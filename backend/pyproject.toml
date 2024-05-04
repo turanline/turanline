@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "mssite"
 version = "0.1.0"
-description = ""
-authors = ["zormnus"]
+description = "backend part for MIS_EXPRESS site"
+authors = ["zormnus", "kuzilya"]
 readme = "README.md"
 
 [tool.poetry.dependencies]

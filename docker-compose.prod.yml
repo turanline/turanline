@@ -13,7 +13,7 @@ services:
   me-backend-app:
     build:
       context: .
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     container_name: me-backend-app
     env_file: .env
     depends_on:
@@ -30,7 +30,7 @@ services:
   me-client-app:
     build:
       context: ./client
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     container_name: me-client-app
     depends_on:
       - me-backend-app

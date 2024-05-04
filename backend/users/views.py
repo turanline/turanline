@@ -1,3 +1,5 @@
+"""Модуль описывающий логику """
+
 import logging
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -34,28 +36,30 @@ from .services.user_service import UserService
 logger = logging.getLogger(__name__)
 
 
-@extend_schema(tags=["jwt auth"])
+@extend_schema(tags=['jwt auth'])
 @extend_schema_view(
     post=extend_schema(
-        summary="Get access and refresh token by username and password",
+        summary='Get access and refresh token by username and password',
     )
 )
 class TokenObtainPairViewDoc(TokenObtainPairView):
     pass
 
 
-@extend_schema(tags=["jwt auth"])
+@extend_schema(tags=['jwt auth'])
 @extend_schema_view(
-    post=extend_schema(summary="Get new access token by previous access token"),
+    post=extend_schema(
+        summary='Get new access token by previous access token'
+    ),
 )
 class TokenRefreshViewDoc(TokenRefreshView):
     pass
 
 
-@extend_schema(tags=["jwt auth"])
+@extend_schema(tags=['jwt auth'])
 class TokenVerifyViewDoc(TokenVerifyView):
     @extend_schema(
-        summary="Verify access token",
+        summary='Verify access token',
     )
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -63,19 +67,19 @@ class TokenVerifyViewDoc(TokenVerifyView):
             serializer.is_valid(raise_exception=True)
         except TokenError as e:
             raise InvalidToken(e.args[0])
-        token = AccessToken(request.data["token"])
-        user_id = token["user_id"]
-        return Response({"user": user_id}, status=status.HTTP_200_OK)
+        token = AccessToken(request.data['token'])
+        user_id = token['user_id']
+        return Response({'user': user_id}, status=status.HTTP_200_OK)
 
 
-@extend_schema(tags=["reviews"])
+@extend_schema(tags=['reviews'])
 @extend_schema_view(
     list=extend_schema(
-        summary="Get all reviews of product endpoint",
+        summary='Get all reviews of product endpoint',
         parameters=[
             OpenApiParameter(
-                name="product_id",
-                description="Reviews filtering by product id",
+                name='product_id',
+                description='Reviews filtering by product id',
                 type=OpenApiTypes.INT,
                 required=True,
                 location=OpenApiParameter.QUERY,
@@ -102,7 +106,7 @@ class ReviewsViewSet(
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Review.objects.select_related("user", "product")
+    queryset = Review.objects.select_related('user', 'product')
     permission_classes = [IsOwnerOrAdminUserReviewPermission]
     serializer_class = ReviewSerializer
 
@@ -118,9 +122,9 @@ class ReviewsViewSet(
         return Review.objects.none()
 
     def get_serializer_class(self):
-        if self.action == "create":
+        if self.action == 'create':
             return ReviewSerializer
-        elif self.action in ("update", "partial_update"):
+        elif self.action in ('update', 'partial_update'):
             return LightReviewSerializer
         return super().get_serializer_class()
 
@@ -130,32 +134,32 @@ class ReviewsViewSet(
         except IntegrityError:
             return HttpResponse(
                 status=status.HTTP_400_BAD_REQUEST,
-                content="That review is already created",
+                content='That review is already created',
             )
 
 
-@extend_schema(tags=["users"])
+@extend_schema(tags=['users'])
 @extend_schema_view(
     favorites=extend_schema(
-        summary="Get current user's favorites endpoint",
+        summary='Get current users favorites endpoint',
     ),
     create=extend_schema(
-        summary="Create user endpoint",
+        summary='Create user endpoint',
     ),
     update=extend_schema(
-        summary="Update current user endpoint",
+        summary='Update current user endpoint',
     ),
     partial_update=extend_schema(
-        summary="Update current user endpoint",
+        summary='Update current user endpoint',
     ),
     retrieve=extend_schema(
-        summary="Get user's personal data endpoint",
+        summary='Get users personal data endpoint',
     ),
     orders=extend_schema(
-        summary="Get user's orders endpoint",
+        summary='Get users orders endpoint',
     ),
     reviews=extend_schema(
-        summary="Get user's reviews endpoint",
+        summary='Get users reviews endpoint',
     ),
 )
 class UserViewSet(
@@ -170,29 +174,31 @@ class UserViewSet(
     def create(self, request, *args, **kwargs):
         user_data = request.data
         response = super().create(request, *args, **kwargs)
-        created_user = UserService.get_user_by_username(username=user_data["username"])
+        created_user = UserService.get_user_by_username(
+            username=user_data['username']
+        )
         CartService.create_empty_cart(user=created_user)
         return response
 
     def get_serializer_class(self):
-        if self.action == "favorites":
+        if self.action == 'favorites':
             return ProductSerializer
-        elif self.action == "retrieve":
+        elif self.action == 'retrieve':
             return CustomerUserReadLoginSerializer
-        elif self.action == "orders":
+        elif self.action == 'orders':
             return OrderSerializer
-        elif self.action == "reviews":
+        elif self.action == 'reviews':
             return ReviewSerializer
         return super().get_serializer_class()
 
     def get_permissions(self):
         if self.action in (
-            "update",
-            "partial_update",
-            "favorites",
-            "retrieve",
-            "orders",
-            "reviews",
+            'update',
+            'partial_update',
+            'favorites',
+            'retrieve',
+            'orders',
+            'reviews',
         ):
             self.permission_classes = [
                 IsAdminUser | IsAuthenticatedOrOwnerUserPermission
@@ -200,7 +206,7 @@ class UserViewSet(
 
         return super().get_permissions()
 
-    @action(methods=["get"], detail=True)
+    @action(methods=['get'], detail=True)
     def orders(self, request, *args, **kwargs):
         user = self.get_object()
         user_orders = (
@@ -212,8 +218,8 @@ class UserViewSet(
                     Order.FINISHED,
                 ),
             )
-            .prefetch_related("order_products")
-            .order_by("-created_date")
+            .prefetch_related('order_products')
+            .order_by('-created_date')
         )
         serializer = self.get_serializer(
             user_orders,
@@ -224,17 +230,19 @@ class UserViewSet(
             data=serializer.data,
         )
 
-    @action(methods=["get"], detail=True)
+    @action(methods=['get'], detail=True)
     def reviews(self, request, *args, **kwargs):
         user = self.get_object()
-        user_reviews = Review.objects.filter(user=user).order_by("-created_datetime")
+        user_reviews = Review.objects.filter(
+            user=user
+        ).order_by('-created_datetime')
         serializer = self.get_serializer(user_reviews, many=True)
         return Response(
             status=status.HTTP_200_OK,
             data=serializer.data,
         )
 
-    @action(methods=["get"], detail=True)
+    @action(methods=['get'], detail=True)
     def favorites(self, request: User, *args, **kwargs):
         user = self.get_object()
         user_favorites = user.favorites.all()
@@ -249,22 +257,22 @@ class UserViewSet(
         )
 
 
-@extend_schema(tags=["cart"])
+@extend_schema(tags=['cart'])
 @extend_schema_view(
     create=extend_schema(
-        summary="Add product to cart endpoint",
+        summary='Add product to cart endpoint',
     ),
     destroy=extend_schema(
-        summary="Delete product from cart endpoint",
+        summary='Delete product from cart endpoint',
     ),
     list=extend_schema(
-        summary="Get cart of current user endpoint",
+        summary='Get cart of current user endpoint',
     ),
     update=extend_schema(
-        summary="Update cart product",
+        summary='Update cart product',
     ),
     partial_update=extend_schema(
-        summary="Partial update cart product",
+        summary='Partial update cart product',
     ),
 )
 class CartProductsViewSet(
@@ -274,19 +282,19 @@ class CartProductsViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = OrderProduct.objects.select_related("order", "product")
+    queryset = OrderProduct.objects.select_related('order', 'product')
     serializer_class = CartProductReadSerializer
     permission_classes = [IsOwnerOrAdminCartProductPermission]
 
     def create(self, request, *args, **kwargs):
         serializer = CartProductSerializer(data=request.data)
-        current_cart = Order.objects.get(user=request.user, status="CR")
+        current_cart = Order.objects.get(user=request.user, status='CR')
         try:
-            product_id = request.data["product"]
+            product_id = request.data['product']
             self.queryset.get(order=current_cart, product__pk=product_id)
             return HttpResponse(
                 status=status.HTTP_400_BAD_REQUEST,
-                content="Product is already in cart",
+                content='Product is already in cart',
             )
         except ObjectDoesNotExist:
             if serializer.is_valid(raise_exception=True):
@@ -301,13 +309,13 @@ class CartProductsViewSet(
                 )
 
     def get_serializer(self, *args, **kwargs):
-        if self.action == "list":
+        if self.action == 'list':
             self.serializer_class = CartProductReadSerializer
         else:
             self.serializer_class = CartProductSerializer
         return super().get_serializer(*args, **kwargs)
 
     def get_queryset(self):
-        if self.action == "list":
+        if self.action == 'list':
             self.queryset = self.queryset.filter(order__user=self.request.user)
         return super().get_queryset()
