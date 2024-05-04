@@ -1,5 +1,6 @@
 import logging
-from ..models import User, Order
+
+from ..models import Order, User
 
 logger = logging.getLogger(__name__)
 

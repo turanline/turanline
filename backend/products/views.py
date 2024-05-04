@@ -1,19 +1,16 @@
-from rest_framework import viewsets, mixins
-from .serializers import (
-    ProductSerializer,
-    ProductCategoriesSerializer,
-    ProductTypeSerializer,
-    ProductSubTypeSerializer,
-)
-from .models import Product, Category, ProductType, ProductSubType
-from .permissions import IsAdminUserOrReadOnly
-from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter
-from drf_spectacular.types import OpenApiTypes
-from .services.products_service import ProductsService
 from django.http.response import JsonResponse
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import (OpenApiParameter, extend_schema,
+                                   extend_schema_view)
+from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import status
+
+from .models import Category, Product, ProductSubType, ProductType
+from .permissions import IsAdminUserOrReadOnly
+from .serializers import (ProductCategoriesSerializer, ProductSerializer,
+                          ProductSubTypeSerializer, ProductTypeSerializer)
+from .services.products_service import ProductsService
 
 
 @extend_schema(tags=["products"])

@@ -1,13 +1,9 @@
-from faker import Faker
-from products.models import (
-    Product,
-    Color,
-    Size,
-    Brand,
-    ManufacturerCountry,
-    ProductSubType,
-)
 import random
+
+from faker import Faker
+
+from products.models import (Brand, Color, ManufacturerCountry, Product,
+                             ProductSubType, Size)
 
 faker = Faker()
 

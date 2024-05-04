@@ -1,7 +1,10 @@
-from pathlib import Path
-import environ
+"""Настройки Django проекта."""
+
 import os
 from datetime import timedelta
+from pathlib import Path
+
+import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,8 +30,6 @@ if DEBUG:
         "127.0.0.1",
         # ...
     ]
-
-# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -125,13 +126,8 @@ AUTH_USER_MODEL = "users.User"
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-# Media files (Database storage images, videos etc.)
-
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -154,7 +150,6 @@ SPECTACULAR_SETTINGS = {
     "REDOC_DIST": "SIDECAR",
 }
 
-# JWT Settings
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
@@ -195,7 +190,6 @@ if not DEBUG:
     CORS_ORIGIN_ALLOW_ALL = True
 
 
-# Logs settings
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,

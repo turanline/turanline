@@ -1,8 +1,9 @@
 import logging
 
-from django.http import QueryDict
-from ..models import Order, User
 from django.db.models import QuerySet
+from django.http import QueryDict
+
+from ..models import Order, User
 
 logger = logging.getLogger(__name__)
 

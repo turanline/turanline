@@ -1,14 +1,7 @@
-from .models import (
-    Product,
-    Category,
-    ProductType,
-    ProductSubType,
-    Brand,
-    Color,
-    Size,
-    ManufacturerCountry,
-)
 from rest_framework.serializers import ModelSerializer
+
+from .models import (Brand, Category, Color, ManufacturerCountry, Product,
+                     ProductSubType, ProductType, Size)
 
 
 class BrandSerializer(ModelSerializer):

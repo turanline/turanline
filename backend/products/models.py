@@ -1,5 +1,6 @@
 from django.db import models
 from slugify import slugify
+
 from .validators import validate_positive_number
 
 

@@ -1,14 +1,7 @@
 from django.contrib import admin
-from .models import (
-    Color,
-    Brand,
-    ProductSubType,
-    ProductType,
-    Product,
-    ManufacturerCountry,
-    Category,
-    Size,
-)
+
+from .models import (Brand, Category, Color, ManufacturerCountry, Product,
+                     ProductSubType, ProductType, Size)
 
 admin.site.site_header = "MiSEXPRESS Website API Administration"
 admin.site.site_title = "MiSEXPRESS Website Admin Portal"

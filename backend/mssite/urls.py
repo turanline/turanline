@@ -1,28 +1,16 @@
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from drf_spectacular.views import (SpectacularAPIView, SpectacularRedocView,
+                                   SpectacularSwaggerView)
 from rest_framework.routers import DefaultRouter
-from products.views import (
-    ProductsViewSet,
-    ProductCategoriesViewSet,
-    ProductTypesViewSet,
-    ProductSubTypesViewSet,
-)
-from django.conf.urls.static import static
-from drf_spectacular.views import (
-    SpectacularAPIView,
-    SpectacularRedocView,
-    SpectacularSwaggerView,
-)
-from users.views import (
-    TokenObtainPairViewDoc,
-    TokenRefreshViewDoc,
-    TokenVerifyViewDoc,
-    ReviewsViewSet,
-    UserViewSet,
-    CartProductsViewSet,
-)
 
+from products.views import (ProductCategoriesViewSet, ProductSubTypesViewSet,
+                            ProductsViewSet, ProductTypesViewSet)
+from users.views import (CartProductsViewSet, ReviewsViewSet,
+                         TokenObtainPairViewDoc, TokenRefreshViewDoc,
+                         TokenVerifyViewDoc, UserViewSet)
 
 router = DefaultRouter()
 

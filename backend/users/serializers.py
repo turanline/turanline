@@ -1,7 +1,9 @@
 from rest_framework.serializers import ModelSerializer, ValidationError
+
 from products.models import Product
 from products.serializers import ProductLightSerializer
-from .models import Review, User, OrderProduct, Order
+
+from .models import Order, OrderProduct, Review, User
 
 
 class ReviewSerializer(ModelSerializer):

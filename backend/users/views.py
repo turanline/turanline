@@ -1,42 +1,35 @@
 import logging
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)
-from rest_framework_simplejwt.tokens import AccessToken
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
+
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.utils import IntegrityError
+from django.http import HttpResponse, JsonResponse
 from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import (OpenApiParameter, extend_schema,
+                                   extend_schema_view)
+from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
-from rest_framework import viewsets, mixins
-from rest_framework import status
-from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
-from .models import Review, User, OrderProduct, Order
-from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
-from .permissions import (
-    IsOwnerOrAdminUserReviewPermission,
-    IsOwnerOrAdminCartProductPermission,
-    IsAuthenticatedOrOwnerUserPermission,
-)
-from .serializers import (
-    ReviewSerializer,
-    LightReviewSerializer,
-    CustomerUserLoginSerializer,
-    CartProductReadSerializer,
-    CartProductSerializer,
-    CustomerUserReadLoginSerializer,
-    OrderSerializer,
-)
+from rest_framework.response import Response
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.views import (TokenObtainPairView,
+                                            TokenRefreshView, TokenVerifyView)
+
 from products.models import Product
 from products.serializers import ProductSerializer
-from .services.reviews_service import ReviewService
-from .services.cart_service import CartService
-from .services.user_service import UserService
-from django.db.utils import IntegrityError
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse, JsonResponse
 
+from .models import Order, OrderProduct, Review, User
+from .permissions import (IsAuthenticatedOrOwnerUserPermission,
+                          IsOwnerOrAdminCartProductPermission,
+                          IsOwnerOrAdminUserReviewPermission)
+from .serializers import (CartProductReadSerializer, CartProductSerializer,
+                          CustomerUserLoginSerializer,
+                          CustomerUserReadLoginSerializer,
+                          LightReviewSerializer, OrderSerializer,
+                          ReviewSerializer)
+from .services.cart_service import CartService
+from .services.reviews_service import ReviewService
+from .services.user_service import UserService
 
 logger = logging.getLogger(__name__)
 
