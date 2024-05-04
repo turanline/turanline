@@ -1,0 +1,26 @@
+@media (max-width: 8000px) {
+    .footer_shop_address{
+        font-size: 16px;
+        width: 300px;
+    }
+}
+@media (max-width:767px) {
+    .footer_shop_address{
+        font-size: 14px;
+        width: 240px;
+    }
+}
+@media (max-width:530px) {
+    .footer_shop_address{
+        font-size: 12px;
+        width: 170px;
+    }
+}
+
+.family_bold{
+    font-family: geometria-bold;
+}
+.family_medium{
+    font-family: Geometria-Medium;
+}
+

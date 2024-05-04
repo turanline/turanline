@@ -1,0 +1,70 @@
+.change-wrapper {
+  padding: 0 30px;
+  background: rgb(0, 0, 0, 0.5);
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+}
+
+.change-content {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 5px;
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  transition: transform 0.3s ease;
+  transform: translateY(100px);
+
+  &.active {
+    transform: translateY(0);
+  }
+}
+
+.change-content-title {
+  text-align: center;
+  color: #0abab5;
+  font-family: geometria-medium;
+  font-size: 25px;
+}
+
+.change-content-input {
+  font-size: 15px;
+  width: 100%;
+  border: 1px solid #dadada;
+  padding: 5px 15px;
+  outline: none;
+  border-radius: 5px;
+}
+
+.delete-card-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.submit-change {
+  background-color: #0abab5;
+  color: white;
+  width: 100%;
+}

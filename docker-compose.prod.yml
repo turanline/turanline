@@ -1,0 +1,58 @@
+version: '3.7'
+services:
+  me-postgres:
+    image: postgres:15.4
+    container_name: $POSTGRES_HOST
+    env_file: .env
+    ports:
+      - '5432:5432'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: always
+
+  me-backend-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: me-backend-app
+    env_file: .env
+    depends_on:
+      - me-postgres
+    volumes:
+      - .:/app
+      - static_data:/app/static
+      - media_data:/app/media
+    command: sh -c "./entrypoint.sh"
+    ports:
+      - '8000:8000'
+    restart: always
+
+  me-client-app:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.prod
+    container_name: me-client-app
+    depends_on:
+      - me-backend-app
+    command: sh -c "npm run start"
+    ports:
+      - '3000:3000'
+    restart: always
+
+  nginx:
+    image: nginx:latest
+    depends_on:
+      - me-backend-app
+      # - me-client-app
+    ports:
+      - '80:80'
+      - '8800:8800'
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/nginx.conf
+      - static_data:/var/www/api/static/
+      - media_data:/var/www/api/media/
+    restart: always
+volumes:
+  pg_data:
+  static_data:
+  media_data:

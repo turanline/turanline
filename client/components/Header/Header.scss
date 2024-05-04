@@ -1,0 +1,82 @@
+@media (max-width: 8000px) {
+  .header_search {
+    display: flex;
+    align-items: center;
+    width: 850px;
+    height: 100%;
+    background-color: #f5f5f5;
+    border-radius: 20px 0 0 20px;
+  }
+
+  .header-burder {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    transition: 0.5s all ease-in;
+    display: none;
+
+    &.active {
+      display: none;
+    }
+  }
+
+  .search-button-mobile {
+    padding: 0 30px;
+    border-radius: 0 15px 15px 0;
+  }
+}
+
+@media (max-width: 1535px) {
+  .header_search {
+    width: 700px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .header_search {
+    width: 450px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .header-burder {
+    opacity: 0;
+    max-height: 0px;
+    display: grid;
+    visibility: hidden;
+    transform: scaleY(0.2);
+
+    &.active {
+      transform: scaleY(1);
+      opacity: 1;
+      display: grid;
+      max-height: 384px;
+      visibility: visible;
+
+      transition: 0.4s all ease-in;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .search-button-mobile {
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .header-burder {
+    grid-template-columns: repeat(1, minmax(0fr));
+  }
+}
+
+@media (max-width: 639px) {
+  .header-burder {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
+
+.family-bold {
+  font-family: geometria-bold;
+}
+.family-medium {
+  font-family: Geometria-Medium;
+}
