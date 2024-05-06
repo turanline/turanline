@@ -1,9 +1,8 @@
 """Модуль с логикой моделей продуктов."""
 
+from django.core.validators import MinValueValidator
 from django.db import models
 from slugify import slugify
-
-from .validators import validate_positive_number
 
 
 class Color(models.Model):
@@ -46,7 +45,7 @@ class Brand(models.Model):
         return self.name
 
 
-def category_upload_to(instance, filename):
+def category_upload_to(instance, filename) -> str:
     return '/'.join(['products-category', str(instance.name), filename])
 
 
@@ -172,7 +171,7 @@ class Size(models.Model):
         verbose_name_plural = 'Product sizes'
 
 
-def products_upload_to(instance, filename):
+def products_upload_to(instance, filename) -> str:
     return '/'.join(['products-images', str(instance.name), filename])
 
 
@@ -191,7 +190,7 @@ class Product(models.Model):
         null=True,
         blank=True,
     )
-    subTypes = models.ManyToManyField(
+    sub_types = models.ManyToManyField(
         ProductSubType,
     )
     brand = models.ForeignKey(
@@ -210,7 +209,10 @@ class Product(models.Model):
         max_digits=10,
         decimal_places=2,
         validators=[
-            validate_positive_number,
+            MinValueValidator(
+                0,
+                message='the price cannot be a negative number'
+            ),
         ],
         db_index=True,
     )
@@ -229,7 +231,7 @@ class Product(models.Model):
         on_delete=models.CASCADE,
         db_index=True,
     )
-    manufacturerCountry = models.ForeignKey(
+    manufacturer_country = models.ForeignKey(
         ManufacturerCountry,
         on_delete=models.SET_NULL,
         null=True,
@@ -252,6 +254,7 @@ class Product(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+        """Переводит значение в slug и сохраняет."""
         self.slug = slugify(
             f'{str(self.vendor_code)}-{str(self.name)}-{str(self.color.name)}'
         )

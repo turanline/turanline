@@ -91,7 +91,7 @@ DATABASES = {
         "NAME": env("POSTGRES_DB", default=""),
         "USER": env("POSTGRES_USER", default=""),
         "PASSWORD": env("POSTGRES_PASSWORD", default=""),
-        "HOST": env("POSTGRES_HOST", default="localhost"),
+        "HOST": env("POSTGRES_HOST", default=""),
         "PORT": env("POSTGRES_PORT", cast=int, default=5432),
         "ATOMIC_REQUESTS": True,
     }

@@ -71,8 +71,8 @@ class ProductSerializer(ModelSerializer):
     brand = BrandSerializer()
     color = ColorSerializer()
     size = SizeSerializer()
-    manufacturerCountry = ManufactoryCountrySerializer()
-    subTypes = ProductSubTypeSerializer(many=True)
+    manufacturer_country = ManufactoryCountrySerializer()
+    sub_types = ProductSubTypeSerializer(many=True)
 
     class Meta:
         """Включены все поля исходной модели. Введен поиск по slug."""

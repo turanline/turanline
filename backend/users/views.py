@@ -1,4 +1,4 @@
-"""Модуль описывающий логику """
+"""Модуль описывающий логику представлений."""
 
 import logging
 
@@ -17,7 +17,6 @@ from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView, TokenVerifyView)
 
-from products.models import Product
 from products.serializers import ProductSerializer
 
 from .models import Order, OrderProduct, Review, User
@@ -53,6 +52,8 @@ class TokenObtainPairViewDoc(TokenObtainPairView):
     ),
 )
 class TokenRefreshViewDoc(TokenRefreshView):
+    """Класс нужный для визуализации обновления токена в схеме."""
+
     pass
 
 

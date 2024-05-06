@@ -1,10 +1,10 @@
 """Модуль с логикой пользовательских моделей."""
 
+from django.core.validators import MinValueValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from products.models import Product
-from products.validators import validate_positive_number
 
 
 class User(AbstractUser):
@@ -121,7 +121,10 @@ class Order(models.Model):
         max_digits=10,
         decimal_places=2,
         validators=[
-            validate_positive_number,
+            MinValueValidator(
+                0,
+                message='the total sum cannot be a negative number'
+            ),
         ],
         null=True,
         blank=True,
