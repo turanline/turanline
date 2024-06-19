@@ -4,7 +4,7 @@
 import { useState, useMemo, useEffect } from "react";
 
 //Components
-import { Button } from "@nextui-org/react";
+import { Button, Tooltip } from "@nextui-org/react";
 import { Filter } from "@/components/Filter/Filter";
 import { ProductCard } from "@/components/ProductCard/productCard";
 import { EmptyComponent } from "@/components/EmptyComponent/EmptyComponent";
@@ -43,15 +43,17 @@ export default function Category() {
 
   useEffect(() => {
     onSetFiltered();
-  }, [filters, category]);
+  }, [filters, category, onSetFiltered]);
 
   useEffect(() => {
     setAllProducts();
-  }, []);
+  }, [setAllProducts]);
 
   const newProducts = handleSearch(searchText, filtered);
 
-  const mapAllProducts = () => {
+  const mapAllProducts = useMemo(() => {
+    if (status === "pending") return <Icons id="spiner" />;
+
     if (!newProducts.length && status === "fulfilled")
       return (
         <EmptyComponent
@@ -62,16 +64,21 @@ export default function Category() {
         />
       );
 
-    if (status === "pending") return <Icons id="spiner" />;
-
-    return (
-      <div className="main-product-wrapper">
-        {newProducts.map(productInfo => (
-          <ProductCard key={productInfo.id} productInfo={productInfo} />
-        ))}
-      </div>
-    );
-  };
+    if (newProducts.length && status === "fulfilled")
+      return (
+        <div className="main-product-wrapper">
+          {newProducts.map(productInfo => (
+            <ProductCard key={productInfo.id} productInfo={productInfo} />
+          ))}
+        </div>
+      );
+  }, [
+    emptyCatalogButtonText,
+    emptyCatalogText,
+    emptyCatalogTitle,
+    newProducts,
+    status,
+  ]);
 
   return (
     <main className="container mx-auto mt-[30px] mb-[100px] px-[28px] md:px-0">
@@ -81,7 +88,11 @@ export default function Category() {
       </Breadcrumbs>
 
       <Button
-        style={{ background: isOpen ? "#E30387" : "#0ABAB5" }}
+        style={{
+          background: isOpen ? "#E30387" : "#0ABAB5",
+          color: "white",
+          fontSize: "25px",
+        }}
         onClick={() => setIsOpen(!isOpen)}
         className="filters"
         startContent={<Icons id="filter" />}
@@ -93,7 +104,7 @@ export default function Category() {
         <Filter products={products} />
       </div>
 
-      {mapAllProducts()}
+      {mapAllProducts}
     </main>
   );
 }

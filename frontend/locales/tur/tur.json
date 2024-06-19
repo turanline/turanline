@@ -10,6 +10,7 @@
   "headerCategorySelect": "Kategori",
   "headerAllCategories": "Tüm Kategoriler",
   "headerSearchPlaceholder": "Katalogda Ara",
+  "headerToProfile": "Profiline Git",
 
   "newRevenues": "Yeni gelirler",
   "newRevenuesText": "Endüstrinin geleceğini şekillendiren ürünleri ilk olarak keşfedin!",
@@ -31,6 +32,7 @@
   "footerTextUnderEmail": "Günün her saati bize ulaşabilirsiniz",
   "footerWriteUs": "Bize yazın",
   "footerUsing": "Web sitesi materyallerini kullanmak ve kopyalamak yasaktır",
+  "footerProviders": "Tedarikçilere",
 
   "filterColor": "Renk",
   "filterSize": "Boyut",
@@ -55,6 +57,7 @@
   "logInCheckboxText": "Şifreyi hatırla",
   "logInTextForget": "Şifrenizi mi unuttunuz?",
   "logInButtonText": "Giriş Yap",
+  "logInButtonRegistration": "Hızlı Kayıt",
 
   "registrationTitle": "Hesabınızı Kaydedin",
   "registrationLabelEmail": "E-posta",
@@ -65,6 +68,7 @@
   "registrationInputLastName": "Soyadınızı girin",
   "registrationPhoneNumber": "Telefon Numarası",
   "registrationButtonText": "Kaydol",
+  "registrationButtonLogIn": "Zaten bir hesabınız var mı?",
 
   "emptyBasketTitle": "Sepet Boş!",
   "emptyBasketText": "Alışveriş zamanı geldi!",
@@ -149,6 +153,7 @@
   "profileModalCompany": "Şirket Adı",
   "profileModalAddress": "Yeni Adres",
   "profileModalButton": "Onayla",
+  "profilePageLogOut": "Hesaptan çıkış yap",
 
   "productPageArticle": "Makale",
   "productPageCompound": "Bileşik",
@@ -255,5 +260,45 @@
   "politics.12": "Son Hükümler",
   "politics.12.1": "Kullanıcı, kişisel verilerinin işlenmesi ile ilgili herhangi bir konuda açıklama almak için Operatör ile privacy@thismywebsite.com e-posta adresinden iletişime geçebilir.",
   "politics.12.2": "Bu belge, Operatör tarafından kişisel verilerin işlenmesine ilişkin politikada yapılan herhangi bir değişikliği yansıtacaktır. Politika, yeni bir sürümle değiştirilene kadar süresiz olarak yürürlükte kalır.",
-  "politics.12.3": "Politikanın güncel sürümü, https://opt-turkie.com/ptivacy adresinde internet üzerinde ücretsiz olarak mevcuttur."
+  "politics.12.3": "Politikanın güncel sürümü, https://opt-turkie.com/ptivacy adresinde internet üzerinde ücretsiz olarak mevcuttur.",
+
+  "messageLogInError": "Geçersiz kimlik bilgileri, lütfen tekrar deneyin!",
+  "messageLogInSuccess": "Başarıyla giriş yaptınız!",
+  "messageRegistration": "Başarıyla kaydoldunuz!",
+  "messageRegistrationError": "Girilen kullanıcı adı veya telefon numarası zaten kayıtlı!",
+  "messageHeaderCart": "Sepet yalnızca oturum açmış kullanıcılar için kullanılabilir",
+  "messageHeaderFavorites": "Favoriler yalnızca oturum açmış kullanıcılar için kullanılabilir",
+  "messageModalChangeError": "Bu telefon numarası zaten var, lütfen başka bir numara girin!",
+  "messageModalChangeSuccess": "Veriler başarıyla değiştirildi!",
+  "messageModalChangeWarn": "Tüm alanlar doldurulmalıdır!",
+  "messageCounterDec": "Öğe sayacı bir'den küçük olamaz!",
+  "messageCounterInc": "Stokta sadece bu kadar öğe var:",
+  "messageCartError": "Sepet alınırken bir hata oluştu!",
+  "messageCartAdded": "Ürün sepete eklendi!",
+  "messageCartAddedError": "Ürün sepete eklenirken bir hata oluştu!",
+  "messageCartItemInCart": "Bu öğe zaten sepette!",
+  "messageCartNotAuth": "Kimlik doğrulanmadı!",
+  "messageCartDeleted": "Ürün sepetten silindi!",
+  "messageFavoritesSuccess": "Ürün favorilere eklendi!",
+  "messageFavoritesWarn": "Oturum açana kadar favorilere öğe ekleyemezsiniz!",
+  "messageFavoritesDeleted": "Ürün favorilerden silindi!",
+  "messageLogOutSuccess": "Başarıyla çıkış yaptınız!",
+
+  "notFoundTitle": "Küçük bir hata",
+  "notFoundText": "Hoppala... Görünüşe göre bu sayfa mevcut değil! Anasayfaya gidin ve tekrar deneyin.",
+
+  "errorPageTitle": "Ağ hatası",
+  "errorPageText": "Sunucu tarafında bir hata meydana geldi, bunu düzeltmek için çok çalışıyoruz!",
+
+  "formEmail": "Lütfen geçerli bir e-posta adresi girin.",
+  "formName": "Lütfen büyük bir İngilizce harfle başlayan ve ardından yalnızca küçük harflerin geldiği geçerli bir değer girin.",
+  "formPassword": "Şifre yalnızca harfler (büyük ve küçük harfler) ve rakamlar içerebilir. Lütfen şifrenizin bu gereksinimleri karşıladığından emin olun.",
+  "formUsername": "Kullanıcı adı yalnızca harfler (büyük ve küçük harfler), rakamlar ve alt çizgiler içerebilir. Lütfen kullanıcı adınızın yalnızca bu karakterlerden oluştuğundan emin olun.",
+  "formPhone": "Lütfen telefon numarasını şu formatta girin: +7 (999) 999-99-99!",
+  "formAddress": "Adres yalnızca Latin harfleri, rakamlar, boşluklar, virgüller, noktalar ve tireler içerebilir. Lütfen geçerli bir adres girin.",
+  "formCompany": "Lütfen geçerli bir şirket adı girin!",
+  "formRequired": "Bu alan gereklidir!",
+  "formMin": "En az",
+  "formMax": "En fazla",
+  "formSymbols": "karakter"
 }

@@ -1,79 +1,23 @@
 from django.http.response import JsonResponse
-from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import (OpenApiParameter, extend_schema,
-                                   extend_schema_view)
+from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import Category, Product, ProductSubType, ProductType
+from components.models import (Category, ManufacturerCountry,
+                               ProductSubType, ProductType)
+from .models import Product
+
 from .permissions import IsAdminUserOrReadOnly
-from .serializers import (ProductCategoriesSerializer, ProductSerializer,
-                          ProductSubTypeSerializer, ProductTypeSerializer)
+from components.serializers import (ManufactoryCountrySerializer,
+                                    ProductSubTypeSerializer,
+                                    ProductCategoriesSerializer,
+                                    ProductTypeSerializer)
+from .serializers import ProductSerializer
 from .services.products_service import ProductsService
 
 
 @extend_schema(tags=['products'])
-@extend_schema_view(
-    retrieve=extend_schema(
-        summary='Get product by its slug endpoint',
-    ),
-    list=extend_schema(
-        summary='Get all products endpoint',
-        parameters=[
-            OpenApiParameter(
-                name='cats',
-                description='Products filtering by categories',
-                many=True,
-                type=OpenApiTypes.STR,
-            ),
-            OpenApiParameter(
-                name='color',
-                description='Product filtering by color',
-                type=OpenApiTypes.STR,
-            ),
-            OpenApiParameter(
-                name='size',
-                description='Product filtering by size',
-                type=OpenApiTypes.STR,
-            ),
-            OpenApiParameter(
-                name='lbprice',
-                description='Product filtering by price low border',
-                type=OpenApiTypes.DECIMAL,
-            ),
-            OpenApiParameter(
-                name='hbprice',
-                description='Product filtering by price high border',
-                type=OpenApiTypes.DECIMAL,
-            ),
-            OpenApiParameter(
-                name='brands',
-                description='Product filtering by brands',
-                many=True,
-                type=OpenApiTypes.STR,
-            ),
-        ],
-    ),
-    create=extend_schema(
-        summary='Create product endpoint',
-    ),
-    destroy=extend_schema(
-        summary='Destroy product endpoint',
-    ),
-    update=extend_schema(
-        summary='Update product endpoint',
-    ),
-    partial_update=extend_schema(
-        summary='Partial update product endpoint',
-    ),
-    famous=extend_schema(
-        summary='Get famous products endpoint',
-    ),
-    similar=extend_schema(
-        summary='Get similar products endpoint',
-    ),
-)
 class ProductsViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
@@ -136,32 +80,8 @@ class ProductsViewSet(
 
 
 @extend_schema(tags=['categories'])
-@extend_schema_view(
-    list=extend_schema(
-        summary='Get all products categories endpoint',
-    ),
-    retrieve=extend_schema(
-        summary='Get product category with joined types and subtypes',
-    ),
-    create=extend_schema(
-        summary='Create product category endpoint',
-    ),
-    destroy=extend_schema(
-        summary='Delete product category endpoint',
-    ),
-    update=extend_schema(
-        summary='Update product category endpoint',
-    ),
-    partial_update=extend_schema(
-        summary='Partial update product category endpoint',
-    ),
-)
 class ProductCategoriesViewSet(
     mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = Category.objects.all()
@@ -184,61 +104,31 @@ class ProductCategoriesViewSet(
         )
 
 
-@extend_schema(tags=['types'])
-@extend_schema_view(
-    list=extend_schema(
-        summary='Get all products types endpoint',
-    ),
-    create=extend_schema(
-        summary='Create product type endpoint',
-    ),
-    destroy=extend_schema(
-        summary='Delete product type endpoint',
-    ),
-    update=extend_schema(
-        summary='Update product type endpoint',
-    ),
-    partial_update=extend_schema(
-        summary='Partial update product type endpoint',
-    ),
-)
+@extend_schema(tags=['categories'])
 class ProductTypesViewSet(
     mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
-    viewsets.GenericViewSet,
+    viewsets.GenericViewSet
 ):
     queryset = ProductType.objects.all()
     permission_classes = [IsAdminUserOrReadOnly]
     serializer_class = ProductTypeSerializer
 
 
-@extend_schema(tags=['subtypes'])
-@extend_schema_view(
-    list=extend_schema(
-        summary='Get all products subtypes endpoint',
-    ),
-    create=extend_schema(
-        summary='Create product subtype endpoint',
-    ),
-    destroy=extend_schema(
-        summary='Delete product subtype endpoint',
-    ),
-    update=extend_schema(
-        summary='Update product subtype endpoint',
-    ),
-    partial_update=extend_schema(
-        summary='Partial update product subtype endpoint',
-    ),
-)
+@extend_schema(tags=['categories'])
 class ProductSubTypesViewSet(
     mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = ProductSubType.objects.all()
     permission_classes = [IsAdminUserOrReadOnly]
     serializer_class = ProductSubTypeSerializer
+
+
+@extend_schema(tags=['country'])
+class ManufacturerCountryViewSet(
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    queryset = ManufacturerCountry.objects.all()
+    permission_classes = [IsAdminUserOrReadOnly]
+    serializer_class = ManufactoryCountrySerializer

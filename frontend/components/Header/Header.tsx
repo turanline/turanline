@@ -8,7 +8,15 @@ import { showToastMessage } from "@/app/toastsChange";
 
 //Components
 import { Icons } from "../Icons/Icons";
-import { Badge } from "@nextui-org/react";
+import {
+  Badge,
+  Tooltip,
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/react";
 import { SearchModal } from "../SearchModal/SearchModal";
 import { HeaderSearch } from "../HeaderSearch/HeaderSearch";
 import { LanguageSelect } from "../LanguageSelect/LanguageSelect";
@@ -18,6 +26,9 @@ import { useTranslate } from "@/hooks/useTranslate";
 import { useTypedSelector } from "@/hooks/useTypedSelector";
 import { useProducts } from "@/hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
+import { useCart } from "@/hooks/useCart";
+import { useUserActions } from "@/hooks/useUserActions";
+import { useFavorites } from "@/hooks/useFavorites";
 
 //Utils
 import {
@@ -29,37 +40,55 @@ import {
   FAVORITES_ROUTE,
   LOGIN_ROUTE,
   PROFILE_ROUTE,
-  SHOP_PHONE_4,
+  SHOP_PHONE,
   SHOP_ROUTE,
 } from "@/utils/Consts";
 
 //Icons
 import logo from "@/public/assets/other/logo.svg";
-
-//Types
-import { IHeaderProps } from "@/types/types";
+import logo2 from "@/public/assets/other/logo2.svg";
 
 //Styles
 import "./Header.scss";
 
-export default function Header({
-  isActive,
-  userCart,
-  favorites,
-}: IHeaderProps) {
-  const [searchModal, setSearchModal] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState(false);
+export default function Header() {
+  const [searchModal, setSearchModal] = useState<boolean>(false),
+    [isOpen, setIsOpen] = useState<boolean>(false);
 
   const { category } = useTypedSelector(state => state.products),
-    { categories } = useTypedSelector(state => state.categories);
+    { categories } = useTypedSelector(state => state.categories),
+    { isAuth } = useTypedSelector(state => state.user),
+    { cart } = useTypedSelector(state => state.cart),
+    { favorites } = useTypedSelector(state => state.favorites);
 
-  const { onSetCategory, onSetFiltered } = useProducts(),
-    { onSetCategories, mapCategoriesOnDesktop, mapCategoriesOnPhone } =
-      useCategories();
+  const { onSetCategory } = useProducts(),
+    { onGetUser, onLogOutUser } = useUserActions(),
+    { fetchCart } = useCart(),
+    { fetchFavorites } = useFavorites(),
+    {
+      onSetCategories,
+      mapCategoriesOnDesktop,
+      mapCategoriesOnPhone,
+      onSetTypes,
+      onSetSubtypes,
+    } = useCategories("#E30387");
+
+  useEffect(() => {
+    onGetUser();
+  }, [onGetUser]);
+
+  useEffect(() => {
+    if (isAuth) {
+      fetchFavorites();
+      fetchCart();
+    }
+  }, [isAuth, fetchFavorites, fetchCart]);
 
   useEffect(() => {
     onSetCategories();
-  }, []);
+    onSetTypes();
+    onSetSubtypes();
+  }, [onSetCategories, onSetTypes, onSetSubtypes]);
 
   const {
     headerAbout,
@@ -70,48 +99,144 @@ export default function Header({
     headerLogIn,
     headerProfile,
     headerFavorites,
+    messageHeaderCart,
+    messageHeaderFavorites,
+    orderPageSearch,
+    profilePageLogOut,
+    headerToProfile,
   } = useTranslate();
 
+  const buttonStyles = {
+    backgroundColor: "transparent",
+    borderRadius: 0,
+    width: "100%",
+  };
+
   const handleClickButton = (message: string) => {
-    if (!isActive) {
-      showToastMessage("warn", message);
+    if (!isAuth) showToastMessage("warn", message);
+  };
+
+  const returnHeaderElement = (isMobile: boolean) => {
+    if (!isAuth) {
+      return (
+        <Link
+          href={PROFILE_ROUTER}
+          className={`flex ${
+            !isMobile ? "flex-col" : "flex-row gap-[10px]"
+          } items-center justify-between`}
+        >
+          <Icons id={!isMobile ? "profileAccountWhite" : "profile-account"} />
+
+          <p className={!isMobile ? "text-white" : "text-black"}>
+            {accountProfileText}
+          </p>
+        </Link>
+      );
+    } else {
+      if (!isMobile) {
+        return (
+          <Tooltip
+            classNames={{ content: "p-0 overflow-hidden" }}
+            style={{ cursor: "pointer" }}
+            content={
+              <div className="flex flex-col items-center">
+                <Button style={buttonStyles}>
+                  <Link
+                    className="h-[40px] flex items-center"
+                    href={PROFILE_ROUTE}
+                  >
+                    {headerToProfile}
+                  </Link>
+                </Button>
+
+                <Button onClick={onLogOutUser} style={buttonStyles}>
+                  {profilePageLogOut}
+                </Button>
+              </div>
+            }
+            className="flex flex-col items-center justify-between"
+          >
+            <div className="flex flex-col items-center cursor-pointer">
+              <Icons id="profileWhiteAccount" />
+
+              <p className="text-white">{accountProfileText}</p>
+            </div>
+          </Tooltip>
+        );
+      } else {
+        return (
+          <Dropdown isKeyboardDismissDisabled>
+            <DropdownTrigger>
+              <div className="flex gap-[10px]">
+                <Icons id="profile" />
+
+                <p className="text-black">{accountProfileText}</p>
+              </div>
+            </DropdownTrigger>
+            <DropdownMenu classNames={{ base: "p-0" }}>
+              <DropdownItem style={{ textAlign: "center", height: "40px" }}>
+                <Link href={PROFILE_ROUTE}>{headerToProfile}</Link>
+              </DropdownItem>
+
+              <DropdownItem
+                style={{ textAlign: "center", height: "40px" }}
+                onClick={onLogOutUser}
+              >
+                {profilePageLogOut}
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        );
+      }
     }
   };
 
-  const burderMenuClass = isOpen ? "header-burder active" : "header-burder";
-  const cartCounter = userCart.length ? "w-[25px] h-[25px] visible" : "hidden";
-  const favoritesCounter = favorites.length
-    ? "w-[25px] h-[25px] visible"
-    : "hidden";
+  const burderMenuClass = isOpen ? "header-burder active" : "header-burder",
+    cartCounter = cart.length ? "w-[25px] h-[25px] visible" : "hidden",
+    favoritesCounter = favorites.length
+      ? "w-[25px] h-[25px] visible"
+      : "hidden";
 
-  const accountProfileText = !isActive ? headerLogIn : headerProfile;
-  const PROFILE_ROUTER = !isActive ? LOGIN_ROUTE : PROFILE_ROUTE;
-  const FAVORITE_ROUTER = !isActive ? LOGIN_ROUTE : FAVORITES_ROUTE;
+  const accountProfileText = !isAuth ? headerLogIn : headerProfile;
+  const PROFILE_ROUTER = !isAuth ? LOGIN_ROUTE : PROFILE_ROUTE;
+  const FAVORITE_ROUTER = !isAuth ? LOGIN_ROUTE : FAVORITES_ROUTE;
 
   return (
-    <header>
+    <header className="header-color">
       <div className="container mx-auto px-[29px] sm:px-0">
-        <div className="hidden lg:flex justify-between py-[25px]">
+        <nav className="hidden lg:flex justify-between py-[25px]">
           <div className="flex items-center gap-2">
-            <LanguageSelect />
+            <LanguageSelect color="white" />
 
-            <Link href={`tel:${SHOP_PHONE_4}`}>{SHOP_PHONE_4}</Link>
+            <Link className="text-white" href={`tel:${SHOP_PHONE}`}>
+              {SHOP_PHONE}
+            </Link>
           </div>
 
           <div className="flex gap-[75px]">
-            <Link href={CATALOG_ROUTE}>{headerCatalog}</Link>
+            <Link className="text-white" href={CATALOG_ROUTE}>
+              {headerCatalog}
+            </Link>
 
-            <Link href={ABOUT_ROUTE}>{headerAbout}</Link>
+            <Link className="text-white" href={ABOUT_ROUTE}>
+              {headerAbout}
+            </Link>
 
-            <Link href={DELIVERY_ROUTE}>{headerDelivery}</Link>
+            <Link className="text-white" href={DELIVERY_ROUTE}>
+              {headerDelivery}
+            </Link>
 
-            <Link href={CONTACTS_ROUTE}>{headerContacts}</Link>
+            <Link className="text-white" href={CONTACTS_ROUTE}>
+              {headerContacts}
+            </Link>
           </div>
-        </div>
+        </nav>
 
-        <div className="flex justify-between mb-[25px] gap-[46px] pt-[25px] lg:pt-0">
-          <Link href={SHOP_ROUTE}>
-            <Image src={logo} alt="logo" width={110} />
+        <nav className="flex justify-between mb-[25px] gap-[46px] pt-[25px] lg:pt-0">
+          <Link href={SHOP_ROUTE} className="flex items-center justify-center">
+            <Image data-logo="desktop" src={logo} alt="logo" />
+
+            <Image data-logo="mobile" src={logo2} alt="logo2" />
           </Link>
 
           <HeaderSearch
@@ -121,78 +246,42 @@ export default function Header({
             allCategories={categories}
           />
 
-          <div className="hidden lg:flex gap-[30px]">
+          <div className="hidden lg:flex gap-[25px]">
             <Link
               href={FAVORITE_ROUTER}
               className="flex flex-col items-center"
-              onClick={() =>
-                handleClickButton(
-                  "Избранное доступно только для авторизованных пользователей"
-                )
-              }
+              onClick={() => handleClickButton(messageHeaderFavorites)}
             >
               <Badge
                 content={favorites.length}
                 color="danger"
                 className={favoritesCounter}
               >
-                <Icons id="heart" />
+                <Icons id="whiteHeart" />
               </Badge>
 
-              <p>{headerFavorites}</p>
+              <p className="text-white">{headerFavorites}</p>
             </Link>
 
             <Link
               href={BASKET_ROUTE}
               className="flex flex-col items-center"
-              onClick={() =>
-                handleClickButton(
-                  "Корзина доступна только для авторизованных пользователей"
-                )
-              }
+              onClick={() => handleClickButton(messageHeaderCart)}
             >
               <Badge
-                content={userCart.length}
+                content={cart.length}
                 color="danger"
                 className={cartCounter}
               >
-                <Icons id="shopping1" />
+                <Icons id="whiteCart" />
               </Badge>
 
-              <p>{headerCart}</p>
+              <p className="text-white">{headerCart}</p>
             </Link>
 
-            <Link
-              href={PROFILE_ROUTER}
-              className="flex flex-col items-center justify-between"
-            >
-              <Icons id={!isActive ? "profile-account" : "profile"} />
-
-              <p>{accountProfileText}</p>
-            </Link>
+            {returnHeaderElement(false)}
           </div>
-          <div className="flex  lg:hidden items-center  gap-[20px]">
-            <button onClick={() => setSearchModal(!searchModal)}>
-              <Icons id="searchMobile" />
-            </button>
-
-            <Link
-              href={BASKET_ROUTE}
-              onClick={() =>
-                handleClickButton(
-                  "Корзина доступна только для авторизованных пользователей"
-                )
-              }
-            >
-              <Badge
-                content={userCart.length}
-                color="danger"
-                className={cartCounter}
-              >
-                <Icons id="shopping" />
-              </Badge>
-            </Link>
-
+          <div className="flex lg:hidden items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="w-[45px] md:w-[44px] cursor-pointer"
@@ -200,11 +289,11 @@ export default function Header({
               <Icons id="burger" />
             </button>
           </div>
-        </div>
+        </nav>
 
         <div className={burderMenuClass}>
-          <div className="grid grid-cols-2 grid-rows-5 gap-[20px] sm:gap-0">
-            <div className="flex flex-col gap-[20px] row-span-4">
+          <nav className="flex items-start justify-between flex-wrap gap-[20px]">
+            <div className="flex flex-col gap-[20px]">
               <Link href={CATALOG_ROUTE}>{headerCatalog}</Link>
 
               <Link href={ABOUT_ROUTE}>{headerAbout}</Link>
@@ -212,30 +301,67 @@ export default function Header({
               <Link href={DELIVERY_ROUTE}>{headerDelivery}</Link>
 
               <Link href={CONTACTS_ROUTE}>{headerContacts}</Link>
-              <Link href={`tel:${SHOP_PHONE_4}`}>{SHOP_PHONE_4}</Link>
+
+              <Link href={`tel:${SHOP_PHONE}`}>{SHOP_PHONE}</Link>
             </div>
 
             {mapCategoriesOnPhone()}
 
-            <div className="sm:hidden flex items-center row-span-1 col-span-2 gap-[20px]">
-              <Link href={PROFILE_ROUTER} className="block">
-                <div className="flex items-center gap-[12px]">
-                  <Icons id={!isActive ? "person" : "profile"} />
+            <div className="sm:hidden flex flex-wrap items-center gap-[20px]">
+              {returnHeaderElement(true)}
 
-                  <p>{accountProfileText}</p>
-                </div>
+              <Link
+                href={FAVORITE_ROUTER}
+                className="block flex items-center gap-[10px]"
+                onClick={() => handleClickButton(messageHeaderFavorites)}
+              >
+                <Badge
+                  content={favorites.length}
+                  color="danger"
+                  className={favoritesCounter}
+                >
+                  <Icons id="heart" />
+                </Badge>
+
+                <p>{headerFavorites}</p>
               </Link>
+              <button
+                className="flex items-center gap-[10px]"
+                onClick={() => setSearchModal(!searchModal)}
+              >
+                <Icons id="searchMobile" />
+
+                <p>{orderPageSearch}</p>
+              </button>
+              <Link
+                className="flex items-center gap-[10px]"
+                href={BASKET_ROUTE}
+                onClick={() => handleClickButton(messageHeaderCart)}
+              >
+                <Badge
+                  content={cart.length}
+                  color="danger"
+                  className={cartCounter}
+                >
+                  <Icons id="shopping" />
+                </Badge>
+
+                <p>{headerCart}</p>
+              </Link>
+              <LanguageSelect color="black" />
+            </div>
+          </nav>
+
+          <div className="hidden sm:grid flex items-start gap-[24px] pl-[38px]">
+            <div className="flex flex-wrap items-center gap-[20px]">
+              {returnHeaderElement(true)}
 
               <Link
                 href={FAVORITE_ROUTER}
                 className="block"
-                onClick={() =>
-                  handleClickButton(
-                    "Избранное доступно только для авторизованных пользователей"
-                  )
-                }
+                onClick={() => handleClickButton(messageHeaderFavorites)}
               >
-                <div className="flex items-center gap-[12px]">
+                <div className="flex items-center gap-[10px]">
                   <Badge
                     content={favorites.length}
                     color="danger"
@@ -248,62 +374,32 @@ export default function Header({
                 </div>
               </Link>
 
-              <LanguageSelect />
-            </div>
-          </div>
-          <div className="hidden sm:grid grid-cols-2 grid-rows-5 border-l-1 border-border gap-[24px] pl-[38px]">
-            <div className="flex flex-col gap-[24px] col-span-1 row-span-4">
-              <Link href="/category">Категория 1</Link>
+              <button
+                className="flex items-center gap-[10px]"
+                onClick={() => setSearchModal(!searchModal)}
+              >
+                <Icons id="searchMobile" />
 
-              <Link href="/category">Категория 1</Link>
-
-              <Link href="/category">Категория 1</Link>
-
-              <Link href="/category">Категория 1</Link>
-            </div>
-
-            <div className="flex flex-col gap-[24px] col-span-1  row-span-4">
-              <Link href="/category">Категория 1</Link>
-
-              <Link href="/category">Категория 1</Link>
-
-              <Link href="/category">Категория 1</Link>
-
-              <Link href="/category">Категория 1</Link>
-            </div>
-
-            <div className="flex items-center row-span-2 col-span-2 gap-[20px]">
-              <Link href={PROFILE_ROUTER} className="block">
-                <div className="flex items-center gap-[12px]">
-                  <Icons id={!isActive ? "person" : "profile"} />
-
-                  <p>{accountProfileText}</p>
-                </div>
-              </Link>
+                <p>{orderPageSearch}</p>
+              </button>
 
               <Link
-                href={FAVORITE_ROUTER}
-                className="block"
-                onClick={() =>
-                  handleClickButton(
-                    "Избранное доступно только для авторизованных пользователей"
-                  )
-                }
+                className="flex items-center gap-[10px]"
+                href={BASKET_ROUTE}
+                onClick={() => handleClickButton(messageHeaderCart)}
               >
-                <div className="flex items-center gap-[12px]">
-                  <Badge
-                    content={favorites.length}
-                    color="danger"
-                    className={favoritesCounter}
-                  >
-                    <Icons id="heart" />
-                  </Badge>
+                <Badge
+                  content={cart.length}
+                  color="danger"
+                  className={cartCounter}
+                >
+                  <Icons id="shopping" />
+                </Badge>
 
-                  <p>{headerFavorites}</p>
-                </div>
+                <p>{headerCart}</p>
               </Link>
 
-              <LanguageSelect />
+              <LanguageSelect color="black" />
             </div>
           </div>
         </div>

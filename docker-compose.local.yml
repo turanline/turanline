@@ -1,17 +1,21 @@
 version: '3.7'
 services:
   db:
+    cpus: "0.5"
+    mem_limit: 500m
     image: postgres:15.4
     restart: always
     container_name: me-shop-postgres
     env_file: backend/.env
     ports:
       - '5432:5432'
-    volumes:
-      - pg_data:/var/lib/postgresql/data
 
   me-backend-app:
-    image: kuzilya/misexpress_backend:latest
+    cpus: "0.5"
+    mem_limit: 1000m
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     restart: always
     container_name: me-backend-app
     env_file: backend/.env
@@ -22,10 +26,15 @@ services:
       - media_data:/app/media
     command: sh -c "./entrypoint.sh"
     ports:
-      - '8000:8000'
+      - '80:8000'
 
   me-frontend-app:
-    image: kuzilya/misexpress_frontend:latest
+    cpus: "0.5"
+    mem_limit: 500m
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
     container_name: me-frontend-app
     depends_on:
       - me-backend-app
@@ -35,6 +44,8 @@ services:
     restart: always
 
   nginx:
+    cpus: "0.5"
+    mem_limit: 500m
     image: kuzilya/misexpress_gateway:latest
     container_name: me-gateway-app
     depends_on:
@@ -48,6 +59,5 @@ services:
       - media_data:/var/www/api/media/
     restart: always
 volumes:
-  pg_data:
   static_data:
   media_data:

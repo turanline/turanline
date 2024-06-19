@@ -10,6 +10,7 @@
   "headerCategorySelect": "Category",
   "headerAllCategories": "All Categories",
   "headerSearchPlaceholder": "Search in catalog",
+  "headerToProfile": "To Profile",
 
   "newRevenues": "New Arrivals",
   "newRevenuesText": "Be the first to know about products shaping the future of the industry",
@@ -31,6 +32,7 @@
   "footerTextUnderEmail": "Write anytime, day or night",
   "footerWriteUs": "Write to Us",
   "footerUsing": "Use and copying of materials from the website is prohibited",
+  "footerProviders": "Suppliers",
 
   "filterColor": "Color",
   "filterSize": "Size",
@@ -55,6 +57,7 @@
   "logInCheckboxText": "Remember password",
   "logInTextForget": "Forgot password",
   "logInButtonText": "Log In",
+  "logInButtonRegistration": "Quick Registration",
 
   "registrationTitle": "Register Your Account",
   "registrationLabelEmail": "Email",
@@ -65,6 +68,7 @@
   "registrationInputLastName": "Enter your last name",
   "registrationPhoneNumber": "Phone Number",
   "registrationButtonText": "Register",
+  "registrationButtonLogIn": "Already have an account?",
 
   "emptyBasketTitle": "Basket is Empty!",
   "emptyBasketText": "It's time to go shopping!",
@@ -149,6 +153,7 @@
   "profileModalCompany": "Company Name",
   "profileModalAddress": "New Address",
   "profileModalButton": "Confirm",
+  "profilePageLogOut": "Log Out",
 
   "productPageArticle": "Article",
   "productPageCompound": "Compound",
@@ -255,5 +260,45 @@
   "politics.12": "Final Provisions",
   "politics.12.1": "The User may obtain any clarifications on matters of interest regarding the processing of their personal data by contacting the Operator via email at privacy@thismywebsite.com.",
   "politics.12.2": "Any changes to the Operator's personal data processing policy will be reflected in this document. The policy remains in effect indefinitely until replaced by a new version.",
-  "politics.12.3": "The current version of the Policy is freely available on the Internet at https://opt-turkie.com/ptivacy."
+  "politics.12.3": "The current version of the Policy is freely available on the Internet at https://opt-turkie.com/ptivacy.",
+
+  "messageLogInError": "Invalid credentials, please try again!",
+  "messageLogInSuccess": "You have successfully logged in!",
+  "messageRegistration": "You have successfully registered!",
+  "messageRegistrationError": "The entered username or phone number is already registered!",
+  "messageHeaderCart": "Cart is only available for logged-in users",
+  "messageHeaderFavorites": "Favorites is only available for logged-in users",
+  "messageModalChangeError": "This phone number already exists, please enter another one!",
+  "messageModalChangeSuccess": "Data has been successfully changed!",
+  "messageModalChangeWarn": "All fields must be filled!",
+  "messageCounterDec": "Item counter cannot be less than one!",
+  "messageCounterInc": "There are only this many items in stock:",
+  "messageCartError": "Error while fetching the cart!",
+  "messageCartAdded": "Item added to cart!",
+  "messageCartAddedError": "An error occurred while adding item to cart!",
+  "messageCartItemInCart": "This item is already in the cart!",
+  "messageCartNotAuth": "You are not authenticated!",
+  "messageCartDeleted": "Item deleted from cart!",
+  "messageFavoritesSuccess": "Item added to favorites!",
+  "messageFavoritesWarn": "You cannot add item to favorites until you log in!",
+  "messageFavoritesDeleted": "Item deleted from favorites!",
+  "messageLogOutSuccess": "You have successfully logged out!",
+
+  "notFoundTitle": "Small Error",
+  "notFoundText": "Oops... It looks like this page doesn't exist! Please go to the homepage and try again.",
+
+  "errorPageTitle": "Network Error",
+  "errorPageText": "Some error occurred on the server side, we are already working hard to fix it!",
+
+  "formEmail": "Please enter a valid email address.",
+  "formName": "Please enter a valid value starting with an uppercase English letter, followed by lowercase letters only.",
+  "formPassword": "Password can contain only letters (uppercase and lowercase) and numbers. Please ensure your password meets these requirements.",
+  "formUsername": "Username can contain only letters (uppercase and lowercase), numbers, and underscores. Please ensure your username consists of these characters only.",
+  "formPhone": "Please enter the phone number in the format: +7 (999) 999-99-99!",
+  "formAddress": "Address can contain only Latin letters, numbers, spaces, commas, periods, and hyphens. Please enter a valid address.",
+  "formCompany": "Please enter a valid company name!",
+  "formRequired": "This field is required!",
+  "formMin": "At least",
+  "formMax": "No more than",
+  "formSymbols": "characters"
 }

@@ -3,8 +3,7 @@ import { NextPage } from "next";
 import React from "react";
 import Link from "next/link";
 import { CATALOG_ROUTE } from "@/utils/Consts";
-import './not-found.scss';
-
+import "./not-found.scss";
 
 const ErrorPage: NextPage = () => {
   return (

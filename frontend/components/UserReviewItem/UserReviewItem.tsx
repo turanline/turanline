@@ -1,14 +1,22 @@
 //Global
 import React, { FC } from "react";
+
 //Types
 import { IUserReviewItemProps } from "@/types/types";
-//styles
-import './UserReviewItem.scss';
 
-const UserReviewItem: FC<IUserReviewItemProps> = ({reviewStatus,reviewText,reviewTitle,}) => {
+//Styles
+import "./UserReviewItem.scss";
+
+const UserReviewItem: FC<IUserReviewItemProps> = ({
+  reviewStatus,
+  reviewText,
+  reviewTitle,
+}) => {
   const status = reviewStatus === "moderation" ? "на модерации" : "опубликован";
 
-  const statusStyles = {background: status === "на модерации" ? "#e30387" : "#0ABAB5",};
+  const statusStyles = {
+    background: status === "на модерации" ? "#e30387" : "#0ABAB5",
+  };
 
   return (
     <article
@@ -34,4 +42,4 @@ const UserReviewItem: FC<IUserReviewItemProps> = ({reviewStatus,reviewText,revie
   );
 };
 
-export default UserReviewItem;
+export { UserReviewItem };

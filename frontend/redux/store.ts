@@ -7,14 +7,20 @@ import { configureStore } from "@reduxjs/toolkit";
 import languageSlice from "./reducers/languageSlice";
 import productsSlice from "./reducers/productsSlice";
 import categoriesSlice from "./reducers/categoriesSlice";
-// import favoritesSlice from "./reducers/favoritesSlice";
+import userSlice from "./reducers/userSlice";
+import cartSlice from "./reducers/cartSlice";
+import favoritesSlice from "./reducers/favoritesSlice";
+import providerSlice from "./reducers/providerSlice";
 
 export const store = configureStore({
   reducer: {
     language: languageSlice,
     products: productsSlice,
     categories: categoriesSlice,
-    // favorites: favoritesSlice,
+    user: userSlice,
+    cart: cartSlice,
+    favorites: favoritesSlice,
+    provider: providerSlice,
   },
 });
 

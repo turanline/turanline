@@ -1,28 +1,33 @@
-version: '3.7'
+version: '3'
+
+volumes:
+  pg_data:
+  static_data:
+  media_data:
+
+
 services:
   db:
+    container_name: me-shop-postgres
     image: postgres:15.4
-    restart: always
-    container_name: $POSTGRES_HOST
-    env_file: .env
-    ports:
-      - '5432:5432'
     volumes:
       - pg_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    restart: always
 
   me-backend-app:
-    image: kuzilya/misexpress_backend:latest
-    restart: always
     container_name: me-backend-app
-    env_file: .env
+    image: kuzilya/misexpress_backend:latest
+    volumes:
+      - static_data:/backend_static
+      - media_data:/app/media/
+    restart: always
+    env_file:
+      - .env
     depends_on:
       - db
-    volumes:
-      - static_data:/app/static
-      - media_data:/app/media
     command: sh -c "./entrypoint.sh"
-    ports:
-      - '8000:8000'
 
   me-frontend-app:
     image: kuzilya/misexpress_frontend:latest
@@ -30,8 +35,6 @@ services:
     depends_on:
       - me-backend-app
     command: sh -c "npm run start"
-    ports:
-      - '3000:3000'
     restart: always
 
   nginx:
@@ -41,13 +44,8 @@ services:
       - me-backend-app
       - me-frontend-app
     ports:
-      - '80:80'
-      - '8800:8800'
+      - 8000:80
     volumes:
-      - static_data:/var/www/api/static/
-      - media_data:/var/www/api/media/
+      - static_data:/staticfiles
+      - media_data:/media
     restart: always
-volumes:
-  pg_data:
-  static_data:
-  media_data:

@@ -1,36 +1,85 @@
-import {$authHost,$host} from "./index";
+//Hosts
+import { $authHost, $host } from "./index";
 
 export const getCategories = async () => {
+  try {
+    const { data } = await $host.get("/api/categories/");
 
-    const {data} = await $host.get('/api/categories/');
-    
     return data;
-}
-export const getCategoryById = async (id: string) => {
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+};
 
-    const {data} = await $host.get(`/api/categories/${id}`);
-    
+export const getCategoryById = async (id: number) => {
+  try {
+    const { data } = await $host.get(`/api/categories/${id}/`);
+
     return data;
-}
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+};
+
 export const postCategory = async (name: string) => {
+  try {
+    const { data } = await $authHost.post("/api/categories/", { name });
 
-    const {data} = await $authHost.post('/api/categories/',{name});
-    
     return data;
-}
-export const putCategoryById  = async (id: number) => {
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+};
 
-    const {data} = await $authHost.put(`/api/categories/${id}`);
-    
+export const putCategoryById = async (id: number) => {
+  try {
+    const { data } = await $authHost.put(`/api/categories/${id}/`);
+
     return data;
-}
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+};
+
 export const patchCategoryById = async (id: number, updateData: object) => {
-    const { data } = await $authHost.patch(`/api/categories/${id}`, updateData);
-    return data;
-}
-export const deleteCategoryById  = async (id: number) => {
+  try {
+    const { data } = await $authHost.patch(
+      `/api/categories/${id}/`,
+      updateData
+    );
 
-    const {data} = await $authHost.delete(`/api/categories/${id}`);
-    
     return data;
-}
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+};
+
+export const deleteCategoryById = async (id: number) => {
+  try {
+    const { data } = await $authHost.delete(`/api/categories/${id}/`);
+
+    return data;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+};
+
+export const getTypes = async () => {
+  try {
+    const { data } = await $host.get("/api/types/");
+
+    return data;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+};
+
+export const getSubTypes = async () => {
+  try {
+    const { data } = await $host.get("/api/subtypes/");
+
+    return data;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+};

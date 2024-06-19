@@ -1,3 +1,8 @@
+"use client";
+
+//Global
+import { useCallback } from "react";
+
 //Hooks
 import { useAppDispatch } from "./useAppDispatch";
 
@@ -7,9 +12,10 @@ import { setSelectedLanguage } from "@/redux/reducers/languageSlice";
 const useLanguage = () => {
   const dispatch = useAppDispatch();
 
-  const changeSelectedLanguage = (newLanguage: string) => {
-    dispatch(setSelectedLanguage(newLanguage));
-  };
+  const changeSelectedLanguage = useCallback(
+    (newLanguage: string) => dispatch(setSelectedLanguage(newLanguage)),
+    [dispatch]
+  );
 
   return { changeSelectedLanguage };
 };

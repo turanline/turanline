@@ -26,9 +26,9 @@ import "swiper/css";
 const Filter: FC<{ products: IProductsState["products"] }> = ({ products }) => {
   const [value, setValue] = useState<number[]>([200, 1500]);
 
-  const [color, setColor] = useState<string>("");
-  const [size, setSize] = useState<string>("");
-  const [brand, setBrand] = useState<string>("");
+  const [color, setColor] = useState<string>(""),
+    [size, setSize] = useState<string>(""),
+    [brand, setBrand] = useState<string>("");
 
   const { push } = useRouter(),
     pathname = usePathname();

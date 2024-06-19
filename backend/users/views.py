@@ -3,23 +3,25 @@
 import logging
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction, DatabaseError
 from django.db.utils import IntegrityError
 from django.http import HttpResponse, JsonResponse
-from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import (OpenApiParameter, extend_schema,
-                                   extend_schema_view)
+from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework_simplejwt.views import (TokenObtainPairView,
+from rest_framework_simplejwt.views import (TokenBlacklistView,
+                                            TokenObtainPairView,
                                             TokenRefreshView, TokenVerifyView)
+
 
 from products.serializers import ProductSerializer
 
-from .models import Order, OrderProduct, Review, User
+from .models import (Order, OrderProduct, Review,
+                     User, Provider, Customer, SuperAdminNews)
 from .permissions import (IsAuthenticatedOrOwnerUserPermission,
                           IsOwnerOrAdminCartProductPermission,
                           IsOwnerOrAdminUserReviewPermission)
@@ -27,30 +29,20 @@ from .serializers import (CartProductReadSerializer, CartProductSerializer,
                           CustomerUserLoginSerializer,
                           CustomerUserReadLoginSerializer,
                           LightReviewSerializer, OrderSerializer,
-                          ReviewSerializer)
-from .services.cart_service import CartService
+                          ReviewSerializer, ProviderSerializer,
+                          CustomerSerializer, SuperAdminNewsReadSerializer,
+                          SuperAdminNewsWriteSerializer)
 from .services.reviews_service import ReviewService
-from .services.user_service import UserService
 
 logger = logging.getLogger(__name__)
 
 
 @extend_schema(tags=['jwt auth'])
-@extend_schema_view(
-    post=extend_schema(
-        summary='Get access and refresh token by username and password',
-    )
-)
 class TokenObtainPairViewDoc(TokenObtainPairView):
     pass
 
 
 @extend_schema(tags=['jwt auth'])
-@extend_schema_view(
-    post=extend_schema(
-        summary='Get new access token by previous access token'
-    ),
-)
 class TokenRefreshViewDoc(TokenRefreshView):
     """Класс нужный для визуализации обновления токена в схеме."""
 
@@ -59,9 +51,7 @@ class TokenRefreshViewDoc(TokenRefreshView):
 
 @extend_schema(tags=['jwt auth'])
 class TokenVerifyViewDoc(TokenVerifyView):
-    @extend_schema(
-        summary='Verify access token',
-    )
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         try:
@@ -73,33 +63,12 @@ class TokenVerifyViewDoc(TokenVerifyView):
         return Response({'user': user_id}, status=status.HTTP_200_OK)
 
 
+@extend_schema(tags=['jwt auth'])
+class TokenLogoutViewDoc(TokenBlacklistView):
+    pass
+
+
 @extend_schema(tags=['reviews'])
-@extend_schema_view(
-    list=extend_schema(
-        summary='Get all reviews of product endpoint',
-        parameters=[
-            OpenApiParameter(
-                name='product_id',
-                description='Reviews filtering by product id',
-                type=OpenApiTypes.INT,
-                required=True,
-                location=OpenApiParameter.QUERY,
-            )
-        ],
-    ),
-    create=extend_schema(
-        summary="Create user's review endpoint",
-    ),
-    destroy=extend_schema(
-        summary="Destroy user's review endpoint",
-    ),
-    update=extend_schema(
-        summary="Update user's review endpoint",
-    ),
-    partial_update=extend_schema(
-        summary="Partial update user's review endpoint",
-    ),
-)
 class ReviewsViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
@@ -140,72 +109,33 @@ class ReviewsViewSet(
 
 
 @extend_schema(tags=['users'])
-@extend_schema_view(
-    favorites=extend_schema(
-        summary='Get current users favorites endpoint',
-    ),
-    create=extend_schema(
-        summary='Create user endpoint',
-    ),
-    update=extend_schema(
-        summary='Update current user endpoint',
-    ),
-    partial_update=extend_schema(
-        summary='Update current user endpoint',
-    ),
-    retrieve=extend_schema(
-        summary='Get users personal data endpoint',
-    ),
-    orders=extend_schema(
-        summary='Get users orders endpoint',
-    ),
-    reviews=extend_schema(
-        summary='Get users reviews endpoint',
-    ),
-)
 class UserViewSet(
-    mixins.RetrieveModelMixin,
     mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
-    viewsets.GenericViewSet,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet
 ):
-    queryset = User.objects.all()
-    serializer_class = CustomerUserLoginSerializer
 
-    def create(self, request, *args, **kwargs):
-        user_data = request.data
-        response = super().create(request, *args, **kwargs)
-        created_user = UserService.get_user_by_username(
-            username=user_data['username']
-        )
-        CartService.create_empty_cart(user=created_user)
-        return response
+    queryset = User.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'favorites':
-            return ProductSerializer
-        elif self.action == 'retrieve':
+        if self.action in ('list', 'retrieve'):
             return CustomerUserReadLoginSerializer
         elif self.action == 'orders':
             return OrderSerializer
         elif self.action == 'reviews':
             return ReviewSerializer
-        return super().get_serializer_class()
+        elif self.action == 'favorites':
+            return ProductSerializer
+        else:
+            return CustomerUserLoginSerializer
 
-    def get_permissions(self):
-        if self.action in (
-            'update',
-            'partial_update',
-            'favorites',
-            'retrieve',
-            'orders',
-            'reviews',
-        ):
-            self.permission_classes = [
-                IsAdminUser | IsAuthenticatedOrOwnerUserPermission
-            ]
-
-        return super().get_permissions()
+    @action(methods=['get'], detail=False)
+    def me(self, request, *args, **kwargs):
+        instance = get_object_or_404(User, username=request.user.username)
+        serializer = CustomerUserLoginSerializer(instance)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     @action(methods=['get'], detail=True)
     def orders(self, request, *args, **kwargs):
@@ -222,7 +152,7 @@ class UserViewSet(
             .prefetch_related('order_products')
             .order_by('-created_date')
         )
-        serializer = self.get_serializer(
+        serializer = OrderSerializer(
             user_orders,
             many=True,
         )
@@ -237,21 +167,7 @@ class UserViewSet(
         user_reviews = Review.objects.filter(
             user=user
         ).order_by('-created_datetime')
-        serializer = self.get_serializer(user_reviews, many=True)
-        return Response(
-            status=status.HTTP_200_OK,
-            data=serializer.data,
-        )
-
-    @action(methods=['get'], detail=True)
-    def favorites(self, request: User, *args, **kwargs):
-        user = self.get_object()
-        user_favorites = user.favorites.all()
-
-        serializer = self.get_serializer(
-            user_favorites,
-            many=True,
-        )
+        serializer = ReviewSerializer(user_reviews, many=True)
         return Response(
             status=status.HTTP_200_OK,
             data=serializer.data,
@@ -259,23 +175,6 @@ class UserViewSet(
 
 
 @extend_schema(tags=['cart'])
-@extend_schema_view(
-    create=extend_schema(
-        summary='Add product to cart endpoint',
-    ),
-    destroy=extend_schema(
-        summary='Delete product from cart endpoint',
-    ),
-    list=extend_schema(
-        summary='Get cart of current user endpoint',
-    ),
-    update=extend_schema(
-        summary='Update cart product',
-    ),
-    partial_update=extend_schema(
-        summary='Partial update cart product',
-    ),
-)
 class CartProductsViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
@@ -289,7 +188,12 @@ class CartProductsViewSet(
 
     def create(self, request, *args, **kwargs):
         serializer = CartProductSerializer(data=request.data)
-        current_cart = Order.objects.get(user=request.user, status='CR')
+
+        try:
+            current_cart = Order.objects.get(user=request.user, status='CR')
+        except Order.DoesNotExist:
+            current_cart = Order.objects.create(user=request.user, status='CR')
+
         try:
             product_id = request.data['product']
             self.queryset.get(order=current_cart, product__pk=product_id)
@@ -303,10 +207,9 @@ class CartProductsViewSet(
                     validated_data=serializer.validated_data,
                     order=current_cart,
                 )
-                obj_data = CartProductSerializer(obj).data
                 return JsonResponse(
                     status=status.HTTP_201_CREATED,
-                    data=obj_data,
+                    data=CartProductSerializer(obj).data,
                 )
 
     def get_serializer(self, *args, **kwargs):
@@ -320,3 +223,105 @@ class CartProductsViewSet(
         if self.action == 'list':
             self.queryset = self.queryset.filter(order__user=self.request.user)
         return super().get_queryset()
+
+
+@extend_schema(tags=['provider'])
+class ProviderViewSet(viewsets.ModelViewSet):
+    queryset = Provider.objects.all()
+    serializer_class = ProviderSerializer
+
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED,
+                headers=headers
+            )
+        except Exception as e:
+            logger.error(f"Error during ProviderViewSet create: {e}")
+            raise e
+
+    @transaction.atomic
+    def update(self, request, *args, **kwargs):
+        try:
+            partial = kwargs.pop('partial', False)
+            instance = self.get_object()
+            serializer = self.get_serializer(
+                instance,
+                data=request.data,
+                partial=partial
+            )
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+
+            if getattr(instance, '_prefetched_objects_cache', None):
+                instance._prefetched_objects_cache = {}
+
+            return Response(serializer.data)
+        except Exception as e:
+            logger.error(f"Error during ProviderViewSet update: {e}")
+            raise e
+
+
+@extend_schema(tags=['customer'])
+class CustomerViewSet(viewsets.ModelViewSet):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(
+            instance,
+            data=request.data,
+            partial=partial
+        )
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+
+    @action(methods=['get'], detail=True)
+    def favorites(self, request, *args, **kwargs):
+        user = self.get_object()
+        customer = Customer.objects.filter(user=user).first()
+        customer_favorites = customer.favorites.all()
+
+        serializer = ProductSerializer(
+            customer_favorites,
+            many=True,
+            context={'request': request},
+        )
+        return Response(
+            status=status.HTTP_200_OK,
+            data=serializer.data,
+        )
+
+
+@extend_schema(tags=['superuser'])
+class SuperAdminNewsViewSet(viewsets.ModelViewSet):
+    queryset = SuperAdminNews.objects.all()
+
+    def get_serializer_class(self):
+        if self.action in ('create', 'retrieve'):
+            return SuperAdminNewsReadSerializer
+        return SuperAdminNewsWriteSerializer

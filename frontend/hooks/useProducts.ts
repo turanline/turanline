@@ -1,3 +1,8 @@
+"use client";
+
+//Global
+import { useCallback } from "react";
+
 //Actions
 import {
   setFilters,
@@ -16,17 +21,30 @@ import { IProductMainPage, IProductsState } from "@/types/types";
 const useProducts = () => {
   const dispatch = useAppDispatch();
 
-  const onSetFilters = (newFilters: IProductsState["filters"]) =>
-    dispatch(setFilters(newFilters));
+  const onSetFilters = useCallback(
+    (newFilters: IProductsState["filters"]) => dispatch(setFilters(newFilters)),
+    [dispatch]
+  );
 
-  const onSetCategory = (newCategory: string) =>
-    dispatch(setCategory(newCategory));
+  const onSetCategory = useCallback(
+    (newCategory: string) => dispatch(setCategory(newCategory)),
+    [dispatch]
+  );
 
-  const setAllProducts = () => dispatch(fetchProducts());
+  const setAllProducts = useCallback(
+    () => dispatch(fetchProducts()),
+    [dispatch]
+  );
 
-  const onSetFiltered = () => dispatch(fetchFilteredProducts());
+  const onSetFiltered = useCallback(
+    () => dispatch(fetchFilteredProducts()),
+    [dispatch]
+  );
 
-  const onSetSearchText = (text: string) => dispatch(setSearchText(text));
+  const onSetSearchText = useCallback(
+    (text: string) => dispatch(setSearchText(text)),
+    [dispatch]
+  );
 
   const handleSearch = (searchText: string, filtered: IProductMainPage[]) => {
     if (!searchText) return filtered;

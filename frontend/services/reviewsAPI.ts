@@ -1,30 +1,52 @@
+//Hosts
 import { $host, $authHost } from "./index";
 
 export const getAllReviews = async () => {
-  const { data } = await $host.get("/api/reviews/");
+  try {
+    const { data } = await $host.get("/api/reviews/");
 
-  return data;
+    return data;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
 };
 
 export const postReview = async (review: object) => {
-  const { data } = await $authHost.post("/api/reviews-proc/", review);
+  try {
+    const { data } = await $authHost.post("/api/reviews-proc/", review);
 
-  return data;
+    return data;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
 };
 
 export const putReviewById = async (id: number, review: object) => {
-  const { data } = await $authHost.put(`/api/reviews-proc/${id}/`, review);
+  try {
+    const { data } = await $authHost.put(`/api/reviews-proc/${id}/`, review);
 
-  return data;
+    return data;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
 };
 
 export const patchReviewById = async (id: number, review: object) => {
-  const { data } = await $authHost.patch(`/api/reviews-proc/${id}/`, review);
-  return data;
+  try {
+    const { data } = await $authHost.patch(`/api/reviews-proc/${id}/`, review);
+
+    return data;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
 };
 
 export const deleteReviewById = async (id: number) => {
-  const { data } = await $authHost.delete(`/api/reviews-proc/${id}/`);
+  try {
+    const { data } = await $authHost.delete(`/api/reviews-proc/${id}/`);
 
-  return data;
+    return data;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
 };

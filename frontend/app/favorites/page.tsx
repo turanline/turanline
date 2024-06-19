@@ -1,32 +1,47 @@
 "use client";
 
 //Global
-import { getUser } from "../layout";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useEffect, useContext } from "react";
-
-//Context
-import { SidebarContext } from "../layout";
 
 //Components
-import { Icons } from "@/components/Icons/Icons";
 import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import { EmptyComponent } from "@/components/EmptyComponent/EmptyComponent";
 import { ProductCard } from "@/components/ProductCard/productCard";
+import { Icons } from "@/components/Icons/Icons";
 
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
+import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useFavorites } from "@/hooks/useFavorites";
 
 //Utils
-import { CATALOG_ROUTE, FAVORITES_ROUTE, SHOP_ROUTE } from "@/utils/Consts";
+import {
+  CATALOG_ROUTE,
+  FAVORITES_ROUTE,
+  LOGIN_ROUTE,
+  SHOP_ROUTE,
+} from "@/utils/Consts";
 
 //Styles
 import "./favorites.scss";
 
 export default function Favorites() {
-  const router = useRouter();
+  const { isAuth, status: userStatus } = useTypedSelector(state => state.user),
+    { favorites, status: favoritesStatus } = useTypedSelector(
+      state => state.favorites
+    );
 
-  const { isActive, setIsActive, favorites } = useContext(SidebarContext);
+  const { push } = useRouter();
+
+  const { fetchFavorites } = useFavorites();
+
+  useEffect(() => {
+    if (userStatus === "fulfilled") {
+      if (isAuth) fetchFavorites();
+      else push(LOGIN_ROUTE);
+    }
+  }, [isAuth, fetchFavorites, userStatus, push]);
 
   const {
     emptyFavoritesTitle,
@@ -36,24 +51,8 @@ export default function Favorites() {
     headerFavorites,
   } = useTranslate();
 
-  useEffect(() => {
-    isAuthUser();
-  }, [router]);
-
-  async function isAuthUser() {
-    try {
-      const { status, error } = await getUser();
-
-      if (status === 200) setIsActive(true);
-
-      if (error) router.push(SHOP_ROUTE);
-    } catch (error) {
-      console.error(error as Error);
-      setIsActive(false);
-    }
-  }
-
-  if (!isActive) return <Icons id="spiner" />;
+  if (!isAuth || favoritesStatus === "pending" || userStatus === "pending")
+    return <Icons id="spiner" />;
 
   return (
     <main className="container mx-auto mt-[30px] mb-[30px] px-[28px] sm:px-0">

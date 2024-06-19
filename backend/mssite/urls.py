@@ -5,22 +5,37 @@ from django.urls import include, path
 from drf_spectacular.views import (SpectacularAPIView, SpectacularRedocView,
                                    SpectacularSwaggerView)
 from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenBlacklistView
 
 from products.views import (ProductCategoriesViewSet, ProductSubTypesViewSet,
-                            ProductsViewSet, ProductTypesViewSet)
+                            ProductsViewSet, ProductTypesViewSet,
+                            ManufacturerCountryViewSet)
 from users.views import (CartProductsViewSet, ReviewsViewSet,
                          TokenObtainPairViewDoc, TokenRefreshViewDoc,
-                         TokenVerifyViewDoc, UserViewSet)
+                         TokenVerifyViewDoc, UserViewSet, ProviderViewSet,
+                         CustomerViewSet, SuperAdminNewsViewSet)
 
 router = DefaultRouter()
 
 router.register(r'catalog', ProductsViewSet)
+
 router.register(r'categories', ProductCategoriesViewSet)
 router.register(r'types', ProductTypesViewSet)
 router.register(r'subtypes', ProductSubTypesViewSet)
+
+
 router.register(r'reviews', ReviewsViewSet)
-router.register(r'users', UserViewSet)
 router.register(r'cart', CartProductsViewSet)
+router.register(r'users', UserViewSet)
+
+router.register(r'country', ManufacturerCountryViewSet)
+router.register(r'provider', ProviderViewSet)
+router.register(r'customer', CustomerViewSet)
+
+router.register(
+    r'superusernews',
+    SuperAdminNewsViewSet
+)
 
 urlpatterns = [
     path(
@@ -64,6 +79,11 @@ urlpatterns = [
         'api/token/verify/',
         TokenVerifyViewDoc.as_view(),
         name='token_verify',
+    ),
+    path(
+        'api/token/logout/',
+        TokenBlacklistView.as_view(),
+        name='token_blacklist',
     ),
 ]
 

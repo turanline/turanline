@@ -1,7 +1,7 @@
 "use client";
 
 //Global
-import React, { FC, useContext } from "react";
+import React, { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,12 +12,11 @@ import likeRed from "@/public/assets/other/likeProductActive.png";
 //Components
 import { Button } from "@nextui-org/react";
 
-//Context
-import { SidebarContext } from "@/app/layout";
-
 //Hooks
 import { useCart } from "@/hooks/useCart";
 import { useFavorites } from "@/hooks/useFavorites";
+import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useTranslate } from "@/hooks/useTranslate";
 
 //Types
 import { IProductMainPage } from "@/types/types";
@@ -28,7 +27,10 @@ import "./ProductCard.scss";
 const ProductCard: FC<{ productInfo: IProductMainPage }> = ({
   productInfo,
 }) => {
-  const { favorites } = useContext(SidebarContext);
+  const { isAuth } = useTypedSelector(state => state.user),
+    { favorites } = useTypedSelector(state => state.favorites);
+
+  const { productPageButton } = useTranslate();
 
   const { addItemToCart } = useCart();
 
@@ -46,7 +48,7 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({
 
   const likeHandleClick = () => {
     if (!itemInFavorites) {
-      addToFavorites(productInfo);
+      addToFavorites(productInfo, isAuth);
     } else {
       deleteFromFavorites(productInfo);
     }
@@ -71,22 +73,13 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({
     ));
   };
 
-  let backendURL;
-
-  if (productInfo.image) {
-    backendURL = new URL(productInfo.image);
-    backendURL.port = "8800";
-  }
-
-  const imagePath = backendURL ? backendURL.toString() : "";
-
   return (
     <div className="product_card">
       <div className="w-full h-fit relative">
-        <Link href={`product/${productInfo.slug}`}>
+        <Link href={`/product/${productInfo.slug}`}>
           <Image
             className="product_image"
-            src={imagePath}
+            src={productInfo.image ? productInfo.image : ""}
             alt="cardImg"
             width={500}
             height={500}
@@ -138,10 +131,10 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({
       </div>
 
       <Button
-        onClick={() => addItemToCart(productInfo, 1)}
+        onClick={() => addItemToCart(productInfo, 1, isAuth)}
         className="bg-tiffani text-white rounded-md w-full h-[44px] py-[10px]"
       >
-        Купить
+        {productPageButton}
       </Button>
     </div>
   );

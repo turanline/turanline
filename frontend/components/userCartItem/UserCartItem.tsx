@@ -28,15 +28,6 @@ const UserCartItem: FC<IUserCartItem> = ({ product }) => {
     cartItemTotalPrice,
   } = useTranslate();
 
-  let backendURL;
-
-  if (product.product.image) {
-    backendURL = new URL(product.product.image);
-    backendURL.port = "8800";
-  }
-
-  const imagePath = backendURL ? backendURL.toString() : "";
-
   return (
     <div id={String(product.id)} className="product-card">
       <div className="product-card__image-container">
@@ -45,7 +36,7 @@ const UserCartItem: FC<IUserCartItem> = ({ product }) => {
           href={`/product/${product.product.slug}`}
         >
           <Image
-            src={imagePath}
+            src={product.product.image ? product.product.image : ""}
             alt={product.product.name}
             width={500}
             height={500}
@@ -67,7 +58,7 @@ const UserCartItem: FC<IUserCartItem> = ({ product }) => {
 
                 <div className="product-card__option">
                   <p className="product-card__option--active font-medium">
-                    {product.product.size}
+                    {product.product.size.name}
                   </p>
                 </div>
               </div>
@@ -75,9 +66,11 @@ const UserCartItem: FC<IUserCartItem> = ({ product }) => {
               <div className="product-card__description-container">
                 <p className="product-card__description">{filterColor}</p>
 
-                <div data-color className="product-card__option">
-                  {product.product.color}
-                </div>
+                <div
+                  data-color
+                  className="product-card__option"
+                  style={{ background: product.product.color.color }}
+                ></div>
               </div>
 
               <div className="product-card__description-container">
@@ -123,7 +116,7 @@ const UserCartItem: FC<IUserCartItem> = ({ product }) => {
 
                 <div className="product-card__option">
                   <p className="font-medium">
-                    ${(product.product.price * product.amount).toFixed(2)}
+                    ${(+product.product.price * product.amount).toFixed(2)}
                   </p>
                 </div>
               </div>

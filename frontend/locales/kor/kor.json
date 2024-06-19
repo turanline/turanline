@@ -10,6 +10,7 @@
   "headerCategorySelect": "카테고리",
   "headerAllCategories": "모든 카테고리",
   "headerSearchPlaceholder": "카탈로그 검색",
+  "headerToProfile": "프로필로",
 
   "newRevenues": "신규 상품",
   "newRevenuesText": "산업의 미래를 만드는 상품을 먼저 발견하세요!",
@@ -31,6 +32,7 @@
   "footerTextUnderEmail": "낮과 밤을 막론하고 언제든지 문의하세요",
   "footerWriteUs": "문의하기",
   "footerUsing": "웹사이트 자료의 사용 및 복제는 금지되어 있습니다",
+  "footerProviders": "공급 업체",
 
   "filterColor": "색상",
   "filterSize": "크기",
@@ -55,6 +57,7 @@
   "logInCheckboxText": "비밀번호 저장",
   "logInTextForget": "비밀번호를 잊으셨나요?",
   "logInButtonText": "로그인",
+  "logInButtonRegistration": "빠른 등록",
 
   "registrationTitle": "계정 등록",
   "registrationLabelEmail": "이메일",
@@ -65,6 +68,7 @@
   "registrationInputLastName": "성을 입력하세요",
   "registrationPhoneNumber": "전화번호",
   "registrationButtonText": "등록",
+  "registrationButtonLogIn": "계정이 이미 있습니까?",
 
   "emptyBasketTitle": "장바구니가 비어 있습니다!",
   "emptyBasketText": "쇼핑을 가는 시간입니다!",
@@ -149,6 +153,7 @@
   "profileModalCompany": "회사 이름",
   "profileModalAddress": "새로운 주소",
   "profileModalButton": "확인",
+  "profilePageLogOut": "로그아웃",
 
   "productPageArticle": "기사",
   "productPageCompound": "화합물",
@@ -255,5 +260,45 @@
   "politics.12": "종결 규정",
   "politics.12.1": "사용자는 privacy@thismywebsite.com으로 이메일을 보내어 운영자에게 개인 데이터 처리에 관한 궁금한 점에 대한 설명을 받을 수 있습니다.",
   "politics.12.2": "이 문서에는 운영자의 개인 데이터 처리 정책에 대한 변경 사항이 반영됩니다. 이 정책은 새로운 버전으로 교체될 때까지 무기한 유효합니다.",
-  "politics.12.3": "최신 정책 버전은 https://opt-turkie.com/ptivacy에서 공개되어 있습니다."
+  "politics.12.3": "최신 정책 버전은 https://opt-turkie.com/ptivacy에서 공개되어 있습니다.",
+
+  "messageLogInError": "잘못된 자격 증명입니다, 다시 시도하세요!",
+  "messageLogInSuccess": "로그인에 성공했습니다!",
+  "messageRegistration": "가입에 성공했습니다!",
+  "messageRegistrationError": "입력한 사용자 이름 또는 전화번호가 이미 등록되었습니다!",
+  "messageHeaderCart": "카트는 로그인 한 사용자 만 사용할 수 있습니다",
+  "messageHeaderFavorites": "즐겨찾기는 로그인 한 사용자 만 사용할 수 있습니다",
+  "messageModalChangeError": "이 전화번호는 이미 존재합니다. 다른 번호를 입력해 주세요!",
+  "messageModalChangeSuccess": "데이터가 성공적으로 변경되었습니다!",
+  "messageModalChangeWarn": "모든 필드를 작성하십시오!",
+  "messageCounterDec": "항목 카운터는 1 미만 일 수 없습니다!",
+  "messageCounterInc": "재고에 이만한 항목 만 있습니다:",
+  "messageCartError": "카트를 가져오는 동안 오류가 발생했습니다!",
+  "messageCartAdded": "항목이 카트에 추가되었습니다!",
+  "messageCartAddedError": "항목을 카트에 추가하는 동안 오류가 발생했습니다!",
+  "messageCartItemInCart": "이 항목은 이미 카트에 있습니다!",
+  "messageCartNotAuth": "인증되지 않았습니다!",
+  "messageCartDeleted": "항목이 카트에서 삭제되었습니다!",
+  "messageFavoritesSuccess": "항목이 즐겨찾기에 추가되었습니다!",
+  "messageFavoritesWarn": "로그인 하기 전에 즐겨찾기에 항목을 추가할 수 없습니다!",
+  "messageFavoritesDeleted": "항목이 즐겨찾기에서 삭제되었습니다!",
+  "messageLogOutSuccess": "성공적으로 로그아웃되었습니다!",
+
+  "notFoundTitle": "작은 오류",
+  "notFoundText": "앗… 이 페이지가 존재하지 않는 것 같습니다! 홈페이지로 이동하여 다시 시도해 주세요.",
+
+  "errorPageTitle": "네트워크 오류",
+  "errorPageText": "서버 측에서 오류가 발생했습니다. 수정하기 위해 열심히 노력하고 있습니다!",
+
+  "formEmail": "유효한 이메일 주소를 입력하세요.",
+  "formName": "대문자로 시작하고 소문자만 따르는 올바른 값을 입력하세요.",
+  "formPassword": "비밀번호는 대소문자 및 숫자만 포함할 수 있습니다. 비밀번호가 이러한 요구 사항을 충족하는지 확인하세요.",
+  "formUsername": "사용자 이름은 대소문자, 숫자 및 밑줄만 포함할 수 있습니다. 사용자 이름이 이러한 문자로만 구성되어 있는지 확인하세요.",
+  "formPhone": "전화번호를 다음 형식으로 입력하세요: +7 (999) 999-99-99!",
+  "formAddress": "주소는 라틴 문자, 숫자, 공백, 쉼표, 마침표 및 하이픈만 포함할 수 있습니다. 유효한 주소를 입력하세요.",
+  "formCompany": "유효한 회사 이름을 입력하세요!",
+  "formRequired": "이 필드는 필수 항목입니다!",
+  "formMin": "최소",
+  "formMax": "최대",
+  "formSymbols": "문자"
 }

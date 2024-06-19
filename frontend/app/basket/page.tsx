@@ -1,30 +1,29 @@
 "use client";
 
 //Components
-import { useEffect, useContext } from "react";
-import { SidebarContext } from "../layout";
-import { useRouter } from "next/navigation";
-import { getUser } from "../layout";
+import { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 //Utils
 import {
   BASKET_ROUTE,
-  LOGIN_ROUTE,
   SHOP_ROUTE,
   ORDER_ROUTE,
   CATALOG_ROUTE,
+  LOGIN_ROUTE,
 } from "@/utils/Consts";
 
 //Hooks
 import { useCart } from "@/hooks/useCart";
 import { useTranslate } from "@/hooks/useTranslate";
+import { useTypedSelector } from "@/hooks/useTypedSelector";
 
 //Components
 import { Breadcrumbs, BreadcrumbItem, Button } from "@nextui-org/react";
 import { UserCartItem } from "@/components/userCartItem/UserCartItem";
-import { Icons } from "@/components/Icons/Icons";
 import { EmptyComponent } from "@/components/EmptyComponent/EmptyComponent";
+import { Icons } from "@/components/Icons/Icons";
 
 //Styles
 import "swiper/css";
@@ -32,10 +31,19 @@ import "./basket.scss";
 import "swiper/css/pagination";
 
 export default function Basket() {
-  const { setIsActive, userCart, setUserCart, isActive } =
-    useContext(SidebarContext);
+  const { isAuth, status: userStatus } = useTypedSelector(state => state.user),
+    { cart, status: cartStatus } = useTypedSelector(state => state.cart);
 
-  const router = useRouter();
+  const { fetchCart } = useCart();
+
+  const { push } = useRouter();
+
+  useEffect(() => {
+    if (userStatus === "fulfilled") {
+      if (isAuth) fetchCart();
+      else push(LOGIN_ROUTE);
+    }
+  }, [isAuth, fetchCart, userStatus, push]);
 
   const {
     emptyBasketButtonText,
@@ -49,67 +57,8 @@ export default function Basket() {
 
   const { calculateTotalPrice } = useCart();
 
-  useEffect(() => {
-    isAuthUser();
-  }, []);
-
-  async function isAuthUser() {
-    try {
-      const { status, error } = await getUser();
-
-      if (status === 200) setIsActive(true);
-
-      if (error) router.push(LOGIN_ROUTE);
-    } catch (error) {
-      console.error(error as Error);
-      setIsActive(false);
-    }
-  }
-
-  const mapAllProductsInBasket = () => {
-    if (!userCart.length)
-      return (
-        <EmptyComponent
-          title={emptyBasketTitle}
-          text={emptyBasketText}
-          route={CATALOG_ROUTE}
-          buttonText={emptyBasketButtonText}
-        />
-      );
-
-    const totalPrice = calculateTotalPrice().toFixed(2);
-
-    return (
-      <>
-        <h5 className="text-[24px]">{headerCart}</h5>
-
-        <div className="flex flex-col gap-[23px]">
-          {userCart.map(item => (
-            <UserCartItem
-              product={item}
-              key={item.id}
-              setBasket={setUserCart}
-            />
-          ))}
-
-          <div className="basket_confirm">
-            <Button className="basket_button bg-tiffani text-white rounded-md w-[278px] h-[51px] py-[10px]">
-              <Link
-                className="w-full h-full flex items-center justify-center"
-                href={ORDER_ROUTE}
-              >
-                {cartContinue}
-              </Link>
-            </Button>
-
-            <p className="text-[24px]">{`${cartTotalPriceText} $${totalPrice}`}</p>
-          </div>
-        </div>
-      </>
-    );
-  };
-
-  if (!isActive) return <Icons id="spiner" />;
+  if (!isAuth || cartStatus === "pending" || userStatus === "pending")
+    return <Icons id="spiner" />;
 
   return (
     <main className="container mx-auto mt-[30px] mb-[100px] px-[28px] sm:px-0">
@@ -120,7 +69,39 @@ export default function Basket() {
       </Breadcrumbs>
 
       <div className="w-full mt-[48px] gap-[23px] flex flex-col">
-        {mapAllProductsInBasket()}
+        {cart.length ? (
+          <>
+            <h5 className="text-[24px]">{headerCart}</h5>
+
+            <div className="flex flex-col gap-[23px]">
+              {cart.map(item => (
+                <UserCartItem product={item} key={item.id} />
+              ))}
+
+              <div className="basket_confirm">
+                <Button className="basket_button bg-tiffani text-white rounded-md w-[278px] h-[51px] py-[10px]">
+                  <Link
+                    className="w-full h-full flex items-center justify-center"
+                    href={ORDER_ROUTE}
+                  >
+                    {cartContinue}
+                  </Link>
+                </Button>
+
+                <p className="text-[24px]">{`${cartTotalPriceText} $${calculateTotalPrice().toFixed(
+                  2
+                )}`}</p>
+              </div>
+            </div>
+          </>
+        ) : (
+          <EmptyComponent
+            title={emptyBasketTitle}
+            text={emptyBasketText}
+            route={CATALOG_ROUTE}
+            buttonText={emptyBasketButtonText}
+          />
+        )}
       </div>
     </main>
   );

@@ -1,3 +1,5 @@
+"use client";
+
 //Global
 import { useDispatch } from "react-redux";
 

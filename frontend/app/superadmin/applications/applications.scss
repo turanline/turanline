@@ -1,0 +1,153 @@
+@media (max-width: 8000px) {
+  .applications-page_wrapper {
+    padding: 50px 0;
+  }
+
+  .applications-page_content {
+    width: 1536px;
+  }
+
+  .applications-page_application-left,
+  .applications-page_application-right {
+    max-width: 450px;
+  }
+
+  .applications-page_application {
+    padding: 30px;
+    border: 1px solid black;
+  }
+}
+
+@media (max-width: 1536px) {
+  .applications-page_content {
+    width: 1280px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .applications-page_content {
+    width: 1024px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .applications-page_wrapper {
+    padding: 30px 0;
+  }
+
+  .applications-page_content {
+    width: 768px;
+    padding: 0 30px;
+  }
+
+  .application-page_application-bottom {
+    gap: 15px;
+  }
+
+  .applications-page_application-left,
+  .applications-page_application-right {
+    max-width: 100%;
+  }
+
+  .applications-page_application {
+    padding: 10px;
+    border: 1px solid rgb(0, 0, 0, 0.3);
+  }
+}
+
+.applications-page_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.applications-page_content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  & > h5 {
+    font-size: 42px;
+    font-family: geometria-medium;
+    font-weight: 700;
+  }
+}
+
+.applications-page_application {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  border-radius: 5px;
+
+  &-left,
+  &-right {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    &_label {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      color: #252b42;
+      font-size: 16px;
+      font-family: geometria-medium;
+      font-weight: 700;
+    }
+  }
+}
+
+.label-input,
+.comment-input {
+  border-radius: 5px;
+  height: 50px;
+  color: #f9f9f9;
+  border: 1px solid #dddddd;
+}
+
+.application-page_application-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.comment-text {
+  color: #252b42;
+  font-family: geometria-medium;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.comment-date_text {
+  color: #929292;
+  font-family: geometria-medium;
+  font-weight: 700;
+  font-size: 10px;
+}
+
+.comment-date_date {
+  color: #929292;
+  font-family: geometria-medium;
+  font-weight: 400;
+  font-size: 10px;
+}
+
+.comment-button {
+  width: 100%;
+  max-width: 250px;
+  border-radius: 5px;
+  color: white;
+  font-weight: 700;
+  font-family: geometria-medium;
+  height: 45px;
+}
+
+.comment-button:first-of-type {
+  background-color: #0abab5;
+}
+
+.comment-button:last-of-type {
+  background-color: #e30387;
+}

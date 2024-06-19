@@ -2,6 +2,8 @@
 
 //Global
 import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 //Components
 import {
@@ -17,14 +19,27 @@ import InputMask from "react-input-mask";
 
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
+import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useCart } from "@/hooks/useCart";
 
 //Utils
-import { POLITIC_ROUTE } from "@/utils/Consts";
+import { POLITIC_ROUTE, SHOP_ROUTE } from "@/utils/Consts";
 
 //Styles
 import "./order.scss";
 
 export default function Order() {
+  const { status: cartStatus } = useTypedSelector(state => state.cart),
+    { isAuth, status: userStatus } = useTypedSelector(state => state.user);
+
+  const { push } = useRouter();
+
+  const { calculateTotalPrice, returnAllProductsCounter } = useCart();
+
+  useEffect(() => {
+    if (!isAuth && userStatus === "fulfilled") push(SHOP_ROUTE);
+  }, [isAuth, userStatus, push]);
+
   const {
     orderPageAddress,
     orderPageButton,
@@ -49,14 +64,6 @@ export default function Order() {
     paymentPageCrypto,
   } = useTranslate();
 
-  const categories = [
-    {
-      label: "+7",
-      value: "+7",
-      description: "",
-    },
-  ];
-
   const payments = [
     paymentPageBank,
     paymentPageCard,
@@ -64,6 +71,9 @@ export default function Order() {
     paymentPageCrypto,
     "PayPal",
   ];
+
+  if (!isAuth || userStatus === "pending" || cartStatus === "pending")
+    return <Icons id="spiner" />;
 
   return (
     <main className="container mx-auto mt-[30px] mb-[100px] px-[28px] md:px-0">
@@ -152,6 +162,7 @@ export default function Order() {
             </div>
           </form>
         </div>
+
         <div className="flex flex-col">
           <h2 className="text-[32px] family-medium mb-[46px]">
             {orderPageCart}
@@ -160,11 +171,16 @@ export default function Order() {
           <div className="flex flex-col gap-[4px] text-textGray mb-[23px]">
             <div className="flex justify-between">
               <p className="text-[24px] text-textGray">{orderPageSum}</p>
-              <p className="text-[24px] text-tiffani">500 $</p>
+              <p className="text-[24px] text-tiffani">
+                {calculateTotalPrice().toFixed(2)} $
+              </p>
             </div>
             <div className="flex justify-between">
-              <p>5 {orderPageProductsText}</p>
-              <p>500 $</p>
+              <p>
+                {returnAllProductsCounter()} {orderPageProductsText}
+              </p>
+
+              <p>{calculateTotalPrice().toFixed(2)} $</p>
             </div>
             <div className="flex justify-between">
               <p>{headerDelivery}</p>
@@ -188,7 +204,11 @@ export default function Order() {
             <p className="text-[18px] mb-[14px]">{orderPagePayment}</p>
             <RadioGroup>
               {payments.map(value => (
-                <Radio classNames={{ label: "text-textAcc" }} value={value}>
+                <Radio
+                  key={value}
+                  classNames={{ label: "text-textAcc" }}
+                  value={value}
+                >
                   {value}
                 </Radio>
               ))}

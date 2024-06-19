@@ -1,45 +1,39 @@
-import { $authHost, $host } from "./index";
-import { jwtDecode } from "jwt-decode";
+//Hosts
+import { $authHost, $host, clearTokens } from "./index";
 
-export const postLogin = async (userData: object) => {
+export const postTokenRefresh = async (
+  refreshToken: string
+): Promise<string> => {
   try {
-    const { data } = await $host.post("/api/token/", userData);
-    localStorage.setItem("AuthTokenMis", data?.access);
-    localStorage.setItem("AuthTokenMisRef", data?.refresh);
-    return jwtDecode(data?.access);
-  } catch (error) {
-    console.error(error);
-    throw error;
+    const { data } = await $authHost.post<{ access: string }>(
+      "/api/token/refresh/",
+      { refresh: refreshToken }
+    );
+    if (!data.access) throw new Error("No access token in response");
+    localStorage.setItem("AuthTokenMis", data.access);
+    return data.access;
+  } catch (error: any) {
+    clearTokens();
+
+    throw new Error(
+      `Failed to refresh token: ${error.response?.data || error.message}`
+    );
   }
 };
 
-export const postTokenRefresh = async () => {
+export const postVerifyToken = async (
+  token: string
+): Promise<{ [key: string]: any }> => {
+  if (!token) throw new Error("No token provided for verification");
   try {
-    const refreshToken = localStorage.getItem("AuthTokenMisRef");
-
-    if (!refreshToken) {
-      throw new Error("Refresh token is missing");
-    }
-
-    const { data } = await $authHost.post("/api/token/refresh/", {
-      refresh: refreshToken,
-    });
-
-    localStorage.setItem("AuthTokenMis", data?.access);
-
+    const { data } = await $host.post<{ [key: string]: any }>(
+      "/api/token/verify/",
+      { token }
+    );
     return data;
-  } catch (error) {
-    console.error("Failed to refresh token:", error);
-    throw error;
-  }
-};
-
-export const postVerifyToken = async (token: string | null) => {
-  try {
-    const { data } = await $host.post("/api/token/verify/", { token });
-    return data;
-  } catch (error) {
-    console.error("Failed to verify token:", error);
-    throw error;
+  } catch (error: any) {
+    throw new Error(
+      `Failed to verify token: ${error.response?.data || error.message}`
+    );
   }
 };

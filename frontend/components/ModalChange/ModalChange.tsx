@@ -2,7 +2,7 @@
 
 //Global
 import { showToastMessage } from "@/app/toastsChange";
-import { FC, FormEvent } from "react";
+import { FC } from "react";
 
 //Components
 import InputMask from "react-input-mask";
@@ -10,29 +10,18 @@ import { Icons } from "../Icons/Icons";
 import { Button } from "@nextui-org/react";
 
 //Types
-import { IModalChangeProps, IProfileInputs } from "@/types/types";
+import { IInputsChangeProfile, IModalChangeProps } from "@/types/types";
 
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
-
-//Services
-import { changeUserData } from "@/services/usersAPI";
-import { postVerifyToken } from "@/services/authAPI";
+import { useCustomForm } from "@/hooks/useCustomForm.";
+import { useUserActions } from "@/hooks/useUserActions";
+import { useTypedSelector } from "@/hooks/useTypedSelector";
 
 //Styles
 import "./ModalChange.scss";
 
-const ModalChange: FC<IModalChangeProps> = props => {
-  const {
-    setIsChange,
-    isChange,
-    handleInputsChange,
-    inputsValue,
-    setUserState,
-    userState,
-    setInputsValue,
-  } = props;
-
+const ModalChange: FC<IModalChangeProps> = ({ isChange, setIsChange }) => {
   const {
     profileModalAddress,
     profileModalButton,
@@ -40,59 +29,52 @@ const ModalChange: FC<IModalChangeProps> = props => {
     profileModalName,
     profileModalSurName,
     profileModalTitle,
+    messageModalChangeError,
+    messageModalChangeSuccess,
+    messageModalChangeWarn,
   } = useTranslate();
 
-  const { address, company, first_name, last_name, phone_number } = inputsValue;
+  const {
+    getValues,
+    reset,
+    handleSubmit,
+    isValid,
+    setValue,
+    returnInputError,
+    returnInputProperties,
+  } = useCustomForm<IInputsChangeProfile>();
 
-  const checkAllFieldsFilled = (obj: IProfileInputs) => {
-    for (let key in obj) {
-      if (
-        typeof obj[key as keyof IProfileInputs] !== "string" ||
-        obj[key as keyof IProfileInputs].trim() === ""
-      ) {
-        console.error("Ошибка: Не все поля заполнены");
-        return false;
-      }
-    }
-    return true;
-  };
+  const { onChangeUserData } = useUserActions();
 
-  const clearInputs = () =>
-    setInputsValue({
-      address: "",
-      company: "",
-      phone_number: "",
-      first_name: "",
-      last_name: "",
-    });
+  const handleChangeUserData = async () => {
+    const { address, company, first_name, last_name, phone_number } =
+      getValues();
 
-  const handleChangeUserData = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const areFilled = checkAllFieldsFilled(inputsValue);
-
-    if (areFilled) {
-      const token = localStorage.getItem("AuthTokenMis");
-
-      if (token) {
-        const { user } = await postVerifyToken(token);
-
-        await changeUserData(user, inputsValue, token)
-          .then(() => {
-            userState &&
-              setUserState({
-                ...userState,
-                ...inputsValue,
-              });
-
-            showToastMessage("success", "Данные успешно изменены!");
+    if (isValid) {
+      onChangeUserData({
+        user: { first_name, last_name },
+        address,
+        company,
+        phone_number,
+      })
+        .then(data => {
+          if ("error" in data && data.error.message === "Rejected") {
+            showToastMessage("error", messageModalChangeError);
+          } else {
+            showToastMessage("success", messageModalChangeSuccess);
             setIsChange(false);
-          })
-          .catch(e => console.log(e))
-          .finally(() => clearInputs());
-      }
+            setValue("phone_number", "");
+            reset();
+          }
+        })
+        // eslint-disable-next-line no-console
+        .catch(error => console.log(error))
+        .finally(() => {
+          setValue("phone_number", "");
+          reset();
+        });
     } else {
-      showToastMessage("warn", "Все поля обязательно должны быть заполнены!");
+      showToastMessage("warn", messageModalChangeWarn);
     }
   };
 
@@ -104,62 +86,70 @@ const ModalChange: FC<IModalChangeProps> = props => {
       <form
         className={!isChange ? "change-content" : "change-content active"}
         onClick={e => e.stopPropagation()}
-        onSubmit={e => handleChangeUserData(e)}
+        onSubmit={handleSubmit(handleChangeUserData)}
       >
         <h3 className="change-content-title">{profileModalTitle}</h3>
 
-        <input
-          placeholder={`${profileModalName}...`}
-          name="first_name"
-          className="change-content-input"
-          type="text"
-          onChange={e => handleInputsChange(e)}
-          value={first_name}
-        />
+        <label className="w-full" htmlFor="#">
+          <input
+            {...returnInputProperties("first_name")}
+            placeholder={`${profileModalName}...`}
+            name="first_name"
+            className="change-content-input"
+            type="text"
+          />
+          {returnInputError("first_name")}
+        </label>
 
-        <input
-          placeholder={`${profileModalSurName}...`}
-          name="last_name"
-          className="change-content-input"
-          type="text"
-          onChange={e => handleInputsChange(e)}
-          value={last_name}
-        />
+        <label className="w-full" htmlFor="#">
+          <input
+            {...returnInputProperties("last_name")}
+            placeholder={`${profileModalSurName}...`}
+            name="last_name"
+            className="change-content-input"
+            type="text"
+          />
+          {returnInputError("last_name")}
+        </label>
 
-        <input
-          placeholder={`${profileModalCompany}...`}
-          name="company"
-          className="change-content-input"
-          type="text"
-          onChange={e => handleInputsChange(e)}
-          value={company}
-        />
+        <label className="w-full" htmlFor="#">
+          <input
+            {...returnInputProperties("company")}
+            placeholder={`${profileModalCompany}...`}
+            name="company"
+            className="change-content-input"
+            type="text"
+          />
+          {returnInputError("company")}
+        </label>
 
-        <InputMask
-          name="phone_number"
-          className="change-content-input"
-          type="text"
-          onChange={e => handleInputsChange(e)}
-          mask={"+7 (999) 999-99-99"}
-          alwaysShowMask={true}
-          value={phone_number}
-        />
+        <label className="w-full" htmlFor="#">
+          <input
+            {...returnInputProperties("address")}
+            placeholder={`${profileModalAddress}...`}
+            name="address"
+            className="change-content-input"
+            type="text"
+          />
+          {returnInputError("address")}
+        </label>
 
-        <input
-          placeholder={`${profileModalAddress}...`}
-          name="address"
-          className="change-content-input"
-          type="text"
-          onChange={e => handleInputsChange(e)}
-          value={address}
-        />
+        <label className="w-full" htmlFor="#">
+          <InputMask
+            {...returnInputProperties("phone_number")}
+            name="phone_number"
+            className="change-content-input"
+            mask={"+7 (999) 999-99-99"}
+            alwaysShowMask={true}
+          />
+          {returnInputError("phone_number")}
+        </label>
 
-        <Button type="submit" className="submit-change">
+        <Button type="submit" className="bg-tiffani text-white w-full">
           {profileModalButton}
         </Button>
 
         <button
-          type="button"
           onClick={() => setIsChange(false)}
           className="delete-card-button"
         >

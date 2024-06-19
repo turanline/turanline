@@ -2,68 +2,71 @@
 
 //Global
 import { showToastMessage } from "@/app/toastsChange";
-import { useContext } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 
-//Services
-import { patchUserFavorites } from "@/services/favoritesAPI";
-import { postVerifyToken } from "@/services/authAPI";
+//Actions
+import {
+  addToFavorites as onAddToFavorites,
+  deleteFromFavorites as onDeleteFromFavorites,
+  fetchFavorites as onFetchFavorites,
+  resetFavorites,
+} from "@/redux/reducers/favoritesSlice";
 
-//Context
-import { SidebarContext } from "@/app/layout";
+//Hooks
+import { useTranslate } from "./useTranslate";
+import { useAppDispatch } from "./useAppDispatch";
+
+//Utils
+import { LOGIN_ROUTE } from "@/utils/Consts";
 
 //Types
 import { IProductMainPage } from "@/types/types";
 
 const useFavorites = () => {
-  const { favorites, setFavorites, isActive } = useContext(SidebarContext);
+  const dispatch = useAppDispatch();
 
-  const addToFavorites = async (product: IProductMainPage) => {
-    if (!isActive)
-      showToastMessage(
-        "warn",
-        "Вы не можете добавить товар в избранное, пока не авторизуйтесь!"
-      );
+  const { push } = useRouter();
 
-    try {
-      const token = localStorage.getItem("AuthTokenMis");
+  const {
+    messageFavoritesDeleted,
+    messageFavoritesSuccess,
+    messageFavoritesWarn,
+  } = useTranslate();
 
-      if (token) {
-        const { user } = await postVerifyToken(token);
-        const serverArray = favorites.map(item => item.id);
+  const fetchFavorites = useCallback(
+    () => dispatch(onFetchFavorites()),
+    [dispatch]
+  );
 
-        patchUserFavorites(user, [...serverArray, product.id])
-          .then(() => {
-            showToastMessage("success", "Товар добавлен в избранное!");
-            setFavorites([...favorites, product]);
-          })
-          .catch(error => console.log(error));
-      }
-    } catch (error) {
-      throw new Error(`${error}`);
+  const addToFavorites = (product: IProductMainPage, isAuth: boolean) => {
+    if (isAuth) {
+      dispatch(onAddToFavorites(product))
+        .then(() => showToastMessage("success", messageFavoritesSuccess))
+        // eslint-disable-next-line no-console
+        .catch(error => console.log(error));
+    } else {
+      showToastMessage("warn", messageFavoritesWarn);
+
+      push(LOGIN_ROUTE);
     }
   };
 
-  const deleteFromFavorites = async (product: IProductMainPage) => {
-    try {
-      const token = localStorage.getItem("AuthTokenMis");
+  const onResetFavorites = () => dispatch(resetFavorites());
 
-      if (token) {
-        const { user } = await postVerifyToken(token);
-        const serverArray = favorites.map(item => item.id);
-
-        const newServerArray = serverArray.filter(item => item !== product.id);
-
-        patchUserFavorites(user, newServerArray).then(() => {
-          showToastMessage("success", "Товар удален из избранного!");
-          setFavorites(favorites.filter(item => item.id !== product.id));
-        });
-      }
-    } catch (error) {
-      throw new Error(`${error}`);
-    }
+  const deleteFromFavorites = (product: IProductMainPage) => {
+    dispatch(onDeleteFromFavorites(product))
+      .then(() => showToastMessage("success", messageFavoritesDeleted))
+      // eslint-disable-next-line no-console
+      .catch(error => console.log(error));
   };
 
-  return { addToFavorites, deleteFromFavorites };
+  return {
+    addToFavorites,
+    deleteFromFavorites,
+    fetchFavorites,
+    onResetFavorites,
+  };
 };
 
 export { useFavorites };
