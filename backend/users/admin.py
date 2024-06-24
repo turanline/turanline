@@ -2,15 +2,9 @@
 
 from django.contrib import admin
 
-from .models import (Order, OrderProduct,
-                     Review, User, Appeal,
-                     Provider, Customer, SuperAdminNews)
+from .models import User, Appeal, News
 
-admin.site.register(Order)
-admin.site.register(OrderProduct)
+
 admin.site.register(User)
-admin.site.register(Review)
 admin.site.register(Appeal)
-admin.site.register(Provider)
-admin.site.register(Customer)
-admin.site.register(SuperAdminNews)
+admin.site.register(News)

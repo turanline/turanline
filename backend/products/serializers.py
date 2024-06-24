@@ -1,10 +1,10 @@
 from rest_framework.serializers import ModelSerializer
 
 from .models import Product
-from components.serializers import (BrandSerializer, ColorSerializer,
-                                    SizeSerializer,
-                                    ManufactoryCountrySerializer,
-                                    ProductSubTypeSerializer)
+from product_components.serializers import (BrandSerializer, ColorSerializer,
+                                            SizeSerializer,
+                                            ManufactoryCountrySerializer,
+                                            ProductSubTypeSerializer)
 
 
 class ProductUpdateSerializer(ModelSerializer):

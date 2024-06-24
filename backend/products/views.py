@@ -1,18 +1,14 @@
-from django.http.response import JsonResponse
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from components.models import (Category, ManufacturerCountry,
-                               ProductSubType, ProductType)
 from .models import Product
+from customers.models import Review
+from customers.serializers import ReviewSerializer
 
-from .permissions import IsAdminUserOrReadOnly
-from components.serializers import (ManufactoryCountrySerializer,
-                                    ProductSubTypeSerializer,
-                                    ProductCategoriesSerializer,
-                                    ProductTypeSerializer)
+from products.permissions import IsAdminUserOrReadOnly
+
 from .serializers import ProductSerializer
 from .services.products_service import ProductsService
 
@@ -53,6 +49,18 @@ class ProductsViewSet(
         )
         serializer = self.get_serializer(filter_queryset, many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+    
+    @action(methods=['get'], detail=True)
+    def reviews(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj_reviews = Review.objects.filter(
+            product=obj
+        )
+        serializer = ReviewSerializer(obj_reviews, many=True)
+        return Response(
+            status=status.HTTP_200_OK,
+            data=serializer.data
+        )
 
     def get_queryset(self):
         request_data = self.request.GET
@@ -77,58 +85,3 @@ class ProductsViewSet(
             self.queryset,
         )
         return super().get_queryset()
-
-
-@extend_schema(tags=['categories'])
-class ProductCategoriesViewSet(
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
-    queryset = Category.objects.all()
-    permission_classes = [IsAdminUserOrReadOnly]
-    serializer_class = ProductCategoriesSerializer
-
-    def retrieve(self, request, *args, **kwargs):
-        category = self.get_object()
-        queryset = ProductSubType.objects.select_related(
-            'type', 'type__category'
-        ).filter(type__category=category)
-        category_relations_data = ProductsService.get_category_relations(
-            queryset
-        )
-        response_data = {category.name: category_relations_data}
-        return JsonResponse(
-            data=response_data,
-            safe=False,
-            json_dumps_params={'ensure_ascii': False},
-        )
-
-
-@extend_schema(tags=['categories'])
-class ProductTypesViewSet(
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet
-):
-    queryset = ProductType.objects.all()
-    permission_classes = [IsAdminUserOrReadOnly]
-    serializer_class = ProductTypeSerializer
-
-
-@extend_schema(tags=['categories'])
-class ProductSubTypesViewSet(
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
-    queryset = ProductSubType.objects.all()
-    permission_classes = [IsAdminUserOrReadOnly]
-    serializer_class = ProductSubTypeSerializer
-
-
-@extend_schema(tags=['country'])
-class ManufacturerCountryViewSet(
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet
-):
-    queryset = ManufacturerCountry.objects.all()
-    permission_classes = [IsAdminUserOrReadOnly]
-    serializer_class = ManufactoryCountrySerializer

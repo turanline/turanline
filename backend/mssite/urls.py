@@ -7,34 +7,84 @@ from drf_spectacular.views import (SpectacularAPIView, SpectacularRedocView,
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenBlacklistView
 
-from products.views import (ProductCategoriesViewSet, ProductSubTypesViewSet,
-                            ProductsViewSet, ProductTypesViewSet,
-                            ManufacturerCountryViewSet)
-from users.views import (CartProductsViewSet, ReviewsViewSet,
-                         TokenObtainPairViewDoc, TokenRefreshViewDoc,
-                         TokenVerifyViewDoc, UserViewSet, ProviderViewSet,
-                         CustomerViewSet, SuperAdminNewsViewSet)
+from products.views import ProductsViewSet
+from users.views import (TokenObtainPairViewDoc, TokenRefreshViewDoc,
+                         TokenVerifyViewDoc, UserViewSet,
+                         NewsViewSet)
+from cart.views import CartProductsViewSet
+from customers.views import CustomerViewSet, ReviewsViewSet
+from providers.views import ProviderViewSet
+from product_components.views import (ProductTypesViewSet,
+                                      ManufacturerCountryViewSet,
+                                      ProductCategoriesViewSet,
+                                      ProductSubTypesViewSet)
 
 router = DefaultRouter()
 
-router.register(r'catalog', ProductsViewSet)
+router.register(
+    r'catalog',
+    ProductsViewSet,
+    'catalog'
+)
 
-router.register(r'categories', ProductCategoriesViewSet)
-router.register(r'types', ProductTypesViewSet)
-router.register(r'subtypes', ProductSubTypesViewSet)
+router.register(
+    r'categories',
+    ProductCategoriesViewSet,
+    'categories'
+)
 
+router.register(
+    r'types',
+    ProductTypesViewSet,
+    'types'
+)
 
-router.register(r'reviews', ReviewsViewSet)
-router.register(r'cart', CartProductsViewSet)
-router.register(r'users', UserViewSet)
+router.register(
+    r'subtypes',
+    ProductSubTypesViewSet,
+    'subtypes'
+)
 
-router.register(r'country', ManufacturerCountryViewSet)
-router.register(r'provider', ProviderViewSet)
-router.register(r'customer', CustomerViewSet)
+router.register(
+    r'reviews',
+    ReviewsViewSet,
+    'reviews'
+)
+
+router.register(
+    r'cart',
+    CartProductsViewSet,
+    'cart'
+)
+
+router.register(
+    r'users',
+    UserViewSet,
+    'users'
+)
+
+router.register(
+    r'country',
+    ManufacturerCountryViewSet,
+    'country'
+)
+
+router.register(
+    r'provider',
+    ProviderViewSet,
+    'provider'
+)
+
+router.register(
+    r'customer',
+    CustomerViewSet,
+    'customer'
+)
 
 router.register(
     r'superusernews',
-    SuperAdminNewsViewSet
+    NewsViewSet,
+    'news'
 )
 
 urlpatterns = [
