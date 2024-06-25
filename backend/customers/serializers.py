@@ -1,27 +1,25 @@
 from rest_framework.serializers import ModelSerializer
 
-from .models import Customer, Review
-from users.models import User
-from users.serializers import UserLoginSerializer
-from products.serializers import ProductLightSerializer
+from . import models
+from users import models as user_models
+from users import serializers as user_serializer
+from products import serializers as product_serializer
 
 
 class CustomerSerializer(ModelSerializer):
-    user = UserLoginSerializer()
+    user = user_serializer.UserLoginSerializer()
 
     class Meta:
-        model = Customer
+        model = models.Customer
         fields = '__all__'
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')
-        user = User.objects.create(**user_data)
-        user.set_password(user.password)
-        user.save()
-        customer = Customer.objects.create(user=user, **validated_data)
-        return customer
+        user = user_models.User.objects.create_user(**user_data)
+        return models.Customer.objects.create(user=user, **validated_data)
 
     def update(self, instance, validated_data):
+        #TODO: check method
         user_data = validated_data.pop('user', None)
         if user_data:
             user = instance.user
@@ -39,12 +37,10 @@ class CustomerSerializer(ModelSerializer):
 class ReviewSerializer(ModelSerializer):
     """Сериализатор для модели обзоров продуктов."""
 
-    product = ProductLightSerializer(read_only=True)
+    product = product_serializer.ProductLightSerializer(read_only=True)
 
     class Meta:
-        """Включены все поля исходной модели."""
-
-        model = Review
+        model = models.Review
         fields = '__all__'
 
 
@@ -52,7 +48,5 @@ class LightReviewSerializer(ModelSerializer):
     """Легкий сериализатор для модели обзоров продуктов."""
 
     class Meta:
-        """Включено поле text исходной модели."""
-
-        model = Review
+        model = models.Review
         fields = ('text',)

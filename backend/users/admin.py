@@ -1,10 +1,8 @@
-"""Логика для работы с админ панелью приложения users."""
-
 from django.contrib import admin
 
-from .models import User, Appeal, News
+from . import models
 
 
-admin.site.register(User)
-admin.site.register(Appeal)
-admin.site.register(News)
+admin.site.register(models.User)
+admin.site.register(models.Appeal)
+admin.site.register(models.News)

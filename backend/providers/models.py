@@ -1,6 +1,7 @@
 from django.db import models
 
 from users.models import User
+from .enums import ProviderStates
 
 
 class BankAccountNumber(models.Model):
@@ -63,16 +64,9 @@ class Provider(models.Model):
         on_delete=models.CASCADE
     )
 
-    PROVIDER_STATES = [
-        ('M', 'Moderating'),
-        ('B', 'Blocked'),
-        ('F', 'Finished'),
-        ('C', 'Canceled')
-    ]
-
     state = models.CharField(
         max_length=50,
-        choices=PROVIDER_STATES,
+        choices=ProviderStates,
         null=False,
         blank=False,
     )

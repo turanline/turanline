@@ -2,10 +2,9 @@ from django.http import HttpResponse, JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
-from .models import Order, OrderProduct
-from .serializers import CartProductReadSerializer, CartProductSerializer
-from .permissions import IsOwnerOrAdminCartProductPermission
+from . import models, serializers, permissions
 
 
 @extend_schema(tags=['cart'])
@@ -16,17 +15,22 @@ class CartProductsViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = OrderProduct.objects.select_related('order', 'product')
-    serializer_class = CartProductReadSerializer
-    permission_classes = [IsOwnerOrAdminCartProductPermission]
+    queryset = models.OrderProduct.objects.select_related('order', 'product')
+    serializer_class = serializers.CartProductReadSerializer
+    permission_classes = [
+        IsAuthenticated |
+        IsAdminUser |
+        permissions.IsOwnerPermission
+    ]
 
     def create(self, request, *args, **kwargs):
-        serializer = CartProductSerializer(data=request.data)
+        #TODO: rewrite method
+        serializer = serializers.CartProductSerializer(data=request.data)
 
         try:
-            current_cart = Order.objects.get(user=request.user, status='CR')
-        except Order.DoesNotExist:
-            current_cart = Order.objects.create(user=request.user, status='CR')
+            current_cart = models.Order.objects.get(user=request.user, status='CR')
+        except models.Order.DoesNotExist:
+            current_cart = models.Order.objects.create(user=request.user, status='CR')
 
         try:
             product_id = request.data['product']
@@ -38,22 +42,23 @@ class CartProductsViewSet(
         except ObjectDoesNotExist:
             if serializer.is_valid(raise_exception=True):
                 obj = serializer.create(
-                    validated_data=serializer.validated_data,
-                    order=current_cart,
+                    validated_data=serializer.validated_data
                 )
                 return JsonResponse(
                     status=status.HTTP_201_CREATED,
-                    data=CartProductSerializer(obj).data,
+                    data=serializers.CartProductSerializer(obj).data,
                 )
 
     def get_serializer(self, *args, **kwargs):
         if self.action == 'list':
-            self.serializer_class = CartProductReadSerializer
+            self.serializer_class = serializers.CartProductReadSerializer
         else:
-            self.serializer_class = CartProductSerializer
+            self.serializer_class = serializers.CartProductSerializer
         return super().get_serializer(*args, **kwargs)
 
     def get_queryset(self):
         if self.action == 'list':
-            self.queryset = self.queryset.filter(order__user=self.request.user)
+            self.queryset = self.queryset.filter(
+                order__user=self.request.user
+            )
         return super().get_queryset()

@@ -1,74 +1,63 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 
-from .models import (Brand, Category, Color, ManufacturerCountry,
-                     ProductSubType, ProductType, Size)
+from . import models
 
 
-class BrandSerializer(ModelSerializer):
+class BaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+
+
+class ImagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Images
+        fields = ('image',)
+
+
+class BrandSerializer(BaseSerializer):
     """Сериализатор для модели брендов продуктов."""
 
-    class Meta:
-        """Включены все поля исходной модели."""
-
-        model = Brand
-        fields = '__all__'
+    class Meta(BaseSerializer.Meta):
+        model = models.Brand
 
 
-class SizeSerializer(ModelSerializer):
+class SizeSerializer(BaseSerializer):
     """Сериализатор для модели размеров продуктов."""
 
-    class Meta:
-        """Включены все поля исходной модели."""
-
-        model = Size
-        fields = '__all__'
+    class Meta(BaseSerializer.Meta):
+        model = models.Size
 
 
-class ColorSerializer(ModelSerializer):
+class ColorSerializer(BaseSerializer):
     """Сериализатор для модели цветов продуктов."""
 
-    class Meta:
-        """Включены все поля исходной модели."""
-
-        model = Color
-        fields = '__all__'
+    class Meta(BaseSerializer.Meta):
+        model = models.Color
 
 
-class ManufactoryCountrySerializer(ModelSerializer):
+class ManufactoryCountrySerializer(BaseSerializer):
     """Сериализатор для модели стран производителей продуктов."""
 
-    class Meta:
-        """Включены все поля исходной модели."""
-
-        model = ManufacturerCountry
-        fields = '__all__'
+    class Meta(BaseSerializer.Meta):
+        model = models.ManufacturerCountry
 
 
-class ProductCategoriesSerializer(ModelSerializer):
+class ProductCategoriesSerializer(BaseSerializer):
     """Сериализатор для модели категорий продуктов."""
 
-    class Meta:
-        """Включены все поля исходной модели."""
-
-        model = Category
-        fields = '__all__'
+    class Meta(BaseSerializer.Meta):
+        model = models.Category
 
 
-class ProductTypeSerializer(ModelSerializer):
+class ProductTypeSerializer(BaseSerializer):
     """Сериализатор для модели типов продуктов."""
 
-    class Meta:
-        """Включены все поля исходной модели."""
-
-        model = ProductType
-        fields = '__all__'
+    class Meta(BaseSerializer.Meta):
+        model = models.ProductType
 
 
-class ProductSubTypeSerializer(ModelSerializer):
+class ProductSubTypeSerializer(BaseSerializer):
     """Сериализатор для модели подкатегорий продуктов."""
 
-    class Meta:
-        """Включены все поля исходной модели."""
-
-        model = ProductSubType
-        fields = '__all__'
+    class Meta(BaseSerializer.Meta):
+        model = models.ProductSubType

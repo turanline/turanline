@@ -1,12 +1,10 @@
-"""Модуль с логикой моделей продуктов."""
-
 from django.core.validators import MinValueValidator
 from django.db import models
 from slugify import slugify
 
-from product_components.models import (Brand, ProductSubType, Color,
-                                       ManufacturerCountry, Size)
-from users.models import User
+from . import enums
+from product_components import models as product_components_models
+from users import models as user_models
 
 # один цвет
 # is_famous через связные таблицы
@@ -16,7 +14,7 @@ class Product(models.Model):
     """Модель продуктов."""
 
     provider = models.ForeignKey(
-        User,
+        user_models.User,
         on_delete=models.CASCADE,
         verbose_name='Поставщик',
     )
@@ -32,20 +30,21 @@ class Product(models.Model):
         blank=True,
     )
 
-    image = models.ImageField(
-        'Картинка товара',
-        upload_to='products-images/',
+    image = models.ForeignKey(
+        product_components_models.Images,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        verbose_name='Галерея'
     )
 
     subTypes = models.ManyToManyField(
-        ProductSubType,
+        product_components_models.ProductSubType,
         verbose_name='Подтипы товаров'
     )
 
     brand = models.ForeignKey(
-        Brand,
+        product_components_models.Brand,
         on_delete=models.CASCADE,
         db_index=True,
         verbose_name='Бренд товара'
@@ -53,7 +52,8 @@ class Product(models.Model):
 
     article_number = models.CharField(
         'Артикул',
-        max_length=10
+        max_length=10,
+        unique=True
     )
 
     amount = models.PositiveIntegerField(
@@ -80,16 +80,9 @@ class Product(models.Model):
         db_index=True,
     )
 
-    SEASON_CHOICES = [
-        ('S', 'Summer'),
-        ('W', 'Winter'),
-        ('DS', 'Demi-season'),
-        ('AS', 'All-season')
-    ]
-
     season = models.CharField(
         'Сезон для ношения',
-        choices=SEASON_CHOICES,
+        choices=enums.SeasonChoices,
         null=True,
         blank=True,
     )
@@ -104,14 +97,14 @@ class Product(models.Model):
     # несколько неповторяющихся цветов
 
     color = models.ForeignKey(
-        Color,
+        product_components_models.Color,
         on_delete=models.CASCADE,
         db_index=True,
         verbose_name='Цвет товара'
     )
 
     manufacturerCountry = models.ForeignKey(
-        ManufacturerCountry,
+        product_components_models.ManufacturerCountry,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -121,7 +114,7 @@ class Product(models.Model):
     # несколько повторяющихся размеров
 
     size = models.ForeignKey(
-        Size,
+        product_components_models.Size,
         on_delete=models.CASCADE,
         verbose_name='Размер товара'
     )
@@ -135,20 +128,14 @@ class Product(models.Model):
     )
 
     is_famous = models.BooleanField(
-        'Популярный товар?'
+        'Популярный товар?',
+        default=False
     )
-
-    PRODUCT_STATUS = [
-        ('UC', 'Under consideration'),
-        ('R', 'Rejected'),
-        ('A', 'Accepted')
-    ]
 
     status = models.CharField(
         'Статус проверки модерацией',
-        choices=PRODUCT_STATUS,
-        null=False,
-        blank=False
+        choices=enums.ProductStatus,
+        default=enums.ProductStatus.UNDER_CONSIDERATION
     )
 
     date_and_time = models.DateTimeField(
@@ -157,18 +144,12 @@ class Product(models.Model):
     )
 
     class Meta:
-        """Сортирует по слагу, по убыванию."""
-
-        verbose_name = 'Product'
-        verbose_name_plural = 'Products'
         ordering = ['-slug']
 
     def __str__(self) -> str:
-        """Строковое представление класса для админ панели."""
         return f'Товар {self.name} поставщика {self.provider.username}'
 
     def save(self, *args, **kwargs):
-        """Переводит значение в slug и сохраняет."""
         self.slug = slugify(
             f'{self.article_number}-{self.name}-{self.color.name}'
         )

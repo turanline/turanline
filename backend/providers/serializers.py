@@ -2,9 +2,9 @@ import logging
 
 from rest_framework.serializers import ModelSerializer
 
-from .models import BankAccountNumber, Provider
-from users.models import User
-from users.serializers import UserLoginSerializer
+from . import models
+from users import models as user_models
+from users import serializers as user_serializers
 
 logger = logging.getLogger(__name__)
 
@@ -13,18 +13,16 @@ class BankAccountNumberSerializer(ModelSerializer):
     "Сериализатор для модели банковского счета."
 
     class Meta:
-        """Включены все поля исходной модели."""
-
-        model = BankAccountNumber
+        model = models.BankAccountNumber
         fields = '__all__'
 
 
 class ProviderSerializer(ModelSerializer):
-    user = UserLoginSerializer()
+    user = user_serializers.UserLoginSerializer()
     bank_account_number = BankAccountNumberSerializer()
 
     class Meta:
-        model = Provider
+        model = models.Provider
         fields = '__all__'
 
     def create(self, validated_data):
@@ -32,16 +30,16 @@ class ProviderSerializer(ModelSerializer):
             user_data = validated_data.pop('user')
             bank_account_data = validated_data.pop('bank_account_number')
 
-            user = User.objects.create(**user_data)
+            user = user_models.User.objects.create(**user_data)
             user.set_password(user_data['password'])
 
             user.save()
 
-            bank_account_number = BankAccountNumber.objects.create(
+            bank_account_number = models.BankAccountNumber.objects.create(
                 **bank_account_data
             )
 
-            provider = Provider.objects.create(
+            provider = models.Provider.objects.create(
                 user=user,
                 bank_account_number=bank_account_number,
                 **validated_data

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Provider, BankAccountNumber
+from . import models
 
-admin.site.register(Provider)
-admin.site.register(BankAccountNumber)
+admin.site.register(models.Provider)
+admin.site.register(models.BankAccountNumber)

@@ -7,17 +7,14 @@ from django.http.request import QueryDict
 from django.db.utils import IntegrityError
 from django.http import HttpResponse
 
-from .serializers import (CustomerSerializer, ReviewSerializer,
-                          LightReviewSerializer)
-from .models import Customer, Review
-from .permissions import IsOwnerOrAdminUserReviewPermission
-from products.serializers import ProductSerializer
+from . import serializers, models, permissions
+from products import serializers as product_serializers
 
 
 @extend_schema(tags=['customer'])
 class CustomerViewSet(viewsets.ModelViewSet):
-    queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
+    queryset = models.Customer.objects.all()
+    serializer_class = serializers.CustomerSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -49,10 +46,10 @@ class CustomerViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=True)
     def favorites(self, request, *args, **kwargs):
         user = self.get_object()
-        customer = Customer.objects.filter(user=user).first()
+        customer = models.Customer.objects.filter(user=user).first()
         customer_favorites = customer.favorites.all()
 
-        serializer = ProductSerializer(
+        serializer = product_serializers.ProductSerializer(
             customer_favorites,
             many=True,
             context={'request': request},
@@ -71,9 +68,9 @@ class ReviewsViewSet(
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Review.objects.select_related('user', 'product')
-    permission_classes = [IsOwnerOrAdminUserReviewPermission]
-    serializer_class = ReviewSerializer
+    queryset = models.Review.objects.select_related('user', 'product')
+    permission_classes = [permissions.IsOwnerOrAdminUserReviewPermission]
+    serializer_class = serializers.ReviewSerializer
 
     @staticmethod
     def apply_product_reviews_filter(
@@ -92,13 +89,11 @@ class ReviewsViewSet(
         if filter_result:
             self.queryset = filter_result
             return super().get_queryset()
-        return Review.objects.none()
+        return models.Review.objects.none()
 
     def get_serializer_class(self):
-        if self.action == 'create':
-            return ReviewSerializer
-        elif self.action in ('update', 'partial_update'):
-            return LightReviewSerializer
+        if self.action in ('update', 'partial_update'):
+            return serializers.LightReviewSerializer
         return super().get_serializer_class()
 
     def create(self, request, *args, **kwargs):

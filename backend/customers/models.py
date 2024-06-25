@@ -1,14 +1,14 @@
 from django.db import models
 
-from users.models import User
-from products.models import Product
+from users import models as user_models
+from products import models as product_models
 
 
 class Customer(models.Model):
     """Модель пользователя."""
 
     user = models.OneToOneField(
-        User,
+        user_models.User,
         on_delete=models.CASCADE,
         primary_key=True
     )
@@ -20,7 +20,7 @@ class Customer(models.Model):
     )
 
     favorites = models.ManyToManyField(
-        Product,
+        product_models.Product,
         blank=True,
     )
 
@@ -36,36 +36,33 @@ class Customer(models.Model):
     )
 
     def __str__(self) -> str:
-        """Строковое представление класса для админ панели."""
-        return f'Пользователь {self.username}'
+        return f'Пользователь {self.user.username}'
 
 
 class Review(models.Model):
     """Модель отзыва на продукт."""
 
     text = models.TextField()
+
     created_datetime = models.DateTimeField(
         auto_now_add=True,
         null=False,
     )
 
     user = models.ForeignKey(
-        User,
+        user_models.User,
         on_delete=models.SET_NULL,
         null=True,
     )
 
     product = models.ForeignKey(
-        Product,
+        product_models.Product,
         on_delete=models.CASCADE,
     )
 
     class Meta:
-        """Уникальность пар user - product."""
-
         unique_together = ('user', 'product')
 
     def __str__(self) -> str:
-        """Строковое представление класса для админ панели."""
         return (f'Review {self.pk} on {self.product.pk} '
                 f'by user {self.user.username}')

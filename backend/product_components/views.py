@@ -1,14 +1,9 @@
 from drf_spectacular.utils import extend_schema
 from django.http.response import JsonResponse
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, viewsets, permissions
 
-from .models import (Category, ManufacturerCountry,
-                     ProductSubType, ProductType)
-from products.permissions import IsAdminUserOrReadOnly
-from .serializers import (ManufactoryCountrySerializer,
-                          ProductSubTypeSerializer,
-                          ProductCategoriesSerializer,
-                          ProductTypeSerializer)
+from . import models, serializers
+from products import permissions as product_permissions
 from products.services.products_service import ProductsService
 
 
@@ -17,13 +12,16 @@ class ProductCategoriesViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Category.objects.all()
-    permission_classes = [IsAdminUserOrReadOnly]
-    serializer_class = ProductCategoriesSerializer
+    queryset = models.Category.objects.all()
+    permission_classes = [
+        permissions.IsAdminUser |
+        product_permissions.ReadOnly
+    ]
+    serializer_class = serializers.ProductCategoriesSerializer
 
     def retrieve(self, request, *args, **kwargs):
         category = self.get_object()
-        queryset = ProductSubType.objects.select_related(
+        queryset = models.ProductSubType.objects.select_related(
             'type', 'type__category'
         ).filter(type__category=category)
         category_relations_data = ProductsService.get_category_relations(
@@ -42,9 +40,12 @@ class ProductTypesViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = ProductType.objects.all()
-    permission_classes = [IsAdminUserOrReadOnly]
-    serializer_class = ProductTypeSerializer
+    queryset = models.ProductType.objects.all()
+    permission_classes = [
+        permissions.IsAdminUser |
+        product_permissions.ReadOnly
+    ]
+    serializer_class = serializers.ProductTypeSerializer
 
 
 @extend_schema(tags=['categories'])
@@ -52,9 +53,12 @@ class ProductSubTypesViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = ProductSubType.objects.all()
-    permission_classes = [IsAdminUserOrReadOnly]
-    serializer_class = ProductSubTypeSerializer
+    queryset = models.ProductSubType.objects.all()
+    permission_classes = [
+        permissions.IsAdminUser |
+        product_permissions.ReadOnly
+    ]
+    serializer_class = serializers.ProductSubTypeSerializer
 
 
 @extend_schema(tags=['country'])
@@ -62,6 +66,9 @@ class ManufacturerCountryViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = ManufacturerCountry.objects.all()
-    permission_classes = [IsAdminUserOrReadOnly]
-    serializer_class = ManufactoryCountrySerializer
+    queryset = models.ManufacturerCountry.objects.all()
+    permission_classes = [
+        permissions.IsAdminUser |
+        product_permissions.ReadOnly
+    ]
+    serializer_class = serializers.ManufactoryCountrySerializer

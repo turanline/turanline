@@ -1,5 +1,3 @@
-"""Модуль описывающий логику представлений."""
-
 import logging
 
 from django.shortcuts import get_object_or_404
@@ -9,40 +7,33 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework_simplejwt.views import (TokenBlacklistView,
-                                            TokenObtainPairView,
-                                            TokenRefreshView, TokenVerifyView)
+from rest_framework_simplejwt import views
 
-
-from products.serializers import ProductSerializer
-
-from .models import User, News
-from cart.models import Order
-from customers.models import Review
-from .serializers import (UserLoginSerializer,
-                          UserReadLoginSerializer,
-                          NewsReadSerializer,
-                          NewsWriteSerializer)
-from cart.serializers import OrderSerializer
-from customers.serializers import ReviewSerializer
+from . import models, serializers
+from products import serializers as product_serializers
+from cart import models as cart_models
+from cart import enums as cart_enums
+from cart import serializers as cart_serializers
+from customers import models as customer_models
+from customers import serializers as customer_serializers
 
 logger = logging.getLogger(__name__)
 
 
 @extend_schema(tags=['jwt auth'])
-class TokenObtainPairViewDoc(TokenObtainPairView):
+class TokenObtainPairViewDoc(views.TokenObtainPairView):
     pass
 
 
 @extend_schema(tags=['jwt auth'])
-class TokenRefreshViewDoc(TokenRefreshView):
+class TokenRefreshViewDoc(views.TokenRefreshView):
     """Класс нужный для визуализации обновления токена в схеме."""
 
     pass
 
 
 @extend_schema(tags=['jwt auth'])
-class TokenVerifyViewDoc(TokenVerifyView):
+class TokenVerifyViewDoc(views.TokenVerifyView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -56,7 +47,7 @@ class TokenVerifyViewDoc(TokenVerifyView):
 
 
 @extend_schema(tags=['jwt auth'])
-class TokenLogoutViewDoc(TokenBlacklistView):
+class TokenLogoutViewDoc(views.TokenBlacklistView):
     pass
 
 
@@ -69,42 +60,42 @@ class UserViewSet(
     viewsets.GenericViewSet
 ):
 
-    queryset = User.objects.all()
+    queryset = models.User.objects.all()
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
-            return UserReadLoginSerializer
+            return serializers.UserReadLoginSerializer
         elif self.action == 'orders':
-            return OrderSerializer
+            return cart_serializers.OrderSerializer
         elif self.action == 'reviews':
-            return ReviewSerializer
+            return customer_serializers.ReviewSerializer
         elif self.action == 'favorites':
-            return ProductSerializer
+            return product_serializers.ProductSerializer
         else:
-            return UserLoginSerializer
+            return serializers.UserLoginSerializer
 
     @action(methods=['get'], detail=False)
     def me(self, request, *args, **kwargs):
-        instance = get_object_or_404(User, username=request.user.username)
-        serializer = UserLoginSerializer(instance)
+        instance = get_object_or_404(models.User, username=request.user.username)
+        serializer = serializers.UserLoginSerializer(instance)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     @action(methods=['get'], detail=True)
     def orders(self, request, *args, **kwargs):
         user = self.get_object()
         user_orders = (
-            Order.objects.filter(
+            cart_models.Order.objects.filter(
                 user=user,
                 status__in=(
-                    Order.PROCESSED,
-                    Order.COLLECTED,
-                    Order.FINISHED,
+                    cart_enums.OrderStatuses.PROCESSED,
+                    cart_enums.OrderStatuses.COLLECTED,
+                    cart_enums.OrderStatuses.FINISHED,
                 ),
             )
             .prefetch_related('order_products')
             .order_by('-created_date')
         )
-        serializer = OrderSerializer(
+        serializer = cart_serializers.OrderSerializer(
             user_orders,
             many=True,
         )
@@ -116,10 +107,10 @@ class UserViewSet(
     @action(methods=['get'], detail=True)
     def reviews(self, request, *args, **kwargs):
         user = self.get_object()
-        user_reviews = Review.objects.filter(
+        user_reviews = customer_models.Review.objects.filter(
             user=user
         ).order_by('-created_datetime')
-        serializer = ReviewSerializer(user_reviews, many=True)
+        serializer = customer_serializers.ReviewSerializer(user_reviews, many=True)
         return Response(
             status=status.HTTP_200_OK,
             data=serializer.data,
@@ -128,9 +119,9 @@ class UserViewSet(
 
 @extend_schema(tags=['news'])
 class NewsViewSet(viewsets.ModelViewSet):
-    queryset = News.objects.all()
+    queryset = models.News.objects.all()
 
     def get_serializer_class(self):
         if self.action in ('create', 'retrieve'):
-            return NewsReadSerializer
-        return NewsWriteSerializer
+            return serializers.NewsReadSerializer
+        return serializers.NewsWriteSerializer

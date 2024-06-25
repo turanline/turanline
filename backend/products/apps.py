@@ -1,5 +1,3 @@
-"""Конфигурационный файл приложения products."""
-
 from django.apps import AppConfig
 
 

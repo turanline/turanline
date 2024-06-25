@@ -1,26 +1,26 @@
 import logging
 
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework import serializers
 
-from .models import User, Appeal, News
-from providers.models import Provider
+from . import models
+from providers import models as provider_models
 
 logger = logging.getLogger(__name__)
 
 
-class UserReadLoginSerializer(ModelSerializer):
+class UserReadLoginSerializer(serializers.ModelSerializer):
 
-    state = SerializerMethodField('get_state_field')
+    state = serializers.SerializerMethodField('get_state_field')
 
     def get_state_field(self, obj):
         try:
-            provider = Provider.objects.get(user=obj)
+            provider = provider_models.Provider.objects.get(user=obj)
             return provider.state
-        except Provider.DoesNotExist:
+        except provider_models.Provider.DoesNotExist:
             return None
 
     class Meta:
-        model = User
+        model = models.User
         exclude = (
             'date_joined',
             'is_superuser',
@@ -33,9 +33,9 @@ class UserReadLoginSerializer(ModelSerializer):
         )
 
 
-class UserLoginSerializer(ModelSerializer):
+class UserLoginSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = models.User
         exclude = (
             'date_joined',
             'is_superuser',
@@ -52,42 +52,38 @@ class UserLoginSerializer(ModelSerializer):
         return super().update(instance, validated_data)
 
     def create(self, validated_data):
-        user = User(**validated_data)
+        user = models.User(**validated_data)
         password = validated_data.pop('password')
         user.set_password(password)
         user.save()
         return user
 
 
-class SuperAdminUsernameSerializer(ModelSerializer):
+class SuperAdminUsernameSerializer(serializers.ModelSerializer):
     class Meta:
-        """Исключены поля date_joined, last_login исходной модели."""
-
-        model = User
+        model = models.User
         fields = ('username',)
 
 
-class AppealSerializer(ModelSerializer):
+class AppealSerializer(serializers.ModelSerializer):
     """Сериализатор для модели обращений поставщиков."""
 
     class Meta:
-        """Включены все поля исходной модели."""
-
-        model = Appeal
+        model = models.Appeal
         fields = '__all__'
 
 
-class NewsReadSerializer(ModelSerializer):
+class NewsReadSerializer(serializers.ModelSerializer):
 
     author = SuperAdminUsernameSerializer()
 
     class Meta:
-        model = News
+        model = models.News
         fields = '__all__'
 
 
-class NewsWriteSerializer(ModelSerializer):
+class NewsWriteSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = News
+        model = models.News
         exclude = ('author',)

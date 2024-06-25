@@ -2,88 +2,82 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from drf_spectacular.views import (SpectacularAPIView, SpectacularRedocView,
-                                   SpectacularSwaggerView)
+from drf_spectacular import views
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenBlacklistView
 
-from products.views import ProductsViewSet
-from users.views import (TokenObtainPairViewDoc, TokenRefreshViewDoc,
-                         TokenVerifyViewDoc, UserViewSet,
-                         NewsViewSet)
-from cart.views import CartProductsViewSet
-from customers.views import CustomerViewSet, ReviewsViewSet
-from providers.views import ProviderViewSet
-from product_components.views import (ProductTypesViewSet,
-                                      ManufacturerCountryViewSet,
-                                      ProductCategoriesViewSet,
-                                      ProductSubTypesViewSet)
+from products import views as product_views
+from users import views as user_views
+from cart import views as cart_views
+from customers import views as customer_views
+from providers import views as provider_views
+from product_components import views as product_component_views
 
 router = DefaultRouter()
 
 router.register(
     r'catalog',
-    ProductsViewSet,
+    product_views.ProductsViewSet,
     'catalog'
 )
 
 router.register(
     r'categories',
-    ProductCategoriesViewSet,
+    product_component_views.ProductCategoriesViewSet,
     'categories'
 )
 
 router.register(
     r'types',
-    ProductTypesViewSet,
+    product_component_views.ProductTypesViewSet,
     'types'
 )
 
 router.register(
     r'subtypes',
-    ProductSubTypesViewSet,
+    product_component_views.ProductSubTypesViewSet,
     'subtypes'
 )
 
 router.register(
     r'reviews',
-    ReviewsViewSet,
+    customer_views.ReviewsViewSet,
     'reviews'
 )
 
 router.register(
     r'cart',
-    CartProductsViewSet,
+    cart_views.CartProductsViewSet,
     'cart'
 )
 
 router.register(
     r'users',
-    UserViewSet,
+    user_views.UserViewSet,
     'users'
 )
 
 router.register(
     r'country',
-    ManufacturerCountryViewSet,
+    product_component_views.ManufacturerCountryViewSet,
     'country'
 )
 
 router.register(
     r'provider',
-    ProviderViewSet,
+    provider_views.ProviderViewSet,
     'provider'
 )
 
 router.register(
     r'customer',
-    CustomerViewSet,
+    customer_views.CustomerViewSet,
     'customer'
 )
 
 router.register(
     r'superusernews',
-    NewsViewSet,
+    user_views.NewsViewSet,
     'news'
 )
 
@@ -102,32 +96,32 @@ urlpatterns = [
     ),
     path(
         'api/schema/',
-        SpectacularAPIView.as_view(),
+        views.SpectacularAPIView.as_view(),
         name='schema'
     ),
     path(
         'api/schema/swagger-ui/',
-        SpectacularSwaggerView.as_view(url_name='schema'),
+        views.SpectacularSwaggerView.as_view(url_name='schema'),
         name='swagger-ui',
     ),
     path(
         'api/schema/redoc/',
-        SpectacularRedocView.as_view(url_name='schema'),
+        views.SpectacularRedocView.as_view(url_name='schema'),
         name='redoc',
     ),
     path(
         'api/token/',
-        TokenObtainPairViewDoc.as_view(),
+        user_views.TokenObtainPairViewDoc.as_view(),
         name='token_obtain_pair',
     ),
     path(
         'api/token/refresh/',
-        TokenRefreshViewDoc.as_view(),
+        user_views.TokenRefreshViewDoc.as_view(),
         name='token_refresh',
     ),
     path(
         'api/token/verify/',
-        TokenVerifyViewDoc.as_view(),
+        user_views.TokenVerifyViewDoc.as_view(),
         name='token_verify',
     ),
     path(
@@ -135,6 +129,11 @@ urlpatterns = [
         TokenBlacklistView.as_view(),
         name='token_blacklist',
     ),
+    path(
+        'api/import_xlsx/',
+        product_views.ImportProductDataView.as_view(),
+        name='import_xlsx'
+    )
 ]
 
 

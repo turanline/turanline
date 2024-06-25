@@ -1,32 +1,14 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 
-from users.models import User
-from products.models import Product
+from . import enums
+from users import models as user_models
+from products import models as product_models
+from product_components import models as product_components_models
 
 
 class Order(models.Model):
     """Модель объекта включенного в состав заказа."""
-
-    PAYMENT_METHODS = [
-        ('BT', 'Bank Transfer'),
-        ('BC', 'By card'),
-        ('BG', 'By billing'),
-        ('CR', 'By cryptocurrency'),
-        ('PP', 'By PayPal service'),
-    ]
-
-    CREATED = 'CR'
-    PROCESSED = 'PR'
-    COLLECTED = 'CD'
-    FINISHED = 'FD'
-
-    ORDER_STATUSES = [
-        (CREATED, 'Created'),
-        (PROCESSED, 'Processed'),
-        (COLLECTED, 'Collected'),
-        (FINISHED, 'Finished'),
-    ]
 
     address = models.CharField(
         max_length=1024,
@@ -36,14 +18,14 @@ class Order(models.Model):
 
     payment_method = models.CharField(
         max_length=50,
-        choices=PAYMENT_METHODS,
+        choices=enums.PaymentMethods,
         null=True,
         blank=True,
     )
 
     status = models.CharField(
         max_length=50,
-        choices=ORDER_STATUSES,
+        choices=enums.OrderStatuses,
         null=True,
         blank=True,
     )
@@ -67,21 +49,16 @@ class Order(models.Model):
     )
 
     user = models.ForeignKey(
-        User,
+        user_models.User,
         on_delete=models.CASCADE,
         null=False,
     )
 
     def __str__(self) -> str:
-        """Строковое представление класса для админ панели."""
         return (f'Заказ: {self.pk} состояние '
                 f'{self.status} (вледелец: {self.user})')
 
     class Meta:
-        """Сортирует по методам оплаты по убыванию."""
-
-        verbose_name = 'Order'
-        verbose_name_plural = 'Orders'
         ordering = ['-payment_method']
 
 
@@ -95,8 +72,8 @@ class OrderProduct(models.Model):
     )
 
     product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
+        product_models.Product,
+        on_delete=models.CASCADE
     )
 
     amount = models.PositiveIntegerField()
@@ -106,14 +83,15 @@ class OrderProduct(models.Model):
         auto_now_add=True
     )
 
-    class Meta:
-        """Сортирует по количеству."""
+    color = models.ManyToManyField(product_components_models.Color)
 
+    size = models.ManyToManyField(product_components_models.Size)
+
+    class Meta:
         verbose_name = 'Order to Product'
         verbose_name_plural = 'Orders to Products'
         ordering = ['amount']
 
     def __str__(self) -> str:
-        """Строковое представление класса для админ панели."""
         return (f'Товар {self.product} [{self.order}] '
                 f'в количестве {self.amount} шт.')

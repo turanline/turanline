@@ -2,14 +2,36 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 
-class Color(models.Model):
-    """Модель цвета."""
-
+class BaseModel(models.Model):
     name = models.CharField(
-        'Название цвета',
         max_length=255,
         unique=True,
     )
+
+    class Meta:
+        abstract = True
+        ordering = ['-name']
+
+
+class Images(models.Model):
+    image = models.ImageField(
+        'Картинка товара',
+        upload_to='products-images/',
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        verbose_name = 'Gallery'
+        verbose_name_plural = 'Galleries'
+        ordering = ['pk']
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Color(BaseModel):
+    """Модель цвета."""
 
     color = models.CharField(
         'Цветовой HEX-код',
@@ -23,19 +45,12 @@ class Color(models.Model):
         ]
     )
 
-    class Meta:
-        """Сортирует по названию по убыванию."""
-
+    class Meta(BaseModel.Meta):
         verbose_name = 'Product color'
         verbose_name_plural = 'Product colors'
-        ordering = ['-name']
-
-    def __str__(self) -> str:
-        """Строковое представление класса для админ панели."""
-        return f'{self.name} цвет'
 
 
-class Brand(models.Model):
+class Brand(BaseModel):
     """Модель бренда."""
 
     image = models.ImageField(
@@ -44,44 +59,20 @@ class Brand(models.Model):
         null=True,
     )
 
-    name = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-
-    class Meta:
-        """Сортирует по названию по убыванию."""
-
+    class Meta(BaseModel.Meta):
         verbose_name = 'Product brand'
         verbose_name_plural = 'Product brands'
-        ordering = ['-name']
-
-    def __str__(self) -> str:
-        """Строковое представление класса для админ панели."""
-        return self.name
 
 
-class Category(models.Model):
+class Category(BaseModel):
     """Модель категорий."""
 
-    name = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-
-    class Meta:
-        """Сортирует по названию по убыванию."""
-
+    class Meta(BaseModel.Meta):
         verbose_name = 'Product category'
         verbose_name_plural = 'Product categories'
-        ordering = ['-name']
-
-    def __str__(self) -> str:
-        """Строковое представление класса для админ панели."""
-        return f'Категория: {self.name}'
 
 
-class ProductType(models.Model):
+class ProductType(BaseModel):
     """Модель типа продукта."""
 
     name = models.CharField(
@@ -100,29 +91,17 @@ class ProductType(models.Model):
         related_name='types'
     )
 
-    class Meta:
-        """
-        Сортирует по названию по убыванию.
-
-        Уникальность пар name - category.
-        """
-
+    class Meta(BaseModel.Meta):
         verbose_name = 'Product type'
         verbose_name_plural = 'Product types'
-        ordering = ['-name']
         unique_together = ('name', 'category')
 
     def __str__(self) -> str:
-        """Строковое представление класса для админ панели."""
         return f'Тип: {self.name} [Категория: {self.category.name}]'
 
 
-class ProductSubType(models.Model):
+class ProductSubType(BaseModel):
     """Модель подкатегорий."""
-
-    name = models.CharField(
-        max_length=255,
-    )
 
     type = models.ForeignKey(
         ProductType,
@@ -130,48 +109,29 @@ class ProductSubType(models.Model):
         related_name='subtypes'
     )
 
+    class Meta(BaseModel.Meta):
+        verbose_name = 'Product subtype'
+        verbose_name_plural = 'Product subtypes'
+        unique_together = ('name', 'type')
+
     def __str__(self) -> str:
-        """Строковое представление класса для админ панели."""
         return (f'Подкатегория: {self.name} [Тип: {self.type.name} '
                 f'Категория: {self.type.category.name}]')
 
-    class Meta:
-        """
-        Сортирует по названию по убыванию.
 
-        Уникальность пар name - type.
-        """
-
-        verbose_name = 'Product subtype'
-        verbose_name_plural = 'Product subtypes'
-        ordering = ['-name']
-        unique_together = ('name', 'type')
-
-
-class ManufacturerCountry(models.Model):
+class ManufacturerCountry(BaseModel):
     """Модель страны производителя продукта."""
 
-    name = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-
-    class Meta:
-        """Сортирует по названию по убыванию."""
-
+    class Meta(BaseModel.Meta):
         verbose_name = 'Product manufacturer country'
         verbose_name_plural = 'Product manufacturer countries'
-        ordering = ['-name']
 
-    def __str__(self) -> str:
-        """Строковое представление класса для админ панели."""
-        return self.name
 
 # добавить возможность иметь несколько размеров
 # 5XL 7XL отдельная графа
 
 
-class Size(models.Model):
+class Size(BaseModel):
     """Модель размера продукта."""
 
     name = models.CharField(
@@ -179,12 +139,6 @@ class Size(models.Model):
         unique=True
     )
 
-    def __str__(self) -> str:
-        """Строковое представление класса для админ панели."""
-        return f'{self.name} size'
-
     class Meta:
-        """Сортировок нет."""
-
         verbose_name = 'Product size'
         verbose_name_plural = 'Product sizes'

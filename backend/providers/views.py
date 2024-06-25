@@ -2,24 +2,23 @@ import logging
 
 from django.db import transaction
 from drf_spectacular.utils import extend_schema
-from rest_framework.decorators import action
 from rest_framework import status, viewsets
-
-from .models import Provider
-from products.models import Product
-from products.serializers import ProductLightSerializer
-from customers.models import Review
-from customers.serializers import ReviewSerializer
-from .serializers import ProviderSerializer
+from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from . import models, serializers
+from products import models as product_models
+from products import serializers as product_serializers
+from customers import models as customer_models
+from customers import serializers as customer_serializers
 
 logger = logging.getLogger(__name__)
 
 
 @extend_schema(tags=['provider'])
 class ProviderViewSet(viewsets.ModelViewSet):
-    queryset = Provider.objects.all()
-    serializer_class = ProviderSerializer
+    queryset = models.Provider.objects.all()
+    serializer_class = serializers.ProviderSerializer
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
@@ -61,10 +60,10 @@ class ProviderViewSet(viewsets.ModelViewSet):
     @action(methods=['GET'], detail=True)
     def products(self, request, *args, **kwargs):
         provider = self.get_object()
-        products = Product.objects.filter(
+        products = product_models.Product.objects.filter(
             provider=provider.user
         )
-        serializer = ProductLightSerializer(products, many=True)
+        serializer = product_serializers.ProductLightSerializer(products, many=True)
 
         return Response(
             status=status.HTTP_200_OK,
@@ -74,13 +73,13 @@ class ProviderViewSet(viewsets.ModelViewSet):
     @action(methods=['GET'], detail=True)
     def reviews(self, request, *args, **kwargs):
         provider = self.get_object()
-        products = Product.objects.filter(
+        products = product_models.Product.objects.filter(
             provider=provider.user
         )
-        reviews = Review.objects.filter(
+        reviews = customer_models.Review.objects.filter(
             product__id__in=products
         )
-        serializer = ReviewSerializer(reviews, many=True)
+        serializer = customer_serializers.ReviewSerializer(reviews, many=True)
 
         return Response(
             status=status.HTTP_200_OK,

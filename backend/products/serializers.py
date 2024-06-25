@@ -1,48 +1,38 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 
-from .models import Product
-from product_components.serializers import (BrandSerializer, ColorSerializer,
-                                            SizeSerializer,
-                                            ManufactoryCountrySerializer,
-                                            ProductSubTypeSerializer)
+from . import models
+from product_components import serializers as product_components_serializers
 
 
-class ProductUpdateSerializer(ModelSerializer):
+class BaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Product
+        fields = '__all__'
+
+
+class ProductUpdateSerializer(serializers.ModelSerializer):
     """Сериализатор обновления для модели продуктов."""
 
     class Meta:
-        """
-        Включены все поля исходной модели, кроме slug.
-        Введен поиск по slug.
-        """
-
-        model = Product
+        model = models.Product
         lookup_field = 'slug'
         exclude = ('slug',)
 
 
-class ProductLightSerializer(ModelSerializer):
+class ProductLightSerializer(BaseSerializer):
     """Легкий сериализатор для модели продуктов."""
-
-    class Meta:
-        """Включены все поля исходной модели."""
-
-        model = Product
-        fields = '__all__'
+    pass
 
 
-class ProductSerializer(ModelSerializer):
+class ProductSerializer(BaseSerializer):
     """Сериализатор для модели продуктов."""
 
-    brand = BrandSerializer()
-    color = ColorSerializer()
-    size = SizeSerializer()
-    manufacturerCountry = ManufactoryCountrySerializer()
-    subTypes = ProductSubTypeSerializer(many=True)
+    image = product_components_serializers.ImagesSerializer(many=True)
+    brand = product_components_serializers.BrandSerializer()
+    color = product_components_serializers.ColorSerializer()
+    size = product_components_serializers.SizeSerializer()
+    manufacturerCountry = product_components_serializers.ManufactoryCountrySerializer()
+    subTypes = product_components_serializers.ProductSubTypeSerializer(many=True)
 
-    class Meta:
-        """Включены все поля исходной модели. Введен поиск по slug."""
-
-        model = Product
+    class Meta(BaseSerializer.Meta):
         lookup_field = 'slug'
-        fields = '__all__'

@@ -34,20 +34,19 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "rest_framework",
     "corsheaders",
     "drf_spectacular",
     "drf_spectacular_sidecar",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
-
     "products",
     "users",
     "product_components",
     "customers",
     "cart",
-    "providers"
+    "providers",
+    "import_export"
 ]
 
 MIDDLEWARE = [
