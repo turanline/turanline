@@ -1,74 +1,38 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 
-from .models import (Brand, Category, Color, ManufacturerCountry, Product,
-                     ProductSubType, ProductType, Size)
+from . import models
+from product_components import serializers as product_components_serializers
 
 
-class BrandSerializer(ModelSerializer):
+class BaseSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Brand
-        fields = "__all__"
+        model = models.Product
+        fields = '__all__'
 
 
-class SizeSerializer(ModelSerializer):
-    class Meta:
-        model = Size
-        fields = "__all__"
-
-
-class ColorSerializer(ModelSerializer):
-    class Meta:
-        model = Color
-        fields = "__all__"
-
-
-class ManufactoryCountrySerializer(ModelSerializer):
-    class Meta:
-        model = ManufacturerCountry
-        fields = "__all__"
-
-
-class ProductSubTypeSerializer(ModelSerializer):
-    class Meta:
-        model = ProductSubType
-        fields = "__all__"
-
-
-class ProductUpdateSerializer(ModelSerializer):
-    class Meta:
-        model = Product
-        lookup_field = "slug"
-        exclude = ("slug",)
-
-
-class ProductSerializer(ModelSerializer):
-    brand = BrandSerializer()
-    color = ColorSerializer()
-    size = SizeSerializer()
-    manufacturerCountry = ManufactoryCountrySerializer()
-    subTypes = ProductSubTypeSerializer(many=True)
+class ProductUpdateSerializer(serializers.ModelSerializer):
+    """Сериализатор обновления для модели продуктов."""
 
     class Meta:
-        model = Product
-        lookup_field = "slug"
-        fields = "__all__"
+        model = models.Product
+        lookup_field = 'slug'
+        exclude = ('slug',)
 
 
-class ProductLightSerializer(ModelSerializer):
-    class Meta:
-        model = Product
-        fields = "__all__"
+class ProductLightSerializer(BaseSerializer):
+    """Легкий сериализатор для модели продуктов."""
+    pass
 
 
-class ProductTypeSerializer(ModelSerializer):
+class ProductSerializer(BaseSerializer):
+    """Сериализатор для модели продуктов."""
 
-    class Meta:
-        model = ProductType
-        fields = "__all__"
+    image = product_components_serializers.ImagesSerializer(many=True)
+    brand = product_components_serializers.BrandSerializer()
+    color = product_components_serializers.ColorSerializer()
+    size = product_components_serializers.SizeSerializer()
+    manufacturerCountry = product_components_serializers.ManufactoryCountrySerializer()
+    subTypes = product_components_serializers.ProductSubTypeSerializer(many=True)
 
-
-class ProductCategoriesSerializer(ModelSerializer):
-
-    class Meta:
-        model = Category
-        fields = "__all__"
+    class Meta(BaseSerializer.Meta):
+        lookup_field = 'slug'

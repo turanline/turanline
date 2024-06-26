@@ -19,17 +19,13 @@ SECRET_KEY = env("SECRET_KEY")
 
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'mis-express.com',
+    '127.0.0.1',
+    'localhost',
+    'www.mis-express.com'
+]
 
-if not DEBUG:
-    ALLOWED_HOSTS.append("mis-express.com")
-
-if DEBUG:
-    INTERNAL_IPS = [
-        # ...
-        "127.0.0.1",
-        # ...
-    ]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -43,8 +39,14 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "drf_spectacular_sidecar",
     "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
     "products",
     "users",
+    "product_components",
+    "customers",
+    "cart",
+    "providers",
+    "import_export"
 ]
 
 MIDDLEWARE = [
@@ -91,7 +93,7 @@ DATABASES = {
         "NAME": env("POSTGRES_DB", default=""),
         "USER": env("POSTGRES_USER", default=""),
         "PASSWORD": env("POSTGRES_PASSWORD", default=""),
-        "HOST": env("POSTGRES_HOST", default="localhost"),
+        "HOST": env("POSTGRES_HOST", default=""),
         "PORT": env("POSTGRES_PORT", cast=int, default=5432),
         "ATOMIC_REQUESTS": True,
     }
@@ -123,11 +125,13 @@ USE_TZ = True
 
 AUTH_USER_MODEL = "users.User"
 
-STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "/media/"
+STATIC_ROOT = BASE_DIR / 'collected_static'
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -185,9 +189,8 @@ SIMPLE_JWT = {
 }
 
 
-if not DEBUG:
-    CSRF_TRUSTED_ORIGINS = ["http://mis-express.com", "http://mis-express.com:8800"]
-    CORS_ORIGIN_ALLOW_ALL = True
+CSRF_TRUSTED_ORIGINS = ["https://mis-express.com",]
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 LOGGING = {

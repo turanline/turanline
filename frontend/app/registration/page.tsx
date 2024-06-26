@@ -1,50 +1,55 @@
 "use client";
 
 //Global
-import React, {
-  ChangeEvent,
-  useContext,
-  useEffect,
-  useState,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import React, { useEffect } from "react";
 import { Checkbox, Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { showToastMessage } from "../toastsChange";
 import InputMask from "react-input-mask";
-import { SidebarContext } from "../layout";
-import { getUser } from "../layout";
-import { SubmitHandler, useForm } from "react-hook-form";
 
 //Components
 import { Icons } from "@/components/Icons/Icons";
-
-//Services
-import { postRegistration } from "@/services/usersAPI";
+import { Input } from "@nextui-org/react";
 
 //Utils
-import { SHOP_ROUTE, LOGIN_ROUTE } from "@/utils/Consts";
+import { LOGIN_ROUTE, PROFILE_ROUTE } from "@/utils/Consts";
 
 //Hooks
 import { useCustomForm } from "@/hooks/useCustomForm.";
 import { useTranslate } from "@/hooks/useTranslate";
+import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useUserActions } from "@/hooks/useUserActions";
 
 //Types
-import { IUserInformationApi } from "@/types/types";
+import { IInputsRegistration } from "@/types/types";
 
 //Styles
 import "./registration.scss";
 
 const Registration = () => {
-  const { handleSubmit } = useForm<IUserInformationApi>({ defaultValues: {} });
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { isAuth, status } = useTypedSelector(state => state.user);
 
-  const { isActive, setIsActive } = useContext(SidebarContext);
+  const {
+    returnInputError,
+    returnInputProperties,
+    isValid,
+    getValues,
+    handleSubmit,
+    reset,
+    setValue,
+  } = useCustomForm<IInputsRegistration>();
 
-  const { returnInputError, returnInputProperties } = useCustomForm();
+  const { onGetUser, onRegistrationUser } = useUserActions();
 
   const { push } = useRouter();
+
+  useEffect(() => {
+    onGetUser();
+  }, [onGetUser]);
+
+  useEffect(() => {
+    if (isAuth && status === "fulfilled") push(PROFILE_ROUTE);
+  }, [isAuth, status, push]);
 
   const {
     registrationButtonText,
@@ -62,69 +67,44 @@ const Registration = () => {
     logInInputPassword,
     logInCheckboxText,
     logInTextForget,
+    registrationButtonLogIn,
+    messageRegistrationError,
+    messageRegistration,
   } = useTranslate();
 
-  const [userInformation, setUserInformation] = useState({
-    email: "",
-    password: "",
-    username: "",
-    first_name: "",
-    last_name: "",
-    phone_number: "",
-  });
+  const createAccount = () => {
+    const { email, first_name, last_name, password, phone_number, username } =
+      getValues();
 
-  const changeUserInformation = (
-    e: ChangeEvent<HTMLInputElement>,
-    setInformation: Dispatch<SetStateAction<any>>,
-    information: IUserInformationApi
-  ) => {
-    e.preventDefault();
-
-    setInformation({
-      ...information,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const createAccount: SubmitHandler<IUserInformationApi> = () => {
-    try {
-      postRegistration(userInformation)
-        .then(() => {
-          push(LOGIN_ROUTE);
-          showToastMessage("success", "Вы успешно зарегистрировались");
+    if (isValid)
+      onRegistrationUser({
+        phone_number,
+        user: {
+          email,
+          first_name,
+          is_provider: false,
+          last_name,
+          password,
+          username,
+        },
+      })
+        .then(data => {
+          if ("error" in data && data.error.message === "Rejected") {
+            showToastMessage("error", messageRegistrationError);
+          } else {
+            showToastMessage("success", messageRegistration);
+            push(LOGIN_ROUTE);
+          }
         })
-        .catch(error => {
-          console.log(error);
-
-          showToastMessage(
-            "error",
-            "Ошибка, заполните все поля и попробуйте снова!"
-          );
+        // eslint-disable-next-line no-console
+        .catch(error => console.log(error))
+        .finally(() => {
+          setValue("phone_number", "");
+          reset();
         });
-    } catch (error) {
-      throw new Error(`${error}`);
-    }
   };
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const { status } = await getUser();
-
-        if (status === 200) {
-          push(SHOP_ROUTE);
-        } else {
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.error(error as Error);
-        setIsActive(false);
-        setIsLoading(false);
-      }
-    })();
-  }, [setIsActive]);
-
-  if (isActive || isLoading) return <Icons id="spiner" />;
+  if (isAuth || status === "pending") return <Icons id="spiner" />;
 
   return (
     <div className="form-wrapper">
@@ -140,14 +120,12 @@ const Registration = () => {
             <span className="form-content_bottom-label-span">
               {registrationLabelEmail}
             </span>
-            <input
+
+            <Input
               {...returnInputProperties("email")}
               placeholder={registrationInputEmail}
               type="email"
-              className="form-content_bottom-label-input"
-              onChange={e => {
-                changeUserInformation(e, setUserInformation, userInformation);
-              }}
+              classNames={{ inputWrapper: "form-content_bottom-label-input" }}
             />
             {returnInputError("email")}
           </label>
@@ -156,14 +134,12 @@ const Registration = () => {
             <span className="form-content_bottom-label-span">
               {logInLabelPassword}
             </span>
-            <input
+
+            <Input
               {...returnInputProperties("password")}
               placeholder={logInInputPassword}
               type="password"
-              className="form-content_bottom-label-input"
-              onChange={e => {
-                changeUserInformation(e, setUserInformation, userInformation);
-              }}
+              classNames={{ inputWrapper: "form-content_bottom-label-input" }}
             />
             {returnInputError("password")}
           </label>
@@ -172,14 +148,11 @@ const Registration = () => {
             <span className="form-content_bottom-label-span">
               {logInLabelLogin}
             </span>
-            <input
+
+            <Input
               {...returnInputProperties("username")}
               placeholder={logInInputLogin}
-              type="text"
-              className="form-content_bottom-label-input"
-              onChange={e => {
-                changeUserInformation(e, setUserInformation, userInformation);
-              }}
+              classNames={{ inputWrapper: "form-content_bottom-label-input" }}
             />
             {returnInputError("username")}
           </label>
@@ -188,14 +161,11 @@ const Registration = () => {
             <span className="form-content_bottom-label-span">
               {registrationLabelName}
             </span>
-            <input
+
+            <Input
               {...returnInputProperties("first_name")}
               placeholder={registrationInputName}
-              type="text"
-              className="form-content_bottom-label-input"
-              onChange={e => {
-                changeUserInformation(e, setUserInformation, userInformation);
-              }}
+              classNames={{ inputWrapper: "form-content_bottom-label-input" }}
             />
             {returnInputError("first_name")}
           </label>
@@ -204,14 +174,11 @@ const Registration = () => {
             <span className="form-content_bottom-label-span">
               {registrationLabelLastName}
             </span>
-            <input
+
+            <Input
               {...returnInputProperties("last_name")}
               placeholder={registrationInputLastName}
-              type="text"
-              className="form-content_bottom-label-input"
-              onChange={e => {
-                changeUserInformation(e, setUserInformation, userInformation);
-              }}
+              classNames={{ inputWrapper: "form-content_bottom-label-input" }}
             />
             {returnInputError("last_name")}
           </label>
@@ -220,16 +187,14 @@ const Registration = () => {
             <span className="form-content_bottom-label-span">
               {registrationPhoneNumber}
             </span>
+
             <InputMask
+              {...returnInputProperties("phone_number")}
               className="form-content_bottom-label-input"
-              onChange={e => {
-                changeUserInformation(e, setUserInformation, userInformation);
-              }}
-              type="tel"
               mask={"+7 (999) 999-99-99"}
               alwaysShowMask={true}
-              name="phone_number"
             />
+            {returnInputError("phone_number")}
           </label>
 
           <div className="form-content_checkbox">
@@ -246,11 +211,17 @@ const Registration = () => {
           </div>
 
           <Button
-            onClick={handleSubmit(createAccount)}
             type="submit"
             className="bg-tiffani text-white rounded-md w-full h-[44px] py-[10px]"
           >
             {registrationButtonText}
+          </Button>
+
+          <Button
+            onClick={() => push(LOGIN_ROUTE)}
+            className="rounded-md w-full h-[44px] py-[10px] text-tiffani bg-transparent"
+          >
+            {registrationButtonLogIn}
           </Button>
         </div>
       </form>

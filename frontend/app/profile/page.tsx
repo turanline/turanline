@@ -1,42 +1,24 @@
 "use client";
 
 //Global
-import React, { useEffect, useContext, useState, ChangeEvent } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { getUser } from "../layout";
-
-//Context
-import { SidebarContext } from "../layout";
 
 //Components
 import { Icons } from "@/components/Icons/Icons";
 import { UserOrderWrapper } from "@/components/UserOrderWrapper/UserOrderWrapper";
-import UserReviewItem from "@/components/UserReviewItem/UserReviewItem";
+import { UserReviewItem } from "@/components/UserReviewItem/UserReviewItem";
 import { ModalChange } from "@/components/ModalChange/ModalChange";
 import { EmptyComponent } from "@/components/EmptyComponent/EmptyComponent";
-
-//Services
-import {
-  getUserData,
-  getUserOrders,
-  getUserReviews,
-} from "@/services/usersAPI";
-import { postVerifyToken } from "@/services/authAPI";
 
 //Utils
 import { CATALOG_ROUTE, SHOP_ROUTE } from "@/utils/Consts";
 
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
-
-//Types
-import {
-  IProfileInputs,
-  IUserDataFromServer,
-  IUserOrdersState,
-  IUserReviewState,
-} from "@/types/types";
+import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useUserActions } from "@/hooks/useUserActions";
 
 //Images
 import profile from "../../public/assets/other/profile-photo.png";
@@ -45,21 +27,14 @@ import profile from "../../public/assets/other/profile-photo.png";
 import "./profile.scss";
 
 const Profile = () => {
-  const [userState, setUserState] = useState<IUserDataFromServer | null>(null);
-  const [userOrders, setUserOrders] = useState<IUserOrdersState[]>([]);
-  const [userReviews, setUserReviews] = useState<IUserReviewState[]>([]);
+  const { isAuth, userState, status, userOrders, userReviews } =
+    useTypedSelector(state => state.user);
+
   const [isChange, setIsChange] = useState<boolean>(false);
-  const [inputsValue, setInputsValue] = useState<IProfileInputs>({
-    address: "",
-    company: "",
-    phone_number: "",
-    first_name: "",
-    last_name: "",
-  });
 
-  const { isActive, setIsActive } = useContext(SidebarContext);
+  const { push } = useRouter();
 
-  const router = useRouter();
+  const { onGetUser, onGetOrders, onGetReviews } = useUserActions();
 
   const {
     profileOrdersText,
@@ -76,113 +51,19 @@ const Profile = () => {
   } = useTranslate();
 
   useEffect(() => {
-    isAuthUser();
-  }, [router]);
+    onGetUser();
+  }, [onGetUser]);
 
   useEffect(() => {
-    getUserDataFromServer();
-  }, []);
+    if (!isAuth && status === "fulfilled") push(SHOP_ROUTE);
+  }, [isAuth, status, push]);
 
   useEffect(() => {
-    getUserOrdersFromServer();
-  }, []);
-
-  useEffect(() => {
-    getUserReviewsFromServer();
-  }, []);
-
-  const handleInputsChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    setInputsValue(prevState => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  async function isAuthUser() {
-    try {
-      const { status, error } = await getUser();
-
-      if (status === 200) setIsActive(true);
-
-      if (error) router.push(SHOP_ROUTE);
-    } catch (error) {
-      console.error(error as Error);
-      setIsActive(false);
-      if (error) router.push(SHOP_ROUTE);
+    if (isAuth) {
+      onGetOrders();
+      onGetReviews();
     }
-  }
-
-  async function getUserDataFromServer() {
-    try {
-      const token = localStorage.getItem("AuthTokenMis");
-
-      if (token) {
-        const { user } = await postVerifyToken(token);
-        const data = await getUserData(user, token);
-
-        setUserState(data);
-      }
-    } catch (error) {
-      throw new Error(`${error}`);
-    }
-  }
-
-  async function getUserOrdersFromServer() {
-    try {
-      const token = localStorage.getItem("AuthTokenMis");
-
-      if (token) {
-        const { user } = await postVerifyToken(token);
-        const data = await getUserOrders(user, token);
-
-        setUserOrders(data);
-      }
-    } catch (error) {
-      throw new Error(`${error}`);
-    }
-  }
-
-  async function getUserReviewsFromServer() {
-    try {
-      const token = localStorage.getItem("AuthTokenMis");
-
-      if (token) {
-        const { user } = await postVerifyToken(token);
-        const data = await getUserReviews(user, token);
-
-        setUserReviews(data);
-      }
-    } catch (error) {
-      throw new Error(`${error}`);
-    }
-  }
-
-  const returnUserReviews = () => {
-    if (!userOrders.length) {
-      return (
-        <EmptyComponent
-          buttonText={emptyBasketButtonText}
-          route={CATALOG_ROUTE}
-          text={profileReviewsText}
-          title={profileReviewsTitle}
-        />
-      );
-    }
-
-    return (
-      <div className="profile-content_reviews-list">
-        {userReviews.map(review => (
-          <UserReviewItem
-            reviewStatus="published"
-            reviewText={review.text}
-            reviewTitle={review.product.name}
-          />
-        ))}
-      </div>
-    );
-  };
+  }, [onGetOrders, onGetReviews, isAuth]);
 
   const returnUserOrders = () => {
     if (!userOrders.length) {
@@ -223,6 +104,7 @@ const Profile = () => {
         <div className="profile-content_orders-content-list">
           {userOrders.map(order => (
             <UserOrderWrapper
+              key={order.id}
               orderDate={order.created_date}
               orderNumber={order.id}
               orderPrice={order.total_sum}
@@ -234,7 +116,33 @@ const Profile = () => {
     );
   };
 
-  if (!isActive || !userState) return <Icons id="spiner" />;
+  const returnUserReviews = () => {
+    return (
+      <>
+        {!userReviews.length ? (
+          <EmptyComponent
+            buttonText={emptyBasketButtonText}
+            route={CATALOG_ROUTE}
+            text={profileReviewsText}
+            title={profileReviewsTitle}
+          />
+        ) : (
+          <div className="profile-content_reviews-list">
+            {userReviews.map(review => (
+              <UserReviewItem
+                key={review.id}
+                reviewStatus="published"
+                reviewText={review.text}
+                reviewTitle={review.product.name}
+              />
+            ))}
+          </div>
+        )}
+      </>
+    );
+  };
+
+  if (!userState) return <Icons id="spiner" />;
 
   return (
     <main className="profile-wrapper">
@@ -245,7 +153,7 @@ const Profile = () => {
 
             <div className="profile-content_header-user-data">
               <h5 className="profile-content_header-user-data-title">
-                {userState.first_name} {userState.last_name}
+                {userState.user.first_name} {userState.user.last_name}
               </h5>
 
               <div className="profile-content_header-user-data-blocks">
@@ -316,15 +224,7 @@ const Profile = () => {
         </div>
       </div>
 
-      <ModalChange
-        setInputsValue={setInputsValue}
-        userState={userState}
-        setUserState={setUserState}
-        inputsValue={inputsValue}
-        handleInputsChange={handleInputsChange}
-        isChange={isChange}
-        setIsChange={setIsChange}
-      />
+      <ModalChange isChange={isChange} setIsChange={setIsChange} />
     </main>
   );
 };

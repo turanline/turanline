@@ -1,5 +1,9 @@
 "use client";
 
+//Global
+import Image from "next/image";
+import { FC } from "react";
+
 //Components
 import { Icons } from "@/components/Icons/Icons";
 import { Divider } from "@nextui-org/react";
@@ -11,33 +15,30 @@ import { SHOP_ROUTE } from "@/utils/Consts";
 
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
-
-//Types
-import { ICategoriesObject } from "@/types/types";
+import { useCategories } from "@/hooks/useCategories";
+import { useTypedSelector } from "@/hooks/useTypedSelector";
 
 //Styles
 import "swiper/css";
 import "./CategoryComponent.scss";
 import "swiper/css/pagination";
 
-const CategoryComponent = ({ categoriesObject }: ICategoriesObject) => {
+const CategoryComponent: FC<{ categoryObject: any; categoryId: number }> = ({
+  categoryObject,
+  categoryId,
+}) => {
+  const { status } = useTypedSelector(state => state.categories);
+
   const { mainPageRoute, lookAll } = useTranslate();
 
-  const categoryName = Object.keys(categoriesObject)[0];
+  const { returnSubtypesByType, returnTypesByCategory } = useCategories("");
 
-  const itemClasses = {
-    base: "family-bold flex flex-col pb-[20px] gap-[10px]",
-    title: "text-base",
-    trigger: "flex-row-reverse py-0",
-    indicator: "py-0",
-    content: "py-0",
-  };
+  const categoryName = Object.keys(categoryObject)[0];
 
-  const defaultContent =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+  if (status === "pending") return <Icons id="spiner" />;
 
   return (
-    <main>
+    <>
       <Breadcrumbs>
         <BreadcrumbItem href={SHOP_ROUTE}>{mainPageRoute}</BreadcrumbItem>
         <BreadcrumbItem>{categoryName}</BreadcrumbItem>
@@ -48,38 +49,61 @@ const CategoryComponent = ({ categoriesObject }: ICategoriesObject) => {
       </h3>
 
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[44px] mb-[47px]">
-        {Object.entries(categoriesObject[categoryName]).map(
-          ([category, { subtypes }]: [string, any], index: number) => (
-            <div key={index} className="w-full flex flex-col">
-              <div className="w-full h-[208px] bg-black rounded-md mb-[20px]"></div>
-              <p className="text-[24px] mb-[26px]">{category}</p>
-              <Accordion showDivider={false} itemClasses={itemClasses}>
-                {subtypes.map((subtype: string) => (
-                  <AccordionItem
-                    key={subtype}
-                    aria-label={subtype}
-                    indicator={<Icons id="plusAcc" />}
-                    title={
-                      <div className="flex justify-between">
-                        <p className="w-[217px] truncate">{subtype}</p>
-                        <p>103</p>
-                      </div>
-                    }
-                  >
-                    {defaultContent}
-                  </AccordionItem>
-                ))}
-              </Accordion>
-              <Divider className="my-1" />
-              <div className="flex justify-between">
-                <p className="w-[217px] truncate">{lookAll}</p>
-                <p>200</p>
+        {returnTypesByCategory(categoryId).map(
+          ({ name, id: typeId, image }, index: number) => {
+            const filteredSubtypes = returnSubtypesByType(typeId);
+
+            return (
+              <div key={index} className="w-full flex flex-col">
+                <Image
+                  className="w-full h-[300px] rounded-md mb-[20px]"
+                  src={image.toString()}
+                  alt={name}
+                  width={150}
+                  height={300}
+                />
+
+                <span className="text-[24px]">{name}</span>
+
+                <Accordion
+                  showDivider={false}
+                  itemClasses={{
+                    base: "family-bold flex flex-col",
+                    title: "text-base",
+                    trigger: "flex-row-reverse",
+                  }}
+                >
+                  {filteredSubtypes.map(({ name }, index) => (
+                    <AccordionItem
+                      key={index}
+                      aria-label={name}
+                      indicator={<Icons id="plusAcc" />}
+                      title={
+                        <div className="flex justify-between">
+                          <span className="w-[217px]">{name}</span>
+
+                          <span>{filteredSubtypes.length}</span>
+                        </div>
+                      }
+                    >
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+
+                <Divider className="my-1" />
+
+                <div className="flex justify-between">
+                  <p className="w-[217px] truncate">{lookAll}</p>
+
+                  <p>{filteredSubtypes.length}</p>
+                </div>
               </div>
-            </div>
-          )
+            );
+          }
         )}
       </div>
-    </main>
+    </>
   );
 };
 

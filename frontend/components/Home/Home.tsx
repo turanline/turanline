@@ -73,7 +73,7 @@ const Home = () => {
 
   useEffect(() => {
     setAllProducts();
-  }, []);
+  }, [setAllProducts]);
 
   const mapAllProducts = () => {
     const threeProducts = products.slice(0, 3);

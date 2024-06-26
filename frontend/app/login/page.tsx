@@ -2,116 +2,85 @@
 
 //Global
 import { useRouter } from "next/navigation";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler } from "react-hook-form";
 import { Checkbox, Button } from "@nextui-org/react";
-import { getUser } from "../layout";
-import { SidebarContext } from "../layout";
 import { showToastMessage } from "../toastsChange";
-import React, {
-  ChangeEvent,
-  useContext,
-  useEffect,
-  useState,
-  Dispatch,
-  SetStateAction,
-} from "react";
-
-//Services
-import { postLogin } from "@/services/authAPI";
+import React, { useEffect } from "react";
 
 //Components
 import { Icons } from "@/components/Icons/Icons";
+import { Input } from "@nextui-org/react";
 
 //Utils
-import { SHOP_ROUTE, PROFILE_ROUTE } from "@/utils/Consts";
+import { PROFILE_ROUTE, REGISTRATION_ROUTE } from "@/utils/Consts";
 
 //Hooks
 import { useCustomForm } from "@/hooks/useCustomForm.";
 import { useTranslate } from "@/hooks/useTranslate";
+import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useUserActions } from "@/hooks/useUserActions";
 
 //Types
 import { IInputsLogin } from "@/types/types";
 
 //Styles
-import "./authorization.scss";
+import "./login.scss";
 
 const Authorization = () => {
-  const router = useRouter();
+  const { isAuth, status } = useTypedSelector(state => state.user);
 
-  const { setIsActive, isActive } = useContext(SidebarContext);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { push } = useRouter();
 
-  const { handleSubmit } = useForm<IInputsLogin>({ defaultValues: {} });
+  const { onLogInUser, onGetUser } = useUserActions();
 
-  const { returnInputError, returnInputProperties } = useCustomForm();
+  const {
+    returnInputError,
+    returnInputProperties,
+    isValid,
+    handleSubmit,
+    getValues,
+    reset,
+  } = useCustomForm<IInputsLogin>();
+
+  useEffect(() => {
+    onGetUser();
+  }, [onGetUser]);
+
+  useEffect(() => {
+    if (isAuth && status === "fulfilled") push(PROFILE_ROUTE);
+  }, [isAuth, push, status]);
 
   const {
     logInButtonText,
     logInCheckboxText,
     logInInputLogin,
-    logInInputPassword,
     logInLabelLogin,
     logInLabelPassword,
     logInText,
     logInTextForget,
     logInTitle,
+    logInButtonRegistration,
+    messageLogInError,
+    messageLogInSuccess,
   } = useTranslate();
 
-  const [userInformation, setUserInformation] = useState({
-    username: "",
-    password: "",
-  });
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const { status } = await getUser();
-
-        if (status === 200) router.push(SHOP_ROUTE);
-        else setIsLoading(false);
-      } catch (error) {
-        setIsActive(false);
-        setIsLoading(false);
-        throw new Error(`${error}`);
-      }
-    })();
-  }, [router, setIsActive]);
-
-  const changeUserInformation = (
-    e: ChangeEvent<HTMLInputElement>,
-    setInformation: Dispatch<SetStateAction<any>>,
-    information: IInputsLogin
-  ) => {
-    e.preventDefault();
-
-    setInformation({
-      ...information,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   const logInAccount: SubmitHandler<IInputsLogin> = () => {
-    try {
-      postLogin(userInformation)
-        .then(() => {
-          setIsActive(true);
-          router.push(PROFILE_ROUTE);
-          showToastMessage("success", "Вы успешно авторизовались");
+    if (isValid)
+      onLogInUser(getValues())
+        .then(data => {
+          if ("error" in data && data.error.message === "Rejected") {
+            showToastMessage("error", messageLogInError);
+          } else {
+            showToastMessage("success", messageLogInSuccess);
+            push(PROFILE_ROUTE);
+          }
         })
-        .catch(error => {
-          console.log(error);
-
-          showToastMessage(
-            "error",
-            "Произошла ошибка, заполните все поля и попробуйте снова!"
-          );
-        });
-    } catch (error) {
-      throw new Error(`${error}`);
-    }
+        // eslint-disable-next-line no-console
+        .catch(error => console.log(error))
+        .finally(() => reset());
   };
 
-  if (isActive || isLoading) return <Icons id="spiner" />;
+  if (status === "pending" || isAuth) return <Icons id="spiner" />;
 
   return (
     <div className="form-wrapper">
@@ -127,14 +96,12 @@ const Authorization = () => {
             <span className="form-content_bottom-label-span">
               {logInLabelLogin}
             </span>
-            <input
+
+            <Input
               {...returnInputProperties("username")}
               placeholder={logInInputLogin}
               type="username"
-              className="form-content_bottom-label-input"
-              onChange={e => {
-                changeUserInformation(e, setUserInformation, userInformation);
-              }}
+              classNames={{ inputWrapper: "form-content_bottom-label-input" }}
             />
             {returnInputError("username")}
           </label>
@@ -143,14 +110,12 @@ const Authorization = () => {
             <span className="form-content_bottom-label-span">
               {logInLabelPassword}
             </span>
-            <input
+
+            <Input
               {...returnInputProperties("password")}
               placeholder={logInLabelPassword}
               type="password"
-              className="form-content_bottom-label-input"
-              onChange={e => {
-                changeUserInformation(e, setUserInformation, userInformation);
-              }}
+              classNames={{ inputWrapper: "form-content_bottom-label-input" }}
             />
             {returnInputError("password")}
           </label>
@@ -173,6 +138,13 @@ const Authorization = () => {
             className="bg-tiffani text-white rounded-md w-full h-[44px] py-[10px]"
           >
             {logInButtonText}
+          </Button>
+
+          <Button
+            onClick={() => push(REGISTRATION_ROUTE)}
+            className="bg-transparent text-tiffani rounded-md w-full h-[44px] py-[10px]"
+          >
+            {logInButtonRegistration}
           </Button>
         </div>
       </form>

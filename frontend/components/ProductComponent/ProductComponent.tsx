@@ -15,6 +15,7 @@ import { SHOP_ROUTE, CATALOG_ROUTE } from "@/utils/Consts";
 //Hooks
 import { useCart } from "@/hooks/useCart";
 import { useTranslate } from "@/hooks/useTranslate";
+import { useTypedSelector } from "@/hooks/useTypedSelector";
 
 //Types
 import { IProductMainPage } from "@/types/types";
@@ -24,6 +25,8 @@ import "./ProductComponent.scss";
 import { showToastMessage } from "@/app/toastsChange";
 
 const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
+  const { isAuth } = useTypedSelector(state => state.user);
+
   const [productCounter, setProductCounter] = useState<number>(1);
 
   const { addItemToCart } = useCart();
@@ -41,10 +44,12 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
     productPageSeason,
     productPageArticle,
     filterColor,
+    messageCounterDec,
+    messageCounterInc,
   } = useTranslate();
 
   const handleAddToCart = () => {
-    addItemToCart(oneProduct, productCounter);
+    addItemToCart(oneProduct, productCounter, isAuth);
     setProductCounter(1);
   };
 
@@ -79,17 +84,11 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
     }
 
     if (action === "dec" && productCounter === 1)
-      showToastMessage("warn", "Счетчик товара не может быть меньше единицы!");
+      showToastMessage("warn", messageCounterDec);
 
     if (action === "inc" && productCounter === oneProduct.amount)
-      showToastMessage(
-        "warn",
-        `На складе только ${productCounter} таких товаров!`
-      );
+      showToastMessage("warn", `${messageCounterInc} ${productCounter}!`);
   };
-
-  let backendURL = new URL(oneProduct?.image);
-  backendURL.port = "8800";
 
   return (
     <main>
@@ -107,7 +106,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
           <div className="w-full lg:w-[560px] flex flex-col gap-[14px]">
             <Image
               className="w-full h-full object-cover"
-              src={oneProduct.image === null ? "" : backendURL.toString()}
+              src={oneProduct.image ? oneProduct.image : ""}
               width={500}
               height={500}
               alt="rec"
@@ -118,7 +117,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
             <div className="flex flex-col col-span-3 row-span-4 gap-[11px]">
               <div className="flex mb-[33px]">
                 <p className="text-textAcc">{productPageArticle}:&nbsp;</p>
-                <p className="family-medium">{oneProduct.vendor_code}</p>
+                <p className="family-medium">{oneProduct.article_number}</p>
               </div>
               <div className="flex w-full">
                 <p className="text-textAcc">{productPageCompound}:&nbsp;</p>
@@ -195,7 +194,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
 
               <div className="flex flex-col sm:flex-row gap-[16px]">
                 <p className="text-[25px] family-medium">
-                  {(productCounter * oneProduct.price).toFixed(2)} $
+                  {(productCounter * +oneProduct.price).toFixed(2)} $
                 </p>
 
                 <Button

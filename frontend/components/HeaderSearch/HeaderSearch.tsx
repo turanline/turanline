@@ -1,8 +1,9 @@
 "use client";
 
 //Global
-import { ChangeEvent, FC, useRef, Ref } from "react";
+import { ChangeEvent, FC } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { useForm } from "react-hook-form";
 
 //Components
 import { Select, SelectItem, Input, Button } from "@nextui-org/react";
@@ -19,7 +20,7 @@ import { useTranslate } from "@/hooks/useTranslate";
 import { IHeaderSearchProps } from "@/types/types";
 
 //Styles
-import "../Header/Header.scss";
+import "@/components/SearchModal/SearchModal.scss";
 
 const HeaderSearch: FC<IHeaderSearchProps> = ({
   allCategories,
@@ -27,31 +28,30 @@ const HeaderSearch: FC<IHeaderSearchProps> = ({
   category,
   isHidden,
 }) => {
-  const inputRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
-
-  const { headerCategorySelect, headerSearchPlaceholder } = useTranslate();
-
-  const { onSetSearchText } = useProducts();
-
   const { push } = useRouter(),
     pathname = usePathname();
 
-  const handleSubmitForm = (e: any) => {
-    e.preventDefault();
+  const { headerCategorySelect, headerSearchPlaceholder } = useTranslate();
 
-    if (inputRef.current) {
-      const { value } = inputRef.current;
+  const { reset, getValues, handleSubmit, register } = useForm<{
+    search: string;
+  }>();
 
-      if (pathname !== CATALOG_ROUTE) push(CATALOG_ROUTE);
+  const { onSetSearchText } = useProducts();
 
-      onSetSearchText(value);
-    }
+  const handleSubmitForm = () => {
+    if (pathname !== CATALOG_ROUTE) push(CATALOG_ROUTE);
+    onSetSearchText(getValues().search);
   };
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const { value } = e.target;
+    if (pathname !== CATALOG_ROUTE) push(CATALOG_ROUTE);
+    onSetCategory(e.target.value);
+  };
 
-    if (value) onSetCategory(value);
+  const handleClear = () => {
+    onSetSearchText("");
+    reset();
   };
 
   const newCategories = [
@@ -61,23 +61,23 @@ const HeaderSearch: FC<IHeaderSearchProps> = ({
 
   return (
     <form
-      onSubmit={handleSubmitForm}
+      onSubmit={handleSubmit(handleSubmitForm)}
       className={`${
-        isHidden ? "hidden" : "flex search-mobile"
-      } lg:flex h-[56px]`}
+        isHidden ? "hidden" : "search-mobile"
+      } lg:flex h-[56px] overflow-hidden rounded-[10px]`}
     >
-      <div className="header_search">
+      <div className="flex w-[900px]">
         <Select
+          disallowEmptySelection
           label={headerCategorySelect}
-          className="max-w-xs"
           selectedKeys={[category]}
           onChange={handleChange}
           classNames={{
-            trigger: "rounded-r-none shadow-none w-[170px]",
-            innerWrapper: "w-fit",
-            popoverContent: "w-[180px]",
+            popoverContent: "w-[170px]",
             mainWrapper: "w-[170px]",
             base: "w-[170px]",
+            trigger:
+              "rounded-none shadow-none transition duration-200 ease bg-white",
           }}
         >
           {newCategories.map(category => (
@@ -88,20 +88,24 @@ const HeaderSearch: FC<IHeaderSearchProps> = ({
         </Select>
 
         <Input
-          ref={inputRef}
+          {...register("search")}
           isClearable
           radius="none"
-          className="w-full bg-gray-search focus:outline-none"
+          className="w-full focus:outline-none"
           placeholder={headerSearchPlaceholder}
-          onClear={() => onSetSearchText("")}
+          onClear={handleClear}
           classNames={{
-            inputWrapper: "shadow-none border-none",
+            inputWrapper: "shadow-none border-none h-[56px] bg-white",
+            mainWrapper: "h-[56px] transition duration-200 ease",
           }}
         />
       </div>
 
-      <Button type="submit" className="h-full bg-tiffani search-button-mobile">
-        <Icons id="search" />
+      <Button
+        type="submit"
+        className="h-full bg-white search-button-mobile transition duration-200 ease"
+      >
+        <Icons id="searchMobile" />
       </Button>
     </form>
   );

@@ -1,15 +1,11 @@
-FROM python:3.10.12-alpine
+FROM python:3.12
 
 WORKDIR /app
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
 COPY . .
 
-RUN apk update && pip install --user poetry
+RUN pip install poetry
 
-ENV PATH="${PATH}:/root/.local/bin"
+RUN poetry config virtualenvs.create false --local
 
 RUN poetry install
-RUN chmod +x entrypoint.sh

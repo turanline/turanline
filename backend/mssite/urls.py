@@ -2,56 +2,138 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from drf_spectacular.views import (SpectacularAPIView, SpectacularRedocView,
-                                   SpectacularSwaggerView)
+from drf_spectacular import views
 from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenBlacklistView
 
-from products.views import (ProductCategoriesViewSet, ProductSubTypesViewSet,
-                            ProductsViewSet, ProductTypesViewSet)
-from users.views import (CartProductsViewSet, ReviewsViewSet,
-                         TokenObtainPairViewDoc, TokenRefreshViewDoc,
-                         TokenVerifyViewDoc, UserViewSet)
+from products import views as product_views
+from users import views as user_views
+from cart import views as cart_views
+from customers import views as customer_views
+from providers import views as provider_views
+from product_components import views as product_component_views
 
 router = DefaultRouter()
 
-router.register(r"catalog", ProductsViewSet)
-router.register(r"categories", ProductCategoriesViewSet)
-router.register(r"types", ProductTypesViewSet)
-router.register(r"subtypes", ProductSubTypesViewSet)
-router.register(r"reviews", ReviewsViewSet)
-router.register(r"users", UserViewSet)
-router.register(r"cart", CartProductsViewSet)
+router.register(
+    r'catalog',
+    product_views.ProductsViewSet,
+    'catalog'
+)
+
+router.register(
+    r'categories',
+    product_component_views.ProductCategoriesViewSet,
+    'categories'
+)
+
+router.register(
+    r'types',
+    product_component_views.ProductTypesViewSet,
+    'types'
+)
+
+router.register(
+    r'subtypes',
+    product_component_views.ProductSubTypesViewSet,
+    'subtypes'
+)
+
+router.register(
+    r'reviews',
+    customer_views.ReviewsViewSet,
+    'reviews'
+)
+
+router.register(
+    r'cart',
+    cart_views.CartProductsViewSet,
+    'cart'
+)
+
+router.register(
+    r'users',
+    user_views.UserViewSet,
+    'users'
+)
+
+router.register(
+    r'country',
+    product_component_views.ManufacturerCountryViewSet,
+    'country'
+)
+
+router.register(
+    r'provider',
+    provider_views.ProviderViewSet,
+    'provider'
+)
+
+router.register(
+    r'customer',
+    customer_views.CustomerViewSet,
+    'customer'
+)
+
+router.register(
+    r'superusernews',
+    user_views.NewsViewSet,
+    'news'
+)
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("api/", include(router.urls)),
-    path("__debug__/", include("debug_toolbar.urls")),
-    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
-        "api/schema/swagger-ui/",
-        SpectacularSwaggerView.as_view(url_name="schema"),
-        name="swagger-ui",
+        'admin/',
+        admin.site.urls
     ),
     path(
-        "api/schema/redoc/",
-        SpectacularRedocView.as_view(url_name="schema"),
-        name="redoc",
+        'api/',
+        include(router.urls)
     ),
     path(
-        "api/token/",
-        TokenObtainPairViewDoc.as_view(),
-        name="token_obtain_pair",
+        '__debug__/',
+        include('debug_toolbar.urls')
     ),
     path(
-        "api/token/refresh/",
-        TokenRefreshViewDoc.as_view(),
-        name="token_refresh",
+        'api/schema/',
+        views.SpectacularAPIView.as_view(),
+        name='schema'
     ),
     path(
-        "api/token/verify/",
-        TokenVerifyViewDoc.as_view(),
-        name="token_verify",
+        'api/schema/swagger-ui/',
+        views.SpectacularSwaggerView.as_view(url_name='schema'),
+        name='swagger-ui',
     ),
+    path(
+        'api/schema/redoc/',
+        views.SpectacularRedocView.as_view(url_name='schema'),
+        name='redoc',
+    ),
+    path(
+        'api/token/',
+        user_views.TokenObtainPairViewDoc.as_view(),
+        name='token_obtain_pair',
+    ),
+    path(
+        'api/token/refresh/',
+        user_views.TokenRefreshViewDoc.as_view(),
+        name='token_refresh',
+    ),
+    path(
+        'api/token/verify/',
+        user_views.TokenVerifyViewDoc.as_view(),
+        name='token_verify',
+    ),
+    path(
+        'api/token/logout/',
+        TokenBlacklistView.as_view(),
+        name='token_blacklist',
+    ),
+    path(
+        'api/import_xlsx/',
+        product_views.ImportProductDataView.as_view(),
+        name='import_xlsx'
+    )
 ]
 
 

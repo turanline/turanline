@@ -10,6 +10,7 @@
   "headerCategorySelect": "קטגוריה",
   "headerAllCategories": "כל הקטגוריות",
   "headerSearchPlaceholder": "חיפוש בקטלוג",
+  "headerToProfile": "לפרופיל",
 
   "newRevenues": "הכנסות חדשות",
   "newRevenuesText": "גלו ראשונים על המוצרים שיוצרים את עתיד התעשייה!",
@@ -31,6 +32,7 @@
   "footerTextUnderEmail": "צרו קשר בכל עת של יום או לילה",
   "footerWriteUs": "כתבו לנו",
   "footerUsing": "אסור להשתמש ולשכפל חומרים מהאתר",
+  "footerProviders": "ספקים",
 
   "filterColor": "צבע",
   "filterSize": "גודל",
@@ -55,6 +57,7 @@
   "logInCheckboxText": "זכור סיסמה",
   "logInTextForget": "שכחת סיסמה",
   "logInButtonText": "התחבר",
+  "logInButtonRegistration": "הרשמה מהירה",
 
   "registrationTitle": "רישום לחשבון שלך",
   "registrationLabelEmail": "אימייל",
@@ -65,6 +68,7 @@
   "registrationInputLastName": "הזן את שם המשפחה שלך",
   "registrationPhoneNumber": "מספר טלפון",
   "registrationButtonText": "הרשם",
+  "registrationButtonLogIn": "כבר יש לך חשבון?",
 
   "emptyBasketTitle": "הסל ריק!",
   "emptyBasketText": "הגיע הזמן ללכת לקניות!",
@@ -149,6 +153,7 @@
   "profileModalCompany": "שם החברה",
   "profileModalAddress": "כתובת חדשה",
   "profileModalButton": "אישור",
+  "profilePageLogOut": "התנתק מהחשבון",
 
   "productPageArticle": "מאמר",
   "productPageCompound": "תרכובת",
@@ -255,5 +260,45 @@
   "politics.12": "תקנות סופיות",
   "politics.12.1": "המשתמש יכול לקבל הסברים על כל נושא הקשור לעיבוד נתונים האישיים שלו, על ידי פנייה למפעיל בדואר אלקטרוני בכתובת privacy@thismywebsite.com.",
   "politics.12.2": "במסמך זה יופיעו כל שינויי מדיניות עיבוד הנתונים האישיים של המפעיל. מדיניות זו תחול ללא הפסקה עד שתוחלף בגרסה חדשה.",
-  "politics.12.3": "הגרסה המעודכנת של המדיניות זמינה לציבור ברשת בכתובת https://opt-turkie.com/ptivacy."
+  "politics.12.3": "הגרסה המעודכנת של המדיניות זמינה לציבור ברשת בכתובת https://opt-turkie.com/ptivacy.",
+
+  "messageLogInError": "פרטי הכניסה שגויים, אנא נסו שוב!",
+  "messageLogInSuccess": "התחברת בהצלחה!",
+  "messageRegistration": "הינך רשום בהצלחה!",
+  "messageRegistrationError": "שם המשתמש או מספר הטלפון שהוזנו כבר רשומים!",
+  "messageHeaderCart": "הסל זמין רק למשתמשים מחוברים",
+  "messageHeaderFavorites": "המועדפים זמינים רק למשתמשים מחוברים",
+  "messageModalChangeError": "מספר הטלפון הזה כבר קיים, אנא הזן מספר אחר!",
+  "messageModalChangeSuccess": "הנתונים שונו בהצלחה!",
+  "messageModalChangeWarn": "כל השדות חייבים להיות מלאים!",
+  "messageCounterDec": "מונה הפריטים לא יכול להיות פחות מאחד!",
+  "messageCounterInc": "יש רק כפול זה של פריטים במלאי:",
+  "messageCartError": "שגיאה בעת קבלת העגלה!",
+  "messageCartAdded": "פריט התווסף לעגלה!",
+  "messageCartAddedError": "שגיאה אירעה בעת הוספת הפריט לעגלה!",
+  "messageCartItemInCart": "הפריט כבר נמצא בעגלה!",
+  "messageCartNotAuth": "את/ה לא מאומת/ת!",
+  "messageCartDeleted": "הפריט נמחק מהעגלה!",
+  "messageFavoritesSuccess": "הפריט התווסף למועדפים!",
+  "messageFavoritesWarn": "אינך יכול להוסיף פריטים למועדפים עד שתתחבר!",
+  "messageFavoritesDeleted": "הפריט נמחק מהמועדפים!",
+  "messageLogOutSuccess": "יצאת מהחשבון בהצלחה!",
+
+  "notFoundTitle": "טעות קטנה",
+  "notFoundText": "אופס... נראה שהדף הזה לא קיים! חזור לדף הראשי ונסה שוב.",
+
+  "errorPageTitle": "שגיאת רשת",
+  "errorPageText": "אירעה שגיאה כלשהי בצד השרת, אנו כבר עובדים קשה לתקן זאת!",
+
+  "formEmail": "אנא הזן כתובת אימייל תקינה.",
+  "formName": "אנא הזן ערך תקין המתחיל באות גדולה באנגלית, ואחריו אותיות קטנות בלבד.",
+  "formPassword": "הסיסמה יכולה להכיל רק אותיות (גדולות וקטנות) ומספרים. אנא ודא שהסיסמה שלך עומדת בדרישות אלה.",
+  "formUsername": "שם המשתמש יכול להכיל רק אותיות (גדולות וקטנות), מספרים וקווים תחתונים. אנא ודא ששם המשתמש שלך מורכב מאותם תווים בלבד.",
+  "formPhone": "אנא הזן את מספר הטלפון בפורמט: +7 (999) 999-99-99!",
+  "formAddress": "הכתובת יכולה להכיל רק אותיות לטיניות, מספרים, רווחים, פסיקים, נקודות ומקפים. אנא הזן כתובת תקינה.",
+  "formCompany": "אנא הזן שם חברה תקין!",
+  "formRequired": "שדה זה הוא חובה!",
+  "formMin": "לא פחות מ",
+  "formMax": "לא יותר מ",
+  "formSymbols": "תווים"
 }

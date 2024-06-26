@@ -10,6 +10,7 @@
   "headerCategorySelect": "Categoría",
   "headerAllCategories": "Todas las categorías",
   "headerSearchPlaceholder": "Buscar en el catálogo",
+  "headerToProfile": "A Perfil",
 
   "newRevenues": "Nuevos ingresos",
   "newRevenuesText": "¡Descubre primero los productos que están creando el futuro de la industria!",
@@ -31,6 +32,7 @@
   "footerTextUnderEmail": "Contáctanos en cualquier momento del día o la noche",
   "footerWriteUs": "Escríbenos",
   "footerUsing": "Queda prohibido el uso y la reproducción de materiales del sitio web",
+  "footerProviders": "Proveedores",
 
   "filterColor": "Color",
   "filterSize": "Tamaño",
@@ -55,6 +57,7 @@
   "logInCheckboxText": "Recordar contraseña",
   "logInTextForget": "¿Olvidaste tu contraseña?",
   "logInButtonText": "Iniciar sesión",
+  "logInButtonRegistration": "Registro rápido",
 
   "registrationTitle": "Registrar tu cuenta",
   "registrationLabelEmail": "Correo electrónico",
@@ -65,6 +68,7 @@
   "registrationInputLastName": "Introduce tu apellido",
   "registrationPhoneNumber": "Número de teléfono",
   "registrationButtonText": "Registrar",
+  "registrationButtonLogIn": "¿Ya tienes una cuenta?",
 
   "emptyBasketTitle": "¡La cesta está vacía!",
   "emptyBasketText": "¡Es hora de ir de compras!",
@@ -149,6 +153,7 @@
   "profileModalCompany": "Nombre de la Empresa",
   "profileModalAddress": "Nueva Dirección",
   "profileModalButton": "Confirmar",
+  "profilePageLogOut": "Cerrar sesión",
 
   "productPageArticle": "Artículo",
   "productPageCompound": "Compuesto",
@@ -255,5 +260,45 @@
   "politics.12": "Disposiciones Finales",
   "politics.12.1": "El Usuario puede obtener aclaraciones sobre cualquier tema de interés relacionado con el procesamiento de sus datos personales comunicándose con el Operador por correo electrónico a privacy@thismywebsite.com.",
   "politics.12.2": "Cualquier cambio en la política de procesamiento de datos personales del Operador se reflejará en este documento. La política permanece vigente indefinidamente hasta ser reemplazada por una nueva versión.",
-  "politics.12.3": "La versión actual de la Política está disponible libremente en Internet en la dirección https://opt-turkie.com/ptivacy."
+  "politics.12.3": "La versión actual de la Política está disponible libremente en Internet en la dirección https://opt-turkie.com/ptivacy.",
+
+  "messageLogInError": "¡Credenciales incorrectas, por favor inténtelo de nuevo!",
+  "messageLogInSuccess": "¡Has iniciado sesión correctamente!",
+  "messageRegistration": "¡Te has registrado correctamente!",
+  "messageRegistrationError": "¡El nombre de usuario o número de teléfono ingresado ya está registrado!",
+  "messageHeaderCart": "El carrito solo está disponible para usuarios registrados",
+  "messageHeaderFavorites": "Favoritos solo está disponible para usuarios registrados",
+  "messageModalChangeError": "¡Este número de teléfono ya existe, por favor ingrese otro!",
+  "messageModalChangeSuccess": "¡Los datos se han cambiado correctamente!",
+  "messageModalChangeWarn": "¡Todos los campos deben estar completos!",
+  "messageCounterDec": "¡El contador de elementos no puede ser inferior a uno!",
+  "messageCounterInc": "Solo hay esta cantidad de elementos en stock:",
+  "messageCartError": "¡Error al obtener el carrito!",
+  "messageCartAdded": "¡Producto añadido al carrito!",
+  "messageCartAddedError": "¡Se produjo un error al agregar el producto al carrito!",
+  "messageCartItemInCart": "¡Este producto ya está en el carrito!",
+  "messageCartNotAuth": "¡No estás autenticado!",
+  "messageCartDeleted": "¡Producto eliminado del carrito!",
+  "messageFavoritesSuccess": "¡Producto añadido a favoritos!",
+  "messageFavoritesWarn": "¡No puedes agregar productos a favoritos hasta que inicies sesión!",
+  "messageFavoritesDeleted": "¡Producto eliminado de favoritos!",
+  "messageLogOutSuccess": "¡Has cerrado sesión con éxito!",
+
+  "notFoundTitle": "Pequeño error",
+  "notFoundText": "Ups... Parece que esta página no existe! Vaya a la página principal e intente de nuevo.",
+
+  "errorPageTitle": "Error de red",
+  "errorPageText": "Ocurrió algún error en el lado del servidor, ¡ya estamos trabajando arduamente para solucionarlo!",
+
+  "formEmail": "Por favor, introduzca una dirección de correo electrónico válida.",
+  "formName": "Por favor, introduzca un valor correcto comenzando con una letra mayúscula del alfabeto inglés, seguido solo de letras minúsculas.",
+  "formPassword": "La contraseña solo puede contener letras (mayúsculas y minúsculas) y números. Asegúrese de que su contraseña cumpla con estos requisitos.",
+  "formUsername": "El nombre de usuario solo puede contener letras (mayúsculas y minúsculas), números y guiones bajos. Asegúrese de que su nombre de usuario solo consista en estos caracteres.",
+  "formPhone": "¡Por favor, introduzca el número de teléfono en el formato: +7 (999) 999-99-99!",
+  "formAddress": "La dirección solo puede contener letras latinas, números, espacios, comas, puntos y guiones. Por favor, introduzca una dirección válida.",
+  "formCompany": "¡Por favor, introduzca un nombre de empresa válido!",
+  "formRequired": "¡Este campo es obligatorio!",
+  "formMin": "No menos de",
+  "formMax": "No más de",
+  "formSymbols": "caracteres"
 }

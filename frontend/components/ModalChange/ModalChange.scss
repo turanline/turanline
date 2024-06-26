@@ -13,7 +13,7 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
 
   &.active {
     opacity: 1;
@@ -33,7 +33,7 @@
   flex-direction: column;
   align-items: center;
   padding: 30px;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
   transform: translateY(100px);
 
   &.active {
@@ -61,10 +61,4 @@
   position: absolute;
   top: 5px;
   right: 5px;
-}
-
-.submit-change {
-  background-color: #0abab5;
-  color: white;
-  width: 100%;
 }

@@ -10,6 +10,7 @@
   "headerCategorySelect": "カテゴリ",
   "headerAllCategories": "すべてのカテゴリ",
   "headerSearchPlaceholder": "カタログ内を検索",
+  "headerToProfile": "プロフィールへ",
 
   "newRevenues": "新着商品",
   "newRevenuesText": "産業の未来を創る商品を最初に発見しましょう！",
@@ -31,6 +32,7 @@
   "footerTextUnderEmail": "昼夜を問わずいつでもお問い合わせください",
   "footerWriteUs": "お問い合わせ",
   "footerUsing": "ウェブサイトの素材の使用および複製は禁止されています",
+  "footerProviders": "サプライヤーへ",
 
   "filterColor": "色",
   "filterSize": "サイズ",
@@ -55,6 +57,7 @@
   "logInCheckboxText": "パスワードを記憶する",
   "logInTextForget": "パスワードを忘れた場合",
   "logInButtonText": "ログイン",
+  "logInButtonRegistration": "クイック登録",
 
   "registrationTitle": "アカウントを登録",
   "registrationLabelEmail": "メールアドレス",
@@ -65,6 +68,7 @@
   "registrationInputLastName": "姓を入力してください",
   "registrationPhoneNumber": "電話番号",
   "registrationButtonText": "登録",
+  "registrationButtonLogIn": "アカウントをお持ちですか？",
 
   "emptyBasketTitle": "カゴは空です！",
   "emptyBasketText": "買い物に行く時間です！",
@@ -149,6 +153,7 @@
   "profileModalCompany": "会社名",
   "profileModalAddress": "新しい住所",
   "profileModalButton": "確認",
+  "profilePageLogOut": "ログアウト",
 
   "productPageArticle": "記事",
   "productPageCompound": "化合物",
@@ -255,5 +260,45 @@
   "politics.12": "最終規定",
   "politics.12.1": "ユーザーは、privacy@thismywebsite.com宛てのメールで運営者に連絡することで、個人データの処理に関する疑問に対するいかなる説明も受けることができます。",
   "politics.12.2": "本文書には、運営者による個人データの処理ポリシーの変更が反映されます。このポリシーは、新しいバージョンで置き換えられるまで無期限で有効です。",
-  "politics.12.3": "最新のポリシーのバージョンは、https://opt-turkie.com/ptivacyのウェブアドレスで一般に公開されています。"
+  "politics.12.3": "最新のポリシーのバージョンは、https://opt-turkie.com/ptivacyのウェブアドレスで一般に公開されています。",
+
+  "messageLogInError": "無効な資格情報です、もう一度お試しください！",
+  "messageLogInSuccess": "ログインに成功しました！",
+  "messageRegistration": "登録に成功しました！",
+  "messageHeaderCart": "カートはログインユーザーのみ利用可能です",
+  "messageRegistrationError": "入力されたユーザー名または電話番号は既に登録されています！",
+  "messageHeaderFavorites": "お気に入りはログインユーザーのみ利用可能です",
+  "messageModalChangeError": "この電話番号は既に存在しています。別の番号を入力してください！",
+  "messageModalChangeSuccess": "データが正常に変更されました！",
+  "messageModalChangeWarn": "すべてのフィールドを記入してください！",
+  "messageCounterDec": "アイテムカウンターは1未満にすることはできません！",
+  "messageCounterInc": "在庫にはこの数量しかありません：",
+  "messageCartError": "カートの取得中にエラーが発生しました！",
+  "messageCartAdded": "商品がカートに追加されました！",
+  "messageCartAddedError": "商品をカートに追加する際にエラーが発生しました！",
+  "messageCartItemInCart": "この商品はすでにカートにあります！",
+  "messageCartNotAuth": "認証されていません！",
+  "messageCartDeleted": "商品がカートから削除されました！",
+  "messageFavoritesSuccess": "商品がお気に入りに追加されました！",
+  "messageFavoritesWarn": "ログインするまでお気に入りに商品を追加できません！",
+  "messageFavoritesDeleted": "商品がお気に入りから削除されました！",
+  "messageLogOutSuccess": "アカウントから正常にログアウトしました！",
+
+  "notFoundTitle": "小さなエラー",
+  "notFoundText": "おっと…このページは存在しないようです！ホームページに戻ってもう一度お試しください。",
+
+  "errorPageTitle": "ネットワークエラー",
+  "errorPageText": "サーバー側で何らかのエラーが発生しました。修正に向けて全力で取り組んでいます！",
+
+  "formEmail": "有効なメールアドレスを入力してください。",
+  "formName": "英語の大文字から始まり、小文字のみが続く正しい値を入力してください。",
+  "formPassword": "パスワードは、文字（大文字と小文字）および数字のみを含めることができます。パスワードがこれらの要件を満たしていることを確認してください。",
+  "formUsername": "ユーザー名には、文字（大文字と小文字）、数字、アンダースコアのみを含めることができます。ユーザー名がこれらの文字で構成されていることを確認してください。",
+  "formPhone": "電話番号を次の形式で入力してください: +7 (999) 999-99-99!",
+  "formAddress": "住所には、ラテン文字、数字、スペース、コンマ、ピリオド、およびハイフンのみを含めることができます。有効な住所を入力してください。",
+  "formCompany": "有効な会社名を入力してください！",
+  "formRequired": "このフィールドは必須です！",
+  "formMin": "少なくとも",
+  "formMax": "最大",
+  "formSymbols": "文字"
 }

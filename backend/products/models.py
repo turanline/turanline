@@ -1,213 +1,157 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from slugify import slugify
+from decimal import Decimal
 
-from .validators import validate_positive_number
+from . import enums
+from product_components import models as product_components_models
+from users import models as user_models
 
-
-class Color(models.Model):
-    name = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-
-    class Meta:
-        verbose_name = "Product color"
-        verbose_name_plural = "Product colors"
-        ordering = ["-name"]
-
-    def __str__(self) -> str:
-        return f"{self.name} цвет"
-
-
-class Brand(models.Model):
-    name = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-
-    def __str__(self) -> str:
-        return self.name
-
-    class Meta:
-        verbose_name = "Product brand"
-        verbose_name_plural = "Product brands"
-        ordering = ["-name"]
-
-
-def category_upload_to(instance, filename):
-    return "/".join(["products-category", str(instance.name), filename])
-
-
-class Category(models.Model):
-    name = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-    image = models.ImageField(
-        upload_to=category_upload_to,
-        null=True,
-        blank=True,
-    )
-
-    def __str__(self) -> str:
-        return f"Категория: {self.name}"
-
-    class Meta:
-        verbose_name = "Product category"
-        verbose_name_plural = "Product categories"
-        ordering = ["-name"]
-
-
-class ProductType(models.Model):
-    name = models.CharField(
-        max_length=255,
-    )
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.CASCADE,
-    )
-
-    def __str__(self) -> str:
-        return f"Тип: {self.name} [Категория: {self.category.name}]"
-
-    class Meta:
-        verbose_name = "Product type"
-        verbose_name_plural = "Product types"
-        ordering = ["-name"]
-        unique_together = ("name", "category")
-
-
-class ProductSubType(models.Model):
-    name = models.CharField(
-        max_length=255,
-    )
-    type = models.ForeignKey(
-        ProductType,
-        on_delete=models.CASCADE,
-    )
-
-    def __str__(self) -> str:
-        return f"Подкатегория: {self.name} [Тип: {self.type.name} Категория: {self.type.category.name}]"
-
-    class Meta:
-        verbose_name = "Product subtype"
-        verbose_name_plural = "Product subtypes"
-        ordering = ["-name"]
-        unique_together = ("name", "type")
-
-
-class ManufacturerCountry(models.Model):
-    name = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-
-    def __str__(self) -> str:
-        return self.name
-
-    class Meta:
-        verbose_name = "Product manufacturer country"
-        verbose_name_plural = "Product manufacturer countries"
-        ordering = ["-name"]
-
-
-class Size(models.Model):
-    name = models.CharField(
-        max_length=10,
-        unique=True,
-    )
-
-    def __str__(self) -> str:
-        return f"{self.name} size"
-
-    class Meta:
-        verbose_name = "Product size"
-        verbose_name_plural = "Product sizes"
-
-
-def products_upload_to(instance, filename):
-    return "/".join(["products-images", str(instance.name), filename])
+# один цвет
+# is_famous через связные таблицы
 
 
 class Product(models.Model):
+    """Модель продуктов."""
+
+    provider = models.ForeignKey(
+        user_models.User,
+        on_delete=models.CASCADE,
+        verbose_name='Поставщик',
+    )
+
     name = models.CharField(
+        'Название товара',
         max_length=255,
     )
+
     description = models.TextField(
+        'Описание товара',
         null=True,
         blank=True,
     )
-    image = models.ImageField(
-        upload_to=products_upload_to,
+
+    image = models.ForeignKey(
+        product_components_models.Images,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        verbose_name='Галерея'
     )
+
     subTypes = models.ManyToManyField(
-        ProductSubType,
+        product_components_models.ProductSubType,
+        verbose_name='Подтипы товаров'
     )
+
     brand = models.ForeignKey(
-        Brand,
+        product_components_models.Brand,
         on_delete=models.CASCADE,
         db_index=True,
+        verbose_name='Бренд товара'
     )
-    vendor_code = models.CharField(max_length=9)
-    amount = models.PositiveIntegerField()
+
+    article_number = models.CharField(
+        'Артикул',
+        max_length=10,
+        unique=True
+    )
+
+    amount = models.PositiveIntegerField(
+        'Количество товара'
+    )
+
     compound = models.CharField(
+        'Состав товара',
         max_length=1024,
         null=True,
         blank=True,
     )
+
     price = models.DecimalField(
+        'Цена товара',
         max_digits=10,
         decimal_places=2,
         validators=[
-            validate_positive_number,
+            MinValueValidator(
+                Decimal(0),
+                message='the price cannot be a negative number'
+            ),
         ],
         db_index=True,
     )
+
     season = models.CharField(
-        max_length=50,
+        'Сезон для ношения',
+        choices=enums.SeasonChoices,
         null=True,
         blank=True,
     )
+
     pattern = models.CharField(
+        'Узор товара',
         max_length=50,
         null=True,
         blank=True,
     )
+
+    # несколько неповторяющихся цветов
+
     color = models.ForeignKey(
-        Color,
+        product_components_models.Color,
         on_delete=models.CASCADE,
         db_index=True,
+        verbose_name='Цвет товара'
     )
+
     manufacturerCountry = models.ForeignKey(
-        ManufacturerCountry,
+        product_components_models.ManufacturerCountry,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        verbose_name='Страна производителя товара'
     )
+
+    # несколько повторяющихся размеров
+
     size = models.ForeignKey(
-        Size,
+        product_components_models.Size,
         on_delete=models.CASCADE,
+        verbose_name='Размер товара'
     )
+
     slug = models.SlugField(
         max_length=1024,
         unique=True,
         db_index=True,
         blank=True,
+        verbose_name='Слаг товара'
     )
-    is_famous = models.BooleanField()
+
+    is_famous = models.BooleanField(
+        'Популярный товар?',
+        default=False
+    )
+
+    status = models.CharField(
+        'Статус проверки модерацией',
+        choices=enums.ProductStatus,
+        default=enums.ProductStatus.UNDER_CONSIDERATION
+    )
+
+    date_and_time = models.DateTimeField(
+        'Время и дата публикации',
+        auto_now_add=True
+    )
+
+    class Meta:
+        ordering = ['-slug']
 
     def __str__(self) -> str:
-        return self.name
+        return f'Товар {self.name} поставщика {self.provider.username}'
 
     def save(self, *args, **kwargs):
         self.slug = slugify(
-            f"{str(self.vendor_code)}-{str(self.name)}-{str(self.color.name)}"
+            f'{self.article_number}-{self.name}-{self.color.name}'
         )
         return super().save(*args, **kwargs)
-
-    class Meta:
-        verbose_name = "Product"
-        verbose_name_plural = "Products"
-        ordering = ["-slug"]

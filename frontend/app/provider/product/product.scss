@@ -1,0 +1,158 @@
+@mixin profile-text($family, $size, $height, $weight) {
+  font-family: $family;
+  font-size: $size;
+  line-height: $height;
+  font-weight: $weight;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.products-product-wrapper {
+  padding: 30px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.products-product-content {
+  display: flex;
+  flex-direction: column;
+  width: 1536px;
+  gap: 50px;
+}
+
+.products-product-content_link-block {
+  display: flex;
+  align-items: center;
+}
+
+.products-product-content_link {
+  text-transform: capitalize;
+  @include profile-text("Geometria-Light", 16px, 20px, 300);
+}
+
+.products-product-card_header {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.products-product-card_header-title,
+.products-product-card_content-option-price {
+  @include profile-text("Geometria-Bold", 32px, 40px, 500);
+}
+
+.products-product-card {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.products-product-card_content {
+  width: 100%;
+  display: flex;
+  height: 410px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.products-product-card_content-description {
+  padding: 50px;
+  border: 1px solid #dedede;
+  width: 1000px;
+  height: 407px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  box-shadow: 0px 13px 19px 0px #00000012;
+}
+
+.products-product-card_content-description-changes {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 200px;
+}
+
+.products-product-card_content-description-change {
+  display: flex;
+  gap: 15px;
+}
+
+.products-product-card_content-description-block {
+  display: flex;
+  justify-content: space-between;
+}
+
+.products-product-card_content-description-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.products-product-card_content-description-option,
+.products-product-card_content-description-option-sizes,
+.products-product-card_content-description-option-colors {
+  align-items: center;
+  display: flex;
+  gap: 15px;
+}
+
+.products-product-card_content-option-text {
+  @include profile-text("Geometria-Light", 16px, 20px, 300);
+}
+
+.products-product-card_content-description-option-size {
+  color: #737373;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid #e4e4e4;
+  @include profile-text("Geometria-Bold", 13px, 28px, 300);
+}
+
+.products-product-card_content-description-option-color {
+  border-radius: 50%;
+  box-shadow: 0px 2px 4px 0px #0000001a;
+  border: 2px solid #ffffff;
+  width: 30px;
+  height: 30px;
+}
+
+.products-product-card_content-description-button-block {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.products-product-card_content-description-button {
+  width: 208px;
+  height: 44px;
+  padding: 10px 20px;
+  background-color: #373737;
+  color: white;
+  text-transform: capitalize;
+  border-radius: 5px;
+}
+
+.products-product-card_description {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.products-product-card_description-header {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.products-product-card_description-title {
+  @include profile-text("Geometria-Bold", 24px, 30px, 300);
+}
+
+.products-product-card_description-text {
+  @include profile-text("Geometria-Light", 16px, 20px, 600);
+}

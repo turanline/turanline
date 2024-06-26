@@ -1,6 +1,3 @@
-//Global
-import { notFound } from "next/navigation";
-
 //Components
 import { CategoryPageComponent } from "@/components/CategoryPageComponent/CategoryPageComponent";
 import { CategoryComponent } from "@/components/CategoryComponent/CategoryComponent";
@@ -13,40 +10,43 @@ export async function generateStaticParams() {
   try {
     const categories = await getCategories();
 
-    return categories.map(({ id }: { id: string }) => ({
+    return categories.map(({ id }: { id: number }) => ({
       id: id.toString(),
     }));
   } catch (error) {
-    notFound();
+    // eslint-disable-next-line no-console
+    console.log(error);
   }
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: { id: number } }) {
   try {
-    const categoriesObject = await getCategoryById(params.id.toString());
-    const categoryName = Object.keys(categoriesObject)[0];
+    const categoriesObject = await getCategoryById(params.id),
+      categoryName = Object.keys(categoriesObject)[0];
 
     return {
       title: `${categoryName}`,
-      icons: {
-        icon: "/favicon.ico",
-      },
     };
   } catch (error) {
-    notFound();
+    // eslint-disable-next-line no-console
+    console.log(error);
   }
 }
 
-export default async function Category({ params }: { params: { id: string } }) {
+export default async function Category({ params }: { params: { id: number } }) {
   async function getCategoryByParams() {
     try {
-      const categoriesObject = await getCategoryById(params.id.toString());
+      const categoriesObject = await getCategoryById(params.id);
 
-      if (!categoriesObject) notFound();
-
-      return <CategoryComponent categoriesObject={categoriesObject} />;
+      return (
+        <CategoryComponent
+          categoryObject={categoriesObject}
+          categoryId={+params.id}
+        />
+      );
     } catch (error) {
-      notFound();
+      // eslint-disable-next-line no-console
+      console.log(error);
     }
   }
 
@@ -59,10 +59,10 @@ export default async function Category({ params }: { params: { id: string } }) {
   });
 
   return (
-    <main className="container mx-auto mt-[30px] px-[28px] sm:px-0">
+    <div className="container mx-auto mt-[30px] px-[28px] sm:px-0">
       {getCategoryByParams()}
 
       <CategoryPageComponent products={products} />
-    </main>
+    </div>
   );
 }

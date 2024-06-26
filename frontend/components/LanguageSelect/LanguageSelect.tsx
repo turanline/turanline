@@ -1,7 +1,7 @@
 "use client";
 
 //Global
-import React from "react";
+import React, { FC, useEffect } from "react";
 import Image from "next/image";
 
 //Hooks
@@ -28,10 +28,21 @@ import {
   Button,
 } from "@nextui-org/react";
 
-const LanguageSelect = () => {
+const LanguageSelect: FC<{ color: string }> = ({ color }) => {
   const { selectedLanguage } = useTypedSelector(state => state.language);
 
   const { changeSelectedLanguage } = useLanguage();
+
+  useEffect(() => {
+    const language = localStorage.getItem("selectedLanguage");
+
+    if (language) changeSelectedLanguage(language);
+  }, [changeSelectedLanguage]);
+
+  const onChangeLanguage = (language: string) => {
+    localStorage.setItem("selectedLanguage", language);
+    changeSelectedLanguage(language);
+  };
 
   const returnImageByState = (language: string) => {
     switch (language) {
@@ -61,7 +72,7 @@ const LanguageSelect = () => {
   return (
     <Dropdown isKeyboardDismissDisabled>
       <DropdownTrigger>
-        <Button variant="light" style={{ padding: 0 }}>
+        <Button variant="light" style={{ padding: 0, color }}>
           <Image
             src={returnImageByState(selectedLanguage)}
             alt={selectedLanguage}
@@ -77,7 +88,7 @@ const LanguageSelect = () => {
         selectedKeys={[selectedLanguage]}
         onSelectionChange={keys =>
           //@ts-ignore
-          changeSelectedLanguage(keys.anchorKey)
+          onChangeLanguage(keys.anchorKey)
         }
       >
         {flags.map(flag => (

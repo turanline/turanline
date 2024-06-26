@@ -32,12 +32,15 @@ const UserOrderWrapper: FC<IUserOrderWrapperProps> = ({
       }
     });
 
-    if (contentRef.current) {
-      resizeObserver.observe(contentRef.current);
+    const currentContentRef = contentRef.current;
+
+    if (currentContentRef) {
+      resizeObserver.observe(currentContentRef);
     }
+
     return () => {
-      if (contentRef.current) {
-        resizeObserver.unobserve(contentRef.current);
+      if (currentContentRef) {
+        resizeObserver.unobserve(currentContentRef);
       }
     };
   }, []);

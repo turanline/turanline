@@ -10,6 +10,7 @@
   "headerCategorySelect": "类别",
   "headerAllCategories": "所有类别",
   "headerSearchPlaceholder": "在目录中搜索",
+  "headerToProfile": "个人中心",
 
   "newRevenues": "新产品",
   "newRevenuesText": "第一时间了解未来行业的商品",
@@ -31,6 +32,7 @@
   "footerTextUnderEmail": "随时联系我们",
   "footerWriteUs": "写信给我们",
   "footerUsing": "禁止使用和复制网站材料",
+  "footerProviders": "供应商",
 
   "filterColor": "颜色",
   "filterSize": "尺码",
@@ -55,6 +57,7 @@
   "logInCheckboxText": "记住密码",
   "logInTextForget": "忘记密码",
   "logInButtonText": "登录",
+  "logInButtonRegistration": "快速註冊",
 
   "registrationTitle": "注册个人账户",
   "registrationLabelEmail": "邮箱",
@@ -65,6 +68,7 @@
   "registrationInputLastName": "请输入您的姓氏",
   "registrationPhoneNumber": "电话号码",
   "registrationButtonText": "注册",
+  "registrationButtonLogIn": "已經有帳號？",
 
   "emptyBasketTitle": "购物篮是空的！",
   "emptyBasketText": "是时候去购物了！",
@@ -149,6 +153,7 @@
   "profileModalCompany": "公司名称",
   "profileModalAddress": "新地址",
   "profileModalButton": "确认",
+  "profilePageLogOut": "退出账户",
 
   "productPageArticle": "文章",
   "productPageCompound": "化合物",
@@ -255,5 +260,45 @@
   "politics.12": "最终条款",
   "politics.12.1": "用户可以通过发送电子邮件至privacy@thismywebsite.com与操作者联系，以获取有关其个人数据处理的任何解释。",
   "politics.12.2": "本文件将反映操作者对个人数据处理政策的任何更改。该政策在未被新版本替代之前持续有效。",
-  "politics.12.3": "最新版本的政策可在网址https://opt-turkie.com/ptivacy上公开获取。"
+  "politics.12.3": "最新版本的政策可在网址https://opt-turkie.com/ptivacy上公开获取。",
+
+  "messageLogInError": "登录数据错误，请重试！",
+  "messageLogInSuccess": "登录成功！",
+  "messageRegistration": "注册成功！",
+  "messageRegistrationError": "输入的用户名或电话号码已注册！",
+  "messageHeaderCart": "购物车仅对已登录用户开放",
+  "messageHeaderFavorites": "收藏夹仅对已登录用户开放",
+  "messageModalChangeError": "该电话号码已存在，请输入其他号码！",
+  "messageModalChangeSuccess": "数据已成功更改！",
+  "messageModalChangeWarn": "所有字段必须填写！",
+  "messageCounterDec": "商品计数器不能小于一！",
+  "messageCounterInc": "库存中只有这么多商品：",
+  "messageCartError": "获取购物车时出错！",
+  "messageCartAdded": "商品已添加到购物车！",
+  "messageCartAddedError": "添加商品到购物车时出错！",
+  "messageCartItemInCart": "该商品已在购物车中！",
+  "messageCartNotAuth": "您未登录！",
+  "messageCartDeleted": "商品已从购物车中删除！",
+  "messageFavoritesSuccess": "商品已添加到收藏夹！",
+  "messageFavoritesWarn": "在登录之前，您无法将商品添加到收藏夹！",
+  "messageFavoritesDeleted": "商品已从收藏夹中删除！",
+  "messageLogOutSuccess": "您已成功退出账户！",
+
+  "notFoundTitle": "小错误",
+  "notFoundText": "哎呀... 看起来这个页面不存在！请返回首页再试一次。",
+
+  "errorPageTitle": "网络错误",
+  "errorPageText": "服务器发生了一些错误，我们正在努力修复它！",
+
+  "formEmail": "请输入有效的电子邮箱地址。",
+  "formName": "请输入一个正确的值，以英文大写字母开头，后面只能跟随小写字母。",
+  "formPassword": "密码只能包含字母（大小写）和数字。请确保您的密码符合这些要求。",
+  "formUsername": "用户名只能包含字母（大小写）、数字和下划线。请确保您的用户名仅由这些字符组成。",
+  "formPhone": "请输入电话号格式: +7 (999) 999-99-99!",
+  "formAddress": "地址只能包含拉丁字母、数字、空格、逗号、点和连字符。请输入正确的地址。",
+  "formCompany": "请输入正确的公司名称！",
+  "formRequired": "此字段为必填项！",
+  "formMin": "不少于",
+  "formMax": "不超过",
+  "formSymbols": "字符"
 }

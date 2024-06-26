@@ -1,7 +1,7 @@
 "use client";
 
 // Global
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import Image from "next/image";
 
 // Components
@@ -17,12 +17,6 @@ const UserOrderItem: FC<IUserOrderItemProps> = ({
   cardPrice,
   cardSize,
 }) => {
-  const [counter, setCounter] = useState<number>(1);
-
-  const handleIncChange = () => counter < 10 && setCounter(prev => prev + 1);
-
-  const handleDecChange = () => counter > 1 && setCounter(prev => prev - 1);
-
   const mapAllStart = () =>
     [1, 2, 3, 4, 5].map(number => <Icons key={number} id="star" />);
 

@@ -12,11 +12,10 @@ import {
 
 //Components
 import { ProductComponent } from "@/components/ProductComponent/ProductComponent";
-import { ProductCard } from "@/components/ProductCard/productCard";
 import { ProductPageProducts } from "@/components/ProductPageProducts/ProductPageProducts";
 
 //Types
-import { IProductsState, IProductMainPage } from "@/types/types";
+import { IProductsState } from "@/types/types";
 
 //Styles
 import "swiper/css";
