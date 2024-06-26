@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 from slugify import slugify
+from decimal import Decimal
 
 from . import enums
 from product_components import models as product_components_models
@@ -73,7 +74,7 @@ class Product(models.Model):
         decimal_places=2,
         validators=[
             MinValueValidator(
-                0,
+                Decimal(0),
                 message='the price cannot be a negative number'
             ),
         ],

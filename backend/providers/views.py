@@ -85,3 +85,12 @@ class ProviderViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK,
             data=serializer.data
         )
+
+    @action(methods=['GET'], detail=True)
+    def date_joined(self, request, *args, **kwargs):
+        provider = self.get_object()
+        serializer = serializers.ProviderDateJoinedSerializer(provider.user)
+        return Response(
+            status=status.HTTP_200_OK,
+            data=serializer.data
+        )

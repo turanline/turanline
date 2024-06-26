@@ -3,7 +3,7 @@ from tablib import Dataset
 
 from import_export import exceptions
 from drf_spectacular.utils import extend_schema
-from rest_framework import mixins, status, viewsets, views, parsers, permissions
+from rest_framework import mixins, status, viewsets, views, parsers, permissions, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -13,7 +13,7 @@ from customers import models as customer_models
 from customers import serializers as customer_serializers
 
 
-class ImportProductDataView(views.APIView):
+class ImportProductDataView(generics.GenericAPIView):
     parser_classes = [parsers.MultiPartParser]
 
     def post(self, request, *args, **kwargs):

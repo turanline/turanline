@@ -76,3 +76,11 @@ class ProviderSerializer(ModelSerializer):
         except Exception as e:
             logger.error(f"Error during Provider update: {e}")
             raise e
+
+
+class ProviderDateJoinedSerializer(ModelSerializer):
+    """Сериализатор для получения даты регистрации"""
+
+    class Meta:
+        model = user_models.User
+        fields = ('date_joined',)

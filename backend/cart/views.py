@@ -1,5 +1,4 @@
 from django.http import HttpResponse, JsonResponse
-from django.core.exceptions import ObjectDoesNotExist
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -18,36 +17,34 @@ class CartProductsViewSet(
     queryset = models.OrderProduct.objects.select_related('order', 'product')
     serializer_class = serializers.CartProductReadSerializer
     permission_classes = [
-        IsAuthenticated |
-        IsAdminUser |
-        permissions.IsOwnerPermission
+        IsAuthenticated
+        | IsAdminUser
+        | permissions.IsOwnerPermission
     ]
 
     def create(self, request, *args, **kwargs):
-        #TODO: rewrite method
         serializer = serializers.CartProductSerializer(data=request.data)
 
-        try:
-            current_cart = models.Order.objects.get(user=request.user, status='CR')
-        except models.Order.DoesNotExist:
-            current_cart = models.Order.objects.create(user=request.user, status='CR')
+        current_cart = models.Order.objects.get_or_create(
+            user=request.user,
+            status='CR'
+        )
 
-        try:
-            product_id = request.data['product']
-            self.queryset.get(order=current_cart, product__pk=product_id)
+        if self.queryset.filter(
+            order=current_cart,
+            product__pk=request.data.get('product')
+        ).exists():
             return HttpResponse(
                 status=status.HTTP_400_BAD_REQUEST,
                 content='Product is already in cart',
             )
-        except ObjectDoesNotExist:
-            if serializer.is_valid(raise_exception=True):
-                obj = serializer.create(
-                    validated_data=serializer.validated_data
-                )
-                return JsonResponse(
-                    status=status.HTTP_201_CREATED,
-                    data=serializers.CartProductSerializer(obj).data,
-                )
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(order=current_cart)
+            return JsonResponse(
+                status=status.HTTP_201_CREATED,
+                data=serializer.data,
+            )
 
     def get_serializer(self, *args, **kwargs):
         if self.action == 'list':
