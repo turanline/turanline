@@ -1,0 +1,18 @@
+.provider-page_header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 15px;
+
+  &-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 1536px;
+  }
+
+  &-links {
+    display: flex;
+    gap: 35px;
+  }
+}

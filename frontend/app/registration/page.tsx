@@ -2,14 +2,13 @@
 
 //Global
 import React, { useEffect } from "react";
-import { Checkbox, Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { showToastMessage } from "../toastsChange";
-import InputMask from "react-input-mask";
 
 //Components
 import { Icons } from "@/components/Icons/Icons";
-import { Input } from "@nextui-org/react";
+import InputMask from "react-input-mask";
+import { Checkbox, Button, Input } from "@nextui-org/react";
 
 //Utils
 import { LOGIN_ROUTE, PROFILE_ROUTE } from "@/utils/Consts";
@@ -39,13 +38,9 @@ const Registration = () => {
     setValue,
   } = useCustomForm<IInputsRegistration>();
 
-  const { onGetUser, onRegistrationUser } = useUserActions();
+  const { onRegistrationUser } = useUserActions();
 
   const { push } = useRouter();
-
-  useEffect(() => {
-    onGetUser();
-  }, [onGetUser]);
 
   useEffect(() => {
     if (isAuth && status === "fulfilled") push(PROFILE_ROUTE);
@@ -77,17 +72,20 @@ const Registration = () => {
       getValues();
 
     if (isValid)
-      onRegistrationUser({
-        phone_number,
-        user: {
-          email,
-          first_name,
-          is_provider: false,
-          last_name,
-          password,
-          username,
+      onRegistrationUser(
+        {
+          phone_number,
+          user: {
+            email,
+            first_name,
+            is_provider: false,
+            last_name,
+            password,
+            username,
+          },
         },
-      })
+        "customer"
+      )
         .then(data => {
           if ("error" in data && data.error.message === "Rejected") {
             showToastMessage("error", messageRegistrationError);

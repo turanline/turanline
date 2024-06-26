@@ -1,42 +1,59 @@
 "use client";
 
 //Global
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 //Components
 import { Button } from "@nextui-org/react";
+import { Icons } from "@/components/Icons/Icons";
+import { ProviderNewsItem } from "@/components/ProviderNewsItem/ProviderNewsItem";
+
+//Hooks
+import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useUserActions } from "@/hooks/useUserActions";
 
 //Utils
-import {
-  PROVIDER_ROUTE,
-  PROVIDER_PRODUCTS_ROUTE,
-  PROVIDER_ORDERS_ROUTE,
-} from "@/utils/Consts";
+import { SHOP_ROUTE } from "@/utils/Consts";
 
 //Styles
 import "./provider.scss";
 
 export default function Provider() {
+  const {
+    isProviderAuth,
+    status,
+    providerState,
+    providerNews,
+    providerReviews,
+  } = useTypedSelector(state => state.user);
+
+  const { push } = useRouter();
+
+  const { onGetUser, onGetProviderNews, onGetProviderReviews } =
+    useUserActions();
+
+  useEffect(() => {
+    onGetUser();
+  }, [onGetUser]);
+
+  useEffect(() => {
+    if (isProviderAuth) {
+      onGetProviderNews();
+      onGetProviderReviews();
+    }
+  }, [isProviderAuth, onGetProviderNews, onGetProviderReviews]);
+
+  useEffect(() => {
+    if (!isProviderAuth && status === "fulfilled") push(SHOP_ROUTE);
+  }, [isProviderAuth, status, push]);
+
+  if (!providerState) return <Icons id="spiner" />;
+
   return (
     <div className="provider-page_wrapper">
       <div className="provider-page_content">
-        <nav className="provider-page_header">
-          <div className="provider-page_header-links">
-            <Link href="#">Партнеры</Link>
-
-            <Link style={{ color: "#0ABAB5" }} href={PROVIDER_ROUTE}>
-              Главная
-            </Link>
-
-            <Link href={PROVIDER_PRODUCTS_ROUTE}>Товары и цены</Link>
-
-            <Link href={PROVIDER_ORDERS_ROUTE}>Заказы и отзывы</Link>
-          </div>
-
-          <span className="provider-link">ООО Плащи и куртки</span>
-        </nav>
-
         <div className="provider-page_blocks">
           <div className="provider-page_blocks-total">
             <div className="provider-page_blocks-total_block">
@@ -83,52 +100,19 @@ export default function Provider() {
           <div className="provider-page_blocks-news">
             <h3>Новости</h3>
 
-            <div className="provider-page_blocks-news_item">
-              <h5>
-                Теперь вы сможете загружать товары на сайт из своей панели
-              </h5>
-
-              <div className="provider-page_blocks-news_item-block">
-                <span>30.04.2024</span>
-
-                <span>Возможности</span>
-              </div>
-
-              <p>
-                Ранее данная функция была доступна только через администраторов
-                сайта, теперь же вы сможете...
-              </p>
-            </div>
-
-            <div className="provider-page_blocks-news_item">
-              <h5>Новые способы аналитики</h5>
-
-              <div className="provider-page_blocks-news_item-block">
-                <span>04.04.2024</span>
-
-                <span>Возможности</span>
-              </div>
-
-              <p>
-                Теперь вы сможете выводить средства не только с помощью
-                банковских переводов, но и в криптова...
-              </p>
-            </div>
-
-            <div className="provider-page_blocks-news_item">
-              <h5>Обновление комиссий</h5>
-
-              <div className="provider-page_blocks-news_item-block">
-                <span>04.04.2024</span>
-
-                <span>Условия партнёрства</span>
-              </div>
-
-              <p>
-                Мы обновили тарифы в связи с инфляцией. Теперь комиссии площадки
-                повышены с 5% до 7%...
-              </p>
-            </div>
+            {providerNews.length ? (
+              providerNews.map(news => (
+                <ProviderNewsItem
+                  key={news.id}
+                  data={news.data}
+                  image={news.image}
+                  text={news.text}
+                  title={news.title}
+                />
+              ))
+            ) : (
+              <h3 className="text-tiffani">Пока никаких новостей нет!</h3>
+            )}
           </div>
 
           <div className="provider-page_blocks-notifications">
@@ -182,9 +166,15 @@ export default function Provider() {
             <h3>Отзывы</h3>
 
             <div className="provider-page_blocks-reviews_item">
-              <h5>Пока ничего нет</h5>
+              {providerReviews.length ? (
+                providerReviews.map(review => <h5 key={review}>Новость ...</h5>)
+              ) : (
+                <>
+                  <h5>Пока ничего нет</h5>
 
-              <p>Как только вам оставят отзыв, он появится здесь</p>
+                  <p>Как только вам оставят отзыв, он появится здесь</p>
+                </>
+              )}
             </div>
           </div>
         </div>

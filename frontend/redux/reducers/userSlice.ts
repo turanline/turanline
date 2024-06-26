@@ -6,12 +6,18 @@ import { clearTokens } from "@/services";
 import {
   IChangeUserData,
   IInputsLogin,
+  IPostRegistrationProvider,
+  IProviderNewsObj,
   IUserInformationApi,
   IUserState,
 } from "@/types/types";
 
 //Services
-import { postVerifyToken, postTokenRefresh } from "@/services/authAPI";
+import {
+  postVerifyToken,
+  postTokenRefresh,
+  postLogIn,
+} from "@/services/authAPI";
 import {
   getUserData,
   postRegistration,
@@ -19,19 +25,24 @@ import {
   getUserOrders,
   getUserReviews,
   postLogOut,
-  postLogin,
+  getProviderNews,
+  getProviderReviews,
 } from "@/services/usersAPI";
 
 const initialState: IUserState = {
   userState: null,
+  providerState: null,
   userOrders: [],
   userReviews: [],
+  providerNews: [],
+  providerReviews: [],
   isAuth: false,
+  isProviderAuth: false,
   status: "pending",
 };
 
 export const getUser = createAsyncThunk<
-  IUserState["userState"],
+  any,
   undefined,
   { rejectValue: string }
 >("userSlice/getUser", async (_, { rejectWithValue }) => {
@@ -47,17 +58,17 @@ export const getUser = createAsyncThunk<
     try {
       const refreshToken = localStorage.getItem("AuthTokenMisRef");
 
-      if (!refreshToken) throw new Error("RefreshToken not found");
+      if (!refreshToken) {
+        clearTokens();
+        throw new Error("RefreshToken not found");
+      }
 
       const newToken = await postTokenRefresh(refreshToken),
         { user } = await postVerifyToken(newToken);
 
-      localStorage.setItem("AuthTokenMis", newToken);
-
       return await getUserData(user, newToken);
     } catch (refreshError: any) {
-      // clearTokens();
-
+      clearTokens();
       return rejectWithValue(
         `Failed to refresh token: ${
           refreshError.response?.data || refreshError.message
@@ -67,25 +78,34 @@ export const getUser = createAsyncThunk<
   }
 });
 
-export const logInUser = createAsyncThunk<
+export const registrationUser = createAsyncThunk<
   undefined,
-  IInputsLogin,
+  {
+    information: IUserInformationApi | IPostRegistrationProvider;
+    requestString: "customer" | "provider";
+  },
   { rejectValue: string }
->("userSlice/logInUser", async (information, { rejectWithValue }) => {
+>("userSlice/registrationUser", async (params, { rejectWithValue }) => {
+  const { information, requestString } = params;
+
   try {
-    await postLogin(information);
+    await postRegistration(requestString, information);
   } catch (error) {
     return rejectWithValue(`${error}`);
   }
 });
 
-export const registrationUser = createAsyncThunk<
-  undefined,
-  IUserInformationApi,
+export const logInUser = createAsyncThunk<
+  any,
+  IInputsLogin,
   { rejectValue: string }
->("userSlice/registrationUser", async (information, { rejectWithValue }) => {
+>("userSlice/logInUser", async (information, { rejectWithValue }) => {
   try {
-    await postRegistration(information);
+    let info;
+
+    await postLogIn(information).then(data => (info = data));
+
+    return info;
   } catch (error) {
     return rejectWithValue(`${error}`);
   }
@@ -162,6 +182,38 @@ export const getReviews = createAsyncThunk<
   }
 });
 
+export const getNews = createAsyncThunk<
+  IProviderNewsObj[],
+  undefined,
+  { rejectValue: string }
+>("userSlice/getProviderNews", async (_, { rejectWithValue }) => {
+  try {
+    const token = localStorage.getItem("AuthTokenMis");
+
+    if (token) return await getProviderNews(token);
+  } catch (error) {
+    return rejectWithValue(`${error}`);
+  }
+});
+
+export const getReviewsProvider = createAsyncThunk<
+  [],
+  undefined,
+  { rejectValue: string }
+>("userSlice/getReviewsProvider", async (_, { rejectWithValue }) => {
+  try {
+    const token = localStorage.getItem("AuthTokenMis");
+
+    if (token) {
+      const { user } = await postVerifyToken(token);
+
+      return await getProviderReviews(user, token);
+    }
+  } catch (error) {
+    return rejectWithValue(`${error}`);
+  }
+});
+
 const userSlice = createSlice({
   name: "userSlice",
   initialState,
@@ -172,45 +224,37 @@ const userSlice = createSlice({
         state.status = "pending";
       })
       .addCase(getUser.fulfilled, (state, action) => {
-        const authToken = localStorage.getItem("AuthTokenMis");
-
         state.status = "fulfilled";
 
-        if (authToken) {
+        if (!action.payload?.user.is_provider) {
           state.userState = action.payload;
           state.isAuth = true;
         } else {
-          state.isAuth = false;
-          state.userState = null;
+          state.providerState = action.payload;
+          state.isProviderAuth = true;
         }
       })
       .addCase(getUser.rejected, state => {
         state.status = "fulfilled";
         state.isAuth = false;
+        state.isProviderAuth = false;
         state.userState = null;
+        state.providerState = null;
 
-        // clearTokens();
+        clearTokens();
       })
       .addCase(logOutUser.pending, state => {
         state.status = "pending";
       })
       .addCase(logOutUser.fulfilled, state => {
         state.status = "fulfilled";
+
         state.userState = null;
+        state.providerState = null;
+        state.isProviderAuth = false;
         state.isAuth = false;
         state.userReviews = [];
         state.userOrders = [];
-      })
-      .addCase(logInUser.pending, state => {
-        state.status = "pending";
-      })
-      .addCase(logInUser.fulfilled, state => {
-        state.status = "fulfilled";
-        state.isAuth = true;
-      })
-      .addCase(logInUser.rejected, state => {
-        state.status = "fulfilled";
-        state.isAuth = false;
       })
       .addCase(registrationUser.pending, state => {
         state.status = "pending";
@@ -219,6 +263,21 @@ const userSlice = createSlice({
         state.status = "fulfilled";
       })
       .addCase(registrationUser.rejected, state => {
+        state.status = "fulfilled";
+        state.isAuth = false;
+      })
+      .addCase(logInUser.pending, state => {
+        state.status = "pending";
+      })
+      .addCase(logInUser.fulfilled, (state, action) => {
+        const { is_provider } = action.payload;
+
+        state.status = "fulfilled";
+
+        if (is_provider) state.isProviderAuth = true;
+        else state.isAuth = true;
+      })
+      .addCase(logInUser.rejected, state => {
         state.status = "fulfilled";
         state.isAuth = false;
       })
@@ -259,6 +318,20 @@ const userSlice = createSlice({
       .addCase(getReviews.fulfilled, (state, action) => {
         state.status = "fulfilled";
         state.userReviews = action.payload;
+      })
+      .addCase(getNews.pending, state => {
+        state.status = "pending";
+      })
+      .addCase(getNews.fulfilled, (state, action) => {
+        state.status = "fulfilled";
+        state.providerNews = action.payload;
+      })
+      .addCase(getReviewsProvider.pending, state => {
+        state.status = "pending";
+      })
+      .addCase(getReviewsProvider.fulfilled, (state, action) => {
+        state.status = "fulfilled";
+        state.providerReviews = action.payload;
       }),
 });
 

@@ -10,10 +10,6 @@ export type CustomFormType =
   | IInputsChangeProfile
   | IInputsRegistrationProvider;
 
-export interface IIconsProps {
-  id: string;
-}
-
 export interface IProductCart {
   id: number;
   product: {
@@ -331,18 +327,24 @@ interface IUserData extends IUserInformationApi {
   address: string;
 }
 
-export interface IUserState {
-  userState: IUserData | null;
-  userReviews: IUserReviewState[];
-  userOrders: IUserOrdersState[];
-  isAuth: boolean;
-  status: "pending" | "fulfilled";
+export interface IProviderNewsObj {
+  id: number;
+  image: string;
+  title: string;
+  text: string;
+  data: string;
 }
 
-export interface IProviderState {
-  providerState: null | any;
-  status: IUserState["status"];
+export interface IUserState {
+  userState: IUserData | null;
+  providerState: null | IPostRegistrationProvider;
+  userReviews: IUserReviewState[];
+  userOrders: IUserOrdersState[];
+  providerNews: IProviderNewsObj[];
+  providerReviews: [];
   isAuth: boolean;
+  isProviderAuth: boolean;
+  status: "pending" | "fulfilled";
 }
 
 export interface IPostRegistrationProvider {
@@ -357,8 +359,8 @@ export interface IPostRegistrationProvider {
   phone_number: string;
   company: string;
   address: string;
-  state: "1s" | "2s" | "3s" | "F";
-  taxpayer_identification_number: number;
+  state: "M" | "F" | "C" | "B";
+  taxpayer_identification_number: string;
   bank_account_number: {
     number: string;
   };

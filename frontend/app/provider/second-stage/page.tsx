@@ -1,19 +1,23 @@
 "use client";
 
 //Global
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 //Components
 import { Button } from "@nextui-org/react";
+import { Icons } from "@/components/Icons/Icons";
 
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
+import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useUserActions } from "@/hooks/useUserActions";
 
 //Utils
 import {
   FIRST_STAGE_ROUTE,
+  PROVIDER_ROUTE,
   SECOND_STAGE_ROUTE,
   THIRD_STAGE_ROUTE,
 } from "@/utils/Consts";
@@ -23,9 +27,23 @@ import "../first-stage/first-stage.scss";
 import "./second-stage.scss";
 
 export default function SecondStage() {
+  const { status, isProviderAuth } = useTypedSelector(state => state.user);
+
+  const { onGetUser } = useUserActions();
+
   const { push } = useRouter();
 
   const text = useTranslate();
+
+  useEffect(() => {
+    onGetUser();
+  }, [onGetUser]);
+
+  useEffect(() => {
+    if (isProviderAuth && status === "fulfilled") push(PROVIDER_ROUTE);
+  }, [isProviderAuth, status, push]);
+
+  if (isProviderAuth || status === "pending") return <Icons id="spiner" />;
 
   return (
     <div className="first-stage_wrapper">

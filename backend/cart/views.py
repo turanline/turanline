@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from drf_spectacular.utils import extend_schema
-from rest_framework import mixins, status, viewsets
+from rest_framework import filters, mixins, status, viewsets
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from . import models, serializers, permissions
@@ -16,6 +16,8 @@ class CartProductsViewSet(
 ):
     queryset = models.OrderProduct.objects.select_related('order', 'product')
     serializer_class = serializers.CartProductReadSerializer
+    # filter_backends = [filters.SearchFilter]
+    # search_fields = ['order_number',]
     permission_classes = [
         IsAuthenticated
         | IsAdminUser
