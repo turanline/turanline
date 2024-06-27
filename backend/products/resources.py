@@ -7,6 +7,12 @@ from users import models as user_models
 
 class ProductsResource(resources.ModelResource):
 
+    amount = fields.Field(
+        column_name='amount',
+        attribute='amount',
+        widget=widgets.IntegerWidget(coerce_to_string=False)
+    )
+
     provider = fields.Field(
         column_name='provider',
         attribute='provider',
@@ -65,6 +71,7 @@ class ProductsResource(resources.ModelResource):
         exclude = (
             'image',
             'is_famous',
+            'is_published',
             'status',
             'date_and_time'
         )

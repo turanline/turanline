@@ -1,7 +1,18 @@
+import os
+
 from django.db import models
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 
 from users.models import User
 from .enums import ProviderStates
+
+
+class OverwriteStorage(FileSystemStorage):
+    def get_available_name(self, name, *args, **kwargs):
+        if self.exists(name):
+            os.remove(os.path.join(settings.MEDIA_ROOT, name))
+        return name
 
 
 class BankAccountNumber(models.Model):
@@ -69,6 +80,13 @@ class Provider(models.Model):
         choices=ProviderStates,
         null=False,
         blank=False,
+    )
+
+    last_downloaded_file = models.FileField(
+        upload_to='downloaded_xlsx/',
+        storage=OverwriteStorage(),
+        null=True,
+        blank=True,
     )
 
     def __str__(self) -> str:

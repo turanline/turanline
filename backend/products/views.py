@@ -1,9 +1,13 @@
 import pandas as pd
 from tablib import Dataset
 
+from django.core.files.base import ContentFile
+from django_filters.rest_framework import DjangoFilterBackend
+from django.shortcuts import get_object_or_404
+from django.conf import settings
 from import_export import exceptions
 from drf_spectacular.utils import extend_schema
-from rest_framework import mixins, status, viewsets, views, parsers, permissions, generics
+from rest_framework import mixins, status, viewsets, views, parsers, permissions, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -11,9 +15,10 @@ from . import models, enums, resources, serializers
 from . import permissions as product_permissions
 from customers import models as customer_models
 from customers import serializers as customer_serializers
+from providers import models as provider_models
 
 
-class ImportProductDataView(generics.GenericAPIView):
+class ImportProductDataView(views.APIView):
     parser_classes = [parsers.MultiPartParser]
 
     def post(self, request, *args, **kwargs):
@@ -48,6 +53,20 @@ class ImportProductDataView(generics.GenericAPIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+    def get(self, request, *args, **kwargs):
+        provider = get_object_or_404(provider_models.Provider, user=request.user)
+        queryset = models.Product.objects.filter(provider=provider.user)
+        dataset = resources.ProductsResource().export(queryset)
+        dataset.headers = enums.rename_columns.keys()
+        content_file = ContentFile(dataset.export('xlsx'), name=f'{provider.company}_products.xlsx')
+        provider.last_downloaded_file.save(f'{provider.company}_products.xlsx', content_file)
+        return Response(
+            data={
+                'file': f'http://localhost:8000/media/downloaded_xlsx/{provider.company}_products.xlsx'
+            },
+            status=status.HTTP_200_OK
+        )
+
 
 @extend_schema(tags=['products'])
 class ProductsViewSet(
@@ -67,6 +86,9 @@ class ProductsViewSet(
         product_permissions.ReadOnly
     ]
     lookup_field = 'slug'
+    filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
+    filterset_fields = ('status',)
+    ordering_fields = ('amount', 'date_and_time')
 
     @action(methods=['GET'], detail=False)
     def famous(self, request, *args, **kwargs):
