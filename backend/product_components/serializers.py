@@ -8,12 +8,6 @@ class BaseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ImagesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Images
-        fields = ('image',)
-
-
 class BrandSerializer(BaseSerializer):
     """Сериализатор для модели брендов продуктов."""
 

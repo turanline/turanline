@@ -31,12 +31,29 @@ class Product(models.Model):
         blank=True,
     )
 
-    image = models.ForeignKey(
-        product_components_models.Images,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name='Галерея'
+    first_image = models.ImageField(
+        'Первая картинка товара',
+        null=True
+    )
+
+    second_image = models.ImageField(
+        'Вторая картинка товара',
+        null=True
+    )
+
+    third_image = models.ImageField(
+        'Третья картинка товара',
+        null=True
+    )
+
+    fourth_image = models.ImageField(
+        'Четвертая картинка товара',
+        null=True
+    )
+
+    fifth_image = models.ImageField(
+        'Пятая картинка товара',
+        null=True
     )
 
     subTypes = models.ManyToManyField(

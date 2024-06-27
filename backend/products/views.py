@@ -3,7 +3,7 @@ from tablib import Dataset
 
 from import_export import exceptions
 from drf_spectacular.utils import extend_schema
-from rest_framework import mixins, status, viewsets, views, parsers, permissions, generics
+from rest_framework import mixins, status, viewsets, parsers, permissions, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -63,8 +63,8 @@ class ProductsViewSet(
     ).prefetch_related('subTypes')
     serializer_class = serializers.ProductSerializer
     permission_classes = [
-        permissions.IsAdminUser |
-        product_permissions.ReadOnly
+        permissions.IsAdminUser
+        | product_permissions.ReadOnly
     ]
     lookup_field = 'slug'
 

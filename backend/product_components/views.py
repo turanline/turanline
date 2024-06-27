@@ -14,8 +14,8 @@ class ProductCategoriesViewSet(
 ):
     queryset = models.Category.objects.all()
     permission_classes = [
-        permissions.IsAdminUser |
-        product_permissions.ReadOnly
+        permissions.IsAdminUser
+        | product_permissions.ReadOnly
     ]
     serializer_class = serializers.ProductCategoriesSerializer
 
@@ -42,8 +42,8 @@ class ProductTypesViewSet(
 ):
     queryset = models.ProductType.objects.all()
     permission_classes = [
-        permissions.IsAdminUser |
-        product_permissions.ReadOnly
+        permissions.IsAdminUser
+        | product_permissions.ReadOnly
     ]
     serializer_class = serializers.ProductTypeSerializer
 
@@ -55,8 +55,8 @@ class ProductSubTypesViewSet(
 ):
     queryset = models.ProductSubType.objects.all()
     permission_classes = [
-        permissions.IsAdminUser |
-        product_permissions.ReadOnly
+        permissions.IsAdminUser
+        | product_permissions.ReadOnly
     ]
     serializer_class = serializers.ProductSubTypeSerializer
 
@@ -68,7 +68,7 @@ class ManufacturerCountryViewSet(
 ):
     queryset = models.ManufacturerCountry.objects.all()
     permission_classes = [
-        permissions.IsAdminUser |
-        product_permissions.ReadOnly
+        permissions.IsAdminUser
+        | product_permissions.ReadOnly
     ]
     serializer_class = serializers.ManufactoryCountrySerializer

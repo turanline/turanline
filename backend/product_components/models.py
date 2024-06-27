@@ -13,23 +13,6 @@ class BaseModel(models.Model):
         ordering = ['-name']
 
 
-class Images(models.Model):
-    image = models.ImageField(
-        'Картинка товара',
-        upload_to='products-images/',
-        null=True,
-        blank=True,
-    )
-
-    class Meta:
-        verbose_name = 'Gallery'
-        verbose_name_plural = 'Galleries'
-        ordering = ['pk']
-
-    def __str__(self) -> str:
-        return self.name
-
-
 class Color(BaseModel):
     """Модель цвета."""
 

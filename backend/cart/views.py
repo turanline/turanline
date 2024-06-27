@@ -1,7 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets, filters
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 
 from . import models, serializers, permissions
 
@@ -19,9 +19,8 @@ class CartProductsViewSet(
     filter_backends = [filters.SearchFilter]
     search_fields = ['id',]
     permission_classes = [
-        IsAuthenticated
-        | IsAdminUser
-        | permissions.IsOwnerPermission
+        IsAuthenticated,
+        permissions.IsCustomer
     ]
 
     def create(self, request, *args, **kwargs):

@@ -31,3 +31,4 @@ class ProductStatus(models.TextChoices):
     UNDER_CONSIDERATION = 'UC', 'Under consideration'
     REJECTED = 'R', 'Rejected'
     ACCEPTED = 'A', 'Accepted'
+    BIN = 'B', 'Bin'
