@@ -1,6 +1,8 @@
 import pandas as pd
 from tablib import Dataset
 
+from django.forms import model_to_dict
+
 from django.core.files.base import ContentFile
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
@@ -62,7 +64,7 @@ class ImportProductDataView(views.APIView):
         provider.last_downloaded_file.save(f'{provider.company}_products.xlsx', content_file)
         return Response(
             data={
-                'file': f'http://localhost:8000/media/downloaded_xlsx/{provider.company}_products.xlsx'
+                'file': f'https://{settings.ALLOWED_HOSTS[0]}/media/downloaded_xlsx/{provider.company}_products.xlsx'
             },
             status=status.HTTP_200_OK
         )

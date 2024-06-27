@@ -2,7 +2,6 @@ from django.db import models
 
 
 rename_columns = {
-    'ID': 'id',
     'Provider': 'provider',
     'Name of product': 'name',
     'Description of product': 'description',

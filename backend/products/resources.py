@@ -69,6 +69,7 @@ class ProductsResource(resources.ModelResource):
     class Meta:
         model = models.Product
         exclude = (
+            'id',
             'image',
             'is_famous',
             'is_published',
