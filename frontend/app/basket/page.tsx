@@ -1,9 +1,11 @@
 "use client";
 
-//Components
-import { useEffect } from "react";
-import Link from "next/link";
+//Global
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
+
+//Components
+import Link from "next/link";
 
 //Utils
 import {
@@ -11,7 +13,6 @@ import {
   SHOP_ROUTE,
   ORDER_ROUTE,
   CATALOG_ROUTE,
-  LOGIN_ROUTE,
 } from "@/utils/Consts";
 
 //Hooks
@@ -31,19 +32,14 @@ import "./basket.scss";
 import "swiper/css/pagination";
 
 export default function Basket() {
-  const { isAuth, status: userStatus } = useTypedSelector(state => state.user),
+  const {
+      isAuth,
+      status: userStatus,
+      isProviderAuth,
+    } = useTypedSelector(state => state.user),
     { cart, status: cartStatus } = useTypedSelector(state => state.cart);
 
-  const { fetchCart } = useCart();
-
   const { push } = useRouter();
-
-  useEffect(() => {
-    if (userStatus === "fulfilled") {
-      if (isAuth) fetchCart();
-      else push(LOGIN_ROUTE);
-    }
-  }, [isAuth, fetchCart, userStatus, push]);
 
   const {
     emptyBasketButtonText,
@@ -56,6 +52,10 @@ export default function Basket() {
   } = useTranslate();
 
   const { calculateTotalPrice } = useCart();
+
+  useEffect(() => {
+    if (!isAuth && userStatus === "fulfilled") push(SHOP_ROUTE);
+  }, [userStatus, isAuth, isProviderAuth]);
 
   if (!isAuth || cartStatus === "pending" || userStatus === "pending")
     return <Icons id="spiner" />;

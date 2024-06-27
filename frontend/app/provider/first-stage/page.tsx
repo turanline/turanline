@@ -1,39 +1,42 @@
 "use client";
 
 //Global
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 //Components
 import { Select, SelectItem, Input, Button } from "@nextui-org/react";
 import InputMask from "react-input-mask";
+import { Icons } from "@/components/Icons/Icons";
 
 //Hooks
 import { useCustomForm } from "@/hooks/useCustomForm.";
-import { useProviderActions } from "@/hooks/useProviderActions";
+import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useUserActions } from "@/hooks/useUserActions";
 
 //Utils
 import {
   FIRST_STAGE_ROUTE,
+  PROVIDER_ROUTE,
   SECOND_STAGE_ROUTE,
   THIRD_STAGE_ROUTE,
 } from "@/utils/Consts";
 
 //Types
-import {
-  IInputsRegistrationProvider,
-  IPostRegistrationProvider,
-} from "@/types/types";
+import { IInputsRegistrationProvider } from "@/types/types";
 
 //Styles
 import "./first-stage.scss";
 
 export default function Provider() {
-  const [isAccept, setIsAccept] = useState<boolean>(true),
-    [selected, setSelected] = useState<string>("");
+  const { providerState, status } = useTypedSelector(state => state.user);
 
-  const { onRegistrationProvider } = useProviderActions();
+  const [selected, setSelected] = useState<string>("");
+
+  const { onRegistrationUser, onGetUser } = useUserActions();
+
+  const { push } = useRouter();
 
   const {
     isValid,
@@ -44,6 +47,15 @@ export default function Provider() {
     reset,
     setValue,
   } = useCustomForm<IInputsRegistrationProvider>();
+
+  useEffect(() => {
+    onGetUser();
+  }, [onGetUser]);
+
+  useEffect(() => {
+    if (providerState && providerState.state === "F" && status === "fulfilled")
+      push(PROVIDER_ROUTE);
+  }, [providerState, status, push]);
 
   const handleSubmitForm = () => {
     const {
@@ -58,28 +70,32 @@ export default function Provider() {
       username,
     } = getValues();
 
-    const body: IPostRegistrationProvider = {
-      user: {
-        first_name,
-        last_name,
-        password,
-        username,
-        is_provider: true,
-      },
-      address,
-      bank_account_number: { number: inspection.toString() },
-      company,
-      state: "1s",
-      country: selected,
-      phone_number,
-      taxpayer_identification_number: mersis,
-    };
-
     if (isValid && selected)
-      onRegistrationProvider(body)
+      onRegistrationUser(
+        {
+          user: {
+            first_name,
+            last_name,
+            password,
+            username,
+            is_provider: true,
+          },
+          address,
+          bank_account_number: { number: inspection.toString() },
+          company,
+          state: "M",
+          country: selected,
+          phone_number,
+          taxpayer_identification_number: mersis.toString(),
+        },
+        "provider"
+      )
         .then(data => {
-          console.log(data);
-          console.log(body);
+          if ("error" in data && data.error.message === "Rejected") {
+            console.error("регистрация не вышла");
+          } else {
+            push(SECOND_STAGE_ROUTE);
+          }
         })
         .catch(error => console.log(error))
         .finally(() => {
@@ -89,7 +105,7 @@ export default function Provider() {
   };
 
   const returnAcceptedBlock = () => {
-    if (isAccept) {
+    if (providerState?.state !== "C") {
       return (
         <Button className="submit-form" type="submit">
           Продолжить
@@ -130,12 +146,17 @@ export default function Provider() {
     "Португалия",
   ];
 
+  if (status === "pending" || providerState?.state === "F")
+    return <Icons id="spiner" />;
+
   return (
     <div className="first-stage_wrapper">
       <div className="first-stage_content">
         <div className="first-stage_header">
           <h3 className="first-stage_title">
-            {isAccept ? "Данные компаниии" : "Заявка не принята"}
+            {providerState?.state !== "C"
+              ? "Данные компаниии"
+              : "Заявка не принята"}
           </h3>
 
           <div className="provider-stages">

@@ -1,14 +1,20 @@
+"use client";
+
 //Global
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 
 //Components
 import { Icons } from "@/components/Icons/Icons";
 
+//Hooks
+import { useUserActions } from "@/hooks/useUserActions";
+
 //Utils
 import {
   FIRST_STAGE_ROUTE,
   SECOND_STAGE_ROUTE,
+  SHOP_ROUTE,
   THIRD_STAGE_ROUTE,
 } from "@/utils/Consts";
 
@@ -17,6 +23,12 @@ import "../first-stage/first-stage.scss";
 import "./third-stage.scss";
 
 export default function ThirdStage() {
+  const { onGetUser } = useUserActions();
+
+  useEffect(() => {
+    onGetUser();
+  }, [onGetUser]);
+
   return (
     <div className="first-stage_wrapper">
       <div className="first-stage_content">

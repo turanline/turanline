@@ -11,6 +11,8 @@ import {
   getOrders,
   getReviews,
   logOutUser,
+  getNews,
+  getReviewsProvider,
 } from "@/redux/reducers/userSlice";
 
 //Hooks
@@ -23,6 +25,7 @@ import { useTranslate } from "./useTranslate";
 import {
   IChangeUserData,
   IInputsLogin,
+  IPostRegistrationProvider,
   IUserInformationApi,
 } from "@/types/types";
 
@@ -40,12 +43,12 @@ const useUserActions = () => {
   );
 
   const onRegistrationUser = useCallback(
-    (information: IUserInformationApi) =>
-      dispatch(registrationUser(information)),
+    (
+      information: IPostRegistrationProvider | IUserInformationApi,
+      requestString: "customer" | "provider"
+    ) => dispatch(registrationUser({ information, requestString })),
     [dispatch]
   );
-
-  const onGetUser = useCallback(() => dispatch(getUser()), [dispatch]);
 
   const onChangeUserData = useCallback(
     (newUserData: IChangeUserData) =>
@@ -53,9 +56,14 @@ const useUserActions = () => {
     [dispatch]
   );
 
-  const onGetOrders = useCallback(() => dispatch(getOrders()), [dispatch]);
-
-  const onGetReviews = useCallback(() => dispatch(getReviews()), [dispatch]);
+  const onGetUser = useCallback(() => dispatch(getUser()), [dispatch]),
+    onGetOrders = useCallback(() => dispatch(getOrders()), [dispatch]),
+    onGetReviews = useCallback(() => dispatch(getReviews()), [dispatch]),
+    onGetProviderNews = useCallback(() => dispatch(getNews()), [dispatch]),
+    onGetProviderReviews = useCallback(
+      () => dispatch(getReviewsProvider()),
+      [dispatch]
+    );
 
   const onLogOutUser = useCallback(
     () =>
@@ -78,6 +86,8 @@ const useUserActions = () => {
     onGetOrders,
     onGetReviews,
     onLogOutUser,
+    onGetProviderNews,
+    onGetProviderReviews,
   };
 };
 

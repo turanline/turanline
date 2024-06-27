@@ -8,15 +8,17 @@ from product_components import models as product_components_models
 
 
 class Order(models.Model):
-    """Модель объекта включенного в состав заказа."""
+    """Модель заказа."""
 
     address = models.CharField(
+        'Адрес доставки заказа',
         max_length=1024,
         null=True,
         blank=True,
     )
 
     payment_method = models.CharField(
+        'Метод оплаты заказа',
         max_length=50,
         choices=enums.PaymentMethods,
         null=True,
@@ -24,6 +26,7 @@ class Order(models.Model):
     )
 
     status = models.CharField(
+        'Статус закаказа',
         max_length=50,
         choices=enums.OrderStatuses,
         null=True,
@@ -31,11 +34,13 @@ class Order(models.Model):
     )
 
     created_date = models.DateField(
+        'Дата создания заказа',
         null=True,
         blank=True,
     )
 
     total_sum = models.DecimalField(
+        'Общая сумма заказа',
         max_digits=10,
         decimal_places=2,
         validators=[
@@ -52,6 +57,7 @@ class Order(models.Model):
         user_models.User,
         on_delete=models.CASCADE,
         null=False,
+        verbose_name='Покупатель оформивший заказ'
     )
 
     def __str__(self) -> str:
@@ -63,7 +69,7 @@ class Order(models.Model):
 
 
 class OrderProduct(models.Model):
-    """Модель заказа."""
+    """Модель объекта включенного в состав заказа."""
 
     order = models.ForeignKey(
         Order,

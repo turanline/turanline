@@ -1,38 +1,26 @@
 //Hosts and JWT
-import { jwtDecode } from "jwt-decode";
 import { $authHost, $host } from "./index";
 
 //Types
 import {
   IUserInformationApi,
   IChangeUserData,
-  IInputsLogin,
+  IPostRegistrationProvider,
 } from "@/types/types";
 
 export const postRegistration = async (
-  userInformation: IUserInformationApi
+  requestString: "provider" | "customer",
+  userInformation: IUserInformationApi | IPostRegistrationProvider
 ) => {
   try {
-    const { data } = await $host.post("/api/customer/", userInformation);
+    const { data } = await $host.post(
+      `/api/${requestString}/`,
+      userInformation
+    );
 
     return data;
   } catch (error) {
     throw new Error(`${error}`);
-  }
-};
-
-export const postLogin = async (userData: IInputsLogin): Promise<any> => {
-  try {
-    const { data } = await $host.post("/api/token/", userData);
-
-    if (data.access && data.refresh) {
-      localStorage.setItem("AuthTokenMis", data.access);
-      localStorage.setItem("AuthTokenMisRef", data.refresh);
-    }
-
-    return jwtDecode(data.access);
-  } catch (error: any) {
-    throw new Error(`Failed to log in: ${error.message}`);
   }
 };
 
@@ -50,7 +38,11 @@ export const postLogOut = async (refreshToken: string) => {
 
 export const getUserData = async (id: number, token: string) => {
   try {
-    const { data } = await $host.get(`/api/customer/${id}`, {
+    const information = await getUserById(id);
+
+    const requestString = information?.is_provider ? "provider" : "customer";
+
+    const { data } = await $host.get(`/api/${requestString}/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -82,7 +74,7 @@ export const changeUserData = async (
 
 export const getUserOrders = async (id: number, token: string) => {
   try {
-    const { data } = await $host.get(`/api/users/${id}/orders/`, {
+    const { data } = await $authHost.get(`/api/users/${id}/orders/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -96,7 +88,45 @@ export const getUserOrders = async (id: number, token: string) => {
 
 export const getUserReviews = async (id: number, token: string) => {
   try {
-    const { data } = await $host.get(`/api/users/${id}/reviews`, {
+    const { data } = await $authHost.get(`/api/users/${id}/reviews`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+};
+
+export const getUserById = async (id: number) => {
+  try {
+    const { data } = await $host.get(`/api/users/${id}`);
+
+    return data;
+  } catch (error: any) {
+    throw new Error(`${error.message}`);
+  }
+};
+
+export const getProviderNews = async (token: string) => {
+  try {
+    const { data } = await $authHost.get("/api/superusernews/", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+};
+
+export const getProviderReviews = async (id: number, token: string) => {
+  try {
+    const { data } = await $authHost.get(`/api/provider/${id}/reviews/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

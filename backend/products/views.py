@@ -1,8 +1,6 @@
 import pandas as pd
 from tablib import Dataset
 
-from django.forms import model_to_dict
-
 from django.core.files.base import ContentFile
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
@@ -84,8 +82,8 @@ class ProductsViewSet(
     ).prefetch_related('subTypes')
     serializer_class = serializers.ProductSerializer
     permission_classes = [
-        permissions.IsAdminUser |
-        product_permissions.ReadOnly
+        permissions.IsAdminUser
+        | product_permissions.ReadOnly
     ]
     lookup_field = 'slug'
     filter_backends = (filters.OrderingFilter, DjangoFilterBackend)

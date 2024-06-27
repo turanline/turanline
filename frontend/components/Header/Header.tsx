@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { showToastMessage } from "@/app/toastsChange";
+import { useRouter } from "next/navigation";
 
 //Components
-import { Icons } from "../Icons/Icons";
 import {
   Badge,
   Tooltip,
@@ -20,6 +20,8 @@ import {
 import { SearchModal } from "../SearchModal/SearchModal";
 import { HeaderSearch } from "../HeaderSearch/HeaderSearch";
 import { LanguageSelect } from "../LanguageSelect/LanguageSelect";
+import { ProviderHeader } from "../ProviderHeader/ProviderHeader";
+import { Icons } from "../Icons/Icons";
 
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
@@ -51,13 +53,13 @@ import logo2 from "@/public/assets/other/logo2.svg";
 //Styles
 import "./Header.scss";
 
-export default function Header() {
+export function Header() {
   const [searchModal, setSearchModal] = useState<boolean>(false),
     [isOpen, setIsOpen] = useState<boolean>(false);
 
   const { category } = useTypedSelector(state => state.products),
     { categories } = useTypedSelector(state => state.categories),
-    { isAuth } = useTypedSelector(state => state.user),
+    { isAuth, isProviderAuth, status } = useTypedSelector(state => state.user),
     { cart } = useTypedSelector(state => state.cart),
     { favorites } = useTypedSelector(state => state.favorites);
 
@@ -73,22 +75,27 @@ export default function Header() {
       onSetSubtypes,
     } = useCategories("#E30387");
 
+  const { push } = useRouter();
+
   useEffect(() => {
     onGetUser();
   }, [onGetUser]);
 
   useEffect(() => {
-    if (isAuth) {
-      fetchFavorites();
-      fetchCart();
-    }
+    if (status === "fulfilled")
+      if (isAuth) {
+        fetchFavorites();
+        fetchCart();
+      }
   }, [isAuth, fetchFavorites, fetchCart]);
 
   useEffect(() => {
-    onSetCategories();
-    onSetTypes();
-    onSetSubtypes();
-  }, [onSetCategories, onSetTypes, onSetSubtypes]);
+    if (!isProviderAuth) {
+      onSetCategories();
+      onSetTypes();
+      onSetSubtypes();
+    }
+  }, [onSetCategories, onSetTypes, onSetSubtypes, isProviderAuth]);
 
   const {
     headerAbout,
@@ -140,13 +147,12 @@ export default function Header() {
             style={{ cursor: "pointer" }}
             content={
               <div className="flex flex-col items-center">
-                <Button style={buttonStyles}>
-                  <Link
-                    className="h-[40px] flex items-center"
-                    href={PROFILE_ROUTE}
-                  >
-                    {headerToProfile}
-                  </Link>
+                <Button
+                  className="h-[40px] flex items-center"
+                  onClick={() => push(PROFILE_ROUTE)}
+                  style={buttonStyles}
+                >
+                  {headerToProfile}
                 </Button>
 
                 <Button onClick={onLogOutUser} style={buttonStyles}>
@@ -159,7 +165,7 @@ export default function Header() {
             <div className="flex flex-col items-center cursor-pointer">
               <Icons id="profileWhiteAccount" />
 
-              <p className="text-white">{accountProfileText}</p>
+              <span className="text-white">{accountProfileText}</span>
             </div>
           </Tooltip>
         );
@@ -197,9 +203,12 @@ export default function Header() {
       ? "w-[25px] h-[25px] visible"
       : "hidden";
 
-  const accountProfileText = !isAuth ? headerLogIn : headerProfile;
-  const PROFILE_ROUTER = !isAuth ? LOGIN_ROUTE : PROFILE_ROUTE;
-  const FAVORITE_ROUTER = !isAuth ? LOGIN_ROUTE : FAVORITES_ROUTE;
+  const accountProfileText = !isAuth ? headerLogIn : headerProfile,
+    PROFILE_ROUTER = !isAuth ? LOGIN_ROUTE : PROFILE_ROUTE,
+    FAVORITE_ROUTER = !isAuth ? LOGIN_ROUTE : FAVORITES_ROUTE,
+    CART_ROUTE = !isAuth ? LOGIN_ROUTE : BASKET_ROUTE;
+
+  if (isProviderAuth && status === "fulfilled") return <ProviderHeader />;
 
   return (
     <header className="header-color">
@@ -260,11 +269,11 @@ export default function Header() {
                 <Icons id="whiteHeart" />
               </Badge>
 
-              <p className="text-white">{headerFavorites}</p>
+              <span className="text-white">{headerFavorites}</span>
             </Link>
 
             <Link
-              href={BASKET_ROUTE}
+              href={CART_ROUTE}
               className="flex flex-col items-center"
               onClick={() => handleClickButton(messageHeaderCart)}
             >
@@ -276,7 +285,7 @@ export default function Header() {
                 <Icons id="whiteCart" />
               </Badge>
 
-              <p className="text-white">{headerCart}</p>
+              <span className="text-white">{headerCart}</span>
             </Link>
 
             {returnHeaderElement(false)}

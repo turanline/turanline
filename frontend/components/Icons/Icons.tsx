@@ -1,10 +1,9 @@
 //Global
 import { FC } from "react";
 
-//Types
-import { IIconsProps } from "../../types/types";
-
-export const Icons: FC<IIconsProps> = ({ id }) => {
+export const Icons: FC<{
+  id: string;
+}> = ({ id }) => {
   switch (id) {
     case "profile-account":
       return (
