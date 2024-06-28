@@ -27,7 +27,6 @@ class ProductLightSerializer(BaseSerializer):
 class ProductSerializer(BaseSerializer):
     """Сериализатор для модели продуктов."""
 
-    image = product_components_serializers.ImagesSerializer(many=True)
     brand = product_components_serializers.BrandSerializer()
     color = product_components_serializers.ColorSerializer()
     size = product_components_serializers.SizeSerializer()
@@ -36,3 +35,9 @@ class ProductSerializer(BaseSerializer):
 
     class Meta(BaseSerializer.Meta):
         lookup_field = 'slug'
+
+
+class ProductStatusChangeArchiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ProductStatusChangeArchive
+        fields = '__all__'

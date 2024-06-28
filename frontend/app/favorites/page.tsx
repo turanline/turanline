@@ -1,7 +1,7 @@
 "use client";
 
 //Global
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 //Components
@@ -13,15 +13,9 @@ import { Icons } from "@/components/Icons/Icons";
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
 import { useTypedSelector } from "@/hooks/useTypedSelector";
-import { useFavorites } from "@/hooks/useFavorites";
 
 //Utils
-import {
-  CATALOG_ROUTE,
-  FAVORITES_ROUTE,
-  LOGIN_ROUTE,
-  SHOP_ROUTE,
-} from "@/utils/Consts";
+import { CATALOG_ROUTE, FAVORITES_ROUTE, SHOP_ROUTE } from "@/utils/Consts";
 
 //Styles
 import "./favorites.scss";
@@ -32,17 +26,6 @@ export default function Favorites() {
       state => state.favorites
     );
 
-  const { push } = useRouter();
-
-  const { fetchFavorites } = useFavorites();
-
-  useEffect(() => {
-    if (userStatus === "fulfilled") {
-      if (isAuth) fetchFavorites();
-      else push(LOGIN_ROUTE);
-    }
-  }, [isAuth, fetchFavorites, userStatus, push]);
-
   const {
     emptyFavoritesTitle,
     emptyBasketButtonText,
@@ -50,6 +33,12 @@ export default function Favorites() {
     mainPageRoute,
     headerFavorites,
   } = useTranslate();
+
+  const { push } = useRouter();
+
+  useEffect(() => {
+    if (!isAuth && userStatus === "fulfilled") push(SHOP_ROUTE);
+  }, [isAuth, userStatus]);
 
   if (!isAuth || favoritesStatus === "pending" || userStatus === "pending")
     return <Icons id="spiner" />;

@@ -26,22 +26,6 @@ const ProviderOrders = () => {
   return (
     <div className="provider-page_wrapper">
       <div className="provider-page_content">
-        <div className="provider-page_header">
-          <nav className="provider-page_header-links">
-            <Link href="#">Партнеры</Link>
-
-            <Link href={PROVIDER_ROUTE}>Главная</Link>
-
-            <Link href={PROVIDER_PRODUCTS_ROUTE}>Товары и цены</Link>
-
-            <Link style={{ color: "#0ABAB5" }} href="#">
-              Заказы и отзывы
-            </Link>
-          </nav>
-
-          <span className="provider-link">ООО Плащи и куртки</span>
-        </div>
-
         <div className="provider-content_orders">
           <div className="provider-content_orders-header">
             <h5 className="provider-content_orders-header-text">

@@ -6,7 +6,7 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from . import models, serializers
+from . import models, serializers, paginations
 from products import models as product_models
 from products import serializers as product_serializers
 from customers import models as customer_models
@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 @extend_schema(tags=['provider'])
 class ProviderViewSet(viewsets.ModelViewSet):
     queryset = models.Provider.objects.all()
+    pagination_class = paginations.NotificationPaginator
     serializer_class = serializers.ProviderSerializer
 
     @transaction.atomic
@@ -79,10 +80,28 @@ class ProviderViewSet(viewsets.ModelViewSet):
         )
 
     @action(methods=['GET'], detail=True)
-    def date_joined(self, request, *args, **kwargs):
+    def time_left(self, request, *args, **kwargs):
         provider = self.get_object()
-        serializer = serializers.ProviderDateJoinedSerializer(provider.user)
+        serializer = serializers.ModerationTimeSerializer(provider.user)
         return Response(
             status=status.HTTP_200_OK,
             data=serializer.data
         )
+
+    @action(methods=['GET'], detail=True)
+    def status_change_archive(self, request, *args, **kwargs):
+        provider = self.get_object()
+        user = provider.user
+        archive_qs = product_models.ProductStatusChangeArchive.objects.filter(
+            provider=user
+        )
+        page = self.paginate_queryset(archive_qs)
+        if page is not None:
+            serializer = product_serializers.ProductStatusChangeArchiveSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = product_serializers.ProductStatusChangeArchiveSerializer(
+            archive_qs,
+            many=True
+        )
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -18,6 +18,7 @@ import {
   DELIVERY_ROUTE,
   PAYMENT_ROUTE,
   POLITIC_ROUTE,
+  PROVIDER_LOGIN_ROUTE,
   PROVIDER_ROUTE,
   SHOP_ADDRESS,
   SHOP_EMAIL,
@@ -34,8 +35,11 @@ import logo from "../../public/assets/other/logo2.svg";
 
 //Styles
 import "./Footer.scss";
+import { useTypedSelector } from "@/hooks/useTypedSelector";
 
-export default function Footer() {
+export function Footer() {
+  const { isProviderAuth } = useTypedSelector(state => state.user);
+
   const {
     footerPayment,
     footerPolitics,
@@ -50,8 +54,8 @@ export default function Footer() {
   const { onSetCategories, mapCategoriesOnDesktop } = useCategories("#0ABAB5");
 
   useEffect(() => {
-    onSetCategories();
-  }, [onSetCategories]);
+    !isProviderAuth && onSetCategories();
+  }, [onSetCategories, isProviderAuth]);
 
   return (
     <footer>
@@ -65,7 +69,7 @@ export default function Footer() {
             <Link href={DELIVERY_ROUTE}>{headerDelivery}</Link>
             <Link href={PAYMENT_ROUTE}>{footerPayment}</Link>
             <Link href={POLITIC_ROUTE}>{footerPolitics}</Link>
-            <Link href={PROVIDER_ROUTE}>{footerProviders}</Link>
+            <Link href={PROVIDER_LOGIN_ROUTE}>{footerProviders}</Link>
           </div>
         </nav>
         <nav className="grid grid-cols-2 md:flex w-full justify-between">
@@ -141,7 +145,7 @@ export default function Footer() {
       </div>
 
       <div className="hidden lg:block w-full bg-tiffani mb-[24px]">
-        {mapCategoriesOnDesktop()}
+        {!isProviderAuth && mapCategoriesOnDesktop()}
       </div>
 
       <div className="w-full container mx-auto flex justify-between items-center mb-4 px-[28px] sm:px-0">

@@ -6,10 +6,6 @@
   .provider-page_content {
     max-width: 1536px;
   }
-
-  .provider-page_blocks {
-    padding: 50px 0;
-  }
 }
 
 @media (max-width: 1536px) {
@@ -35,10 +31,6 @@
 
   .provider-header {
     flex-direction: column-reverse;
-  }
-
-  .provider-page_blocks {
-    padding: 0;
   }
 }
 
@@ -130,17 +122,6 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
-
-.provider-page_header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  &-links {
-    display: flex;
-    gap: 35px;
-  }
 }
 
 .provider-page_blocks {

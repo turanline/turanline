@@ -2,8 +2,8 @@
 import { ToastContainer } from "react-toastify";
 
 //Components
-import Header from "../components/Header/Header";
-import Footer from "../components/Footer/Footer";
+import { Header } from "../components/Header/Header";
+import { Footer } from "../components/Footer/Footer";
 
 //Redux-Wrapper
 import { ProviderComponent } from "@/redux/provider";

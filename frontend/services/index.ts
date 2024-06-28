@@ -41,15 +41,15 @@ $authHost.interceptors.response.use(
 
           return $authHost(originalRequest);
         } catch {
-          // clearTokens();
+          clearTokens();
 
           return Promise.reject(error);
         }
       }
-      // clearTokens();
+      clearTokens();
     }
     if ([403, 500, 401, 404, 400].includes(error.response.status)) {
-      // clearTokens();
+      clearTokens();
     }
 
     return Promise.reject(error);

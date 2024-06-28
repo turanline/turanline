@@ -6,6 +6,7 @@ from decimal import Decimal
 from . import enums
 from product_components import models as product_components_models
 from users import models as user_models
+from providers import models as provider_models
 
 # один цвет
 # is_famous через связные таблицы
@@ -31,12 +32,29 @@ class Product(models.Model):
         blank=True,
     )
 
-    image = models.ForeignKey(
-        product_components_models.Images,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name='Галерея'
+    first_image = models.ImageField(
+        'Первая картинка товара',
+        null=True
+    )
+
+    second_image = models.ImageField(
+        'Вторая картинка товара',
+        null=True
+    )
+
+    third_image = models.ImageField(
+        'Третья картинка товара',
+        null=True
+    )
+
+    fourth_image = models.ImageField(
+        'Четвертая картинка товара',
+        null=True
+    )
+
+    fifth_image = models.ImageField(
+        'Пятая картинка товара',
+        null=True
     )
 
     subTypes = models.ManyToManyField(
@@ -155,3 +173,11 @@ class Product(models.Model):
             f'{self.article_number}-{self.name}-{self.color.name}'
         )
         return super().save(*args, **kwargs)
+
+
+class ProductStatusChangeArchive(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    old_status = models.CharField(max_length=50)
+    new_status = models.CharField(max_length=50)
+    changed_at = models.DateTimeField(auto_now_add=True)
+    provider = models.ForeignKey(user_models.User, on_delete=models.CASCADE)
