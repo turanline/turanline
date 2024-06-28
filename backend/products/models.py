@@ -6,6 +6,7 @@ from decimal import Decimal
 from . import enums
 from product_components import models as product_components_models
 from users import models as user_models
+from providers import models as provider_models
 
 # один цвет
 # is_famous через связные таблицы
@@ -172,3 +173,11 @@ class Product(models.Model):
             f'{self.article_number}-{self.name}-{self.color.name}'
         )
         return super().save(*args, **kwargs)
+
+
+class ProductStatusChangeArchive(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    old_status = models.CharField(max_length=50)
+    new_status = models.CharField(max_length=50)
+    changed_at = models.DateTimeField(auto_now_add=True)
+    provider = models.ForeignKey(user_models.User, on_delete=models.CASCADE)

@@ -1,6 +1,8 @@
+from datetime import timedelta
 import logging
 
-from rest_framework.serializers import ModelSerializer
+from django.utils import timezone
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from . import models
 from users import models as user_models
@@ -69,9 +71,20 @@ class ProviderSerializer(ModelSerializer):
         return instance
 
 
-class ProviderDateJoinedSerializer(ModelSerializer):
-    """Сериализатор для получения даты регистрации"""
+class ModerationTimeSerializer(ModelSerializer):
+    """Сериализатор для вычисления оставшегося времени с момента регистрации"""
+
+    time_left = SerializerMethodField()
 
     class Meta:
         model = user_models.User
-        fields = ('date_joined',)
+        fields = ('time_left',)
+
+    def get_time_left(self, obj):
+        now = timezone.now()
+        date_joined = obj.date_joined
+        elapsed_time = now - date_joined
+        remaining_time = timedelta(hours=24) - elapsed_time
+        if remaining_time.total_seconds() < 0:
+            remaining_time = timedelta(seconds=0)
+        return int(remaining_time.total_seconds())

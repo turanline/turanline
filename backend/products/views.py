@@ -78,7 +78,7 @@ class ProductsViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = models.Product.objects.select_related(
-        'brand', 'color', 'manufacturerCountry', 'size', 'image'
+        'brand', 'color', 'manufacturerCountry', 'size'
     ).prefetch_related('subTypes')
     serializer_class = serializers.ProductSerializer
     permission_classes = [
@@ -110,7 +110,7 @@ class ProductsViewSet(
         )
         serializer = self.get_serializer(filter_queryset, many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
-    
+
     @action(methods=['GET'], detail=True)
     def reviews(self, request, *args, **kwargs):
         obj = self.get_object()

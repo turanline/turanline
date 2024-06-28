@@ -35,3 +35,9 @@ class ProductSerializer(BaseSerializer):
 
     class Meta(BaseSerializer.Meta):
         lookup_field = 'slug'
+
+
+class ProductStatusChangeArchiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ProductStatusChangeArchive
+        fields = '__all__'

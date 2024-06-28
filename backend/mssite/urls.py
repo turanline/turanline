@@ -81,6 +81,7 @@ router.register(
     'news'
 )
 
+
 urlpatterns = [
     path(
         'admin/',

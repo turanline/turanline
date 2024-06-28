@@ -6,7 +6,6 @@ from . import models, serializers
 from products import permissions as product_permissions
 from products.services.products_service import ProductsService
 
-
 @extend_schema(tags=['categories'])
 class ProductCategoriesViewSet(
     mixins.ListModelMixin,
