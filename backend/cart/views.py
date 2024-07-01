@@ -26,13 +26,13 @@ class CartProductsViewSet(
     def create(self, request, *args, **kwargs):
         serializer = serializers.CartProductSerializer(data=request.data)
 
-        current_cart = models.Order.objects.get_or_create(
+        current_cart, created = models.Order.objects.get_or_create(
             user=request.user,
             status='CR'
         )
 
         if self.queryset.filter(
-            order=current_cart,
+            order=current_cart.id,
             product__pk=request.data.get('product')
         ).exists():
             return HttpResponse(
