@@ -1,6 +1,7 @@
 import logging
 
 from django.db import transaction
+from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
@@ -11,6 +12,7 @@ from products import models as product_models
 from products import serializers as product_serializers
 from customers import models as customer_models
 from customers import serializers as customer_serializers
+from cart import models as cart_models
 
 logger = logging.getLogger(__name__)
 
@@ -104,4 +106,12 @@ class ProviderViewSet(viewsets.ModelViewSet):
             archive_qs,
             many=True
         )
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['GET'], detail=False)
+    def get_orders(self, request, *args, **kwargs):
+        provider = get_object_or_404(models.Provider, user=request.user)
+        products_of_provider = product_models.Product.objects.filter(provider=provider.user)
+        order_product = cart_models.OrderProduct.filter(product__id__in=products_of_provider)
+        serializer = serializers.OrdersSerializers(order_product, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

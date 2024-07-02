@@ -38,6 +38,8 @@ class ProductSerializer(BaseSerializer):
 
 
 class ProductStatusChangeArchiveSerializer(serializers.ModelSerializer):
+    product = serializers.SlugRelatedField(read_only=True, slug_field='name')
+
     class Meta:
         model = models.ProductStatusChangeArchive
         fields = '__all__'

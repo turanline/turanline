@@ -70,7 +70,11 @@ class ProductsResource(resources.ModelResource):
         model = models.Product
         exclude = (
             'id',
-            'image',
+            'first_image',
+            'second_image',
+            'third_image',
+            'fourth_image',
+            'fifth_image',
             'is_famous',
             'is_published',
             'status',

@@ -2,6 +2,7 @@ import pandas as pd
 from tablib import Dataset
 
 from django.core.files.base import ContentFile
+from django.core.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from django.conf import settings
@@ -23,6 +24,8 @@ class ImportProductDataView(views.APIView):
 
     def post(self, request, *args, **kwargs):
         try:
+            if 'file' not in request.FILES:
+                raise ValidationError('The required file is missing.')
             df = pd.read_excel(request.FILES['file'])
             df.rename(columns=enums.rename_columns, inplace=True)
             product_resource = resources.ProductsResource()
@@ -50,6 +53,11 @@ class ImportProductDataView(views.APIView):
                                 'table template has not been changed'
                                 'And you did not add the same products.')
                 },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except ValidationError:
+            return Response(
+                data={'message': 'The required file was not attached'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
