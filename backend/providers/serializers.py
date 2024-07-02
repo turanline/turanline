@@ -7,6 +7,9 @@ from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from . import models
 from users import models as user_models
 from users import serializers as user_serializers
+from cart import models as cart_models
+from cart import serializers as cart_serializers
+from products import serializers as product_serializers
 
 logger = logging.getLogger(__name__)
 
@@ -88,3 +91,12 @@ class ModerationTimeSerializer(ModelSerializer):
         if remaining_time.total_seconds() < 0:
             remaining_time = timedelta(seconds=0)
         return int(remaining_time.total_seconds())
+
+
+class OrdersSerializers(ModelSerializer):
+    order = cart_serializers.CartProductReadSerializer()
+    product = product_serializers.ProductLightSerializer()
+
+    class Meta:
+        model = cart_models.OrderProduct
+        fields = '__all__'
