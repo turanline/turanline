@@ -46,7 +46,7 @@ services:
   nginx:
     cpus: "0.5"
     mem_limit: 500m
-    image: kuzilya/misexpress_gateway:latest
+    image: timrybakov/misexpress_gateway:latest
     container_name: me-gateway-app
     depends_on:
       - me-backend-app

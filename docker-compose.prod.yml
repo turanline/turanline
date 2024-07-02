@@ -18,7 +18,7 @@ services:
 
   me-backend-app:
     container_name: me-backend-app
-    image: kuzilya/misexpress_backend:latest
+    image: timrybakov/misexpress_backend:latest
     volumes:
       - static_data:/backend_static
       - media_data:/app/media/
@@ -30,7 +30,7 @@ services:
     command: sh -c "./entrypoint.sh"
 
   me-frontend-app:
-    image: kuzilya/misexpress_frontend:latest
+    image: timrybakov/misexpress_frontend:latest
     container_name: me-frontend-app
     depends_on:
       - me-backend-app
@@ -38,7 +38,7 @@ services:
     restart: always
 
   nginx:
-    image: kuzilya/misexpress_gateway:latest
+    image: timrybakov/misexpress_gateway:latest
     container_name: me-gateway-app
     depends_on:
       - me-backend-app
