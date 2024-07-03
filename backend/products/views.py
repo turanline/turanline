@@ -1,3 +1,5 @@
+import logging
+
 import pandas as pd
 from tablib import Dataset
 
@@ -17,6 +19,8 @@ from . import permissions as product_permissions
 from customers import models as customer_models
 from customers import serializers as customer_serializers
 from providers import models as provider_models
+
+logger = logging.getLogger(__name__)
 
 
 class ImportProductDataView(views.APIView):
@@ -47,7 +51,7 @@ class ImportProductDataView(views.APIView):
                     status=status.HTTP_200_OK
                 )
         except exceptions.ImportError as error:
-            print(error)
+            logger.error(error)
             return Response(
                 data={
                     'message': ('Make sure the data you have filled in is correct, '
