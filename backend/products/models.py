@@ -153,13 +153,7 @@ class Product(TranslatableModel):
         ordering = ['-slug']
 
     def __str__(self) -> str:
-        return f'Това поставщика {self.provider.username}'
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(
-            f'{self.article_number}-{self.color.name}'
-        )
-        return super().save(*args, **kwargs)
+        return f'Товар поставщика {self.provider.username}'
 
 
 class ProductStatusChangeArchive(models.Model):
