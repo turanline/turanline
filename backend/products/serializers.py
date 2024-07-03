@@ -1,13 +1,9 @@
 from rest_framework import serializers
+from parler_rest.serializers import TranslatableModelSerializer
+from parler_rest.fields import TranslatedFieldsField
 
-from . import models
+from . import models, mixins
 from product_components import serializers as product_components_serializers
-
-
-class BaseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Product
-        fields = '__all__'
 
 
 class ProductUpdateSerializer(serializers.ModelSerializer):
@@ -19,26 +15,43 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         exclude = ('slug',)
 
 
-class ProductLightSerializer(BaseSerializer):
+class ProductLightSerializer(serializers.ModelSerializer):
     """Легкий сериализатор для модели продуктов."""
-    pass
+
+    class Meta:
+        model = models.Product
+        fields = '__all__'
 
 
-class ProductSerializer(BaseSerializer):
+class ProductSerializer(
+    mixins.TranslatedSerializerMixin,
+    TranslatableModelSerializer
+):
     """Сериализатор для модели продуктов."""
 
+    translations = TranslatedFieldsField(shared_model=models.Product)
     brand = product_components_serializers.BrandSerializer()
     color = product_components_serializers.ColorSerializer()
     size = product_components_serializers.SizeSerializer()
     manufacturerCountry = product_components_serializers.ManufactoryCountrySerializer()
     subTypes = product_components_serializers.ProductSubTypeSerializer(many=True)
 
-    class Meta(BaseSerializer.Meta):
+    class Meta:
+        model = models.Product
+        fields = '__all__'
         lookup_field = 'slug'
 
 
+class ProductDataArchiveSerializer(mixins.TranslatedSerializerMixin, TranslatableModelSerializer):
+    translations = TranslatedFieldsField(shared_model=models.Product)
+
+    class Meta:
+        model = models.Product
+        fields = ('translations', 'slug')
+
+
 class ProductStatusChangeArchiveSerializer(serializers.ModelSerializer):
-    product = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    product = ProductDataArchiveSerializer()
 
     class Meta:
         model = models.ProductStatusChangeArchive

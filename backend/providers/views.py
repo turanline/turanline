@@ -99,11 +99,16 @@ class ProviderViewSet(viewsets.ModelViewSet):
         )
         page = self.paginate_queryset(archive_qs)
         if page is not None:
-            serializer = product_serializers.ProductStatusChangeArchiveSerializer(page, many=True)
+            serializer = product_serializers.ProductStatusChangeArchiveSerializer(
+                page,
+                context={'request': request},
+                many=True
+            )
             return self.get_paginated_response(serializer.data)
 
         serializer = product_serializers.ProductStatusChangeArchiveSerializer(
             archive_qs,
+            context={'request': request},
             many=True
         )
         return Response(serializer.data, status=status.HTTP_200_OK)

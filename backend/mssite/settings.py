@@ -1,6 +1,5 @@
-"""Настройки Django проекта."""
-
 import os
+import deepl
 from datetime import timedelta
 from pathlib import Path
 
@@ -14,6 +13,8 @@ env = environ.Env(
 )
 
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+
+# deepl_translator = deepl.Translator(env("DEEPL_AUTH_KEY"))
 
 SECRET_KEY = env("SECRET_KEY")
 
@@ -47,7 +48,8 @@ INSTALLED_APPS = [
     "cart",
     "providers",
     "import_export",
-    "django_filters"
+    "django_filters",
+    "parler"
 ]
 
 MIDDLEWARE = [
@@ -229,3 +231,17 @@ LOGGING = {
         },
     },
 }
+
+
+PARLER_LANGUAGES = {
+    None: (
+        {'code': 'en'},
+        {'code': 'ru'},
+        {'code': 'tr'},
+    ),
+    'default': {
+        'fallbacks': ['en'],
+        'hide_untranslated': False,
+    }
+}
+

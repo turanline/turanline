@@ -1,3 +1,4 @@
+from mssite import settings
 from import_export import resources, fields, widgets
 
 from . import models
@@ -66,6 +67,20 @@ class ProductsResource(resources.ModelResource):
         )
     )
 
+    def after_save_instance(self, instance, row, **kwargs):
+        translations = list()
+        for lan_code in settings.PARLER_LANGUAGES[None]:
+            translation = models.ProductTranslation(
+                master=instance,
+                name=row['name'],
+                description=row['description'],
+                compound=row['compound'],
+                language_code=lan_code['code']
+            )
+            translations.append(translation)
+
+        models.ProductTranslation.objects.bulk_create(translations)
+
     class Meta:
         model = models.Product
         exclude = (
@@ -81,5 +96,5 @@ class ProductsResource(resources.ModelResource):
             'date_and_time'
         )
         import_id_fields = ['article_number', 'slug']
-        skip_unchanged = True
-        use_bulk = True
+        skip_unchanged = False
+        use_bulk = False

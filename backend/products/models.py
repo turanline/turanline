@@ -1,5 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
+from parler.models import TranslatableModel, TranslatedFieldsModel
 from slugify import slugify
 from decimal import Decimal
 
@@ -11,24 +12,13 @@ from users import models as user_models
 # is_famous через связные таблицы
 
 
-class Product(models.Model):
+class Product(TranslatableModel):
     """Модель продуктов."""
 
     provider = models.ForeignKey(
         user_models.User,
         on_delete=models.CASCADE,
         verbose_name='Поставщик',
-    )
-
-    name = models.CharField(
-        'Название товара',
-        max_length=255,
-    )
-
-    description = models.TextField(
-        'Описание товара',
-        null=True,
-        blank=True,
     )
 
     first_image = models.ImageField(
@@ -81,13 +71,6 @@ class Product(models.Model):
 
     amount = models.PositiveIntegerField(
         'Количество товара'
-    )
-
-    compound = models.CharField(
-        'Состав товара',
-        max_length=1024,
-        null=True,
-        blank=True,
     )
 
     price = models.DecimalField(
@@ -170,11 +153,11 @@ class Product(models.Model):
         ordering = ['-slug']
 
     def __str__(self) -> str:
-        return f'Товар {self.name} поставщика {self.provider.username}'
+        return f'Това поставщика {self.provider.username}'
 
     def save(self, *args, **kwargs):
         self.slug = slugify(
-            f'{self.article_number}-{self.name}-{self.color.name}'
+            f'{self.article_number}-{self.color.name}'
         )
         return super().save(*args, **kwargs)
 
@@ -194,3 +177,34 @@ class ProductStatusChangeArchive(models.Model):
 
     class Meta:
         ordering = ['id']
+
+
+class ProductTranslation(TranslatedFieldsModel):
+
+    master = models.ForeignKey(
+        Product,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='translations'
+    )
+
+    name = models.CharField(
+        'Название товара',
+        max_length=255,
+    )
+
+    description = models.TextField(
+        'Описание товара',
+        null=True,
+        blank=True,
+    )
+
+    compound = models.CharField(
+        'Состав товара',
+        max_length=1024,
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        unique_together = ('language_code', 'master')

@@ -46,7 +46,8 @@ class ImportProductDataView(views.APIView):
                     data={'message': 'Successfully.'},
                     status=status.HTTP_200_OK
                 )
-        except exceptions.ImportError:
+        except exceptions.ImportError as error:
+            print(error)
             return Response(
                 data={
                     'message': ('Make sure the data you have filled in is correct, '
