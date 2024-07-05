@@ -1,3 +1,5 @@
+import random
+
 from django.core.validators import MinValueValidator
 from django.db import models
 from parler.models import TranslatableModel, TranslatedFieldsModel
@@ -154,6 +156,13 @@ class Product(TranslatableModel):
 
     def __str__(self) -> str:
         return f'Товар поставщика {self.provider.username}'
+
+    def save(self, *args, **kwargs):
+        self.article_number = f'{random.randrange(0, 10000)}'
+        self.slug = slugify(
+            f'{self.provider.username}-{self.article_number}'
+        )
+        return super().save(*args, **kwargs)
 
 
 class ProductStatusChangeArchive(models.Model):

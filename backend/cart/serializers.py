@@ -44,3 +44,11 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Order
         fields = '__all__'
+
+
+class OrderBaseSerializer(serializers.ModelSerializer):
+    """Сериализатор для модели заказов."""
+
+    class Meta:
+        model = models.Order
+        fields = '__all__'

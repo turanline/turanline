@@ -3,20 +3,25 @@ from django.db import models
 
 rename_columns = {
     'Provider': 'provider',
-    'Name of product': 'name',
-    'Description of product': 'description',
-    'Product subtypes': 'subTypes',
-    'Brand': 'brand',
-    'Serial number': 'article_number',
-    'Quantity of product': 'amount',
-    'Product composition': 'compound',
-    'Price': 'price',
-    'Season (Summer/Winter/Demi-season/All-season)': 'season',
-    'Product pattern': 'pattern',
-    'Color of product (HEX-format)': 'color',
-    'Country of product manufacturer': 'manufacturerCountry',
-    'Size': 'size',
-    'Slug of product': 'slug'
+    'Название': 'name',
+    'Описание': 'description',
+    'Тип': 'type',
+    'Категория': 'category',
+    'Подкатегория': 'subTypes',
+    'Размер': 'size',
+    'Кол-во': 'amount',
+    'Код цвета': 'color',
+    'Состав': 'compound',
+    'Производитель': 'brand',
+    'Сезон': 'season',
+    'Узор': 'pattern',
+    'Страна производства': 'manufacturerCountry',
+    'Цена': 'price',
+    'Первое фото': 'first_image',
+    'Второе фото': 'second_image',
+    'Третье фото': 'third_image',
+    'Четвертое фото': 'fourth_image',
+    'Пятое фото': 'fifth_image'
 }
 
 

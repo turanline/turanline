@@ -3,6 +3,7 @@ import logging
 import pandas as pd
 from tablib import Dataset
 
+from django.http import Http404
 from django.core.files.base import ContentFile
 from django.core.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
@@ -51,18 +52,25 @@ class ImportProductDataView(views.APIView):
                     status=status.HTTP_200_OK
                 )
         except exceptions.ImportError as error:
-            logger.error(error)
+            print(error)
             return Response(
                 data={
                     'message': ('Make sure the data you have filled in is correct, '
                                 'table template has not been changed'
-                                'And you did not add the same products.')
+                                'and you did not add the same products.')
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
-        except ValidationError:
+        except ValidationError as error:
+            logger.error(error)
             return Response(
-                data={'message': 'The required file was not attached'},
+                data={'message': 'The required file was not attached.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Http404 as error:
+            logger.error(error)
+            return Response(
+                data={'message': 'The selected type, category or subcategory does not exist.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 

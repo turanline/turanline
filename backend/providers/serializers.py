@@ -2,7 +2,7 @@ from datetime import timedelta
 import logging
 
 from django.utils import timezone
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework import serializers
 
 from . import models
 from users import models as user_models
@@ -10,11 +10,12 @@ from users import serializers as user_serializers
 from cart import models as cart_models
 from cart import serializers as cart_serializers
 from products import serializers as product_serializers
+from product_components import serializers as product_components_serializers
 
 logger = logging.getLogger(__name__)
 
 
-class BankAccountNumberSerializer(ModelSerializer):
+class BankAccountNumberSerializer(serializers.ModelSerializer):
     "Сериализатор для модели банковского счета."
 
     class Meta:
@@ -22,7 +23,7 @@ class BankAccountNumberSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class ProviderSerializer(ModelSerializer):
+class ProviderSerializer(serializers.ModelSerializer):
     user = user_serializers.UserLoginSerializer()
     bank_account_number = BankAccountNumberSerializer()
 
@@ -74,10 +75,10 @@ class ProviderSerializer(ModelSerializer):
         return instance
 
 
-class ModerationTimeSerializer(ModelSerializer):
+class ModerationTimeSerializer(serializers.ModelSerializer):
     """Сериализатор для вычисления оставшегося времени с момента регистрации"""
 
-    time_left = SerializerMethodField()
+    time_left = serializers.SerializerMethodField()
 
     class Meta:
         model = user_models.User
@@ -93,8 +94,10 @@ class ModerationTimeSerializer(ModelSerializer):
         return int(remaining_time.total_seconds())
 
 
-class OrdersSerializers(ModelSerializer):
-    order = cart_serializers.CartProductReadSerializer()
+class OrdersSerializers(serializers.ModelSerializer):
+    size = product_components_serializers.SizeSerializer(read_only=True, many=True)
+    color = product_components_serializers.ColorSerializer(read_only=True, many=True)
+    order = cart_serializers.OrderBaseSerializer()
     product = product_serializers.ProductLightSerializer()
 
     class Meta:

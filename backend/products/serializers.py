@@ -15,8 +15,12 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         exclude = ('slug',)
 
 
-class ProductLightSerializer(serializers.ModelSerializer):
+class ProductLightSerializer(
+    mixins.TranslatedSerializerMixin,
+    TranslatableModelSerializer
+):
     """Легкий сериализатор для модели продуктов."""
+    translations = TranslatedFieldsField(shared_model=models.Product)
 
     class Meta:
         model = models.Product
