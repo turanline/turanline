@@ -33,6 +33,13 @@ class UserReadLoginSerializer(serializers.ModelSerializer):
         )
 
 
+class UserLightSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.User
+        fields = ['email']
+
+
 class UserLoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User

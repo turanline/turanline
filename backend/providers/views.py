@@ -58,7 +58,11 @@ class ProviderViewSet(viewsets.ModelViewSet):
         products = product_models.Product.objects.filter(
             provider=provider.user
         )
-        serializer = product_serializers.ProductLightSerializer(products, many=True)
+        serializer = product_serializers.ProductLightSerializer(
+            products,
+            many=True,
+            context={'request': request}
+        )
 
         return Response(
             status=status.HTTP_200_OK,
@@ -116,8 +120,7 @@ class ProviderViewSet(viewsets.ModelViewSet):
     @action(methods=['GET'], detail=False)
     def get_orders(self, request, *args, **kwargs):
         provider = get_object_or_404(models.Provider, user=request.user)
-        products_of_provider = product_models.Product.objects.filter(provider=provider.user)
-        order_product = cart_models.OrderProduct.objects.filter(product__id__in=products_of_provider)
+        order_product = cart_models.Order.objects.filter(order_products__product__provider=provider.user)
         serializer = serializers.OrdersSerializers(
             order_product,
             context={'request': request},

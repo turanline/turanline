@@ -14,14 +14,11 @@ class CartProductsViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = models.OrderProduct.objects.select_related('order', 'product')
+    queryset = models.OrderProduct.objects.select_related('product')
     serializer_class = serializers.CartProductReadSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['id',]
-    permission_classes = [
-        IsAuthenticated,
-        permissions.IsCustomer
-    ]
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         serializer = serializers.CartProductSerializer(data=request.data)
@@ -56,7 +53,8 @@ class CartProductsViewSet(
 
     def get_queryset(self):
         if self.action == 'list':
+
             self.queryset = self.queryset.filter(
-                order__user=self.request.user
+                order__customer__user=self.request.user
             )
         return super().get_queryset()

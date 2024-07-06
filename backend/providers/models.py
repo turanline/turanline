@@ -19,9 +19,9 @@ class BankAccountNumber(models.Model):
     """Модель номера банковского счета"""
 
     number = models.CharField(
-        'Номер банковского счета',
         null=False,
         blank=False,
+        verbose_name='Номер банковского счета'
     )
 
 
@@ -35,38 +35,35 @@ class Provider(models.Model):
     )
 
     country = models.CharField(
-        'Страна поставщика',
         max_length=20,
         blank=False,
-        null=False
+        null=False,
+        verbose_name='Страна поставщика'
     )
 
     phone_number = models.CharField(
-        'Номер телефона поставшика',
         max_length=20,
         unique=False,
         blank=False,
+        verbose_name='Номер телефона поставщика'
     )
 
     company = models.CharField(
-        'Название компании',
         max_length=2048,
         null=False,
         blank=False,
+        verbose_name='Название компании'
     )
 
     address = models.TextField(
-        'Адрес',
         blank=False,
         null=False,
+        verbose_name='Адрес'
     )
 
-    #   частные лица
-    #   10 символов / 11
-
     taxpayer_identification_number = models.CharField(
-        'ИНН или его аналог',
-        unique=True
+        unique=True,
+        verbose_name='ИНН или его аналог'
     )
 
     bank_account_number = models.ForeignKey(

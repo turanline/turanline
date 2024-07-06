@@ -9,6 +9,7 @@ from users import models as user_models
 from users import serializers as user_serializers
 from cart import models as cart_models
 from cart import serializers as cart_serializers
+from customers import serializers as customer_serializers
 from products import serializers as product_serializers
 from product_components import serializers as product_components_serializers
 
@@ -95,11 +96,9 @@ class ModerationTimeSerializer(serializers.ModelSerializer):
 
 
 class OrdersSerializers(serializers.ModelSerializer):
-    size = product_components_serializers.SizeSerializer(read_only=True, many=True)
-    color = product_components_serializers.ColorSerializer(read_only=True, many=True)
-    order = cart_serializers.OrderBaseSerializer()
-    product = product_serializers.ProductLightSerializer()
+    order_products = cart_serializers.CartProductSerializer(read_only=True, many=True)
+    customer = customer_serializers.CustomerLightSerializer(read_only=True)
 
     class Meta:
-        model = cart_models.OrderProduct
+        model = cart_models.Order
         fields = '__all__'

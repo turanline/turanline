@@ -34,6 +34,13 @@ class CustomerSerializer(ModelSerializer):
         return instance
 
 
+class CustomerLightSerializer(CustomerSerializer):
+    user = user_serializer.UserLightSerializer()
+
+    class Meta(CustomerSerializer.Meta):
+        fields = ['user', 'phone_number']
+
+
 class ReviewSerializer(ModelSerializer):
     """Сериализатор для модели обзоров продуктов."""
 

@@ -9,9 +9,7 @@ from decimal import Decimal
 from . import enums
 from product_components import models as product_components_models
 from users import models as user_models
-
-# один цвет
-# is_famous через связные таблицы
+from providers import models as provider_models
 
 
 class Product(TranslatableModel):
@@ -24,33 +22,38 @@ class Product(TranslatableModel):
     )
 
     first_image = models.ImageField(
-        'Первая картинка товара',
+        storage=provider_models.OverwriteStorage(),
         null=True,
-        default=None
+        blank=True,
+        verbose_name='Первая картинка товара'
     )
 
     second_image = models.ImageField(
-        'Вторая картинка товара',
+        storage=provider_models.OverwriteStorage(),
         null=True,
-        default=None
+        blank=True,
+        verbose_name='Вторая картинка товара'
     )
 
     third_image = models.ImageField(
-        'Третья картинка товара',
+        storage=provider_models.OverwriteStorage(),
         null=True,
-        default=None
+        blank=True,
+        verbose_name='Третья картинка товара'
     )
 
     fourth_image = models.ImageField(
-        'Четвертая картинка товара',
+        storage=provider_models.OverwriteStorage(),
         null=True,
-        default=None
+        blank=True,
+        verbose_name='Четвертая картинка товара'
     )
 
     fifth_image = models.ImageField(
-        'Пятая картинка товара',
+        storage=provider_models.OverwriteStorage(),
         null=True,
-        default=None
+        blank=True,
+        verbose_name='Пятая картинка товара'
     )
 
     subTypes = models.ManyToManyField(
@@ -66,17 +69,16 @@ class Product(TranslatableModel):
     )
 
     article_number = models.CharField(
-        'Артикул',
         max_length=10,
-        unique=True
+        unique=True,
+        verbose_name='Артикул'
     )
 
     amount = models.PositiveIntegerField(
-        'Количество товара'
+        verbose_name='Количество товара'
     )
 
     price = models.DecimalField(
-        'Цена товара',
         max_digits=10,
         decimal_places=2,
         validators=[
@@ -86,28 +88,25 @@ class Product(TranslatableModel):
             ),
         ],
         db_index=True,
+        verbose_name='Цена товара'
     )
 
     season = models.CharField(
-        'Сезон для ношения',
         choices=enums.SeasonChoices,
         null=True,
         blank=True,
+        verbose_name='Сезон для ношения'
     )
 
     pattern = models.CharField(
-        'Узор товара',
         max_length=50,
         null=True,
         blank=True,
+        verbose_name='Узор товара'
     )
 
-    # несколько неповторяющихся цветов
-
-    color = models.ForeignKey(
+    color = models.ManyToManyField(
         product_components_models.Color,
-        on_delete=models.CASCADE,
-        db_index=True,
         verbose_name='Цвет товара'
     )
 
@@ -119,11 +118,8 @@ class Product(TranslatableModel):
         verbose_name='Страна производителя товара'
     )
 
-    # несколько повторяющихся размеров
-
-    size = models.ForeignKey(
+    size = models.ManyToManyField(
         product_components_models.Size,
-        on_delete=models.CASCADE,
         verbose_name='Размер товара'
     )
 
@@ -136,19 +132,18 @@ class Product(TranslatableModel):
     )
 
     is_famous = models.BooleanField(
-        'Популярный товар?',
         default=False
     )
 
     status = models.CharField(
-        'Статус проверки модерацией',
         choices=enums.ProductStatus,
-        default=enums.ProductStatus.UNDER_CONSIDERATION
+        default=enums.ProductStatus.UNDER_CONSIDERATION,
+        verbose_name='Статус проверки модерацией'
     )
 
     date_and_time = models.DateTimeField(
-        'Время и дата публикации',
-        auto_now_add=True
+        auto_now_add=True,
+        verbose_name='Время и дата публикации'
     )
 
     class Meta:
@@ -166,17 +161,25 @@ class Product(TranslatableModel):
 
 
 class ProductStatusChangeArchive(models.Model):
+
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
     old_status = models.CharField(
-        'Старый статус',
-        choices=enums.ProductStatus
+        choices=enums.ProductStatus,
+        verbose_name='Старый статус'
     )
+
     new_status = models.CharField(
-        'Новый статус',
-        choices=enums.ProductStatus
+        choices=enums.ProductStatus,
+        verbose_name='Новый статус'
     )
+
     changed_at = models.DateTimeField(auto_now_add=True)
-    provider = models.ForeignKey(user_models.User, on_delete=models.CASCADE)
+
+    provider = models.ForeignKey(
+        user_models.User,
+        on_delete=models.CASCADE
+    )
 
     class Meta:
         ordering = ['id']
@@ -192,21 +195,21 @@ class ProductTranslation(TranslatedFieldsModel):
     )
 
     name = models.CharField(
-        'Название товара',
         max_length=255,
+        verbose_name='Название товара'
     )
 
     description = models.TextField(
-        'Описание товара',
         null=True,
         blank=True,
+        verbose_name='Описание товара'
     )
 
     compound = models.CharField(
-        'Состав товара',
         max_length=1024,
         null=True,
         blank=True,
+        verbose_name='Состав товара'
     )
 
     class Meta:

@@ -31,9 +31,10 @@ class ImportProductDataView(views.APIView):
         try:
             if 'file' not in request.FILES:
                 raise ValidationError('The required file is missing.')
+            provider = get_object_or_404(provider_models.Provider, user=request.user)
             df = pd.read_excel(request.FILES['file'])
             df.rename(columns=enums.rename_columns, inplace=True)
-            product_resource = resources.ProductsResource()
+            product_resource = resources.ProductsResource(provider_id=provider.user.id)
             dataset = Dataset().load(df)
             result = product_resource.import_data(
                 dataset,
@@ -76,9 +77,13 @@ class ImportProductDataView(views.APIView):
 
     def get(self, request, *args, **kwargs):
         provider = get_object_or_404(provider_models.Provider, user=request.user)
-        queryset = models.Product.objects.filter(provider=provider.user)
-        dataset = resources.ProductsResource().export(queryset)
-        dataset.headers = enums.rename_columns.keys()
+        queryset = models.ProductTranslation.objects.select_related(
+            'master'
+        ).filter(
+            master__provider=provider.user
+        )
+        dataset = resources.ExportProductsResource().export(queryset)
+        dataset.headers = enums.dataset_headers
         content_file = ContentFile(dataset.export('xlsx'), name=f'{provider.company}_products.xlsx')
         provider.last_downloaded_file.save(f'{provider.company}_products.xlsx', content_file)
         return Response(
@@ -99,8 +104,8 @@ class ProductsViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = models.Product.objects.select_related(
-        'brand', 'color', 'manufacturerCountry', 'size'
-    ).prefetch_related('subTypes')
+        'brand', 'manufacturerCountry'
+    ).prefetch_related('subTypes', 'color', 'size')
     serializer_class = serializers.ProductSerializer
     permission_classes = [
         permissions.IsAdminUser

@@ -10,7 +10,6 @@ class User(AbstractUser):
     objects = UserManager()
 
     is_provider = models.BooleanField(
-        'Является ли юзер поставщиком',
         default=False
     )
 
@@ -18,28 +17,28 @@ class User(AbstractUser):
 class News(models.Model):
 
     image = models.ImageField(
-        'Картинка новости',
         upload_to='admin-news-images/',
         null=True,
+        verbose_name='Картинка новости'
     )
 
     category = models.CharField(
-        'Категория новости',
-        choices=NewsCategories
+        choices=NewsCategories,
+        verbose_name='Категория новости'
     )
 
     title = models.CharField(
-        'Заголовок новости',
-        max_length=300
+        max_length=300,
+        verbose_name='Заголовок новости'
     )
 
     text = models.TextField(
-        'Текст новости'
+        verbose_name='Текст новости'
     )
 
     date = models.DateField(
-        'Дата новости',
         auto_now_add=True,
+        verbose_name='Дата новости'
     )
 
     author = models.ForeignKey(
@@ -58,15 +57,15 @@ class Appeal(models.Model):
     )
 
     text = models.TextField(
-        'Текст обращения',
+        verbose_name='Текст обращения'
     )
 
     status = models.CharField(
-        'Статус обращения',
-        choices=AppealStatus
+        choices=AppealStatus,
+        verbose_name='Статус обращения'
     )
 
     answer = models.TextField(
-        'Ответ на обращение',
-        null=True
+        null=True,
+        verbose_name='Ответ на обращение'
     )

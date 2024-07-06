@@ -17,7 +17,6 @@ class Color(BaseModel):
     """Модель цвета."""
 
     color = models.CharField(
-        'Цветовой HEX-код',
         unique=True,
         max_length=7,
         validators=[
@@ -25,7 +24,8 @@ class Color(BaseModel):
                 regex='^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
                 message='Не является HEX цветом'
             )
-        ]
+        ],
+        verbose_name='Цветовой HEX-код'
     )
 
     class Meta(BaseModel.Meta):
@@ -37,9 +37,9 @@ class Brand(BaseModel):
     """Модель бренда."""
 
     image = models.ImageField(
-        'Картинка бренда',
         upload_to='brand-images/',
         null=True,
+        verbose_name='Картинка бренда'
     )
 
     class Meta(BaseModel.Meta):
@@ -63,9 +63,9 @@ class ProductType(BaseModel):
     )
 
     image = models.ImageField(
-        'Картинка подкатегории',
         upload_to='subtype_images/',
         null=True,
+        verbose_name='Картинка подкатегории'
     )
 
     category = models.ForeignKey(
@@ -108,10 +108,6 @@ class ManufacturerCountry(BaseModel):
     class Meta(BaseModel.Meta):
         verbose_name = 'Product manufacturer country'
         verbose_name_plural = 'Product manufacturer countries'
-
-
-# добавить возможность иметь несколько размеров
-# 5XL 7XL отдельная графа
 
 
 class Size(BaseModel):

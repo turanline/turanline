@@ -1,5 +1,5 @@
 import os
-import deepl
+from googletrans import Translator
 from datetime import timedelta
 from pathlib import Path
 
@@ -14,7 +14,7 @@ env = environ.Env(
 
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
-# deepl_translator = deepl.Translator(env("DEEPL_AUTH_KEY"))
+translator = Translator()
 
 SECRET_KEY = env("SECRET_KEY")
 
@@ -118,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "en"
 
 TIME_ZONE = "UTC"
 

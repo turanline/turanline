@@ -27,6 +27,18 @@ class ProductLightSerializer(
         fields = '__all__'
 
 
+class OrderProductSerializer(
+    mixins.TranslatedSerializerMixin,
+    TranslatableModelSerializer
+):
+    """Легкий сериализатор для модели продуктов."""
+    translations = TranslatedFieldsField(shared_model=models.Product)
+
+    class Meta:
+        model = models.Product
+        fields = ('id', 'translations', 'first_image', 'slug', 'price')
+
+
 class ProductSerializer(
     mixins.TranslatedSerializerMixin,
     TranslatableModelSerializer
@@ -35,8 +47,8 @@ class ProductSerializer(
 
     translations = TranslatedFieldsField(shared_model=models.Product)
     brand = product_components_serializers.BrandSerializer()
-    color = product_components_serializers.ColorSerializer()
-    size = product_components_serializers.SizeSerializer()
+    color = product_components_serializers.ColorSerializer(many=True)
+    size = product_components_serializers.SizeSerializer(many=True)
     manufacturerCountry = product_components_serializers.ManufactoryCountrySerializer()
     subTypes = product_components_serializers.ProductSubTypeSerializer(many=True)
 

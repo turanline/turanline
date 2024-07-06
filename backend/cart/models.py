@@ -2,45 +2,73 @@ from django.db import models
 from django.core.validators import MinValueValidator
 
 from . import enums
-from users import models as user_models
+from customers import models as customer_models
 from products import models as product_models
 from product_components import models as product_components_models
+
+
+class OrderProduct(models.Model):
+    """Модель объекта включенного в состав заказа (карточка товара, которую добавляют в заказ)."""
+
+    product = models.ForeignKey(
+        product_models.Product,
+        on_delete=models.CASCADE
+    )
+
+    amount = models.PositiveIntegerField()
+
+    color = models.ForeignKey(
+        product_components_models.Color,
+        on_delete=models.CASCADE
+    )
+
+    size = models.ForeignKey(
+        product_components_models.Size,
+        on_delete=models.CASCADE
+    )
+
+    class Meta:
+        verbose_name = 'Order to Product'
+        verbose_name_plural = 'Orders to Products'
+        ordering = ['amount']
+
+    def __str__(self) -> str:
+        return f'Товар {self.product} в количестве {self.amount} шт.'
 
 
 class Order(models.Model):
     """Модель заказа."""
 
     address = models.CharField(
-        'Адрес доставки заказа',
         max_length=1024,
         null=True,
         blank=True,
+        verbose_name='Адрес доставки заказа'
     )
 
     payment_method = models.CharField(
-        'Метод оплаты заказа',
         max_length=50,
         choices=enums.PaymentMethods,
         null=True,
         blank=True,
+        verbose_name='Метод оплаты заказа'
     )
 
     status = models.CharField(
-        'Статус закаказа',
         max_length=50,
         choices=enums.OrderStatuses,
         null=True,
         blank=True,
+        verbose_name='Статус закаказа'
     )
 
     created_date = models.DateField(
-        'Дата создания заказа',
         null=True,
         blank=True,
+        verbose_name='Дата создания заказа'
     )
 
     total_sum = models.DecimalField(
-        'Общая сумма заказа',
         max_digits=10,
         decimal_places=2,
         validators=[
@@ -51,53 +79,21 @@ class Order(models.Model):
         ],
         null=True,
         blank=True,
+        verbose_name='Общая сумма заказа'
     )
 
-    user = models.ForeignKey(
-        user_models.User,
+    customer = models.ForeignKey(
+        customer_models.Customer,
         on_delete=models.CASCADE,
         null=False,
         verbose_name='Покупатель оформивший заказ'
     )
 
+    order_products = models.ManyToManyField(OrderProduct)
+
     def __str__(self) -> str:
         return (f'Заказ: {self.pk} состояние '
-                f'{self.status} (вледелец: {self.user})')
+                f'{self.status} (вледелец: {self.customer})')
 
     class Meta:
         ordering = ['-payment_method']
-
-
-class OrderProduct(models.Model):
-    """Модель объекта включенного в состав заказа."""
-
-    order = models.ForeignKey(
-        Order,
-        on_delete=models.CASCADE,
-        related_name='order_products',
-    )
-
-    product = models.ForeignKey(
-        product_models.Product,
-        on_delete=models.CASCADE
-    )
-
-    amount = models.PositiveIntegerField()
-
-    date = models.DateField(
-        'Дата заказа',
-        auto_now_add=True
-    )
-
-    color = models.ManyToManyField(product_components_models.Color)
-
-    size = models.ManyToManyField(product_components_models.Size)
-
-    class Meta:
-        verbose_name = 'Order to Product'
-        verbose_name_plural = 'Orders to Products'
-        ordering = ['amount']
-
-    def __str__(self) -> str:
-        return (f'Товар {self.product} [{self.order}] '
-                f'в количестве {self.amount} шт.')
