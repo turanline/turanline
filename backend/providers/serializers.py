@@ -10,14 +10,12 @@ from users import serializers as user_serializers
 from cart import models as cart_models
 from cart import serializers as cart_serializers
 from customers import serializers as customer_serializers
-from products import serializers as product_serializers
-from product_components import serializers as product_components_serializers
 
 logger = logging.getLogger(__name__)
 
 
 class BankAccountNumberSerializer(serializers.ModelSerializer):
-    "Сериализатор для модели банковского счета."
+    """Сериализатор для модели банковского счета."""
 
     class Meta:
         model = models.BankAccountNumber
@@ -35,23 +33,15 @@ class ProviderSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user_data = validated_data.pop('user')
         bank_account_data = validated_data.pop('bank_account_number')
-
-        user = user_models.User.objects.create(**user_data)
-        user.set_password(user_data['password'])
-
-        user.save()
-
+        user = user_models.User.objects.create_user(**user_data)
         bank_account_number = models.BankAccountNumber.objects.create(
             **bank_account_data
         )
-
-        provider = models.Provider.objects.create(
+        return models.Provider.objects.create(
             user=user,
             bank_account_number=bank_account_number,
             **validated_data
         )
-
-        return provider
 
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)
@@ -59,11 +49,10 @@ class ProviderSerializer(serializers.ModelSerializer):
 
         if user_data:
             user = instance.user
-            user.username = user_data.get('username', user.username)
-            user.first_name = user_data.get('first_name', user.first_name)
-            user.last_name = user_data.get('last_name', user.last_name)
             if 'password' in user_data:
                 user.set_password(user_data['password'])
+            for attr, value in user_data.items:
+                setattr(user, attr, value)
             user.save()
 
         if bank_account_data:
@@ -72,8 +61,16 @@ class ProviderSerializer(serializers.ModelSerializer):
                 setattr(bank_account_number, attr, value)
             bank_account_number.save()
 
-        instance = super().update(instance, validated_data)
-        return instance
+        return super().update(instance, validated_data)
+
+
+class OrdersSerializers(serializers.ModelSerializer):
+    order_products = cart_serializers.CartProductSerializer(read_only=True, many=True)
+    customer = customer_serializers.CustomerLightSerializer(read_only=True)
+
+    class Meta:
+        model = cart_models.Order
+        fields = '__all__'
 
 
 class ModerationTimeSerializer(serializers.ModelSerializer):
@@ -93,12 +90,3 @@ class ModerationTimeSerializer(serializers.ModelSerializer):
         if remaining_time.total_seconds() < 0:
             remaining_time = timedelta(seconds=0)
         return int(remaining_time.total_seconds())
-
-
-class OrdersSerializers(serializers.ModelSerializer):
-    order_products = cart_serializers.CartProductSerializer(read_only=True, many=True)
-    customer = customer_serializers.CustomerLightSerializer(read_only=True)
-
-    class Meta:
-        model = cart_models.Order
-        fields = '__all__'

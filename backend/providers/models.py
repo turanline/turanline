@@ -4,8 +4,8 @@ from django.db import models
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
-from users.models import User
-from .enums import ProviderStates
+from . import enums
+from users import models as user_models
 
 
 class OverwriteStorage(FileSystemStorage):
@@ -29,7 +29,7 @@ class Provider(models.Model):
     """Модель поставщиков."""
 
     user = models.OneToOneField(
-        User,
+        user_models.User,
         on_delete=models.CASCADE,
         primary_key=True
     )
@@ -74,9 +74,8 @@ class Provider(models.Model):
 
     state = models.CharField(
         max_length=50,
-        choices=ProviderStates,
-        null=False,
-        blank=False,
+        choices=enums.ProviderStates,
+        default=enums.ProviderStates.MODERATING
     )
 
     last_downloaded_file = models.FileField(

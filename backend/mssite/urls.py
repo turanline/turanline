@@ -75,11 +75,11 @@ router.register(
     'customer'
 )
 
-router.register(
-    r'superusernews',
-    user_views.NewsViewSet,
-    'news'
-)
+# router.register(
+#     r'superusernews',
+#     user_views.NewsViewSet,
+#     'news'
+# )
 
 
 urlpatterns = [
@@ -132,8 +132,8 @@ urlpatterns = [
     ),
     path(
         'api/import_xlsx/',
-        product_views.ImportProductDataView.as_view(),
-        name='import_xlsx'
+        product_views.ImportExportProductDataView.as_view(),
+        name='import_export_xlsx'
     )
 ]
 

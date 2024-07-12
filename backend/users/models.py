@@ -48,24 +48,24 @@ class News(models.Model):
     )
 
 
-class Appeal(models.Model):
-    """Модель обращений поставщиков."""
-
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE
-    )
-
-    text = models.TextField(
-        verbose_name='Текст обращения'
-    )
-
-    status = models.CharField(
-        choices=AppealStatus,
-        verbose_name='Статус обращения'
-    )
-
-    answer = models.TextField(
-        null=True,
-        verbose_name='Ответ на обращение'
-    )
+# class Appeal(models.Model):
+#     """Модель обращений поставщиков."""
+#
+#     user = models.ForeignKey(
+#         User,
+#         on_delete=models.CASCADE
+#     )
+#
+#     text = models.TextField(
+#         verbose_name='Текст обращения'
+#     )
+#
+#     status = models.CharField(
+#         choices=AppealStatus,
+#         verbose_name='Статус обращения'
+#     )
+#
+#     answer = models.TextField(
+#         null=True,
+#         verbose_name='Ответ на обращение'
+#     )

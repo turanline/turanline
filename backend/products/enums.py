@@ -1,45 +1,45 @@
+import enum
+
 from django.db import models
 
 
-dataset_headers = [
-    'Артикул',
-    'Название',
-    'Описание',
-    'Подкатегория',
-    'Размер',
-    'Кол-во',
-    'Код цвета',
-    'Состав',
-    'Производитель',
-    'Сезон',
-    'Узор',
-    'Страна производства',
-    'Цена',
-    'Поставщик'
-]
+class ImportHeaders(enum.Enum):
+    name = 'name'
+    description = 'description'
+    type = 'type'
+    category = 'category'
+    subTypes = 'subTypes'
+    size = 'size'
+    amount = 'amount'
+    color = 'color'
+    compound = 'compound'
+    brand = 'brand'
+    season = 'season'
+    pattern = 'pattern'
+    manufacturerCountry = 'manufacturerCountry'
+    price = 'price'
+    first_image = 'first_image'
+    second_image = 'second_image'
+    third_image = 'third_image'
+    fourth_image = 'fourth_image'
+    fifth_image = 'fifth_image'
 
 
-rename_columns = {
-    'Название': 'name',
-    'Описание': 'description',
-    'Тип': 'type',
-    'Категория': 'category',
-    'Подкатегория': 'subTypes',
-    'Размер': 'size',
-    'Кол-во': 'amount',
-    'Код цвета': 'color',
-    'Состав': 'compound',
-    'Производитель': 'brand',
-    'Сезон': 'season',
-    'Узор': 'pattern',
-    'Страна производства': 'manufacturerCountry',
-    'Цена': 'price',
-    'Первое фото': 'first_image',
-    'Второе фото': 'second_image',
-    'Третье фото': 'third_image',
-    'Четвертое фото': 'fourth_image',
-    'Пятое фото': 'fifth_image'
-}
+class ExportHeaders(enum.Enum):
+    article_number = 'Артикул'
+    name = 'Название'
+    description = 'Описание'
+    subTypes = 'Подкатегория'
+    size = 'Размер'
+    amount = 'Кол-во'
+    color = 'Код цвета'
+    compound = 'Состав'
+    brand = 'Производитель'
+    season = 'Сезон'
+    pattern = 'Узор'
+    price = 'Цена'
+    manufacturerCountry = 'Страна производства'
+    provider = 'Поставщик'
 
 
 class SeasonChoices(models.TextChoices):

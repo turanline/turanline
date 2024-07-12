@@ -1,4 +1,3 @@
-import webcolors
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
 from mssite import settings
@@ -22,7 +21,8 @@ class ExportProductsResource(resources.ModelResource):
         attribute='master__subTypes',
         widget=widgets.ManyToManyWidget(
             product_component_models.ProductSubType,
-            field='name'
+            field='name',
+            separator=', '
         )
     )
 
@@ -31,7 +31,8 @@ class ExportProductsResource(resources.ModelResource):
         attribute='master__size',
         widget=widgets.ManyToManyWidget(
             product_component_models.Size,
-            field='name'
+            field='name',
+            separator=', '
         )
     )
 
@@ -40,7 +41,8 @@ class ExportProductsResource(resources.ModelResource):
         attribute='master__color',
         widget=widgets.ManyToManyWidget(
             product_component_models.Color,
-            field='color'
+            field='color',
+            separator=', '
         )
     )
 
@@ -95,7 +97,8 @@ class ProductsResource(resources.ModelResource):
         attribute='size',
         widget=widgets.ManyToManyWidget(
             product_component_models.Size,
-            field='name'
+            field='name',
+            separator=', '
         )
     )
 
@@ -113,7 +116,8 @@ class ProductsResource(resources.ModelResource):
         attribute='color',
         widget=widgets.ManyToManyWidget(
             product_component_models.Color,
-            field='color'
+            field='color',
+            separator=', '
         )
     )
 
@@ -122,7 +126,8 @@ class ProductsResource(resources.ModelResource):
         attribute='subTypes',
         widget=widgets.ManyToManyWidget(
             product_component_models.ProductSubType,
-            field='name'
+            field='name',
+            separator=', '
         )
     )
 
@@ -133,13 +138,6 @@ class ProductsResource(resources.ModelResource):
     def before_import_row(self, row, **kwargs):
         row['provider'] = self.provider_id
 
-        obj, created = product_component_models.Color.objects.get_or_create(
-            name=webcolors.hex_to_name(row['color'].lower()),
-            color=row['color'].upper()
-        )
-        product_component_models.Color.objects.get_or_create(
-            name=row['size'].upper()
-        )
         obj_category = get_object_or_404(
             product_component_models.Category,
             name=row['category']
@@ -150,29 +148,25 @@ class ProductsResource(resources.ModelResource):
             category=obj_category
         )
 
-        row['first_image'] = ContentFile(
-            FileAccess.get_downloaded_file(row['first_image']),
-            name=f'{row["name"]}-first_photo.jpg'
-        )
-        row['second_image'] = ContentFile(
-            FileAccess.get_downloaded_file(row['second_image']),
-            name=f'{row["name"]}-second_photo.jpg'
-        )
-        row['third_image'] = ContentFile(
-            FileAccess.get_downloaded_file(row['third_image']),
-            name=f'{row["name"]}-third_photo.jpg'
-        )
-        row['fourth_image'] = ContentFile(
-            FileAccess.get_downloaded_file(row['fourth_image']),
-            name=f'{row["name"]}-fourth_photo.jpg'
-        )
-        row['fifth_image'] = ContentFile(
-            FileAccess.get_downloaded_file(row['fifth_image']),
-            name=f'{row["name"]}-fifth_photo.jpg'
-        )
-
     def after_save_instance(self, instance, row, **kwargs):
-        translations = list()
+        translations, images = [], []
+        images_list = [
+            row['first_image'],
+            row['second_image'],
+            row['third_image'],
+            row['fourth_image'],
+            row['fifth_image']
+        ]
+        for image_url in images_list:
+            if image_url:
+                image = models.Image(
+                    product=instance,
+                    image_url=image_url
+                )
+                images.append(image)
+
+        models.Image.objects.bulk_create(images)
+
         for lan_code in settings.PARLER_LANGUAGES[None]:
             translation = models.ProductTranslation(
                 master=instance,

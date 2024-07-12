@@ -8,7 +8,17 @@ from providers import models as provider_models
 logger = logging.getLogger(__name__)
 
 
-class UserReadLoginSerializer(serializers.ModelSerializer):
+class BaseUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.User
+
+
+class BaseNewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.News
+
+
+class UserReadLoginSerializer(BaseUserSerializer):
 
     state = serializers.SerializerMethodField('get_state_field')
 
@@ -19,8 +29,7 @@ class UserReadLoginSerializer(serializers.ModelSerializer):
         except provider_models.Provider.DoesNotExist:
             return None
 
-    class Meta:
-        model = models.User
+    class Meta(BaseUserSerializer.Meta):
         exclude = (
             'date_joined',
             'is_superuser',
@@ -33,16 +42,14 @@ class UserReadLoginSerializer(serializers.ModelSerializer):
         )
 
 
-class UserLightSerializer(serializers.ModelSerializer):
+class UserLightSerializer(BaseUserSerializer):
 
-    class Meta:
-        model = models.User
+    class Meta(BaseUserSerializer.Meta):
         fields = ['email']
 
 
-class UserLoginSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.User
+class UserLoginSerializer(BaseUserSerializer):
+    class Meta(BaseUserSerializer.Meta):
         exclude = (
             'date_joined',
             'is_superuser',
@@ -50,7 +57,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
             'is_staff',
             'groups',
             'user_permissions',
-            'last_login',
+            'last_login'
         )
 
     def update(self, instance, validated_data):
@@ -59,38 +66,29 @@ class UserLoginSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
     def create(self, validated_data):
-        user = models.User(**validated_data)
-        password = validated_data.pop('password')
-        user.set_password(password)
-        user.save()
-        return user
+        return models.User.objects.create_user(**validated_data)
 
 
-class SuperAdminUsernameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.User
-        fields = ('username',)
+# class AppealSerializer(serializers.ModelSerializer):
+#     """Сериализатор для модели обращений поставщиков."""
+#
+#     class Meta:
+#         model = models.Appeal
+#         fields = '__all__'
 
 
-class AppealSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели обращений поставщиков."""
+class NewsReadSerializer(BaseNewsSerializer):
 
-    class Meta:
-        model = models.Appeal
+    author = serializers.SlugRelatedField(
+        queryset=models.User.objects.all(),
+        slug_field='username'
+    )
+
+    class Meta(BaseNewsSerializer.Meta):
         fields = '__all__'
 
 
-class NewsReadSerializer(serializers.ModelSerializer):
+class NewsWriteSerializer(BaseNewsSerializer):
 
-    author = SuperAdminUsernameSerializer()
-
-    class Meta:
-        model = models.News
-        fields = '__all__'
-
-
-class NewsWriteSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.News
+    class Meta(BaseNewsSerializer.Meta):
         exclude = ('author',)

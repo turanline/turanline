@@ -6,6 +6,16 @@ from . import models, mixins
 from product_components import serializers as product_components_serializers
 
 
+class ImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Image
+        exclude = (
+            'id',
+            'product'
+        )
+
+
 class ProductUpdateSerializer(serializers.ModelSerializer):
     """Сериализатор обновления для модели продуктов."""
 
@@ -21,6 +31,7 @@ class ProductLightSerializer(
 ):
     """Легкий сериализатор для модели продуктов."""
     translations = TranslatedFieldsField(shared_model=models.Product)
+    images = ImageSerializer(many=True)
 
     class Meta:
         model = models.Product
@@ -33,10 +44,17 @@ class OrderProductSerializer(
 ):
     """Легкий сериализатор для модели продуктов."""
     translations = TranslatedFieldsField(shared_model=models.Product)
+    images = ImageSerializer(many=True)
 
     class Meta:
         model = models.Product
-        fields = ('id', 'translations', 'first_image', 'slug', 'price')
+        fields = [
+            'id',
+            'translations',
+            'images',
+            'slug',
+            'price'
+        ]
 
 
 class ProductSerializer(
@@ -51,6 +69,7 @@ class ProductSerializer(
     size = product_components_serializers.SizeSerializer(many=True)
     manufacturerCountry = product_components_serializers.ManufactoryCountrySerializer()
     subTypes = product_components_serializers.ProductSubTypeSerializer(many=True)
+    images = ImageSerializer(many=True)
 
     class Meta:
         model = models.Product
@@ -63,7 +82,10 @@ class ProductDataArchiveSerializer(mixins.TranslatedSerializerMixin, Translatabl
 
     class Meta:
         model = models.Product
-        fields = ('translations', 'slug')
+        fields = [
+            'translations',
+            'slug'
+        ]
 
 
 class ProductStatusChangeArchiveSerializer(serializers.ModelSerializer):

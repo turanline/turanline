@@ -12,10 +12,10 @@ class TranslatedSerializerMixin(object):
         lang_code = get_language_from_request(request)
         result = {}
         for field_name, field in self.get_fields().items():
-            if field_name is not 'translations':
+            if field_name != 'translations':
                 field_value = inst_rep.pop(field_name)
                 result.update({field_name: field_value})
-            if field_name is 'translations':
+            if field_name == 'translations':
                 translations = inst_rep.pop(field_name)
                 if lang_code not in translations:
                     parler_default_settings = settings.PARLER_LANGUAGES['default']

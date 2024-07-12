@@ -7,14 +7,25 @@ from products import models as product_models
 from product_components import serializers as product_component_serializers
 
 
-class CartProductReadSerializer(serializers.ModelSerializer):
-    """Сериализатор чтения модели объекта корзины."""
+class OrderBaseSerializer(serializers.ModelSerializer):
+    """Сериализатор для модели заказов."""
 
-    product = product_serializers.ProductSerializer(read_only=True)
+    class Meta:
+        model = models.Order
+        fields = '__all__'
+
+
+class CartProductLightSerializer(serializers.ModelSerializer):
+    """Модель объекта корзины."""
 
     class Meta:
         model = models.OrderProduct
-        fields = '__all__'
+        fields = (
+            'amount',
+            'product',
+            'color',
+            'size'
+        )
 
 
 class CartProductSerializer(serializers.ModelSerializer):
@@ -48,19 +59,7 @@ class CartProductSerializer(serializers.ModelSerializer):
         return value
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели заказов."""
+class CartProductReadSerializer(OrderBaseSerializer):
+    """Сериализатор чтения модели объектов корзины."""
 
-    order_products = CartProductReadSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = models.Order
-        fields = '__all__'
-
-
-class OrderBaseSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели заказов."""
-
-    class Meta:
-        model = models.Order
-        fields = '__all__'
+    order_products = CartProductSerializer(many=True, read_only=True)

@@ -57,8 +57,7 @@ class Order(models.Model):
     status = models.CharField(
         max_length=50,
         choices=enums.OrderStatuses,
-        null=True,
-        blank=True,
+        default=enums.OrderStatuses.CREATED,
         verbose_name='Статус закаказа'
     )
 

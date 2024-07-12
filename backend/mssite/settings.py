@@ -212,6 +212,11 @@ LOGGING = {
             "filename": os.path.join(BASE_DIR, "logs/logs.log"),
             "formatter": "default_formatter",
         },
+        'celery': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'default_formatter',
+        },
     },
     "loggers": {
         "mssite": {
@@ -229,6 +234,10 @@ LOGGING = {
             "handlers": ["file"],
             "propogate": True,
         },
+        'celery': {
+            'handlers': ['celery'],
+            'level': 'DEBUG',
+        },
     },
 }
 
@@ -245,3 +254,10 @@ PARLER_LANGUAGES = {
     }
 }
 
+# Настройки Celery
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'

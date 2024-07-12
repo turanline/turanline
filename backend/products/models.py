@@ -9,7 +9,6 @@ from decimal import Decimal
 from . import enums
 from product_components import models as product_components_models
 from users import models as user_models
-from providers import models as provider_models
 
 
 class Product(TranslatableModel):
@@ -19,41 +18,6 @@ class Product(TranslatableModel):
         user_models.User,
         on_delete=models.CASCADE,
         verbose_name='Поставщик',
-    )
-
-    first_image = models.ImageField(
-        storage=provider_models.OverwriteStorage(),
-        null=True,
-        blank=True,
-        verbose_name='Первая картинка товара'
-    )
-
-    second_image = models.ImageField(
-        storage=provider_models.OverwriteStorage(),
-        null=True,
-        blank=True,
-        verbose_name='Вторая картинка товара'
-    )
-
-    third_image = models.ImageField(
-        storage=provider_models.OverwriteStorage(),
-        null=True,
-        blank=True,
-        verbose_name='Третья картинка товара'
-    )
-
-    fourth_image = models.ImageField(
-        storage=provider_models.OverwriteStorage(),
-        null=True,
-        blank=True,
-        verbose_name='Четвертая картинка товара'
-    )
-
-    fifth_image = models.ImageField(
-        storage=provider_models.OverwriteStorage(),
-        null=True,
-        blank=True,
-        verbose_name='Пятая картинка товара'
     )
 
     subTypes = models.ManyToManyField(
@@ -153,6 +117,8 @@ class Product(TranslatableModel):
         return f'Товар поставщика {self.provider.username}'
 
     def save(self, *args, **kwargs):
+        if self.slug and self.article_number:
+            return super().save(*args, **kwargs)
         self.article_number = f'{random.randrange(0, 10000)}'
         self.slug = slugify(
             f'{self.provider.username}-{self.article_number}'
@@ -214,3 +180,22 @@ class ProductTranslation(TranslatedFieldsModel):
 
     class Meta:
         unique_together = ('language_code', 'master')
+
+
+class Image(models.Model):
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='images'
+    )
+
+    image_url = models.URLField(
+        null=True,
+        blank=True
+    )
+
+    image_file = models.ImageField(
+        null=True,
+        blank=True
+    )
