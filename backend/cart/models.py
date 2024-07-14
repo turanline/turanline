@@ -49,8 +49,7 @@ class Order(models.Model):
     payment_method = models.CharField(
         max_length=50,
         choices=enums.PaymentMethods,
-        null=True,
-        blank=True,
+        default=enums.PaymentMethods.BY_CARD,
         verbose_name='Метод оплаты заказа'
     )
 

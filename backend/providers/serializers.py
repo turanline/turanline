@@ -90,3 +90,10 @@ class ModerationTimeSerializer(serializers.ModelSerializer):
         if remaining_time.total_seconds() < 0:
             remaining_time = timedelta(seconds=0)
         return int(remaining_time.total_seconds())
+
+
+class ProviderDownloadFileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Provider
+        fields = ['last_downloaded_file']

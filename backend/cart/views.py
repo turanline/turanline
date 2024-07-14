@@ -4,6 +4,7 @@ from rest_framework import mixins, status, viewsets, filters
 from rest_framework.permissions import IsAuthenticated
 
 from . import models, serializers, enums
+from customers import models as customer_models
 
 
 @extend_schema(tags=['cart'])
@@ -20,16 +21,18 @@ class CartProductsViewSet(
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
+        customer = customer_models.Customer.objects.filter(user=request.user).first()
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        current_product, created = models.OrderProduct.objects.get_or_create(
+        current_product, created_order = models.OrderProduct.objects.get_or_create(
             **serializer.validated_data
         )
-        if not created:
-            return JsonResponse(
-                status=status.HTTP_400_BAD_REQUEST,
-                data={'message': 'Product is already in cart'}
-            )
+        order, created_cart = models.Order.objects.get_or_create(
+            address=customer.address,
+            customer=customer,
+            total_sum=100
+        )
+        order.order_products.add(current_product)
         return JsonResponse(
             status=status.HTTP_201_CREATED,
             data=serializer.data

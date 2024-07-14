@@ -132,7 +132,7 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = BASE_DIR / 'collected_static'
 
-MEDIA_URL = '/media/'
+MEDIA_URL = "https://mis-express.com/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -212,31 +212,22 @@ LOGGING = {
             "filename": os.path.join(BASE_DIR, "logs/logs.log"),
             "formatter": "default_formatter",
         },
-        'celery': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'default_formatter',
-        },
     },
     "loggers": {
         "mssite": {
             "level": "WARNING",
             "handlers": ["file"],
-            "propogate": True,
+            "propagate": True,
         },
         "products": {
             "level": "WARNING",
             "handlers": ["file"],
-            "propogate": True,
+            "propagate": True,
         },
         "users": {
             "level": "WARNING",
             "handlers": ["file"],
-            "propogate": True,
-        },
-        'celery': {
-            'handlers': ['celery'],
-            'level': 'DEBUG',
+            "propagate": True,
         },
     },
 }
@@ -253,11 +244,3 @@ PARLER_LANGUAGES = {
         'hide_untranslated': False,
     }
 }
-
-# Настройки Celery
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'

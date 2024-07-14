@@ -110,3 +110,10 @@ class ProviderViewSet(viewsets.ModelViewSet):
             many=True
         )
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+    @action(methods=['GET'], detail=False)
+    def get_last_downloaded_file(self, request, *args, **kwargs):
+        provider = get_object_or_404(models.Provider, user=request.user)
+        serializer = serializers.ProviderDownloadFileSerializer(provider)
+        return Response(serializer.data, status=status.HTTP_200_OK)

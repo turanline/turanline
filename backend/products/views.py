@@ -36,26 +36,10 @@ class ImportExportProductDataView(views.APIView):
                 data={'message': 'The import process has been started.'},
                 status=status.HTTP_200_OK
             )
-        except exceptions.ImportError as error:
-            print(error)
-            return Response(
-                data={
-                    'message': ('Make sure the data you have filled in is correct, '
-                                'table template has not been changed'
-                                'and you did not add the same products.')
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
         except ValidationError as error:
             logger.error(error)
             return Response(
                 data={'message': 'The required file was not attached.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        except Http404 as error:
-            logger.error(error)
-            return Response(
-                data={'message': 'The selected type, category or subcategory does not exist.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -63,9 +47,7 @@ class ImportExportProductDataView(views.APIView):
         provider = get_object_or_404(provider_models.Provider, user=request.user)
         tasks.export_products_task.delay(provider.user.id)
         return Response(
-            data={
-                'file': f'https://{settings.ALLOWED_HOSTS[0]}/media/downloaded_xlsx/{provider.company}_products.xlsx'
-            },
+            data={'message': 'Creating file for download.'},
             status=status.HTTP_200_OK
         )
 
