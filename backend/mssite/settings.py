@@ -5,6 +5,8 @@ from pathlib import Path
 
 import environ
 
+from django.utils.translation import gettext_lazy as _
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -49,7 +51,8 @@ INSTALLED_APPS = [
     "providers",
     "import_export",
     "django_filters",
-    "parler"
+    "parler",
+    "mptt",
 ]
 
 MIDDLEWARE = [
@@ -119,6 +122,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = "en"
+
+LANGUAGES = [
+    ("ru", _("Russian")),
+    ("en", _("English")),
+    ("tr", _("Turkish")),
+]
 
 TIME_ZONE = "UTC"
 

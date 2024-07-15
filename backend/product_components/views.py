@@ -10,6 +10,7 @@ from products.services.products_service import ProductsService
 @extend_schema(tags=['categories'])
 class ProductCategoriesViewSet(
     mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = models.Category.objects.all()

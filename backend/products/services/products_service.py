@@ -4,8 +4,10 @@ from django.http.request import QueryDict
 
 class ProductsService:
     @staticmethod
-    def apply_categories_filter(request_data: QueryDict,
-                                queryset: QuerySet) -> QuerySet:
+    def apply_categories_filter(
+            request_data: QueryDict,
+            queryset: QuerySet
+    ) -> QuerySet:
         categories = request_data.getlist('cats', None)
         if categories:
             return queryset.filter(

@@ -75,8 +75,7 @@ class Order(models.Model):
                 message='the total sum cannot be a negative number'
             ),
         ],
-        null=True,
-        blank=True,
+        default=0,
         verbose_name='Общая сумма заказа'
     )
 
