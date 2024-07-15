@@ -9,12 +9,28 @@ from django.http import HttpResponse
 
 from . import serializers, models, permissions
 from products import serializers as product_serializers
+from cart import models as cart_models
 
 
 @extend_schema(tags=['customer'])
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = models.Customer.objects.all()
     serializer_class = serializers.CustomerSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        customer = serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        cart_models.Order.objects.create(
+            address=customer.address,
+            customer=customer
+        )
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
 
     @action(methods=['get'], detail=False)
     def favorites(self, request, *args, **kwargs):

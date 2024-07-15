@@ -32,8 +32,8 @@ class CartProductSerializer(serializers.ModelSerializer):
     """Модель объекта корзины."""
 
     product = product_serializers.OrderProductSerializer(read_only=True)
-    color = product_component_serializers.ColorSerializer(read_only=True)
-    size = product_component_serializers.SizeSerializer(read_only=True)
+    color = product_component_serializers.ColorSerializer()
+    size = product_component_serializers.SizeSerializer()
     images = product_serializers.ImageSerializer(many=True, read_only=True)
     sum = serializers.SerializerMethodField()
 

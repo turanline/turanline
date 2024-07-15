@@ -24,7 +24,7 @@ class CartProductsViewSet(
         customer = customer_models.Customer.objects.filter(user=request.user).first()
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        current_product, created_order = models.OrderProduct.objects.get_or_create(
+        current_productmodels.OrderProduct.objects.create(
             **serializer.validated_data
         )
         order, created_cart = models.Order.objects.get_or_create(

@@ -4,7 +4,6 @@ from mssite import settings
 from import_export import resources, fields, widgets
 
 from . import models
-from products.clients.connector import FileAccess
 from product_components import models as product_component_models
 from users import models as user_models
 
