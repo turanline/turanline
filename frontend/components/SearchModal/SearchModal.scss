@@ -2,11 +2,6 @@
   .search-modal-wrapper {
     display: none;
   }
-
-  .search-button-mobile {
-    padding: 0 !important;
-    border-radius: 0 !important;
-  }
 }
 
 @media (max-width: 1025px) {
@@ -53,10 +48,4 @@
   &.active {
     transform: translateY(0);
   }
-}
-
-.search-mobile {
-  display: flex;
-  width: 100%;
-  max-width: 542px;
 }

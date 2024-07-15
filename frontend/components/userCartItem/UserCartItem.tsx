@@ -11,13 +11,15 @@ import { useTranslate } from "@/hooks/useTranslate";
 //Components
 import { Icons } from "../Icons/Icons";
 
-//Types
-import { IUserCartItem } from "@/types/types";
+//Component Types
+import { IProductCart } from "@/types/componentTypes";
 
 //Styles
 import "./UserCartItem.scss";
 
-const UserCartItem: FC<IUserCartItem> = ({ product }) => {
+const UserCartItem: FC<{
+  product: IProductCart;
+}> = ({ product }) => {
   const { onChangeCardCounter, deleteCardFromBasket } = useCart();
 
   const {

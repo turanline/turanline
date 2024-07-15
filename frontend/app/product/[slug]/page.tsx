@@ -1,6 +1,5 @@
 //Components
 import React from "react";
-import { notFound } from "next/navigation";
 
 //Services
 import {
@@ -14,12 +13,12 @@ import {
 import { ProductComponent } from "@/components/ProductComponent/ProductComponent";
 import { ProductPageProducts } from "@/components/ProductPageProducts/ProductPageProducts";
 
-//Types
-import { IProductsState } from "@/types/types";
+//Redux Types
+import { IProductsState } from "@/types/reduxTypes";
 
 //Styles
-import "swiper/css";
 import "./productPage.scss";
+import "swiper/css";
 import "swiper/css/pagination";
 
 export async function generateStaticParams() {
@@ -38,7 +37,7 @@ export async function generateStaticParams() {
       slug: slug,
     }));
   } catch (error) {
-    notFound();
+    console.error(error);
   }
 }
 
@@ -54,7 +53,7 @@ export async function generateMetadata({
       title: `${product.name}`,
     };
   } catch (error) {
-    notFound();
+    console.error(error);
   }
 }
 
@@ -67,11 +66,9 @@ export default async function Product({
     try {
       const oneProduct = await getProductBySlug(params.slug);
 
-      if (!oneProduct) notFound();
-
-      return <ProductComponent oneProduct={oneProduct} />;
+      if (oneProduct) return <ProductComponent oneProduct={oneProduct} />;
     } catch (error) {
-      notFound();
+      console.error(error);
     }
   }
 
@@ -83,7 +80,7 @@ export default async function Product({
 
       return <ProductPageProducts products={similar} isSimilar={true} />;
     } catch (error) {
-      notFound();
+      console.error(error);
     }
   }
 
@@ -95,17 +92,17 @@ export default async function Product({
 
       return <ProductPageProducts products={famous} isSimilar={false} />;
     } catch (error) {
-      notFound();
+      console.error(error);
     }
   }
 
   return (
-    <main className="container mx-auto mt-[30px] mb-[100px] px-[28px] sm:px-0">
+    <div className="container mx-auto mt-[30px] mb-[100px] px-[28px] sm:px-0">
       {getProductByParams()}
 
       {getSimilarCards()}
 
       {getFamousCards()}
-    </main>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 //Hosts
 import { $authHost } from "./index";
 
-//Types
+//Global Types
 import { IPostCartApi, IPutCart } from "@/types/types";
 
 export const getCart = async () => {
@@ -10,7 +10,8 @@ export const getCart = async () => {
 
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    console.error("Failed get user cart:" + error);
+    throw error;
   }
 };
 
@@ -20,7 +21,8 @@ export const postToCart = async (obj: IPostCartApi) => {
 
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    console.error("Failed post to user cart:" + error);
+    throw error;
   }
 };
 
@@ -32,7 +34,8 @@ export const patchCartItem = async ({ amount, productId }: IPutCart) => {
 
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    console.error("Failed patch user cart:" + error);
+    throw error;
   }
 };
 
@@ -42,6 +45,7 @@ export const deleteFromCartById = async (id: number) => {
 
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    console.error("Failed delete from user cart:" + error);
+    throw error;
   }
 };

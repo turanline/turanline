@@ -2,11 +2,14 @@
 
 //GLobal
 import React, { FC, useState, useRef, useEffect } from "react";
+
 //Components
 import { Icons } from "../Icons/Icons";
 import { UserOrderItem } from "@/components/UserOrderItem/UserOrderItem";
-//Types
-import { IUserOrderWrapperProps } from "@/types/types";
+
+//Component Types
+import { IUserOrderWrapperProps } from "@/types/componentTypes";
+
 //styles
 import "./UserOrderWrapper.scss";
 

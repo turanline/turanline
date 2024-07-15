@@ -55,142 +55,177 @@ export default function Category() {
       <div className="flex flex-col gap-[40px] mt-[100px]">
         <div className="flex justify-evenly sm:justify-between cursor-pointer">
           <Image className="object-contain" src={lcWaikiki} alt="lcWaikiki" />
+
           <Image className="object-contain" src={armani} alt="armani" />
+
           <Image
             className="hidden sm:block object-contain"
             src={mavi}
             alt="mavi"
           />
+
           <Image
             className="hidden sm:block object-contain"
             src={koton}
             alt="koton"
           />
+
           <Image
             className="hidden md:block object-contain"
             src={prada}
             alt="prada"
           />
+
           <Image
             className="hidden md:block object-contain"
             src={fangi}
             alt="fangi"
           />
         </div>
+
         <div className="flex justify-evenly sm:justify-between cursor-pointer">
           <Image className="object-contain" src={chanel} alt="chanel" />
+
           <Image className="object-contain" src={defacto} alt="defacto" />
+
           <Image
             className="hidden sm:block object-contain"
             src={dior}
             alt="dior"
           />
+
           <Image
             className="hidden sm:block object-contain"
             src={luiviton}
             alt="luiviton"
           />
+
           <Image
             className="hidden md:block object-contain"
             src={rolex}
             alt="rolex"
           />
+
           <Image
             className="hidden md:block object-contain"
             src={colins}
             alt="colins"
           />
         </div>
+
         <div className="flex justify-evenly sm:justify-between cursor-pointer">
           <Image className="object-contain" src={lcWaikiki} alt="lcWaikiki" />
+
           <Image className="object-contain" src={armani} alt="armani" />
+
           <Image
             className="hidden sm:block object-contain"
             src={mavi}
             alt="mavi"
           />
+
           <Image
             className="hidden sm:block object-contain"
             src={koton}
             alt="koton"
           />
+
           <Image
             className="hidden md:block object-contain"
             src={prada}
             alt="prada"
           />
+
           <Image
             className="hidden md:block object-contain"
             src={fangi}
             alt="fangi"
           />
         </div>
+
         <div className="flex justify-evenly sm:justify-between cursor-pointer">
           <Image className="object-contain" src={chanel} alt="chanel" />
+
           <Image className="object-contain" src={defacto} alt="defacto" />
+
           <Image
             className="hidden sm:block object-contain"
             src={dior}
             alt="dior"
           />
+
           <Image
             className="hidden sm:block object-contain"
             src={luiviton}
             alt="luiviton"
           />
+
           <Image
             className="hidden md:block object-contain"
             src={rolex}
             alt="rolex"
           />
+
           <Image
             className="hidden md:block object-contain"
             src={colins}
             alt="colins"
           />
         </div>
+
         <div className="flex justify-evenly sm:justify-between cursor-pointer">
           <Image className="object-contain" src={lcWaikiki} alt="lcWaikiki" />
+
           <Image className="object-contain" src={armani} alt="armani" />
+
           <Image
             className="hidden sm:block object-contain"
             src={mavi}
             alt="mavi"
           />
+
           <Image
             className="hidden sm:block object-contain"
             src={koton}
             alt="koton"
           />
+
           <Image
             className="hidden md:block object-contain"
             src={prada}
             alt="prada"
           />
+
           <Image
             className="hidden md:block object-contain"
             src={fangi}
             alt="fangi"
           />
         </div>
+
         <div className="flex justify-evenly sm:justify-between cursor-pointer">
           <Image className="object-contain" src={chanel} alt="chanel" />
+
           <Image className="object-contain" src={defacto} alt="defacto" />
+
           <Image
             className="hidden sm:block object-contain"
             src={dior}
             alt="dior"
           />
+
           <Image
             className="hidden sm:block object-contain"
             src={luiviton}
             alt="luiviton"
           />
+
           <Image
             className="hidden md:block object-contain"
             src={rolex}
             alt="rolex"
           />
+
           <Image
             className="hidden md:block object-contain"
             src={colins}

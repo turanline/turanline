@@ -9,7 +9,7 @@ import Link from "next/link";
 
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useProducts } from "@/hooks/useProducts";
 
 //Images
@@ -256,7 +256,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="absolute right-0 bottom-[-50px] flex gap-[7px] items-center mt-[30px]">
+        <div className="absolute right-0 bottom-[220px] flex gap-[7px] items-center mt-[30px]">
           <Link
             className="hover:text-tiffani transition-colors"
             href={MANUFACTURES_ROUTE}
@@ -288,7 +288,7 @@ const Home = () => {
 
       <h5 className="text-[24px] mt-[80px] mb-[25px]">{foundation}</h5>
 
-      <Filter products={products} />
+      <Filter />
     </main>
   );
 };

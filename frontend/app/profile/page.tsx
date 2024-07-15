@@ -7,17 +7,14 @@ import { useRouter } from "next/navigation";
 
 //Components
 import { Icons } from "@/components/Icons/Icons";
-import { UserOrderWrapper } from "@/components/UserOrderWrapper/UserOrderWrapper";
-import { UserReviewItem } from "@/components/UserReviewItem/UserReviewItem";
 import { ModalChange } from "@/components/ModalChange/ModalChange";
-import { EmptyComponent } from "@/components/EmptyComponent/EmptyComponent";
 
 //Utils
-import { CATALOG_ROUTE, SHOP_ROUTE } from "@/utils/Consts";
+import { SHOP_ROUTE } from "@/utils/Consts";
 
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useUserActions } from "@/hooks/useUserActions";
 
 //Images
@@ -27,26 +24,26 @@ import profile from "../../public/assets/other/profile-photo.png";
 import "./profile.scss";
 
 const Profile = () => {
-  const { isAuth, userState, status, userOrders, userReviews } =
-    useTypedSelector(state => state.user);
+  const { isAuth, userState, status } = useTypedSelector(state => state.user);
 
   const [isChange, setIsChange] = useState<boolean>(false);
 
   const { push } = useRouter();
 
-  const { onGetUser, onGetOrders, onGetReviews } = useUserActions();
+  const {
+    onGetUser,
+    onGetOrders,
+    onGetReviews,
+    returnUserOrders,
+    returnUserReviews,
+  } = useUserActions();
 
   const {
-    profileOrdersText,
-    profileOrdersTitle,
     profilePageAddress,
     profilePageCompany,
     profilePageOrders,
     profilePageReviews,
-    profileReviewsText,
-    profileReviewsTitle,
     orderPagePhone,
-    emptyBasketButtonText,
     orderPageSearch,
   } = useTranslate();
 
@@ -64,83 +61,6 @@ const Profile = () => {
       onGetReviews();
     }
   }, [onGetOrders, onGetReviews, isAuth]);
-
-  const returnUserOrders = () => {
-    if (!userOrders.length) {
-      return (
-        <EmptyComponent
-          buttonText={emptyBasketButtonText}
-          route={CATALOG_ROUTE}
-          text={profileOrdersText}
-          title={profileOrdersTitle}
-        />
-      );
-    }
-
-    return (
-      <div className="profile-content_orders-content">
-        <div className="profile-content_orders-content-filters">
-          <button className="profile-content_orders-content-filters-button">
-            Название
-            <Icons id="arrowDownProfile" />
-          </button>
-
-          <button className="profile-content_orders-content-filters-button">
-            Дата
-            <Icons id="arrowDownProfile" />
-          </button>
-
-          <button className="profile-content_orders-content-filters-button">
-            Стоимость
-            <Icons id="arrowDownProfile" />
-          </button>
-
-          <button className="profile-content_orders-content-filters-button">
-            Статус
-            <Icons id="arrowDownProfile" />
-          </button>
-        </div>
-
-        <div className="profile-content_orders-content-list">
-          {userOrders.map(order => (
-            <UserOrderWrapper
-              key={order.id}
-              orderDate={order.created_date}
-              orderNumber={order.id}
-              orderPrice={order.total_sum}
-              orderStatus={order.status}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  const returnUserReviews = () => {
-    return (
-      <>
-        {!userReviews.length ? (
-          <EmptyComponent
-            buttonText={emptyBasketButtonText}
-            route={CATALOG_ROUTE}
-            text={profileReviewsText}
-            title={profileReviewsTitle}
-          />
-        ) : (
-          <div className="profile-content_reviews-list">
-            {userReviews.map(review => (
-              <UserReviewItem
-                key={review.id}
-                reviewStatus="published"
-                reviewText={review.text}
-                reviewTitle={review.product.name}
-              />
-            ))}
-          </div>
-        )}
-      </>
-    );
-  };
 
   if (!userState) return <Icons id="spiner" />;
 

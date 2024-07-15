@@ -4,7 +4,7 @@
 import { useCallback } from "react";
 
 //Hooks
-import { useAppDispatch } from "./useAppDispatch";
+import { useAppDispatch } from "./useReduxHooks";
 
 //Actions
 import { setSelectedLanguage } from "@/redux/reducers/languageSlice";

@@ -5,19 +5,13 @@ import React, { FC, useEffect } from "react";
 import Image from "next/image";
 
 //Hooks
-import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useLanguage } from "@/hooks/useLanguage";
 
 //Images
 import rus from "@/public/rus.png";
 import tur from "@/public/tur.png";
-import chn from "@/public/chn.png";
 import eng from "@/public/eng.png";
-import esp from "@/public/esp.png";
-import isr from "@/public/isr.png";
-import jpn from "@/public/jpn.png";
-import kor from "@/public/kor.png";
-import prt from "@/public/prt.png";
 
 //Components
 import {
@@ -27,6 +21,9 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
+
+//Styles
+import "./LanguageSelect.scss";
 
 const LanguageSelect: FC<{ color: string }> = ({ color }) => {
   const { selectedLanguage } = useTypedSelector(state => state.language);
@@ -48,29 +45,20 @@ const LanguageSelect: FC<{ color: string }> = ({ color }) => {
     switch (language) {
       case "TUR":
         return tur;
-      case "CHN":
-        return chn;
       case "ENG":
         return eng;
-      case "ESP":
-        return esp;
-      case "ISR":
-        return isr;
-      case "JPN":
-        return jpn;
-      case "KOR":
-        return kor;
-      case "PRT":
-        return prt;
       default:
         return rus;
     }
   };
 
-  const flags = ["RUS", "TUR", "CHN", "ENG", "ESP", "ISR", "JPN", "KOR", "PRT"];
+  const flags = ["RUS", "TUR", "ENG"];
 
   return (
-    <Dropdown isKeyboardDismissDisabled>
+    <Dropdown
+      classNames={{ content: "dropdown-content" }}
+      isKeyboardDismissDisabled
+    >
       <DropdownTrigger>
         <Button variant="light" style={{ padding: 0, color }}>
           <Image
@@ -82,14 +70,14 @@ const LanguageSelect: FC<{ color: string }> = ({ color }) => {
           {selectedLanguage}
         </Button>
       </DropdownTrigger>
+
       <DropdownMenu
+        //@ts-ignore
+        onSelectionChange={keys => onChangeLanguage(keys.anchorKey)}
         disallowEmptySelection
         selectionMode="single"
         selectedKeys={[selectedLanguage]}
-        onSelectionChange={keys =>
-          //@ts-ignore
-          onChangeLanguage(keys.anchorKey)
-        }
+        classNames={{ base: "dropdown-content" }}
       >
         {flags.map(flag => (
           <DropdownItem

@@ -3,7 +3,6 @@
 //Global
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { showToastMessage } from "../toastsChange";
 
 //Components
 import { Icons } from "@/components/Icons/Icons";
@@ -16,11 +15,14 @@ import { LOGIN_ROUTE, PROFILE_ROUTE } from "@/utils/Consts";
 //Hooks
 import { useCustomForm } from "@/hooks/useCustomForm.";
 import { useTranslate } from "@/hooks/useTranslate";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useUserActions } from "@/hooks/useUserActions";
 
 //Types
 import { IInputsRegistration } from "@/types/types";
+
+//Redux Types
+import { IUserInformationApi } from "@/types/reduxTypes";
 
 //Styles
 import "./registration.scss";
@@ -63,43 +65,25 @@ const Registration = () => {
     logInCheckboxText,
     logInTextForget,
     registrationButtonLogIn,
-    messageRegistrationError,
-    messageRegistration,
   } = useTranslate();
 
   const createAccount = () => {
     const { email, first_name, last_name, password, phone_number, username } =
       getValues();
 
-    if (isValid)
-      onRegistrationUser(
-        {
-          phone_number,
-          user: {
-            email,
-            first_name,
-            is_provider: false,
-            last_name,
-            password,
-            username,
-          },
-        },
-        "customer"
-      )
-        .then(data => {
-          if ("error" in data && data.error.message === "Rejected") {
-            showToastMessage("error", messageRegistrationError);
-          } else {
-            showToastMessage("success", messageRegistration);
-            push(LOGIN_ROUTE);
-          }
-        })
-        // eslint-disable-next-line no-console
-        .catch(error => console.log(error))
-        .finally(() => {
-          setValue("phone_number", "");
-          reset();
-        });
+    const requestBody: Omit<IUserInformationApi, "address" | "company"> = {
+      phone_number,
+      user: {
+        email,
+        first_name,
+        is_provider: false,
+        last_name,
+        password,
+        username,
+      },
+    };
+
+    isValid && onRegistrationUser(requestBody, reset, setValue);
   };
 
   if (isAuth || status === "pending") return <Icons id="spiner" />;

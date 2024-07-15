@@ -1,11 +1,17 @@
 "use client";
 
-//Global
+// Global
 import { showToastMessage } from "@/app/toastsChange";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
+import Link from "next/link";
 
-//Actions
+// Components
+import { Button } from "@nextui-org/react";
+import { UserCartItem } from "@/components/userCartItem/UserCartItem";
+import { EmptyComponent } from "@/components/EmptyComponent/EmptyComponent";
+
+// Actions
 import {
   addToCart,
   changeItemCounter,
@@ -14,21 +20,26 @@ import {
   resetCart,
 } from "@/redux/reducers/cartSlice";
 
-//Utils
-import { LOGIN_ROUTE } from "@/utils/Consts";
+// Utils
+import { CATALOG_ROUTE, LOGIN_ROUTE, ORDER_ROUTE } from "@/utils/Consts";
 
-//Hooks
+// Hooks
 import { useTranslate } from "./useTranslate";
-import { useAppDispatch } from "./useAppDispatch";
-import { useTypedSelector } from "./useTypedSelector";
+import { useAppDispatch, useTypedSelector } from "./useReduxHooks";
 
-//Types
-import { IProductCart, IProductMainPage } from "@/types/types";
+// Global Types
+import { IPostCartApi } from "@/types/types";
+
+// Component Types
+import { IProductCart } from "@/types/componentTypes";
 
 const useCart = () => {
-  const { cart } = useTypedSelector(state => state.cart);
+  const { cart } = useTypedSelector(state => state.cart),
+    { isAuth } = useTypedSelector(state => state.user);
 
   const dispatch = useAppDispatch();
+
+  const { push } = useRouter();
 
   const {
     messageCartError,
@@ -39,87 +50,165 @@ const useCart = () => {
     messageCartDeleted,
     messageCartItemInCart,
     messageCartNotAuth,
+    cartContinue,
+    cartTotalPriceText,
+    emptyBasketButtonText,
+    emptyBasketText,
+    emptyBasketTitle,
+    headerCart,
   } = useTranslate();
 
-  const { push } = useRouter();
-
-  const fetchCart = useCallback(() => dispatch(onFetchCart()), [dispatch]);
-
-  const onChangeCardCounter = async (
-    action: "inc" | "dec",
-    product: IProductCart
-  ) => {
-    if (action === "inc" && product.amount < product.product.amount) {
-      dispatch(
-        changeItemCounter({
-          amount: product.amount + 1,
-          productId: product.id,
+  const fetchCart = useCallback(
+    () =>
+      dispatch(onFetchCart())
+        .then(data => {
+          if ("error" in data && data.error.message === "Rejected")
+            showToastMessage(
+              "error",
+              "Произошла ошибка при получении корзины корзины, попробуйте позже!"
+            );
         })
-        // eslint-disable-next-line no-console
-      ).catch(error => console.error(messageCartError, error));
-    } else if (action === "dec" && product.amount > 1) {
-      dispatch(
-        changeItemCounter({
-          amount: product.amount - 1,
-          productId: product.id,
-        })
-      ).catch(error =>
-        // eslint-disable-next-line no-console
-        console.error("Ошибка при изменении счетчика на сервере:", error)
-      );
-    }
+        .catch(error => console.error(error)),
+    [dispatch]
+  );
 
-    if (product.amount === 1 && action === "dec")
-      showToastMessage("warn", messageCounterDec);
+  const changeCounter = (action: "inc" | "dec", product: IProductCart) => {
+    const increment = action === "inc",
+      newAmount = product.amount + (increment ? 1 : -1);
 
-    if (product.amount === product.product.amount && action === "inc")
-      showToastMessage("warn", `${messageCounterInc} ${product.amount}!`);
-  };
+    if (newAmount < 1 || newAmount > product.product.amount) return;
 
-  const addItemToCart = async (
-    productInfo: IProductMainPage,
-    amount: number,
-    isAuth: boolean
-  ) => {
-    if (isAuth) {
-      const itemInCart = cart.find(item => item.product.id === productInfo.id);
-
-      if (!itemInCart) {
-        dispatch(addToCart({ amount, product: productInfo.id }))
-          .then(() => fetchCart())
-          .then(() => showToastMessage("success", messageCartAdded))
-          .catch(() => showToastMessage("error", messageCartAddedError));
-      } else showToastMessage("warn", messageCartItemInCart);
-    } else {
-      showToastMessage("warn", messageCartNotAuth);
-      push(LOGIN_ROUTE);
-    }
-  };
-
-  const deleteCardFromBasket = async (id: number) => {
-    dispatch(deleteFromCart(id))
-      .then(() => showToastMessage("success", messageCartDeleted))
-      // eslint-disable-next-line no-console
-      .catch(error => console.log(error));
-  };
-
-  const onResetCart = () => dispatch(resetCart());
-
-  const calculateTotalPrice = (): number => {
-    let totalPrice = 0;
-
-    cart.forEach(item => {
-      const { product, amount } = item,
-        itemPrice = +product.price * amount;
-      totalPrice += itemPrice;
+    dispatch(
+      changeItemCounter({
+        amount: newAmount,
+        productId: product.id,
+      })
+    ).then(data => {
+      if ("error" in data && data.error.message === "Rejected")
+        showToastMessage("error", messageCartError);
     });
 
-    return totalPrice;
+    if (newAmount === 1 && !increment) {
+      showToastMessage("warn", messageCounterDec);
+      return;
+    }
+
+    if (newAmount === product.product.amount && increment) {
+      showToastMessage("warn", `${messageCounterInc} ${newAmount}!`);
+      return;
+    }
   };
 
-  const returnAllProductsCounter = () => {
+  const onChangeCardCounter = useCallback(
+    (action: "inc" | "dec", product: IProductCart) => {
+      changeCounter(action, product);
+    },
+    [changeCounter]
+  );
+
+  const addItemToCart = useCallback(
+    (obj: IPostCartApi) => {
+      if (!isAuth) {
+        showToastMessage("warn", messageCartNotAuth);
+        push(LOGIN_ROUTE);
+        return;
+      }
+
+      const itemInCart = cart.find(item => item.product.id === obj.product);
+
+      if (!itemInCart) {
+        if (!obj.color || !obj.size) {
+          showToastMessage("warn", "Вы не выбрали размер или цвет!");
+          return;
+        }
+
+        dispatch(addToCart(obj))
+          .then(data => {
+            if ("error" in data && data.error.message === "Rejected") {
+              showToastMessage("error", messageCartAddedError);
+              return;
+            }
+
+            onFetchCart();
+            showToastMessage("success", messageCartAdded);
+          })
+          .catch(error => console.error(error));
+        return;
+      }
+
+      showToastMessage("warn", messageCartItemInCart);
+    },
+    [cart, dispatch, fetchCart, push]
+  );
+
+  const deleteCardFromBasket = useCallback(
+    (id: number) => {
+      dispatch(deleteFromCart(id))
+        .then(data => {
+          if ("error" in data && data.error.message === "Rejected") {
+            showToastMessage(
+              "success",
+              "Произошла ошибка при удалении товара, попробуйте позже!"
+            );
+            return;
+          }
+
+          showToastMessage("success", messageCartDeleted);
+        })
+        .catch(error => console.error(error));
+    },
+    [dispatch]
+  );
+
+  const onResetCart = useCallback(() => dispatch(resetCart()), [dispatch]);
+
+  const calculateTotalPrice = useCallback((): number => {
+    return cart.reduce((totalPrice, item) => {
+      const itemPrice = +item.product.price * item.amount;
+
+      return totalPrice + itemPrice;
+    }, 0);
+  }, [cart]);
+
+  const returnAllProductsCounter = useCallback((): number => {
     return cart.reduce((total, currentItem) => total + currentItem.amount, 0);
-  };
+  }, [cart]);
+
+  const renderUserCart = useCallback(
+    () =>
+      cart.length ? (
+        <>
+          <h5 className="text-[24px]">{headerCart}</h5>
+          <div className="flex flex-col gap-[23px]">
+            {cart.map(item => (
+              <UserCartItem product={item} key={item.id} />
+            ))}
+
+            <div className="basket_confirm">
+              <Button className="basket_button bg-tiffani text-white rounded-md w-[278px] h-[51px] py-[10px]">
+                <Link
+                  className="w-full h-full flex items-center justify-center"
+                  href={ORDER_ROUTE}
+                >
+                  {cartContinue}
+                </Link>
+              </Button>
+              <p className="text-[24px]">
+                {`${cartTotalPriceText} $${calculateTotalPrice().toFixed(2)}`}
+              </p>
+            </div>
+          </div>
+        </>
+      ) : (
+        <EmptyComponent
+          title={emptyBasketTitle}
+          text={emptyBasketText}
+          route={CATALOG_ROUTE}
+          buttonText={emptyBasketButtonText}
+        />
+      ),
+    [cart, calculateTotalPrice]
+  );
 
   return {
     fetchCart,
@@ -129,6 +218,7 @@ const useCart = () => {
     deleteCardFromBasket,
     returnAllProductsCounter,
     onResetCart,
+    renderUserCart,
   };
 };
 

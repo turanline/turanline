@@ -16,11 +16,11 @@ import { CATALOG_ROUTE } from "@/utils/Consts";
 import { useProducts } from "@/hooks/useProducts";
 import { useTranslate } from "@/hooks/useTranslate";
 
-//Types
-import { IHeaderSearchProps } from "@/types/types";
+//Component Types
+import { IHeaderSearchProps } from "@/types/componentTypes";
 
 //Styles
-import "@/components/SearchModal/SearchModal.scss";
+import "./HeaderSearch.scss";
 
 const HeaderSearch: FC<IHeaderSearchProps> = ({
   allCategories,
@@ -54,10 +54,29 @@ const HeaderSearch: FC<IHeaderSearchProps> = ({
     reset();
   };
 
+  const renderHeaderCategories = () =>
+    newCategories.map(category => (
+      <SelectItem key={category.name} value={category.name}>
+        {category.name}
+      </SelectItem>
+    ));
+
   const newCategories = [
     { id: 4, name: "Все категории", image: null },
     ...allCategories,
   ];
+
+  const selectClassName = {
+    popoverContent: "w-[170px]",
+    mainWrapper: "w-[170px]",
+    base: "w-[170px]",
+    trigger: "rounded-none shadow-none transition duration-200 ease bg-white",
+  };
+
+  const inputClassName = {
+    inputWrapper: "shadow-none border-none h-[56px] bg-white",
+    mainWrapper: "h-[56px] transition duration-200 ease",
+  };
 
   return (
     <form
@@ -72,19 +91,9 @@ const HeaderSearch: FC<IHeaderSearchProps> = ({
           label={headerCategorySelect}
           selectedKeys={[category]}
           onChange={handleChange}
-          classNames={{
-            popoverContent: "w-[170px]",
-            mainWrapper: "w-[170px]",
-            base: "w-[170px]",
-            trigger:
-              "rounded-none shadow-none transition duration-200 ease bg-white",
-          }}
+          classNames={selectClassName}
         >
-          {newCategories.map(category => (
-            <SelectItem key={category.name} value={category.name}>
-              {category.name}
-            </SelectItem>
-          ))}
+          {renderHeaderCategories()}
         </Select>
 
         <Input
@@ -94,16 +103,13 @@ const HeaderSearch: FC<IHeaderSearchProps> = ({
           className="w-full focus:outline-none"
           placeholder={headerSearchPlaceholder}
           onClear={handleClear}
-          classNames={{
-            inputWrapper: "shadow-none border-none h-[56px] bg-white",
-            mainWrapper: "h-[56px] transition duration-200 ease",
-          }}
+          classNames={inputClassName}
         />
       </div>
 
       <Button
         type="submit"
-        className="h-full bg-white search-button-mobile transition duration-200 ease"
+        className="h-full search-button-mobile transition duration-200 ease"
       >
         <Icons id="searchMobile" />
       </Button>

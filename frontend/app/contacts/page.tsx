@@ -46,14 +46,12 @@ export default function Contacts() {
 
       <div className="flex w-full mt-[48px]">
         <div className="flex flex-col gap-[50px]">
-          <div className="w-full flex flex-col mb-[60px]">
-            <h5 className="family-medium mb-[10px] text-tiffani">
-              {headerContacts}
-            </h5>
+          <div className="w-full flex flex-col">
+            <h5 className="family-medium text-tiffani">{headerContacts}</h5>
 
-            <h3 className="family-bold text-[40px]   mb-[20px]">{SHOP_NAME}</h3>
+            <h3 className="family-bold text-[40px]">{SHOP_NAME}</h3>
 
-            <p className="text-gray/500 mb-[40px]">{contactsPageText}</p>
+            <p className="text-gray/500">{contactsPageText}</p>
           </div>
 
           <div className="flex flex-col gap-[40px]">

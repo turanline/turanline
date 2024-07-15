@@ -1,74 +1,65 @@
 //Hosts
-import { $host, clearTokens } from "./index";
+import { $authHost, $host, clearTokens } from "./index";
 
-//Services
-import { getUserById } from "./usersAPI";
-
-//Types
+//Global Types
 import { IInputsLogin } from "@/types/types";
 
-export const postTokenRefresh = async (
-  refreshToken: string
-): Promise<string> => {
+//Cookie
+import { getCookie, setCookie } from "cookies-next";
+
+export const postTokenRefresh = async () => {
   try {
-    const { data } = await $host.post<{ access: string }>(
-      "/api/token/refresh/",
-      { refresh: refreshToken }
-    );
+    const refreshToken = getCookie("AuthTokenMisRef");
 
-    if (!data.access) {
-      clearTokens();
-      throw new Error("No access token in response");
-    }
+    if (!refreshToken) console.error("Refresh token is missing");
 
-    localStorage.setItem("AuthTokenMis", data.access);
+    const { data } = await $authHost.post("/api/token/refresh/", {
+      refresh: refreshToken,
+    });
 
-    return data.access;
-  } catch (error: any) {
-    clearTokens();
-    throw new Error(
-      `Failed to refresh token: ${error.response?.data || error.message}`
-    );
+    setCookie("AuthTokenMis", data?.access);
+
+    return data;
+  } catch (error) {
+    console.error("Failed to refresh token:", error);
   }
 };
 
-export const postVerifyToken = async (
-  token: string
-): Promise<{ [key: string]: any }> => {
-  if (!token) throw new Error("No token provided for verification");
+export const postVerifyToken = async (token: string | null) => {
   try {
-    const { data } = await $host.post<{ [key: string]: any }>(
-      "/api/token/verify/",
-      { token }
-    );
+    const { data } = await $host.post("/api/token/verify/", { token });
 
-    if (!data.user) {
-      clearTokens();
-      throw new Error(`Error to verify token!`);
-    }
+    return data;
+  } catch (error) {
+    console.error("Failed to verify token:", error);
+  }
+};
+
+export const postLogIn = async (userData: IInputsLogin) => {
+  try {
+    const { data } = await $host.post("/api/token/", userData);
+
+    setCookie("AuthTokenMis", data.access);
+    setCookie("AuthTokenMisRef", data.refresh);
 
     return data;
   } catch (error: any) {
     clearTokens();
-    throw new Error(
-      `Failed to verify token: ${error.response?.data || error.message}`
-    );
+    console.error("Failed to log in:", error);
+    throw error;
   }
 };
 
-export const postLogIn = async (userData: IInputsLogin): Promise<any> => {
+export const postLogOut = async (refreshToken: string) => {
   try {
-    const { data } = await $host.post("/api/token/", userData),
-      { user } = await postVerifyToken(data.access),
-      userInformation = await getUserById(user);
+    const { data } = await $authHost.post("/api/token/logout/", {
+      refresh: refreshToken,
+    });
 
-    localStorage.setItem("AuthTokenMis", data.access);
-    localStorage.setItem("AuthTokenMisRef", data.refresh);
-
-    return userInformation;
-  } catch (error: any) {
+    return data;
+  } catch (error) {
     clearTokens();
-
-    throw new Error(`Failed to log in: ${error.message}`);
+    console.error("Failed to log out:" + error);
+    throw error;
   }
 };

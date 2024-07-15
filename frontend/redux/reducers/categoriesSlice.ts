@@ -1,8 +1,8 @@
 //Global
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-//Types
-import { ICategoriesState } from "@/types/types";
+//Redux Types
+import { ICategoriesState } from "@/types/reduxTypes";
 
 //Services
 import { getCategories, getTypes, getSubTypes } from "@/services/categoriesAPI";

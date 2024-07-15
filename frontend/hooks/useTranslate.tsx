@@ -4,11 +4,11 @@
 import { useEffect } from "react";
 
 //Hooks
-import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useLanguage } from "./useLanguage";
 
 //Utils
-import * as locales from "@/utils/translate/locales";
+import * as locales from "@/utils/locales";
 
 const useTranslate = () => {
   const { selectedLanguage } = useTypedSelector(state => state.language);
@@ -21,10 +21,7 @@ const useTranslate = () => {
     if (language) changeSelectedLanguage(language);
   }, [changeSelectedLanguage]);
 
-  const translatedText =
-    locales[selectedLanguage.toLowerCase() as keyof typeof locales];
-
-  return translatedText;
+  return locales[selectedLanguage.toLowerCase() as keyof typeof locales];
 };
 
 export { useTranslate };

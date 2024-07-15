@@ -1,8 +1,8 @@
 //Global
 import React, { FC } from "react";
 
-//Types
-import { ISearchModalProps } from "@/types/types";
+//Component Types
+import { ISearchModalProps } from "@/types/componentTypes";
 
 //Components
 import { HeaderSearch } from "../HeaderSearch/HeaderSearch";

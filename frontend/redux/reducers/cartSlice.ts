@@ -1,8 +1,11 @@
 //Global
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-//Types
-import { ICartState, IPostCartApi, IPutCart } from "@/types/types";
+//GLobal Types
+import { IPostCartApi, IPutCart } from "@/types/types";
+
+//Redux Types
+import { ICartState } from "@/types/reduxTypes";
 
 //Services
 import {
@@ -30,14 +33,12 @@ export const fetchCart = createAsyncThunk<
 });
 
 export const addToCart = createAsyncThunk<
-  ICartState["cart"],
+  undefined,
   IPostCartApi,
   { rejectValue: string }
 >("cartSlice/addToCart", async (cartItem, { rejectWithValue }) => {
   try {
     await postToCart(cartItem);
-
-    return await getCart();
   } catch (error) {
     return rejectWithValue(`Failed add to cart: ${error}`);
   }
@@ -90,9 +91,8 @@ const cartSlice = createSlice({
       .addCase(addToCart.pending, state => {
         state.status = "pending";
       })
-      .addCase(addToCart.fulfilled, (state, action) => {
+      .addCase(addToCart.fulfilled, state => {
         state.status = "fulfilled";
-        state.cart = action.payload;
       })
       .addCase(deleteFromCart.pending, state => {
         state.status = "pending";

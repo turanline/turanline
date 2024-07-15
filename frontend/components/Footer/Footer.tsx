@@ -18,8 +18,6 @@ import {
   DELIVERY_ROUTE,
   PAYMENT_ROUTE,
   POLITIC_ROUTE,
-  PROVIDER_LOGIN_ROUTE,
-  PROVIDER_ROUTE,
   SHOP_ADDRESS,
   SHOP_EMAIL,
   SHOP_INSTAGRAM,
@@ -28,6 +26,7 @@ import {
   SHOP_ROUTE,
   SHOP_TELEGRAM,
   SHOP_WHATSAPP,
+  PROVIDER_SITE,
 } from "@/utils/Consts";
 
 //Images
@@ -35,11 +34,8 @@ import logo from "../../public/assets/other/logo2.svg";
 
 //Styles
 import "./Footer.scss";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
 
 export function Footer() {
-  const { isProviderAuth } = useTypedSelector(state => state.user);
-
   const {
     footerPayment,
     footerPolitics,
@@ -54,8 +50,8 @@ export function Footer() {
   const { onSetCategories, mapCategoriesOnDesktop } = useCategories("#0ABAB5");
 
   useEffect(() => {
-    !isProviderAuth && onSetCategories();
-  }, [onSetCategories, isProviderAuth]);
+    onSetCategories();
+  }, [onSetCategories]);
 
   return (
     <footer>
@@ -64,12 +60,19 @@ export function Footer() {
           <Link href={SHOP_ROUTE}>
             <Image src={logo} alt="logo" />
           </Link>
-          <div className="flex gap-[57px]">
+
+          <div className="footer-links">
             <Link href={ABOUT_ROUTE}>{headerAbout}</Link>
+
             <Link href={DELIVERY_ROUTE}>{headerDelivery}</Link>
+
             <Link href={PAYMENT_ROUTE}>{footerPayment}</Link>
+
             <Link href={POLITIC_ROUTE}>{footerPolitics}</Link>
-            <Link href={PROVIDER_LOGIN_ROUTE}>{footerProviders}</Link>
+
+            <Link target="_blank" href={PROVIDER_SITE}>
+              {footerProviders}
+            </Link>
           </div>
         </nav>
         <nav className="grid grid-cols-2 md:flex w-full justify-between">
@@ -79,9 +82,14 @@ export function Footer() {
             </Link>
             <div className="flex flex-col gap-[16px] md:gap-[57px]">
               <Link href={ABOUT_ROUTE}>{headerAbout}</Link>
+
               <Link href={DELIVERY_ROUTE}>{headerDelivery}</Link>
+
               <Link href={PAYMENT_ROUTE}>{footerPayment}</Link>
-              <Link href={PROVIDER_ROUTE}>{footerProviders}</Link>
+
+              <Link target="_blank" href={PROVIDER_SITE}>
+                {footerProviders}
+              </Link>
             </div>
           </div>
           <div className="w-full flex flex-col-reverse md:flex-row md:justify-between items-center gap-[10px] md:gap-[32px]">
@@ -112,6 +120,7 @@ export function Footer() {
                   {SHOP_PHONE}
                 </Link>
               </div>
+
               <div className="flex flex-col">
                 <Link
                   className="family_bold text-[10px] text-tiffani"
@@ -127,7 +136,8 @@ export function Footer() {
             </div>
 
             <nav className="w-full hidden lg:flex items-center justify-end gap-[13px]">
-              <p className="family_bold">{footerWriteUs}:</p>
+              <span className="family_bold">{footerWriteUs}:</span>
+
               <Link href={SHOP_TELEGRAM}>
                 <Icons id="telegram" />
               </Link>
@@ -145,13 +155,13 @@ export function Footer() {
       </div>
 
       <div className="hidden lg:block w-full bg-tiffani mb-[24px]">
-        {!isProviderAuth && mapCategoriesOnDesktop()}
+        {mapCategoriesOnDesktop()}
       </div>
 
       <div className="w-full container mx-auto flex justify-between items-center mb-4 px-[28px] sm:px-0">
-        <p className="text-[10px]">{footerUsing}</p>
+        <span className="text-[10px]">{footerUsing}</span>
 
-        <p className="hidden sm:block">{`© ${SHOP_NAME}`}</p>
+        <span className="hidden sm:block">{`© ${SHOP_NAME}`}</span>
       </div>
     </footer>
   );

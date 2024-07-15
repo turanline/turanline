@@ -7,8 +7,8 @@ import Image from "next/image";
 // Components
 import { Icons } from "../Icons/Icons";
 
-//Types
-import { IUserOrderItemProps } from "@/types/types";
+//Component Types
+import { IUserOrderItemProps } from "@/types/componentTypes";
 //styles
 import "./UserOrderItem.scss";
 

@@ -3,20 +3,20 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { clearTokens } from "@/services";
 
 //Types
-import {
-  IChangeUserData,
-  IInputsLogin,
-  IPostRegistrationProvider,
-  IProviderNewsObj,
-  IUserInformationApi,
-  IUserState,
-} from "@/types/types";
+import { IChangeUserData, IInputsLogin } from "@/types/types";
+
+//Redux Types
+import { IUserInformationApi, IUserState } from "@/types/reduxTypes";
+
+//Cookie
+import { deleteCookie, getCookie } from "cookies-next";
 
 //Services
 import {
   postVerifyToken,
   postTokenRefresh,
   postLogIn,
+  postLogOut,
 } from "@/services/authAPI";
 import {
   getUserData,
@@ -24,20 +24,13 @@ import {
   changeUserData,
   getUserOrders,
   getUserReviews,
-  postLogOut,
-  getProviderNews,
-  getProviderReviews,
 } from "@/services/usersAPI";
 
 const initialState: IUserState = {
   userState: null,
-  providerState: null,
   userOrders: [],
   userReviews: [],
-  providerNews: [],
-  providerReviews: [],
   isAuth: false,
-  isProviderAuth: false,
   status: "pending",
 };
 
@@ -47,26 +40,26 @@ export const getUser = createAsyncThunk<
   { rejectValue: string }
 >("userSlice/getUser", async (_, { rejectWithValue }) => {
   try {
-    const token = localStorage.getItem("AuthTokenMis");
+    const token = getCookie("AuthTokenMis");
 
     if (!token) throw new Error("AuthToken not found");
 
     const { user } = await postVerifyToken(token);
 
-    return await getUserData(user, token);
+    return await getUserData(user);
   } catch (error) {
     try {
-      const refreshToken = localStorage.getItem("AuthTokenMisRef");
+      const refreshToken = getCookie("AuthTokenMisRef");
 
       if (!refreshToken) {
         clearTokens();
         throw new Error("RefreshToken not found");
       }
 
-      const newToken = await postTokenRefresh(refreshToken),
+      const newToken = await postTokenRefresh(),
         { user } = await postVerifyToken(newToken);
 
-      return await getUserData(user, newToken);
+      return await getUserData(user);
     } catch (refreshError: any) {
       clearTokens();
       return rejectWithValue(
@@ -80,16 +73,11 @@ export const getUser = createAsyncThunk<
 
 export const registrationUser = createAsyncThunk<
   undefined,
-  {
-    information: IUserInformationApi | IPostRegistrationProvider;
-    requestString: "customer" | "provider";
-  },
+  Omit<IUserInformationApi, "address" | "company">,
   { rejectValue: string }
->("userSlice/registrationUser", async (params, { rejectWithValue }) => {
-  const { information, requestString } = params;
-
+>("userSlice/registrationUser", async (information, { rejectWithValue }) => {
   try {
-    await postRegistration(requestString, information);
+    await postRegistration(information);
   } catch (error) {
     return rejectWithValue(`${error}`);
   }
@@ -101,11 +89,7 @@ export const logInUser = createAsyncThunk<
   { rejectValue: string }
 >("userSlice/logInUser", async (information, { rejectWithValue }) => {
   try {
-    let info;
-
-    await postLogIn(information).then(data => (info = data));
-
-    return info;
+    await postLogIn(information);
   } catch (error) {
     return rejectWithValue(`${error}`);
   }
@@ -117,12 +101,12 @@ export const logOutUser = createAsyncThunk<
   { rejectValue: string }
 >("userSlice/logOutUser", async (_, { rejectWithValue }) => {
   try {
-    const refreshToken = localStorage.getItem("AuthTokenMisRef");
+    const refreshToken = getCookie("AuthTokenMisRef");
 
     if (refreshToken) await postLogOut(refreshToken);
 
-    localStorage.removeItem("AuthTokenMis");
-    localStorage.removeItem("AuthTokenMisRef");
+    deleteCookie("AuthTokenMis");
+    deleteCookie("AuthTokenMisRef");
   } catch (error) {
     return rejectWithValue(`Failed log out user: ${error}`);
   }
@@ -134,12 +118,12 @@ export const changeUserDataProfile = createAsyncThunk<
   { rejectValue: string }
 >("userSlice/changeUserDataProfile", async (userData, { rejectWithValue }) => {
   try {
-    const authToken = localStorage.getItem("AuthTokenMis");
+    const authToken = getCookie("AuthTokenMis");
 
     if (authToken) {
       const { user } = await postVerifyToken(authToken);
 
-      await changeUserData(user, userData, authToken);
+      await changeUserData(user, userData);
     }
 
     return userData;
@@ -154,12 +138,7 @@ export const getOrders = createAsyncThunk<
   { rejectValue: string }
 >("userSlice/getUserOrders", async (_, { rejectWithValue }) => {
   try {
-    const token = localStorage.getItem("AuthTokenMis");
-
-    if (token) {
-      const { user } = await postVerifyToken(token);
-      return await getUserOrders(user, token);
-    }
+    return await getUserOrders();
   } catch (error) {
     return rejectWithValue(`Failed fetch user orders: ${error}`);
   }
@@ -171,46 +150,9 @@ export const getReviews = createAsyncThunk<
   { rejectValue: string }
 >("userSlice/getUserReviews", async (_, { rejectWithValue }) => {
   try {
-    const token = localStorage.getItem("AuthTokenMis");
-
-    if (token) {
-      const { user } = await postVerifyToken(token);
-      return await getUserReviews(user, token);
-    }
+    return await getUserReviews();
   } catch (error) {
     return rejectWithValue(`Failed fetch user orders: ${error}`);
-  }
-});
-
-export const getNews = createAsyncThunk<
-  IProviderNewsObj[],
-  undefined,
-  { rejectValue: string }
->("userSlice/getProviderNews", async (_, { rejectWithValue }) => {
-  try {
-    const token = localStorage.getItem("AuthTokenMis");
-
-    if (token) return await getProviderNews(token);
-  } catch (error) {
-    return rejectWithValue(`${error}`);
-  }
-});
-
-export const getReviewsProvider = createAsyncThunk<
-  [],
-  undefined,
-  { rejectValue: string }
->("userSlice/getReviewsProvider", async (_, { rejectWithValue }) => {
-  try {
-    const token = localStorage.getItem("AuthTokenMis");
-
-    if (token) {
-      const { user } = await postVerifyToken(token);
-
-      return await getProviderReviews(user, token);
-    }
-  } catch (error) {
-    return rejectWithValue(`${error}`);
   }
 });
 
@@ -226,20 +168,13 @@ const userSlice = createSlice({
       .addCase(getUser.fulfilled, (state, action) => {
         state.status = "fulfilled";
 
-        if (!action.payload?.user.is_provider) {
-          state.userState = action.payload;
-          state.isAuth = true;
-        } else {
-          state.providerState = action.payload;
-          state.isProviderAuth = true;
-        }
+        state.userState = action.payload;
+        state.isAuth = true;
       })
       .addCase(getUser.rejected, state => {
         state.status = "fulfilled";
         state.isAuth = false;
-        state.isProviderAuth = false;
         state.userState = null;
-        state.providerState = null;
 
         clearTokens();
       })
@@ -250,8 +185,6 @@ const userSlice = createSlice({
         state.status = "fulfilled";
 
         state.userState = null;
-        state.providerState = null;
-        state.isProviderAuth = false;
         state.isAuth = false;
         state.userReviews = [];
         state.userOrders = [];
@@ -269,13 +202,9 @@ const userSlice = createSlice({
       .addCase(logInUser.pending, state => {
         state.status = "pending";
       })
-      .addCase(logInUser.fulfilled, (state, action) => {
-        const { is_provider } = action.payload;
-
+      .addCase(logInUser.fulfilled, state => {
         state.status = "fulfilled";
-
-        if (is_provider) state.isProviderAuth = true;
-        else state.isAuth = true;
+        state.isAuth = true;
       })
       .addCase(logInUser.rejected, state => {
         state.status = "fulfilled";
@@ -318,20 +247,6 @@ const userSlice = createSlice({
       .addCase(getReviews.fulfilled, (state, action) => {
         state.status = "fulfilled";
         state.userReviews = action.payload;
-      })
-      .addCase(getNews.pending, state => {
-        state.status = "pending";
-      })
-      .addCase(getNews.fulfilled, (state, action) => {
-        state.status = "fulfilled";
-        state.providerNews = action.payload;
-      })
-      .addCase(getReviewsProvider.pending, state => {
-        state.status = "pending";
-      })
-      .addCase(getReviewsProvider.fulfilled, (state, action) => {
-        state.status = "fulfilled";
-        state.providerReviews = action.payload;
       }),
 });
 

@@ -7,16 +7,18 @@ import { FC } from "react";
 //Components
 import InputMask from "react-input-mask";
 import { Icons } from "../Icons/Icons";
-import { Button } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 
-//Types
-import { IInputsChangeProfile, IModalChangeProps } from "@/types/types";
+//Global Types
+import { IChangeUserData, IInputsChangeProfile } from "@/types/types";
+
+//Component Types
+import { IModalChangeProps } from "@/types/componentTypes";
 
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
 import { useCustomForm } from "@/hooks/useCustomForm.";
 import { useUserActions } from "@/hooks/useUserActions";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
 
 //Styles
 import "./ModalChange.scss";
@@ -29,53 +31,38 @@ const ModalChange: FC<IModalChangeProps> = ({ isChange, setIsChange }) => {
     profileModalName,
     profileModalSurName,
     profileModalTitle,
-    messageModalChangeError,
-    messageModalChangeSuccess,
     messageModalChangeWarn,
   } = useTranslate();
 
   const {
     getValues,
-    reset,
     handleSubmit,
-    isValid,
+    reset,
     setValue,
+    isValid,
     returnInputError,
     returnInputProperties,
   } = useCustomForm<IInputsChangeProfile>();
 
   const { onChangeUserData } = useUserActions();
 
-  const handleChangeUserData = async () => {
+  const handleChangeUserData = () => {
     const { address, company, first_name, last_name, phone_number } =
       getValues();
 
-    if (isValid) {
-      onChangeUserData({
-        user: { first_name, last_name },
-        address,
-        company,
-        phone_number,
-      })
-        .then(data => {
-          if ("error" in data && data.error.message === "Rejected") {
-            showToastMessage("error", messageModalChangeError);
-          } else {
-            showToastMessage("success", messageModalChangeSuccess);
-            setIsChange(false);
-            setValue("phone_number", "");
-            reset();
-          }
-        })
-        // eslint-disable-next-line no-console
-        .catch(error => console.log(error))
-        .finally(() => {
-          setValue("phone_number", "");
-          reset();
-        });
-    } else {
+    const requestBody: IChangeUserData = {
+      user: { first_name, last_name },
+      address,
+      company,
+      phone_number,
+    };
+
+    if (!isValid) {
       showToastMessage("warn", messageModalChangeWarn);
+      return;
     }
+
+    onChangeUserData(requestBody, reset, setValue, setIsChange);
   };
 
   return (
@@ -91,44 +78,44 @@ const ModalChange: FC<IModalChangeProps> = ({ isChange, setIsChange }) => {
         <h3 className="change-content-title">{profileModalTitle}</h3>
 
         <label className="w-full" htmlFor="#">
-          <input
+          <Input
             {...returnInputProperties("first_name")}
             placeholder={`${profileModalName}...`}
             name="first_name"
-            className="change-content-input"
+            classNames={{ inputWrapper: "change-content-input" }}
             type="text"
           />
           {returnInputError("first_name")}
         </label>
 
         <label className="w-full" htmlFor="#">
-          <input
-            {...returnInputProperties("last_name")}
-            placeholder={`${profileModalSurName}...`}
-            name="last_name"
-            className="change-content-input"
+          <Input
+            {...returnInputProperties("first_name")}
+            placeholder={`${profileModalName}...`}
+            name="first_name"
+            classNames={{ inputWrapper: "change-content-input" }}
             type="text"
           />
           {returnInputError("last_name")}
         </label>
 
         <label className="w-full" htmlFor="#">
-          <input
-            {...returnInputProperties("company")}
-            placeholder={`${profileModalCompany}...`}
-            name="company"
-            className="change-content-input"
+          <Input
+            {...returnInputProperties("first_name")}
+            placeholder={`${profileModalName}...`}
+            name="first_name"
+            classNames={{ inputWrapper: "change-content-input" }}
             type="text"
           />
           {returnInputError("company")}
         </label>
 
         <label className="w-full" htmlFor="#">
-          <input
-            {...returnInputProperties("address")}
-            placeholder={`${profileModalAddress}...`}
-            name="address"
-            className="change-content-input"
+          <Input
+            {...returnInputProperties("first_name")}
+            placeholder={`${profileModalName}...`}
+            name="first_name"
+            classNames={{ inputWrapper: "change-content-input" }}
             type="text"
           />
           {returnInputError("address")}

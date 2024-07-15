@@ -5,7 +5,12 @@ const nextConfig = {
   swcMinify: true,
   optimizeFonts: true,
   images: {
-    domains: ["mis-express.com", "www.mis-express.com", "localhost:3000"],
+    domains: [
+      "mis-express.com",
+      "www.mis-express.com",
+      "localhost:3001",
+      "drive.google.com",
+    ],
     minimumCacheTTL: 1500000,
   },
 };

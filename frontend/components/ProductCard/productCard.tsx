@@ -1,7 +1,7 @@
 "use client";
 
 //Global
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,17 +9,21 @@ import Link from "next/link";
 import like from "@/public/assets/other/likeProduct.png";
 import likeRed from "@/public/assets/other/likeProductActive.png";
 
+//Utils
+import { getGoogleDriveImageUrl } from "@/utils/googleImage";
+
 //Components
 import { Button } from "@nextui-org/react";
 
 //Hooks
 import { useCart } from "@/hooks/useCart";
 import { useFavorites } from "@/hooks/useFavorites";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useTranslate } from "@/hooks/useTranslate";
+import { useProducts } from "@/hooks/useProducts";
 
-//Types
-import { IProductMainPage } from "@/types/types";
+//Component Types
+import { IProductMainPage } from "@/types/componentTypes";
 
 //Styles
 import "./ProductCard.scss";
@@ -27,14 +31,15 @@ import "./ProductCard.scss";
 const ProductCard: FC<{ productInfo: IProductMainPage }> = ({
   productInfo,
 }) => {
+  const [colorId, setColorId] = useState<number>(0),
+    [sizeId, setSizeId] = useState<number>(0);
+
   const { isAuth } = useTypedSelector(state => state.user),
-    { favorites } = useTypedSelector(state => state.favorites);
-
-  const { productPageButton } = useTranslate();
-
-  const { addItemToCart } = useCart();
-
-  const { addToFavorites, deleteFromFavorites } = useFavorites();
+    { favorites } = useTypedSelector(state => state.favorites),
+    { productPageButton } = useTranslate(),
+    { addItemToCart } = useCart(),
+    { addToFavorites, deleteFromFavorites } = useFavorites(),
+    { mapProductOptions } = useProducts();
 
   const itemInFavorites = favorites.find(item => item.id === productInfo.id);
 
@@ -49,29 +54,23 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({
   const likeHandleClick = () => {
     if (!itemInFavorites) {
       addToFavorites(productInfo, isAuth);
-    } else {
-      deleteFromFavorites(productInfo);
+      return;
     }
+
+    deleteFromFavorites(productInfo);
   };
 
-  const mapSizesProductCard = () => {
-    const sizesArray: { size: string }[] = [
-      { size: "XXL" },
-      { size: "XL" },
-      { size: "L" },
-      { size: "M" },
-      { size: "S" },
-    ];
+  const handleAddToCart = () =>
+    addItemToCart({
+      amount: 1,
+      color: colorId,
+      size: sizeId,
+      product: productInfo.id,
+    });
 
-    return sizesArray.map((item, index) => (
-      <button
-        key={index}
-        className="py-[5px] px-[10px] border-1 border-border cursor-pointer hover:border-tiffani"
-      >
-        <p className="font-medium">{item.size}</p>
-      </button>
-    ));
-  };
+  const imageUrl = productInfo.images[0]
+    ? getGoogleDriveImageUrl(productInfo.images[0].image_url)
+    : "";
 
   return (
     <div className="product_card">
@@ -79,7 +78,7 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({
         <Link href={`/product/${productInfo.slug}`}>
           <Image
             className="product_image"
-            src={productInfo.image ? productInfo.image : ""}
+            src={imageUrl}
             alt="cardImg"
             width={500}
             height={500}
@@ -115,23 +114,28 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({
           <p className="font-medium">{`$${productInfo.price}`}</p>
         </div>
 
-        <div className="flex w-full max-w-[230px] justify-between">
-          {mapSizesProductCard()}
+        <div className="flex  gap-[10px]">
+          {mapProductOptions(
+            productInfo?.size,
+            sizeId,
+            setSizeId,
+            "button-option_size"
+          )}
         </div>
 
         <div className="flex gap-[10px]">
-          <button className="w-[30px] h-[30px] rounded-full drop-shadow-md bg-black border-2 border-white"></button>
-
-          <button className="w-[30px] h-[30px] rounded-full drop-shadow-md bg-blue border-2 border-white"></button>
-
-          <button className="w-[30px] h-[30px] rounded-full drop-shadow-md bg-white border-2 border-gray-color"></button>
-
-          <button className="w-[30px] h-[30px] rounded-full drop-shadow-md bg-brown border-2 border-white"></button>
+          {mapProductOptions(
+            productInfo?.color,
+            colorId,
+            setColorId,
+            "button-option_color",
+            true
+          )}
         </div>
       </div>
 
       <Button
-        onClick={() => addItemToCart(productInfo, 1, isAuth)}
+        onClick={handleAddToCart}
         className="bg-tiffani text-white rounded-md w-full h-[44px] py-[10px]"
       >
         {productPageButton}

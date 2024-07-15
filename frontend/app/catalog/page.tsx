@@ -1,23 +1,22 @@
 "use client";
 
 //Global
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, CSSProperties } from "react";
 
 //Components
-import { Button, Tooltip } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import { Filter } from "@/components/Filter/Filter";
-import { ProductCard } from "@/components/ProductCard/productCard";
+import { ProductCard } from "../../components/ProductCard/productCard";
 import { EmptyComponent } from "@/components/EmptyComponent/EmptyComponent";
 import { Icons } from "@/components/Icons/Icons";
 
 //Hooks
-import { useTypedSelector } from "@/hooks/useTypedSelector";
-import { useProducts } from "@/hooks/useProducts";
+import { useTypedSelector } from "@/hooks/useReduxHooks";
+import { useProducts } from "../../hooks/useProducts";
 import { useTranslate } from "@/hooks/useTranslate";
 
 //Utils
 import { SHOP_ROUTE } from "@/utils/Consts";
-import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 
 //Styles
 import "swiper/css/pagination";
@@ -27,8 +26,9 @@ import "swiper/css";
 export default function Category() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { filtered, category, filters, status, products, searchText } =
-    useTypedSelector(state => state.products);
+  const { filtered, category, filters, status, searchText } = useTypedSelector(
+    state => state.products
+  );
 
   const { onSetFiltered, setAllProducts, handleSearch } = useProducts();
 
@@ -80,6 +80,12 @@ export default function Category() {
     status,
   ]);
 
+  const buttonStyles: CSSProperties = {
+    background: isOpen ? "#E30387" : "#0ABAB5",
+    color: "white",
+    fontSize: "25px",
+  };
+
   return (
     <main className="container mx-auto mt-[30px] mb-[100px] px-[28px] md:px-0">
       <Breadcrumbs>
@@ -88,11 +94,7 @@ export default function Category() {
       </Breadcrumbs>
 
       <Button
-        style={{
-          background: isOpen ? "#E30387" : "#0ABAB5",
-          color: "white",
-          fontSize: "25px",
-        }}
+        style={buttonStyles}
         onClick={() => setIsOpen(!isOpen)}
         className="filters"
         startContent={<Icons id="filter" />}
@@ -101,7 +103,7 @@ export default function Category() {
       </Button>
 
       <div className={isOpen ? "filter_wrapper active" : "filter_wrapper"}>
-        <Filter products={products} />
+        <Filter />
       </div>
 
       {mapAllProducts}

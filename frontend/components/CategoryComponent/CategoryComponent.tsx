@@ -16,7 +16,7 @@ import { SHOP_ROUTE } from "@/utils/Consts";
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
 import { useCategories } from "@/hooks/useCategories";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useTypedSelector } from "@/hooks/useReduxHooks";
 
 //Styles
 import "swiper/css";
@@ -37,6 +37,61 @@ const CategoryComponent: FC<{ categoryObject: any; categoryId: number }> = ({
 
   if (status === "pending") return <Icons id="spiner" />;
 
+  const renderCategory = () =>
+    returnTypesByCategory(categoryId).map(
+      ({ name, id: typeId, image }, index: number) => {
+        const filteredSubtypes = returnSubtypesByType(typeId);
+
+        return (
+          <div key={index} className="w-full flex flex-col">
+            <Image
+              className="w-full h-[300px] rounded-md mb-[20px]"
+              src={image.toString()}
+              alt={name}
+              width={150}
+              height={300}
+            />
+
+            <span className="text-[24px]">{name}</span>
+
+            <Accordion
+              showDivider={false}
+              itemClasses={{
+                base: "family-bold flex flex-col",
+                title: "text-base",
+                trigger: "flex-row-reverse",
+              }}
+            >
+              {filteredSubtypes.map(({ name }, index) => (
+                <AccordionItem
+                  key={index}
+                  aria-label={name}
+                  indicator={<Icons id="plusAcc" />}
+                  title={
+                    <div className="flex justify-between">
+                      <span className="w-[217px]">{name}</span>
+
+                      <span>{filteredSubtypes.length}</span>
+                    </div>
+                  }
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                </AccordionItem>
+              ))}
+            </Accordion>
+
+            <Divider className="my-1" />
+
+            <div className="flex justify-between">
+              <p className="w-[217px] truncate">{lookAll}</p>
+
+              <p>{filteredSubtypes.length}</p>
+            </div>
+          </div>
+        );
+      }
+    );
+
   return (
     <>
       <Breadcrumbs>
@@ -49,59 +104,7 @@ const CategoryComponent: FC<{ categoryObject: any; categoryId: number }> = ({
       </h3>
 
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[44px] mb-[47px]">
-        {returnTypesByCategory(categoryId).map(
-          ({ name, id: typeId, image }, index: number) => {
-            const filteredSubtypes = returnSubtypesByType(typeId);
-
-            return (
-              <div key={index} className="w-full flex flex-col">
-                <Image
-                  className="w-full h-[300px] rounded-md mb-[20px]"
-                  src={image.toString()}
-                  alt={name}
-                  width={150}
-                  height={300}
-                />
-
-                <span className="text-[24px]">{name}</span>
-
-                <Accordion
-                  showDivider={false}
-                  itemClasses={{
-                    base: "family-bold flex flex-col",
-                    title: "text-base",
-                    trigger: "flex-row-reverse",
-                  }}
-                >
-                  {filteredSubtypes.map(({ name }, index) => (
-                    <AccordionItem
-                      key={index}
-                      aria-label={name}
-                      indicator={<Icons id="plusAcc" />}
-                      title={
-                        <div className="flex justify-between">
-                          <span className="w-[217px]">{name}</span>
-
-                          <span>{filteredSubtypes.length}</span>
-                        </div>
-                      }
-                    >
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-
-                <Divider className="my-1" />
-
-                <div className="flex justify-between">
-                  <p className="w-[217px] truncate">{lookAll}</p>
-
-                  <p>{filteredSubtypes.length}</p>
-                </div>
-              </div>
-            );
-          }
-        )}
+        {renderCategory()}
       </div>
     </>
   );

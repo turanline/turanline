@@ -1,30 +1,31 @@
 "use client";
 
 //Global
-import { FC, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
 //Components
 import { Slider, Button, RadioGroup, Radio } from "@nextui-org/react";
+import { Icons } from "../Icons/Icons";
 
 //Utils
 import { CATALOG_ROUTE } from "@/utils/Consts";
 
 //Hooks
-import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useProducts } from "@/hooks/useProducts";
 import { useTranslate } from "@/hooks/useTranslate";
 
-//Types
-import { IProductsState } from "@/types/types";
+//Redux Types
+import { IProductsState } from "@/types/reduxTypes";
 
 //styles
-import "swiper/css/pagination";
 import "./Filter.scss";
+import "swiper/css/pagination";
 import "swiper/css";
 
-const Filter: FC<{ products: IProductsState["products"] }> = ({ products }) => {
-  const [value, setValue] = useState<number[]>([200, 1500]);
+const Filter: FC = () => {
+  const [value, setValue] = useState<number[]>([2000, 8000]);
 
   const [color, setColor] = useState<string>(""),
     [size, setSize] = useState<string>(""),
@@ -33,7 +34,9 @@ const Filter: FC<{ products: IProductsState["products"] }> = ({ products }) => {
   const { push } = useRouter(),
     pathname = usePathname();
 
-  const { filters } = useTypedSelector(state => state.products);
+  const { filters, products, status } = useTypedSelector(
+    state => state.products
+  );
 
   const { onSetFilters, compareObjects } = useProducts();
 
@@ -89,52 +92,54 @@ const Filter: FC<{ products: IProductsState["products"] }> = ({ products }) => {
     setSize(prev => (prev ? "" : prev));
   };
 
-  const allColors = products.map(product => product.color.name),
-    allBrands = products.map(product => product.brand.name),
-    allSizes = products.map(product => product.size.name);
+  const renderFilterOptions = (
+    array: string[],
+    value: string,
+    setValue: Dispatch<SetStateAction<string>>,
+    text: string
+  ) => {
+    if (array.length)
+      return (
+        <div className="w-full flex flex-col rounded-sm border-1 border-border py-[24px] px-[18px]">
+          <h5 className="family-medium mb-[20px]">{text}</h5>
+
+          <div className="flex flex-col gap-2">
+            <RadioGroup value={value} onChange={e => setValue(e.target.value)}>
+              {array.map(uniqueColor => (
+                <Radio key={uniqueColor} value={uniqueColor}>
+                  {uniqueColor}
+                </Radio>
+              ))}
+            </RadioGroup>
+          </div>
+        </div>
+      );
+  };
+
+  const allColors = products.flatMap(product => product.color.map(c => c.name)),
+    allSizes = products.flatMap(product => product.size.map(s => s.name)),
+    allBrands = products.flatMap(product => product.brand.name);
 
   const uniqueColors = returnUniqueArray(allColors),
     uniqueBrands = returnUniqueArray(allBrands),
     uniqueSizes = returnUniqueArray(allSizes);
 
+  const sliderClassName = {
+    thumb: "bg-tiffani",
+    filler: "bg-tiffani",
+    track: "h-[10px]",
+  };
+
+  if (status === "pending") return <Icons id="spiner" />;
+
   return (
     <div id="filter" className="mb-[40px]">
       <div className="rounded-sm md:border-1 border-border md:shadow-md py-[25px] md:px-[24px] lg:px-[65px] md:mb-[37px]">
         <div className="flex flex-col md:flex-row gap-[18px]">
-          <div className="w-full flex flex-col gap-[16px]">
-            <div className="w-full flex flex-col rounded-sm border-1 border-border py-[24px] px-[18px]">
-              <h5 className="family-medium mb-[20px]">{filterColor}</h5>
+          <div className="w-full flex flex-col gap-[16px] capitalize">
+            {renderFilterOptions(uniqueColors, color, setColor, filterColor)}
 
-              <div className="flex flex-col gap-2">
-                <RadioGroup
-                  value={color}
-                  onChange={e => setColor(e.target.value)}
-                >
-                  {uniqueColors.map(uniqueColor => (
-                    <Radio key={uniqueColor} value={uniqueColor}>
-                      {uniqueColor}
-                    </Radio>
-                  ))}
-                </RadioGroup>
-              </div>
-            </div>
-
-            <div className="w-full flex flex-col rounded-sm border-1 border-border py-[24px] px-[18px]">
-              <h5 className="family-medium mb-[20px]">{filterSize}</h5>
-
-              <div className="flex flex-col gap-2">
-                <RadioGroup
-                  value={size}
-                  onChange={e => setSize(e.target.value)}
-                >
-                  {uniqueSizes.map(uniqueSize => (
-                    <Radio key={uniqueSize} value={uniqueSize}>
-                      {uniqueSize}
-                    </Radio>
-                  ))}
-                </RadioGroup>
-              </div>
-            </div>
+            {renderFilterOptions(uniqueSizes, size, setSize, filterSize)}
           </div>
           <div className="w-full flex flex-col gap-[16px]">
             <div className="w-full flex flex-col rounded-sm border-1 border-border py-[24px] px-[18px]">
@@ -143,18 +148,14 @@ const Filter: FC<{ products: IProductsState["products"] }> = ({ products }) => {
               <Slider
                 label={`${filterPriceText}:`}
                 formatOptions={{ style: "currency", currency: "USD" }}
-                step={100}
-                maxValue={2000}
-                minValue={100}
+                step={150}
+                maxValue={10000}
+                minValue={0}
                 value={value}
                 //@ts-ignore
                 onChange={setValue}
-                className="max-w-md"
-                classNames={{
-                  thumb: "bg-tiffani",
-                  filler: "bg-tiffani",
-                  track: "h-[10px]",
-                }}
+                className="w-full"
+                classNames={sliderClassName}
               />
 
               <p className="text-default-500 font-medium text-small mt-[15px]">
@@ -163,22 +164,7 @@ const Filter: FC<{ products: IProductsState["products"] }> = ({ products }) => {
               </p>
             </div>
 
-            <div className="w-full flex flex-col rounded-sm border-1 border-border py-[24px] px-[18px]">
-              <h5 className="family-medium mb-[20px]">{filterBrand}</h5>
-
-              <div className="flex flex-col gap-2">
-                <RadioGroup
-                  value={brand}
-                  onChange={e => setBrand(e.target.value)}
-                >
-                  {uniqueBrands.map(uniqueBrand => (
-                    <Radio key={uniqueBrand} value={uniqueBrand}>
-                      {uniqueBrand}
-                    </Radio>
-                  ))}
-                </RadioGroup>
-              </div>
-            </div>
+            {renderFilterOptions(uniqueBrands, brand, setBrand, filterBrand)}
 
             <div className="flex justify-center gap-[25px]">
               <Button

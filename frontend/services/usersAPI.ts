@@ -1,139 +1,65 @@
 //Hosts and JWT
 import { $authHost, $host } from "./index";
 
-//Types
-import {
-  IUserInformationApi,
-  IChangeUserData,
-  IPostRegistrationProvider,
-} from "@/types/types";
+//Global Types
+import { IChangeUserData } from "@/types/types";
+
+//Redux Types
+import { IUserInformationApi } from "@/types/reduxTypes";
 
 export const postRegistration = async (
-  requestString: "provider" | "customer",
-  userInformation: IUserInformationApi | IPostRegistrationProvider
+  userInformation: Omit<IUserInformationApi, "address" | "company">
 ) => {
   try {
-    const { data } = await $host.post(
-      `/api/${requestString}/`,
-      userInformation
-    );
+    const { data } = await $host.post("/api/customer/", userInformation);
 
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    console.error("Failed post registration:" + error);
+    throw error;
   }
 };
 
-export const postLogOut = async (refreshToken: string) => {
+export const getUserData = async (id: number) => {
   try {
-    const { data } = await $host.post("/api/token/logout/", {
-      refresh: refreshToken,
-    });
+    const { data } = await $authHost.get(`/api/customer/${id}`);
 
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    console.error("Failed get user's data:" + error);
+    throw error;
   }
 };
 
-export const getUserData = async (id: number, token: string) => {
+export const changeUserData = async (id: number, user: IChangeUserData) => {
   try {
-    const information = await getUserById(id);
-
-    const requestString = information?.is_provider ? "provider" : "customer";
-
-    const { data } = await $host.get(`/api/${requestString}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const { data } = await $authHost.patch(`/api/customer/${id}/`, user);
 
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    console.error("Failed change user's data:" + error);
+    throw error;
   }
 };
 
-export const changeUserData = async (
-  id: number,
-  user: IChangeUserData,
-  token: string
-) => {
+export const getUserOrders = async () => {
   try {
-    const { data } = await $authHost.patch(`/api/customer/${id}/`, user, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const { data } = await $authHost.get(`/api/users/orders/`);
 
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    console.error("Failed get user's orders:" + error);
+    throw error;
   }
 };
 
-export const getUserOrders = async (id: number, token: string) => {
+export const getUserReviews = async () => {
   try {
-    const { data } = await $authHost.get(`/api/users/${id}/orders/`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const { data } = await $authHost.get(`/api/users/reviews`);
 
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
-  }
-};
-
-export const getUserReviews = async (id: number, token: string) => {
-  try {
-    const { data } = await $authHost.get(`/api/users/${id}/reviews`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return data;
-  } catch (error) {
-    throw new Error(`${error}`);
-  }
-};
-
-export const getUserById = async (id: number) => {
-  try {
-    const { data } = await $host.get(`/api/users/${id}`);
-
-    return data;
-  } catch (error: any) {
-    throw new Error(`${error.message}`);
-  }
-};
-
-export const getProviderNews = async (token: string) => {
-  try {
-    const { data } = await $authHost.get("/api/superusernews/", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return data;
-  } catch (error) {
-    throw new Error(`${error}`);
-  }
-};
-
-export const getProviderReviews = async (id: number, token: string) => {
-  try {
-    const { data } = await $authHost.get(`/api/provider/${id}/reviews/`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return data;
-  } catch (error) {
-    throw new Error(`${error}`);
+    console.error("Failed get user's reviews:" + error);
+    throw error;
   }
 };

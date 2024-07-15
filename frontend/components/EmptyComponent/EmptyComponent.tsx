@@ -5,8 +5,8 @@ import Link from "next/link";
 //Components
 import { Button } from "@nextui-org/react";
 
-//Types
-import { IEmptyComponentProps } from "@/types/types";
+//Component Types
+import { IEmptyComponentProps } from "@/types/componentTypes";
 
 const EmptyComponent: FC<IEmptyComponentProps> = ({
   route,

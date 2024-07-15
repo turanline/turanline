@@ -2,7 +2,7 @@
 
 //Global
 import Link from "next/link";
-import { useEffect } from "react";
+import { CSSProperties, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 //Components
@@ -19,7 +19,7 @@ import InputMask from "react-input-mask";
 
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useCart } from "@/hooks/useCart";
 
 //Utils
@@ -64,6 +64,13 @@ export default function Order() {
     paymentPageCrypto,
   } = useTranslate();
 
+  const mapPayments = () =>
+    payments.map(value => (
+      <Radio key={value} classNames={{ label: "text-textAcc" }} value={value}>
+        {value}
+      </Radio>
+    ));
+
   const payments = [
     paymentPageBank,
     paymentPageCard,
@@ -71,6 +78,20 @@ export default function Order() {
     paymentPageCrypto,
     "PayPal",
   ];
+
+  const inputClassName = {
+    input: "px-[21px]",
+    inputWrapper: "border-1 border-border shadow-none rounded-md",
+  };
+
+  const selectClassName = {
+    innerWrapper: "w-fit",
+    popoverContent: "w-[74px]",
+    mainWrapper: "w-[74px]",
+    base: "w-[74px]",
+    trigger:
+      "rounded-md rounded-r-none shadow-none w-[74px] border-1 border-r-0 border-border",
+  };
 
   if (!isAuth || userStatus === "pending" || cartStatus === "pending")
     return <Icons id="spiner" />;
@@ -85,15 +106,9 @@ export default function Order() {
           <form className="flex flex-col gap-[20px]">
             <div className="flex flex-col gap-[17px]">
               <label htmlFor="" className="text-[18px]">
-                {registrationLabelName} *
+                {registrationLabelName}
               </label>
-              <Input
-                classNames={{
-                  input: "px-[21px]",
-                  inputWrapper: "border-1 border-border shadow-none rounded-md",
-                }}
-                placeholder="Имя *"
-              />
+              <Input classNames={inputClassName} placeholder="Имя *" />
             </div>
             <div className="flex flex-col gap-[17px]">
               <label htmlFor="" className="text-[18px]">
@@ -104,19 +119,13 @@ export default function Order() {
                   disallowEmptySelection
                   defaultSelectedKeys={["+7"]}
                   className="max-w-xs"
-                  classNames={{
-                    innerWrapper: "w-fit",
-                    popoverContent: "w-[74px]",
-                    mainWrapper: "w-[74px]",
-                    base: "w-[74px]",
-                    trigger:
-                      "rounded-md rounded-r-none shadow-none w-[74px] border-1 border-r-0 border-border",
-                  }}
+                  classNames={selectClassName}
                 >
                   <SelectItem key="+7" value="+7">
                     +7
                   </SelectItem>
                 </Select>
+
                 <InputMask
                   alwaysShowMask
                   mask="(999) 999-99-99"
@@ -131,10 +140,7 @@ export default function Order() {
                 {registrationLabelEmail} *
               </label>
               <Input
-                classNames={{
-                  input: "px-[21px]",
-                  inputWrapper: "border-1 border-border shadow-none rounded-md",
-                }}
+                classNames={inputClassName}
                 placeholder={`${registrationLabelEmail} *`}
               />
               <p className="text-[12px] text-textAcc">{orderPageEmailText}</p>
@@ -202,17 +208,7 @@ export default function Order() {
           </div>
           <div className="flex flex-col">
             <p className="text-[18px] mb-[14px]">{orderPagePayment}</p>
-            <RadioGroup>
-              {payments.map(value => (
-                <Radio
-                  key={value}
-                  classNames={{ label: "text-textAcc" }}
-                  value={value}
-                >
-                  {value}
-                </Radio>
-              ))}
-            </RadioGroup>
+            <RadioGroup>{mapPayments()}</RadioGroup>
           </div>
         </div>
       </div>

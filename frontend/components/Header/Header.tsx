@@ -20,13 +20,12 @@ import {
 import { SearchModal } from "../SearchModal/SearchModal";
 import { HeaderSearch } from "../HeaderSearch/HeaderSearch";
 import { LanguageSelect } from "../LanguageSelect/LanguageSelect";
-import { ProviderHeader } from "../ProviderHeader/ProviderHeader";
 import { Icons } from "../Icons/Icons";
 
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
-import { useProducts } from "@/hooks/useProducts";
+import { useTypedSelector } from "@/hooks/useReduxHooks";
+import { useProducts } from "../../hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
 import { useCart } from "@/hooks/useCart";
 import { useUserActions } from "@/hooks/useUserActions";
@@ -59,7 +58,7 @@ export function Header() {
 
   const { category } = useTypedSelector(state => state.products),
     { categories } = useTypedSelector(state => state.categories),
-    { isAuth, isProviderAuth, status } = useTypedSelector(state => state.user),
+    { isAuth, status } = useTypedSelector(state => state.user),
     { cart } = useTypedSelector(state => state.cart),
     { favorites } = useTypedSelector(state => state.favorites);
 
@@ -82,20 +81,17 @@ export function Header() {
   }, [onGetUser]);
 
   useEffect(() => {
-    if (status === "fulfilled")
-      if (isAuth) {
-        fetchFavorites();
-        fetchCart();
-      }
-  }, [isAuth, fetchFavorites, fetchCart]);
+    if (status === "fulfilled" && isAuth) {
+      fetchFavorites();
+      fetchCart();
+    }
+  }, [isAuth, status, fetchFavorites, fetchCart]);
 
   useEffect(() => {
-    if (!isProviderAuth) {
-      onSetCategories();
-      onSetTypes();
-      onSetSubtypes();
-    }
-  }, [onSetCategories, onSetTypes, onSetSubtypes, isProviderAuth]);
+    onSetCategories();
+    onSetTypes();
+    onSetSubtypes();
+  }, [onSetCategories, onSetTypes, onSetSubtypes]);
 
   const {
     headerAbout,
@@ -123,83 +119,80 @@ export function Header() {
     if (!isAuth) showToastMessage("warn", message);
   };
 
-  const returnHeaderElement = (isMobile: boolean) => {
-    if (!isAuth) {
-      return (
-        <Link
-          href={PROFILE_ROUTER}
-          className={`flex ${
-            !isMobile ? "flex-col" : "flex-row gap-[10px]"
-          } items-center justify-between`}
-        >
-          <Icons id={!isMobile ? "profileAccountWhite" : "profile-account"} />
+  const renderHeaderLink = (isMobile: boolean) => (
+    <Link
+      href={PROFILE_ROUTER}
+      className={`flex ${
+        !isMobile ? "flex-col" : "flex-row gap-[10px]"
+      } items-center justify-between`}
+    >
+      <Icons id={!isMobile ? "profileAccountWhite" : "profile-account"} />
+      <p className={!isMobile ? "text-white" : "text-black"}>
+        {accountProfileText}
+      </p>
+    </Link>
+  );
 
-          <p className={!isMobile ? "text-white" : "text-black"}>
-            {accountProfileText}
-          </p>
-        </Link>
-      );
-    } else {
-      if (!isMobile) {
-        return (
-          <Tooltip
-            classNames={{ content: "p-0 overflow-hidden" }}
-            style={{ cursor: "pointer" }}
-            content={
-              <div className="flex flex-col items-center">
-                <Button
-                  className="h-[40px] flex items-center"
-                  onClick={() => push(PROFILE_ROUTE)}
-                  style={buttonStyles}
-                >
-                  {headerToProfile}
-                </Button>
-
-                <Button onClick={onLogOutUser} style={buttonStyles}>
-                  {profilePageLogOut}
-                </Button>
-              </div>
-            }
-            className="flex flex-col items-center justify-between"
+  const renderHeaderTooltip = () => (
+    <Tooltip
+      classNames={{ content: "p-0 overflow-hidden" }}
+      style={{ cursor: "pointer" }}
+      content={
+        <div className="flex flex-col items-center">
+          <Button
+            className="h-[40px] flex items-center"
+            onClick={() => push(PROFILE_ROUTE)}
+            style={buttonStyles}
           >
-            <div className="flex flex-col items-center cursor-pointer">
-              <Icons id="profileWhiteAccount" />
-
-              <span className="text-white">{accountProfileText}</span>
-            </div>
-          </Tooltip>
-        );
-      } else {
-        return (
-          <Dropdown isKeyboardDismissDisabled>
-            <DropdownTrigger>
-              <div className="flex gap-[10px]">
-                <Icons id="profile" />
-
-                <p className="text-black">{accountProfileText}</p>
-              </div>
-            </DropdownTrigger>
-            <DropdownMenu classNames={{ base: "p-0" }}>
-              <DropdownItem style={{ textAlign: "center", height: "40px" }}>
-                <Link href={PROFILE_ROUTE}>{headerToProfile}</Link>
-              </DropdownItem>
-
-              <DropdownItem
-                style={{ textAlign: "center", height: "40px" }}
-                onClick={onLogOutUser}
-              >
-                {profilePageLogOut}
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        );
+            {headerToProfile}
+          </Button>
+          <Button onClick={onLogOutUser} style={buttonStyles}>
+            {profilePageLogOut}
+          </Button>
+        </div>
       }
-    }
+      className="flex flex-col items-center justify-between"
+    >
+      <div className="flex flex-col items-center cursor-pointer">
+        <Icons id="profileWhiteAccount" />
+        <span className="text-white">{accountProfileText}</span>
+      </div>
+    </Tooltip>
+  );
+
+  const renderHeaderDropdown = () => (
+    <Dropdown isKeyboardDismissDisabled>
+      <DropdownTrigger>
+        <div className="flex gap-[10px]">
+          <Icons id="profile" />
+          <p className="text-black">{accountProfileText}</p>
+        </div>
+      </DropdownTrigger>
+      <DropdownMenu classNames={{ base: "p-0" }}>
+        <DropdownItem style={{ textAlign: "center", height: "40px" }}>
+          <Link href={PROFILE_ROUTE}>{headerToProfile}</Link>
+        </DropdownItem>
+        <DropdownItem
+          style={{ textAlign: "center", height: "40px" }}
+          onClick={onLogOutUser}
+        >
+          {profilePageLogOut}
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
+  );
+
+  const returnHeaderElement = (isMobile: boolean) => {
+    if (!isAuth) return renderHeaderLink(isMobile);
+
+    if (!isMobile) return renderHeaderTooltip();
+
+    return renderHeaderDropdown();
   };
 
   const burderMenuClass = isOpen ? "header-burder active" : "header-burder",
-    cartCounter = cart.length ? "w-[25px] h-[25px] visible" : "hidden",
-    favoritesCounter = favorites.length
+    cartCounter = cart?.length ? "w-[25px] h-[25px] visible" : "hidden",
+    favoritesCounter = favorites?.length
       ? "w-[25px] h-[25px] visible"
       : "hidden";
 
@@ -207,8 +200,6 @@ export function Header() {
     PROFILE_ROUTER = !isAuth ? LOGIN_ROUTE : PROFILE_ROUTE,
     FAVORITE_ROUTER = !isAuth ? LOGIN_ROUTE : FAVORITES_ROUTE,
     CART_ROUTE = !isAuth ? LOGIN_ROUTE : BASKET_ROUTE;
-
-  if (isProviderAuth && status === "fulfilled") return <ProviderHeader />;
 
   return (
     <header className="header-color">
@@ -262,7 +253,7 @@ export function Header() {
               onClick={() => handleClickButton(messageHeaderFavorites)}
             >
               <Badge
-                content={favorites.length}
+                content={favorites?.length}
                 color="danger"
                 className={favoritesCounter}
               >
@@ -278,7 +269,7 @@ export function Header() {
               onClick={() => handleClickButton(messageHeaderCart)}
             >
               <Badge
-                content={cart.length}
+                content={cart?.length}
                 color="danger"
                 className={cartCounter}
               >
@@ -325,7 +316,7 @@ export function Header() {
                 onClick={() => handleClickButton(messageHeaderFavorites)}
               >
                 <Badge
-                  content={favorites.length}
+                  content={favorites?.length}
                   color="danger"
                   className={favoritesCounter}
                 >
@@ -348,7 +339,7 @@ export function Header() {
                 onClick={() => handleClickButton(messageHeaderCart)}
               >
                 <Badge
-                  content={cart.length}
+                  content={cart?.length}
                   color="danger"
                   className={cartCounter}
                 >
@@ -372,7 +363,7 @@ export function Header() {
               >
                 <div className="flex items-center gap-[10px]">
                   <Badge
-                    content={favorites.length}
+                    content={favorites?.length}
                     color="danger"
                     className={favoritesCounter}
                   >

@@ -4,8 +4,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 //Services
 import { getAllProducts } from "@/services/productsAPI";
 
-//Types
-import { IProductsState, IProductMainPage } from "@/types/types";
+//Component Types
+import { IProductMainPage } from "@/types/componentTypes";
+
+//Redux Types
+import { IProductsState } from "@/types/reduxTypes";
 
 const initialState: IProductsState = {
   products: [],

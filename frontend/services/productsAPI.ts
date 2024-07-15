@@ -1,8 +1,8 @@
 //Hosts
-import { $host, $authHost } from "./index";
+import { $host } from "./index";
 
-//Types
-import { IProductsState } from "@/types/types";
+//Redux Types
+import { IProductsState } from "@/types/reduxTypes";
 
 export const getFamousProducts = async () => {
   try {
@@ -10,7 +10,8 @@ export const getFamousProducts = async () => {
 
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    console.error("Failed get famous products:" + error);
+    throw error;
   }
 };
 
@@ -20,34 +21,43 @@ export const getSimilarProducts = async (slug: string) => {
 
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    console.error("Failed get similar products:" + error);
+    throw error;
   }
 };
 
 export const getAllProducts = async (
   category: string,
-  obj: IProductsState["filters"]
-) => {
+  filters: IProductsState["filters"]
+): Promise<any> => {
   try {
-    const params: any = {};
+    const params: Record<string, string | number> = {};
 
-    const { brand, color, hbprice, lbprice, size } = obj;
+    if (category !== "Все категории") {
+      params.cats = category;
+    }
 
-    if (category !== "Все категории") params.cats = category;
+    const filterKeys: (keyof IProductsState["filters"])[] = [
+      "size",
+      "brand",
+      "color",
+      "lbprice",
+      "hbprice",
+    ];
 
-    if (size) params.size = size;
-    if (brand) params.brands = brand;
-    if (color) params.color = color;
-    if (lbprice) params.lbprice = lbprice;
-    if (hbprice) params.hbprice = hbprice;
-
-    const { data } = await $host.get("/api/catalog/", {
-      params: { ...params },
+    filterKeys.forEach(key => {
+      const value = filters[key];
+      if (value) {
+        params[key === "brand" ? "brands" : key] = value;
+      }
     });
+
+    const { data } = await $host.get("/api/catalog/", { params });
 
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    console.error("Error fetching products:" + error);
+    throw error;
   }
 };
 
@@ -57,51 +67,7 @@ export const getProductBySlug = async (slug: string) => {
 
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
-  }
-};
-
-export const postProduct = async ({ productInfo }: any) => {
-  try {
-    const { data } = await $authHost.post("/api/products/", productInfo);
-
-    return data;
-  } catch (error) {
-    throw new Error(`${error}`);
-  }
-};
-
-export const putProductBySlug = async (
-  slug: string,
-  updatedProductInfo: any
-) => {
-  try {
-    const { data } = await $authHost.put(
-      `/api/products/${slug}`,
-      updatedProductInfo
-    );
-
-    return data;
-  } catch (error) {
-    throw new Error(`${error}`);
-  }
-};
-export const patchProductBySlug = async (slug: string, updateData: object) => {
-  try {
-    const { data } = await $authHost.patch("/api/products/" + slug, updateData);
-
-    return data;
-  } catch (error) {
-    throw new Error(`${error}`);
-  }
-};
-
-export const deleteProductBySlug = async (slug: string) => {
-  try {
-    const { data } = await $authHost.delete(`/api/products/${slug}/`);
-
-    return data;
-  } catch (error) {
-    throw new Error(`${error}`);
+    console.error("Error get product by slug:" + error);
+    throw error;
   }
 };

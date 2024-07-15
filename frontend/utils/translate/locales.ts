@@ -1,9 +1,0 @@
-export { default as rus } from "@/locales/rus/rus.json";
-export { default as eng } from "@/locales/eng/eng.json";
-export { default as chn } from "@/locales/chn/chn.json";
-export { default as esp } from "@/locales/esp/esp.json";
-export { default as isr } from "@/locales/isr/isr.json";
-export { default as jpn } from "@/locales/jpn/jpn.json";
-export { default as kor } from "@/locales/kor/kor.json";
-export { default as prt } from "@/locales/prt/prt.json";
-export { default as tur } from "@/locales/tur/tur.json";

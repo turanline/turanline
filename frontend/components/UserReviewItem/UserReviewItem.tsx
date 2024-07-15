@@ -1,8 +1,8 @@
 //Global
 import React, { FC } from "react";
 
-//Types
-import { IUserReviewItemProps } from "@/types/types";
+//Component Types
+import { IUserReviewItemProps } from "@/types/componentTypes";
 
 //Styles
 import "./UserReviewItem.scss";
