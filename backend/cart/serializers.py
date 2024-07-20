@@ -7,49 +7,53 @@ from products import models as product_models
 from product_components import serializers as product_component_serializers
 
 
-class OrderBaseSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели заказов."""
-
-    class Meta:
-        model = models.Order
-        fields = '__all__'
-
-
-class CartProductLightSerializer(serializers.ModelSerializer):
+class CartProductCreateSerializer(serializers.ModelSerializer):
     """Модель объекта корзины."""
 
     class Meta:
         model = models.OrderProduct
         fields = (
+            'id',
             'amount',
             'product',
             'color',
             'size'
         )
 
+class CartProductUpdateSerializer(serializers.ModelSerializer):
+    """Модель объекта корзины."""
 
-class CartProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.OrderProduct
+        fields = (
+            'id',
+            'amount',
+            'color',
+            'size'
+        )
+
+
+class CartOrderProductSerializer(serializers.ModelSerializer):
     """Модель объекта корзины."""
 
     product = product_serializers.OrderProductSerializer(read_only=True)
     color = product_component_serializers.ColorSerializer()
     size = product_component_serializers.SizeSerializer()
-    images = product_serializers.ImageSerializer(many=True, read_only=True)
-    sum = serializers.SerializerMethodField()
+    images = product_serializers.ImageSerializer(
+        many=True,
+        read_only=True
+    )
 
     class Meta:
         model = models.OrderProduct
         fields = (
+            'id',
             'amount',
             'product',
             'color',
             'size',
-            'images',
-            'sum'
+            'images'
         )
-
-    def get_sum(self, obj):
-        return obj.amount * int(obj.product.price)
 
     def validate_amount(self, value):
         product_id = self.initial_data['product']
@@ -61,7 +65,37 @@ class CartProductSerializer(serializers.ModelSerializer):
         return value
 
 
-class CartProductReadSerializer(OrderBaseSerializer):
-    """Сериализатор чтения модели объектов корзины."""
+class CartCreateSerializer(serializers.ModelSerializer):
+    order_products = serializers.PrimaryKeyRelatedField(
+        queryset=models.OrderProduct.objects.all(),
+        many=True
+    )
 
-    order_products = CartProductSerializer(many=True, read_only=True)
+    class Meta:
+        model = models.Order
+        fields = [
+            'order_products'
+        ]
+
+class CartTotalSumSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Order
+        fields = [
+            'total_sum'
+        ]
+
+
+class CartUpdateSerializer(serializers.ModelSerializer):
+    order_products = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = models.Order
+        exclude = ('customer',)
+
+
+class CartSerializer(serializers.ModelSerializer):
+    order_products = CartOrderProductSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Order
+        fields = '__all__'

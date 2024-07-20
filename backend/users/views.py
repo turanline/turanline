@@ -128,11 +128,11 @@ class UserViewSet(
         )
 
 
-# @extend_schema(tags=['news'])
-# class NewsViewSet(viewsets.ModelViewSet):
-#     queryset = models.News.objects.all()
-#
-#     def get_serializer_class(self):
-#         if self.action in ('create', 'retrieve'):
-#             return serializers.NewsReadSerializer
-#         return serializers.NewsWriteSerializer
+@extend_schema(tags=['news'])
+class NewsViewSet(viewsets.ModelViewSet):
+    queryset = models.News.objects.all()
+
+    def get_serializer_class(self):
+        if self.action in ('create', 'retrieve'):
+            return serializers.NewsReadSerializer
+        return serializers.NewsWriteSerializer

@@ -22,8 +22,7 @@ def import_products_task(file_data: bytes, provider_id: int) -> None:
         dataset = Dataset(headers=[item.value for item in enums.ImportHeaders])
 
         for item in Dataset().load(file_data):
-            if item:
-                dataset.append(item)
+            dataset.append(item)
 
         result = product_resource.import_data(dataset, dry_run=True, raise_errors=True)
         if result.has_errors():

@@ -55,24 +55,28 @@ class ImportExportProductDataView(views.APIView):
 @extend_schema(tags=['products'])
 class ProductsViewSet(
     mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
-    viewsets.GenericViewSet,
-):
+    viewsets.GenericViewSet):
     queryset = models.Product.objects.select_related(
         'brand', 'manufacturerCountry'
-    ).prefetch_related('subTypes', 'color', 'size')
+    ).prefetch_related('category', 'color', 'size')
     serializer_class = serializers.ProductSerializer
-    permission_classes = [
-        permissions.IsAdminUser
-        | product_permissions.ReadOnly
-    ]
+    # permission_classes = [
+    #     permissions.IsAdminUser
+    #     | product_permissions.OwnerOnly
+    # ]
     lookup_field = 'slug'
     filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
     filterset_fields = ('status',)
     ordering_fields = ('amount', 'date_and_time')
+
+    def get_serializer_class(self, *args, **kwargs):
+        if self.action in ('update', 'partial_update'):
+            return serializers.ProductUpdateSerializer
+        return super().get_serializer_class(*args, **kwargs)
+
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

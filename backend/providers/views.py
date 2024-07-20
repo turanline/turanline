@@ -1,27 +1,34 @@
 import logging
 
 from django.shortcuts import get_object_or_404
+from django.db.models import Prefetch
 from drf_spectacular.utils import extend_schema
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from . import models, serializers, paginations
+from . import models, serializers, paginations, permissions
 from products import models as product_models
 from products import serializers as product_serializers
 from customers import models as customer_models
 from customers import serializers as customer_serializers
 from cart import models as cart_models
+from cart import enums as cart_enums
 
 logger = logging.getLogger(__name__)
 
 
 @extend_schema(tags=['provider'])
-class ProviderViewSet(viewsets.ModelViewSet):
+class ProviderViewSet(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = models.Provider.objects.all()
     pagination_class = paginations.NotificationPaginator
     serializer_class = serializers.ProviderSerializer
+    permission_classes = [permissions.IsOwner]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -101,11 +108,24 @@ class ProviderViewSet(viewsets.ModelViewSet):
     @action(methods=['GET'], detail=False)
     def get_orders(self, request, *args, **kwargs):
         provider = get_object_or_404(models.Provider, user=request.user)
-        order_product = cart_models.Order.objects.filter(
-            order_products__product__provider=provider.user
+        orders = cart_models.Order.objects.filter(
+            order_products__product__provider=provider.user,
+            status__in=(
+                cart_enums.OrderStatuses.FINISHED,
+                cart_enums.OrderStatuses.PROCESSED,
+                cart_enums.OrderStatuses.COLLECTED
+            )
+        ).distinct().prefetch_related(
+        Prefetch(
+            'order_products',
+            queryset=cart_models.OrderProduct.objects.filter(
+                product__provider=provider.user
+            ),
+            to_attr='filtered_order_products'
         )
+    )
         serializer = serializers.OrdersSerializers(
-            order_product,
+            orders,
             context={'request': request},
             many=True
         )

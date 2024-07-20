@@ -2,6 +2,7 @@ import random
 
 from django.core.validators import MinValueValidator
 from django.db import models
+from mptt import models as mptt_models
 from parler.models import TranslatableModel, TranslatedFieldsModel
 from slugify import slugify
 from decimal import Decimal
@@ -20,9 +21,9 @@ class Product(TranslatableModel):
         verbose_name='Поставщик',
     )
 
-    subTypes = models.ManyToManyField(
-        product_components_models.ProductSubType,
-        verbose_name='Подтипы товаров'
+    category = mptt_models.TreeManyToManyField(
+        product_components_models.Category,
+        verbose_name='Категории товаров'
     )
 
     brand = models.ForeignKey(
@@ -42,9 +43,7 @@ class Product(TranslatableModel):
         verbose_name='Количество товара'
     )
 
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
+    price = models.FloatField(
         validators=[
             MinValueValidator(
                 Decimal(0),
@@ -84,7 +83,13 @@ class Product(TranslatableModel):
 
     size = models.ManyToManyField(
         product_components_models.Size,
+        through='ProductSize',
+        through_fields=['product', 'size'],
         verbose_name='Размер товара'
+    )
+
+    weight = models.PositiveIntegerField(
+        verbose_name='Вес товара'
     )
 
     slug = models.SlugField(
@@ -198,4 +203,23 @@ class Image(models.Model):
     image_file = models.ImageField(
         null=True,
         blank=True
+    )
+
+
+class ProductSize(models.Model):
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE
+    )
+
+    size = models.ForeignKey(
+        product_components_models.Size,
+        on_delete=models.CASCADE,
+        related_name='size_amount'
+    )
+
+    amount = models.PositiveIntegerField(
+        default=0,
+        verbose_name='Количество товара для выбранного размера'
     )

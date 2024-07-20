@@ -69,12 +69,12 @@ class UserLoginSerializer(BaseUserSerializer):
         return models.User.objects.create_user(**validated_data)
 
 
-# class AppealSerializer(serializers.ModelSerializer):
-#     """Сериализатор для модели обращений поставщиков."""
-#
-#     class Meta:
-#         model = models.Appeal
-#         fields = '__all__'
+class AppealSerializer(serializers.ModelSerializer):
+    """Сериализатор для модели обращений поставщиков."""
+
+    class Meta:
+        model = models.Appeal
+        fields = '__all__'
 
 
 class NewsReadSerializer(BaseNewsSerializer):

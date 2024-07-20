@@ -17,21 +17,6 @@ class CustomerViewSet(viewsets.ModelViewSet):
     queryset = models.Customer.objects.all()
     serializer_class = serializers.CustomerSerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        customer = serializer.save()
-        headers = self.get_success_headers(serializer.data)
-        cart_models.Order.objects.create(
-            address=customer.address,
-            customer=customer
-        )
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED,
-            headers=headers
-        )
-
     @action(methods=['get'], detail=False)
     def favorites(self, request, *args, **kwargs):
         customer = models.Customer.objects.filter(user=request.user).first()

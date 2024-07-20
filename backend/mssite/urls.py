@@ -27,17 +27,17 @@ router.register(
     'categories'
 )
 
-router.register(
-    r'types',
-    product_component_views.ProductTypesViewSet,
-    'types'
-)
-
-router.register(
-    r'subtypes',
-    product_component_views.ProductSubTypesViewSet,
-    'subtypes'
-)
+# router.register(
+#     r'types',
+#     product_component_views.ProductTypesViewSet,
+#     'types'
+# )
+#
+# router.register(
+#     r'subtypes',
+#     product_component_views.ProductSubTypesViewSet,
+#     'subtypes'
+# )
 
 router.register(
     r'reviews',
@@ -75,11 +75,17 @@ router.register(
     'customer'
 )
 
-# router.register(
-#     r'superusernews',
-#     user_views.NewsViewSet,
-#     'news'
-# )
+router.register(
+    r'order',
+    cart_views.OrderProductsViewSet,
+    'order'
+)
+
+router.register(
+    r'superusernews',
+    user_views.NewsViewSet,
+    'news'
+)
 
 
 urlpatterns = [
