@@ -10,13 +10,13 @@ from users import models as user_models
 
 class ExportProductsResource(resources.ModelResource):
 
-    master__amount = fields.Field(
+    amount = fields.Field(
         column_name='master__amount',
         attribute='master__amount',
         widget=widgets.IntegerWidget(coerce_to_string=False)
     )
 
-    master__category = fields.Field(
+    category = fields.Field(
         column_name='master__category',
         attribute='master__category',
         widget=widgets.ManyToManyWidget(
@@ -26,7 +26,7 @@ class ExportProductsResource(resources.ModelResource):
         )
     )
 
-    master__color = fields.Field(
+    color = fields.Field(
         column_name='master__color',
         attribute='master__color',
         widget=widgets.ManyToManyWidget(
@@ -42,9 +42,9 @@ class ExportProductsResource(resources.ModelResource):
             'master__article_number',
             'name',
             'description',
-            'master__category',
-            'master__amount',
-            'master__color',
+            'category',
+            'amount',
+            'color',
             'compound',
             'master__weight',
             'master__brand__name',

@@ -28,7 +28,10 @@ class ProductSizeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ProductSize
-        exclude = ('product',)
+        exclude = (
+            'id',
+            'product'
+        )
 
 
 class ProductUpdateSerializer(
@@ -154,17 +157,37 @@ class ProductSerializer(
 ):
     """Сериализатор для модели продуктов."""
 
-    translations = TranslatedFieldsField(shared_model=models.Product)
-    brand = product_components_serializers.BrandSerializer()
-    color = product_components_serializers.ColorSerializer(many=True)
-    size = product_components_serializers.SizeSerializer(many=True)
-    manufacturerCountry = product_components_serializers.ManufactoryCountrySerializer()
-    category = product_components_serializers.ProductCategoriesSerializer(many=True)
-    images = ImageSerializer(many=True)
+    translations = TranslatedFieldsField(
+        shared_model=models.Product,
+        read_only=True
+    )
+    brand = product_components_serializers.BrandSerializer(
+        read_only=True
+    )
+    color = product_components_serializers.ColorSerializer(
+        many=True,
+        read_only=True
+    )
+    sizes_data = ProductSizeSerializer(
+        source='productsize_set',
+        many=True,
+        read_only=True
+    )
+    manufacturerCountry = product_components_serializers.ManufactoryCountrySerializer(
+        read_only=True
+    )
+    category = product_components_serializers.ProductCategoriesSerializer(
+        many=True,
+        read_only=True
+    )
+    images = ImageSerializer(
+        many=True,
+        read_only=True
+    )
 
     class Meta:
         model = models.Product
-        fields = '__all__'
+        exclude = ('size',)
         lookup_field = 'slug'
 
 
