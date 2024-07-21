@@ -43,14 +43,6 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({
 
   const itemInFavorites = favorites.find(item => item.id === productInfo.id);
 
-  const returnAllProductSubTypes = () => {
-    let subTypes: IProductMainPage["subTypes"] = [];
-
-    productInfo.subTypes.forEach(subType => subTypes.push(subType));
-
-    return subTypes;
-  };
-
   const likeHandleClick = () => {
     if (!itemInFavorites) {
       addToFavorites(productInfo, isAuth);
@@ -66,7 +58,12 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({
       color: colorId,
       size: sizeId,
       product: productInfo.id,
-    });
+    })
+      ?.catch(error => console.error(error))
+      .finally(() => {
+        setColorId(0);
+        setSizeId(0);
+      });
 
   const imageUrl = productInfo.images[0]
     ? getGoogleDriveImageUrl(productInfo.images[0].image_url)
@@ -106,32 +103,24 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({
           {productInfo.name}
         </Link>
 
-        <p className="text-tiffani">
-          {returnAllProductSubTypes().map(subType => `${subType.name} `)}
-        </p>
-
         <div className="w-fit py-[5px] px-[10px] border-1 border-border rounded-md">
           <p className="font-medium">{`$${productInfo.price}`}</p>
         </div>
 
-        <div className="flex  gap-[10px]">
-          {mapProductOptions(
-            productInfo?.size,
-            sizeId,
-            setSizeId,
-            "button-option_size"
-          )}
-        </div>
+        {mapProductOptions(
+          productInfo?.sizes_data,
+          sizeId,
+          setSizeId,
+          "button-option_size"
+        )}
 
-        <div className="flex gap-[10px]">
-          {mapProductOptions(
-            productInfo?.color,
-            colorId,
-            setColorId,
-            "button-option_color",
-            true
-          )}
-        </div>
+        {mapProductOptions(
+          productInfo?.color,
+          colorId,
+          setColorId,
+          "button-option_color",
+          true
+        )}
       </div>
 
       <Button

@@ -1,3 +1,3 @@
-export { default as rus } from "@/locales/rus.json";
-export { default as eng } from "@/locales/eng.json";
-export { default as tur } from "@/locales/tur.json";
+export { default as ru } from "@/locales/ru.json";
+export { default as en } from "@/locales/en.json";
+export { default as tr } from "@/locales/tr.json";

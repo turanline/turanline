@@ -12,22 +12,29 @@ interface IUserReviewState {
   user: number;
 }
 
+interface ICart {
+  id: number | null;
+  order_products: IProductCart[];
+  address: string;
+  payment_method: "BC" | "CC" | "PP";
+  status: "CR" | "CO" | "CA";
+  created_date: string;
+  total_sum: string | null;
+  customer: number | null;
+}
+
+interface Category {
+  id: number;
+  name: string;
+  image: string;
+  level: number;
+  parent: number;
+}
+
 export interface ICategoriesState {
-  categories: {
-    id: number;
-    name: string;
-  }[];
-  types: {
-    category: number;
-    id: number;
-    name: string;
-    image: string;
-  }[];
-  subtypes: {
-    type: number;
-    id: number;
-    name: string;
-  }[];
+  categories: Category[];
+  types: Category[];
+  subtypes: Category[];
   status: "pending" | "fulfilled";
 }
 
@@ -54,7 +61,7 @@ export interface IUserState {
 }
 
 export interface ICartState {
-  cart: IProductCart[];
+  cart: ICart;
   status: "pending" | "fulfilled";
 }
 

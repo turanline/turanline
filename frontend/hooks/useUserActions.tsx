@@ -95,10 +95,11 @@ const useUserActions = () => {
         .then(data => {
           if ("error" in data && data.error.message === "Rejected") {
             showToastMessage("error", messageRegistrationError);
-          } else {
-            showToastMessage("success", messageRegistration);
-            push(LOGIN_ROUTE);
+            return;
           }
+
+          showToastMessage("success", messageRegistration);
+          push(LOGIN_ROUTE);
         })
         .catch(error => console.error(error))
         .finally(() => {
@@ -119,17 +120,15 @@ const useUserActions = () => {
         .then(data => {
           if ("error" in data && data.error.message === "Rejected") {
             showToastMessage("error", messageModalChangeError);
-          } else {
-            showToastMessage("success", messageModalChangeSuccess);
-            setIsChange(false);
-            setValue("phone_number", "");
-            reset();
+            return;
           }
+          showToastMessage("success", messageModalChangeSuccess);
+          setIsChange(false);
         })
         .catch(error => console.log(error))
         .finally(() => {
-          setValue("phone_number", "");
           reset();
+          setValue("phone_number", "");
         }),
     [dispatch]
   );

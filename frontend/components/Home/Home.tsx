@@ -36,12 +36,14 @@ import colins from "../../public/assets/companies/colins.png";
 import { Icons } from "@/components/Icons/Icons";
 import { ProductCard } from "../ProductCard/productCard";
 import { Filter } from "../Filter/Filter";
+import { EmptyComponent } from "../EmptyComponent/EmptyComponent";
 
 //Utils
 import {
   CATALOG_ROUTE,
   DELIVERY_ROUTE,
   MANUFACTURES_ROUTE,
+  SHOP_ROUTE,
 } from "@/utils/Consts";
 
 //Styles
@@ -65,6 +67,9 @@ const Home = () => {
     lookAll,
     bestsellers,
     foundation,
+    emptyCatalogTitle,
+    emptyCatalogButtonText,
+    emptyCatalogText,
   } = useTranslate();
 
   const { products, status } = useTypedSelector(state => state.products);
@@ -79,6 +84,16 @@ const Home = () => {
     const threeProducts = products.slice(0, 3);
 
     if (status === "pending") return <Icons id="spiner" />;
+
+    if (!threeProducts.length && status === "fulfilled")
+      return (
+        <EmptyComponent
+          title={emptyCatalogTitle}
+          text={emptyCatalogText}
+          route={SHOP_ROUTE}
+          buttonText={emptyCatalogButtonText}
+        />
+      );
 
     return (
       <div className="home-products-wrapper">

@@ -4,7 +4,7 @@ import { $host } from "./index";
 //Redux Types
 import { IProductsState } from "@/types/reduxTypes";
 
-export const getFamousProducts = async () => {
+export const getFamousProducts = async (language: string) => {
   try {
     const { data } = await $host.get("/api/catalog/famous/");
 
@@ -15,7 +15,7 @@ export const getFamousProducts = async () => {
   }
 };
 
-export const getSimilarProducts = async (slug: string) => {
+export const getSimilarProducts = async (slug: string, language: string) => {
   try {
     const { data } = await $host.get(`/api/catalog/${slug}/similar/`);
 
@@ -63,7 +63,7 @@ export const getAllProducts = async (
 
 export const getProductBySlug = async (slug: string) => {
   try {
-    const { data } = await $host.get("/api/catalog/" + slug);
+    const { data } = await $host.get(`/api/catalog/${slug}/`);
 
     return data;
   } catch (error) {

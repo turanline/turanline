@@ -1,88 +1,79 @@
 //Global
 import { Dispatch, SetStateAction } from "react";
 
+interface Image {
+  image_url: string;
+  image_file: string;
+}
+
+interface Brand {
+  id: number;
+  name: string;
+  image: string;
+}
+
+interface Product {
+  id: number;
+  name: string;
+  images: Image[];
+  slug: string;
+  price: string;
+}
+
+interface ManufacturerCountry {
+  id: number;
+  name: string;
+}
+
+interface CartSize {
+  id: number;
+  name: string;
+}
+
+export interface Color {
+  id: number;
+  name: string;
+  color: string;
+}
+
+export interface Size {
+  amount: number;
+  size: string;
+  size_id: number;
+}
+
 export interface IProductCart {
   id: number;
-  product: {
-    id: number;
-    brand: {
-      id: number;
-      image: string;
-      name: string;
-    };
-    color: {
-      id: number;
-      name: string;
-      color: string;
-    };
-    size: {
-      id: number;
-      name: string;
-    };
-    manufacturerCountry: {
-      id: number;
-      name: string;
-    };
-    subTypes: {
-      id: number;
-      name: string;
-      type: number;
-    }[];
-    name: string;
-    description: string;
-    image: string;
-    article_number: string;
-    amount: number;
-    compound: string;
-    price: string;
-    season: string;
-    pattern: string;
-    slug: string;
-    is_famous: boolean;
-    date_and_time: string;
-  };
   amount: number;
-  date: string;
-  order: number;
+  product: Product;
+  color: Color;
+  size: CartSize;
+  images: Image[];
+  sum: string;
 }
 
 export interface IProductMainPage {
   id: number;
-  brand: {
-    id: number;
-    image: string;
-    name: string;
-  };
-  color: {
-    id: number;
-    name: string;
-    color: string;
-  }[];
-  size: {
-    id: number;
-    name: string;
-  }[];
-  manufacturerCountry: {
-    id: number;
-    name: string;
-  };
-  subTypes: {
-    id: number;
-    name: string;
-    type: number;
-  }[];
-  images: { image_url: string; image_file: null }[];
   name: string;
   description: string;
+  compound: string;
+  brand: Brand;
+  color: Color[];
+  sizes_data: Size[];
+  manufacturerCountry: ManufacturerCountry;
+  category: any[];
+  images: Image[];
   article_number: string;
   amount: number;
-  compound: string;
-  price: string;
+  price: number;
   season: string;
   pattern: string;
+  weight: number;
   slug: string;
   is_famous: boolean;
+  status: string;
   date_and_time: string;
+  provider: number;
 }
 
 export interface IUserOrderProduct {

@@ -42,10 +42,10 @@ const useCategories = (color: string) => {
   ) => items.filter(item => item[property] === value);
 
   const returnTypesByCategory = (id: number) =>
-    filterByProperty(types, "category", id);
+    filterByProperty(types, "parent", id);
 
   const returnSubtypesByType = (id: number) =>
-    filterByProperty(subtypes, "type", id);
+    filterByProperty(subtypes, "parent", id);
 
   const onSetSubtypes = useCallback(
     () => dispatch(fetchSubtypes()),
@@ -78,13 +78,13 @@ const useCategories = (color: string) => {
       <div className="w-full container flex justify-between text-white">
         {returnTypesByCategory(currentCategory.id).map(type => (
           <div key={type.id} className="flex flex-col gap-[10px]">
-            <Link className="font-bold" href={`/category/${type.category}`}>
+            <Link className="font-bold" href={`/category/${type.parent}`}>
               {type.name}
             </Link>
 
             <div className="flex flex-col gap-[5px]">
               {returnSubtypesByType(type.id).map(subtype => (
-                <Link key={subtype.id} href={`/category/${type.category}`}>
+                <Link key={subtype.id} href={`/category/${type.parent}`}>
                   {subtype.name}
                 </Link>
               ))}

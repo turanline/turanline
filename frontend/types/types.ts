@@ -32,8 +32,6 @@ export interface IInputsLength {
   email: number;
   address: number;
   company: number;
-  mersis: number;
-  inspection: number;
 }
 
 export interface IInputsLogin {
@@ -63,5 +61,6 @@ export interface IUserResponse {
 
 export interface IPutCart {
   amount: number;
-  productId: number;
+  color: number;
+  size: number;
 }

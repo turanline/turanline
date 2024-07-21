@@ -22,6 +22,9 @@ import {
   Button,
 } from "@nextui-org/react";
 
+//Cookies
+import { getCookie, setCookie } from "cookies-next";
+
 //Styles
 import "./LanguageSelect.scss";
 
@@ -31,28 +34,28 @@ const LanguageSelect: FC<{ color: string }> = ({ color }) => {
   const { changeSelectedLanguage } = useLanguage();
 
   useEffect(() => {
-    const language = localStorage.getItem("selectedLanguage");
+    const language = getCookie("selectedLanguage");
 
     if (language) changeSelectedLanguage(language);
   }, [changeSelectedLanguage]);
 
   const onChangeLanguage = (language: string) => {
-    localStorage.setItem("selectedLanguage", language);
+    setCookie("selectedLanguage", language);
     changeSelectedLanguage(language);
   };
 
   const returnImageByState = (language: string) => {
     switch (language) {
-      case "TUR":
+      case "TR":
         return tur;
-      case "ENG":
+      case "EN":
         return eng;
       default:
         return rus;
     }
   };
 
-  const flags = ["RUS", "TUR", "ENG"];
+  const flags = ["RU", "TR", "EN"];
 
   return (
     <Dropdown

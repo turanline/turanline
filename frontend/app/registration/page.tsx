@@ -7,10 +7,13 @@ import { useRouter } from "next/navigation";
 //Components
 import { Icons } from "@/components/Icons/Icons";
 import InputMask from "react-input-mask";
-import { Checkbox, Button, Input } from "@nextui-org/react";
+import { Checkbox, Button, Input, Select, SelectItem } from "@nextui-org/react";
 
 //Utils
 import { LOGIN_ROUTE, PROFILE_ROUTE } from "@/utils/Consts";
+
+//Locales
+import { prefixes } from "@/locales/prefixes.json";
 
 //Hooks
 import { useCustomForm } from "@/hooks/useCustomForm.";
@@ -176,6 +179,7 @@ const Registration = () => {
               mask={"+7 (999) 999-99-99"}
               alwaysShowMask={true}
             />
+
             {returnInputError("phone_number")}
           </label>
 

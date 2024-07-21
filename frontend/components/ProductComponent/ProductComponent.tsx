@@ -1,14 +1,13 @@
 "use client";
 
 //Global
-import React, { CSSProperties, useState } from "react";
+import React, { CSSProperties, ChangeEvent, useState } from "react";
 import Image from "next/image";
 
 //Components
 import { Icons } from "../Icons/Icons";
 import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
-import { showToastMessage } from "@/app/toastsChange";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 
@@ -32,7 +31,7 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 
 const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
-  const [productCounter, setProductCounter] = useState<number>(1),
+  const [productCounter, setProductCounter] = useState<number | string>(1),
     [thumbsSwiper, setThumbsSwiper] = useState<any | null>(null),
     [colorId, setColorId] = useState<number>(0),
     [sizeId, setSizeId] = useState<number>(0),
@@ -55,34 +54,29 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
     productPagePattern,
     productPageSeason,
     productPageArticle,
-    messageCounterDec,
-    messageCounterInc,
   } = useTranslate();
 
   const handleAddToCart = () =>
     addItemToCart({
-      amount: productCounter,
+      amount: +productCounter,
       color: colorId,
       size: sizeId,
       product: oneProduct.id,
     });
 
   const changeProductCounter = (action: "inc" | "dec") => {
-    if (action === "inc") {
-      if (productCounter < oneProduct?.amount) {
-        setProductCounter(prev => prev + 1);
-      }
-    } else {
-      if (productCounter > 1) {
-        setProductCounter(prev => prev - 1);
-      }
-    }
+    if (action === "dec" && +productCounter > 1)
+      setProductCounter(prev => +prev - 1);
 
-    if (action === "dec" && productCounter === 1)
-      showToastMessage("warn", messageCounterDec);
+    if (action === "inc") setProductCounter(prev => +prev + 1);
+  };
 
-    if (action === "inc" && productCounter === oneProduct?.amount)
-      showToastMessage("warn", `${messageCounterInc} ${productCounter}!`);
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (value === "" || +value === 0) setProductCounter("");
+
+    if (!isNaN(Number(value)) && Number(value) <= 100) setProductCounter(value);
   };
 
   const renderSlider = () => {
@@ -210,14 +204,14 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
 
               <div className="flex flex-col justify-between gap-[10px]">
                 <p className="text-[32px] family-medium">
-                  {(productCounter * +oneProduct?.price).toFixed(2)} $
+                  {(+productCounter * +oneProduct?.price).toFixed(2)} $
                 </p>
 
                 <p className="text-textAcc">{productPageInStock}</p>
 
                 <div className="flex flex-wrap gap-[10px]">
                   {mapProductOptions(
-                    oneProduct?.size,
+                    oneProduct?.sizes_data,
                     sizeId,
                     setSizeId,
                     "button-option_size"
@@ -249,7 +243,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
                   className="input-counter"
                   value={productCounter}
                   type="number"
-                  onChange={e => setProductCounter(+e.target.value)}
+                  onChange={handleInputChange}
                 />
 
                 <button

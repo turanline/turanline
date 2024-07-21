@@ -16,7 +16,7 @@ import {
 import { useAppDispatch } from "./useReduxHooks";
 
 //Component Types
-import { IProductMainPage } from "@/types/componentTypes";
+import { Color, IProductMainPage, Size } from "@/types/componentTypes";
 
 //Redux Types
 import { IProductsState } from "@/types/reduxTypes";
@@ -76,38 +76,65 @@ const useProducts = () => {
     );
   };
 
+  const getButtonStyles = (
+    item: Size | Color,
+    selectedOption: number,
+    isColor: boolean
+  ): CSSProperties => {
+    const isSelected = isColor
+      ? (item as Color).id === selectedOption
+      : (item as Size).size_id === selectedOption;
+
+    return {
+      borderColor: isSelected ? "#0abab5" : "",
+      background:
+        isColor && "color" in item ? (item as Color).color : "transparent",
+    };
+  };
+
+  const handleButtonClick = (
+    item: Size | Color,
+    selectedOption: number,
+    setSelectedOption: Dispatch<SetStateAction<number>>,
+    isColor: boolean
+  ) => {
+    const optionId = isColor ? (item as Color).id : (item as Size).size_id;
+    if (optionId !== selectedOption) {
+      setSelectedOption(optionId);
+    } else {
+      setSelectedOption(0);
+    }
+  };
+
   const mapProductOptions = (
-    options: IProductMainPage["size" | "color"],
+    options: IProductMainPage["sizes_data"] | IProductMainPage["color"],
     selectedOption: number,
     setSelectedOption: Dispatch<SetStateAction<number>>,
     className: string,
     isColor: boolean = false
   ) => {
-    const returnButtonStyles = (item: { id: number }): CSSProperties => ({
-      borderColor: `${item.id === selectedOption ? "#0abab5" : ""}`,
-      background:
-        isColor && "color" in item ? (item?.color as string) : "transparent",
-    });
-
-    const handleClickButton = (item: { id: number }) => {
-      if (item.id !== selectedOption) {
-        setSelectedOption(item.id);
-        return;
-      }
-
-      setSelectedOption(0);
-    };
-
-    return options?.map((item, index) => (
-      <button
-        onClick={() => handleClickButton(item)}
-        key={index}
-        className={className}
-        style={returnButtonStyles(item)}
-      >
-        {!isColor && item.name}
-      </button>
-    ));
+    if (options.length)
+      return (
+        <div className="flex flex-wrap gap-[10px]">
+          {options?.map((item, index) => (
+            <button
+              onClick={() =>
+                handleButtonClick(
+                  item,
+                  selectedOption,
+                  setSelectedOption,
+                  isColor
+                )
+              }
+              key={index}
+              className={className}
+              style={getButtonStyles(item, selectedOption, isColor)}
+            >
+              {!isColor && (item as Size).size}
+            </button>
+          ))}
+        </div>
+      );
   };
 
   return {

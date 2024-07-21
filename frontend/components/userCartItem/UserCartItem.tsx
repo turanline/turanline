@@ -11,8 +11,14 @@ import { useTranslate } from "@/hooks/useTranslate";
 //Components
 import { Icons } from "../Icons/Icons";
 
+//Utils
+import { getGoogleDriveImageUrl } from "@/utils/googleImage";
+
 //Component Types
 import { IProductCart } from "@/types/componentTypes";
+
+//Global Types
+import { IPutCart } from "@/types/types";
 
 //Styles
 import "./UserCartItem.scss";
@@ -20,7 +26,19 @@ import "./UserCartItem.scss";
 const UserCartItem: FC<{
   product: IProductCart;
 }> = ({ product }) => {
-  const { onChangeCardCounter, deleteCardFromBasket } = useCart();
+  const { deleteCardFromBasket, onChangeCardCounter } = useCart();
+
+  const handleChangeProductCounter = (action: "inc" | "dec") => {
+    if (action === "dec" && product.amount <= 1) return;
+
+    const patchObject: IPutCart = {
+      amount: action === "dec" ? product.amount - 1 : product.amount + 1,
+      color: product.color.id,
+      size: product.size.id,
+    };
+
+    onChangeCardCounter(patchObject, product.id);
+  };
 
   const {
     filterSize,
@@ -30,15 +48,19 @@ const UserCartItem: FC<{
     cartItemTotalPrice,
   } = useTranslate();
 
+  const productCartImage = product.product.images[0].image_url
+    ? getGoogleDriveImageUrl(product.product.images[0].image_url)
+    : "";
+
   return (
-    <div id={String(product.id)} className="product-card">
+    <div id={String(product.product.id)} className="product-card">
       <div className="product-card__image-container">
         <Link
           className="product-card-img-link"
           href={`/product/${product.product.slug}`}
         >
           <Image
-            src={product.product.image ? product.product.image : ""}
+            src={productCartImage}
             alt={product.product.name}
             width={500}
             height={500}
@@ -56,11 +78,11 @@ const UserCartItem: FC<{
           <div className="product-card__options-container">
             <div className="product-card__description-container-wrapper">
               <div className="product-card__description-container">
-                <p className="product-card__description">{filterSize}</p>
+                <span className="product-card__description">{filterSize}</span>
 
                 <div className="product-card__option">
                   <p className="product-card__option--active font-medium">
-                    {product.product.size.name}
+                    {product.size.name}
                   </p>
                 </div>
               </div>
@@ -71,7 +93,7 @@ const UserCartItem: FC<{
                 <div
                   data-color
                   className="product-card__option"
-                  style={{ background: product.product.color.color }}
+                  style={{ background: product.color.color }}
                 ></div>
               </div>
 
@@ -92,18 +114,18 @@ const UserCartItem: FC<{
 
                 <div className="flex">
                   <button
-                    onClick={() => onChangeCardCounter("dec", product)}
+                    onClick={() => handleChangeProductCounter("dec")}
                     className="w-[30px] h-[30px] flex items-center justify-center cursor-pointer border-1 border-tiffani"
                   >
                     <Icons id="minus" />
                   </button>
 
-                  <div className="w-[40px] h-[30px] flex items-center justify-center border-t-1 border-b-1 border-tiffani">
-                    <p>{product.amount}</p>
-                  </div>
+                  <span className="w-[40px] h-[30px] flex items-center justify-center border-t-1 border-b-1 border-tiffani">
+                    {product.amount}
+                  </span>
 
                   <button
-                    onClick={() => onChangeCardCounter("inc", product)}
+                    onClick={() => handleChangeProductCounter("inc")}
                     className="w-[30px] h-[30px] flex items-center justify-center cursor-pointer border-1 border-tiffani"
                   >
                     <Icons id="plusMini" />
@@ -118,7 +140,7 @@ const UserCartItem: FC<{
 
                 <div className="product-card__option">
                   <p className="font-medium">
-                    ${(+product.product.price * product.amount).toFixed(2)}
+                    ${product.amount * +product?.product?.price}
                   </p>
                 </div>
               </div>

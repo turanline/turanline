@@ -64,7 +64,7 @@ export function Header() {
 
   const { onSetCategory } = useProducts(),
     { onGetUser, onLogOutUser } = useUserActions(),
-    { fetchCart } = useCart(),
+    { onFetchCart } = useCart(),
     { fetchFavorites } = useFavorites(),
     {
       onSetCategories,
@@ -83,9 +83,9 @@ export function Header() {
   useEffect(() => {
     if (status === "fulfilled" && isAuth) {
       fetchFavorites();
-      fetchCart();
+      onFetchCart();
     }
-  }, [isAuth, status, fetchFavorites, fetchCart]);
+  }, [isAuth, status, fetchFavorites, onFetchCart]);
 
   useEffect(() => {
     onSetCategories();
@@ -104,7 +104,6 @@ export function Header() {
     headerFavorites,
     messageHeaderCart,
     messageHeaderFavorites,
-    orderPageSearch,
     profilePageLogOut,
     headerToProfile,
   } = useTranslate();
@@ -191,7 +190,9 @@ export function Header() {
   };
 
   const burderMenuClass = isOpen ? "header-burder active" : "header-burder",
-    cartCounter = cart?.length ? "w-[25px] h-[25px] visible" : "hidden",
+    cartCounter = cart?.order_products?.length
+      ? "w-[25px] h-[25px] visible"
+      : "hidden",
     favoritesCounter = favorites?.length
       ? "w-[25px] h-[25px] visible"
       : "hidden";
@@ -269,7 +270,7 @@ export function Header() {
               onClick={() => handleClickButton(messageHeaderCart)}
             >
               <Badge
-                content={cart?.length}
+                content={cart?.order_products?.length}
                 color="danger"
                 className={cartCounter}
               >
@@ -331,7 +332,7 @@ export function Header() {
               >
                 <Icons id="searchMobile" />
 
-                <p>{orderPageSearch}</p>
+                <p>Поиск</p>
               </button>
               <Link
                 className="flex items-center gap-[10px]"
@@ -339,7 +340,7 @@ export function Header() {
                 onClick={() => handleClickButton(messageHeaderCart)}
               >
                 <Badge
-                  content={cart?.length}
+                  content={cart?.order_products?.length}
                   color="danger"
                   className={cartCounter}
                 >
@@ -380,7 +381,7 @@ export function Header() {
               >
                 <Icons id="searchMobile" />
 
-                <p>{orderPageSearch}</p>
+                <p>Поиск</p>
               </button>
 
               <Link
@@ -389,7 +390,7 @@ export function Header() {
                 onClick={() => handleClickButton(messageHeaderCart)}
               >
                 <Badge
-                  content={cart.length}
+                  content={cart?.order_products?.length}
                   color="danger"
                   className={cartCounter}
                 >

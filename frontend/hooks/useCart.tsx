@@ -16,7 +16,7 @@ import {
   addToCart,
   changeItemCounter,
   deleteFromCart,
-  fetchCart as onFetchCart,
+  fetchCart,
   resetCart,
 } from "@/redux/reducers/cartSlice";
 
@@ -29,9 +29,7 @@ import { useAppDispatch, useTypedSelector } from "./useReduxHooks";
 
 // Global Types
 import { IPostCartApi } from "@/types/types";
-
-// Component Types
-import { IProductCart } from "@/types/componentTypes";
+import { postUserOrder } from "@/services/cartAPI";
 
 const useCart = () => {
   const { cart } = useTypedSelector(state => state.cart),
@@ -43,8 +41,6 @@ const useCart = () => {
 
   const {
     messageCartError,
-    messageCounterDec,
-    messageCounterInc,
     messageCartAdded,
     messageCartAddedError,
     messageCartDeleted,
@@ -58,9 +54,9 @@ const useCart = () => {
     headerCart,
   } = useTranslate();
 
-  const fetchCart = useCallback(
+  const onFetchCart = useCallback(
     () =>
-      dispatch(onFetchCart())
+      dispatch(fetchCart())
         .then(data => {
           if ("error" in data && data.error.message === "Rejected")
             showToastMessage(
@@ -72,38 +68,17 @@ const useCart = () => {
     [dispatch]
   );
 
-  const changeCounter = (action: "inc" | "dec", product: IProductCart) => {
-    const increment = action === "inc",
-      newAmount = product.amount + (increment ? 1 : -1);
-
-    if (newAmount < 1 || newAmount > product.product.amount) return;
-
-    dispatch(
-      changeItemCounter({
-        amount: newAmount,
-        productId: product.id,
-      })
-    ).then(data => {
-      if ("error" in data && data.error.message === "Rejected")
-        showToastMessage("error", messageCartError);
-    });
-
-    if (newAmount === 1 && !increment) {
-      showToastMessage("warn", messageCounterDec);
-      return;
-    }
-
-    if (newAmount === product.product.amount && increment) {
-      showToastMessage("warn", `${messageCounterInc} ${newAmount}!`);
-      return;
-    }
-  };
-
   const onChangeCardCounter = useCallback(
-    (action: "inc" | "dec", product: IProductCart) => {
-      changeCounter(action, product);
-    },
-    [changeCounter]
+    (obj: Omit<IPostCartApi, "product">, id: number) =>
+      dispatch(changeItemCounter({ options: obj, id }))
+        .then(data => {
+          if ("error" in data && data.error.message === "Rejected") {
+            showToastMessage("error", messageCartError);
+            return;
+          }
+        })
+        .catch(error => console.error(error)),
+    [dispatch]
   );
 
   const addItemToCart = useCallback(
@@ -114,29 +89,34 @@ const useCart = () => {
         return;
       }
 
-      const itemInCart = cart.find(item => item.product.id === obj.product);
+      const itemInCart = cart?.order_products?.find(
+        item =>
+          item.product.id === obj.product &&
+          item.color.id === obj.color &&
+          item.size.id === obj.size
+      );
 
-      if (!itemInCart) {
-        if (!obj.color || !obj.size) {
-          showToastMessage("warn", "Вы не выбрали размер или цвет!");
-          return;
-        }
-
-        dispatch(addToCart(obj))
-          .then(data => {
-            if ("error" in data && data.error.message === "Rejected") {
-              showToastMessage("error", messageCartAddedError);
-              return;
-            }
-
-            onFetchCart();
-            showToastMessage("success", messageCartAdded);
-          })
-          .catch(error => console.error(error));
+      if (itemInCart) {
+        showToastMessage("warn", messageCartItemInCart);
         return;
       }
 
-      showToastMessage("warn", messageCartItemInCart);
+      if (!obj.color || !obj.size) {
+        showToastMessage("warn", "Вы не выбрали размер или цвет!");
+        return;
+      }
+
+      return dispatch(addToCart(obj))
+        .then(data => {
+          if ("error" in data && data.error.message === "Rejected") {
+            showToastMessage("error", messageCartAddedError);
+            return;
+          }
+
+          onFetchCart();
+          showToastMessage("success", messageCartAdded);
+        })
+        .catch(error => console.error(error));
     },
     [cart, dispatch, fetchCart, push]
   );
@@ -147,12 +127,13 @@ const useCart = () => {
         .then(data => {
           if ("error" in data && data.error.message === "Rejected") {
             showToastMessage(
-              "success",
+              "error",
               "Произошла ошибка при удалении товара, попробуйте позже!"
             );
             return;
           }
 
+          onFetchCart();
           showToastMessage("success", messageCartDeleted);
         })
         .catch(error => console.error(error));
@@ -162,26 +143,46 @@ const useCart = () => {
 
   const onResetCart = useCallback(() => dispatch(resetCart()), [dispatch]);
 
-  const calculateTotalPrice = useCallback((): number => {
-    return cart.reduce((totalPrice, item) => {
-      const itemPrice = +item.product.price * item.amount;
+  const calculateTotalPrice = (): number => {
+    let totalPrice = 0;
 
-      return totalPrice + itemPrice;
-    }, 0);
-  }, [cart]);
+    cart.order_products.forEach(item => {
+      const { product, amount } = item;
+      const itemPrice = +product.price * amount;
+      totalPrice += itemPrice;
+    });
+
+    return totalPrice;
+  };
 
   const returnAllProductsCounter = useCallback((): number => {
-    return cart.reduce((total, currentItem) => total + currentItem.amount, 0);
+    return cart.order_products.reduce(
+      (total, currentItem) => total + currentItem.amount,
+      0
+    );
   }, [cart]);
+
+  const onPostUserOrder = async () => {
+    const totalSum = calculateTotalPrice();
+
+    console.log(totalSum);
+
+    await postUserOrder(totalSum)
+      .then(() => {
+        showToastMessage("success", "Заказ успешно отправлен!");
+        onFetchCart();
+      })
+      .catch(error => console.error(error));
+  };
 
   const renderUserCart = useCallback(
     () =>
-      cart.length ? (
+      cart?.order_products?.length ? (
         <>
           <h5 className="text-[24px]">{headerCart}</h5>
           <div className="flex flex-col gap-[23px]">
-            {cart.map(item => (
-              <UserCartItem product={item} key={item.id} />
+            {cart.order_products.map(item => (
+              <UserCartItem product={item} key={item.product.id} />
             ))}
 
             <div className="basket_confirm">
@@ -207,18 +208,19 @@ const useCart = () => {
           buttonText={emptyBasketButtonText}
         />
       ),
-    [cart, calculateTotalPrice]
+    [cart.order_products]
   );
 
   return {
-    fetchCart,
+    onFetchCart,
     onChangeCardCounter,
-    calculateTotalPrice,
     addItemToCart,
     deleteCardFromBasket,
     returnAllProductsCounter,
     onResetCart,
     renderUserCart,
+    calculateTotalPrice,
+    onPostUserOrder,
   };
 };
 

@@ -4,7 +4,11 @@
 import { useForm } from "react-hook-form";
 
 //Types
-import { IInputsLength, CustomFormType } from "@/types/types";
+import {
+  IInputsLength,
+  CustomFormType,
+  IInputsChangeProfile,
+} from "@/types/types";
 
 //Hooks
 import { useTranslate } from "./useTranslate";
@@ -63,10 +67,6 @@ const useCustomForm = <T extends CustomFormType>() => {
         return addressRegular;
       case "company":
         return companyNameRegular;
-      case "inspection":
-        return /^\d{10}$/;
-      case "mersis":
-        return /^\d{16}$/;
     }
   };
 
@@ -88,10 +88,6 @@ const useCustomForm = <T extends CustomFormType>() => {
         return formAddress;
       case "company":
         return formCompany;
-      case "inspection":
-        return "Введите корректный номер налоговой инспекции!";
-      case "mersis":
-        return "Номер Mersis должен состоять строго из 16 символов";
     }
   };
 
@@ -105,8 +101,6 @@ const useCustomForm = <T extends CustomFormType>() => {
       phone_number: 18,
       address: 150,
       company: 30,
-      inspection: 10,
-      mersis: 16,
     };
 
     const minLengthInput: IInputsLength = {
@@ -118,8 +112,6 @@ const useCustomForm = <T extends CustomFormType>() => {
       phone_number: 18,
       address: 1,
       company: 1,
-      inspection: 10,
-      mersis: 16,
     };
 
     return {

@@ -14,9 +14,20 @@ import {
   deleteFromCartById,
   patchCartItem,
 } from "@/services/cartAPI";
+import { getCookie } from "cookies-next";
+import { postVerifyToken } from "@/services/authAPI";
 
 const initialState: ICartState = {
-  cart: [],
+  cart: {
+    address: "",
+    created_date: "",
+    customer: null,
+    id: null,
+    order_products: [],
+    payment_method: "BC",
+    status: "CR",
+    total_sum: null,
+  },
   status: "pending",
 };
 
@@ -26,7 +37,13 @@ export const fetchCart = createAsyncThunk<
   { rejectValue: string }
 >("cartSlice/fetchCart", async (_, { rejectWithValue }) => {
   try {
-    return await getCart();
+    const token = getCookie("AuthTokenMis");
+
+    if (token) {
+      const { user } = await postVerifyToken(token);
+
+      return await getCart(user);
+    }
   } catch (error) {
     return rejectWithValue(`Failed to load user cart: ${error}`);
   }
@@ -44,30 +61,29 @@ export const addToCart = createAsyncThunk<
   }
 });
 
+export const changeItemCounter = createAsyncThunk<
+  { options: IPutCart; id: number },
+  { options: IPutCart; id: number },
+  { rejectValue: string }
+>("cartSlice/changeItemCounter", async (obj, { rejectWithValue }) => {
+  try {
+    await patchCartItem(obj.options, obj.id);
+
+    return obj;
+  } catch (error) {
+    return rejectWithValue(`Failed change counter: ${error}`);
+  }
+});
+
 export const deleteFromCart = createAsyncThunk<
-  number,
+  undefined,
   number,
   { rejectValue: string }
 >("cartSlice/deleteFromCart", async (id, { rejectWithValue }) => {
   try {
     await deleteFromCartById(id);
-
-    return id;
   } catch (error) {
     return rejectWithValue(`Failed delete from cart: ${error}`);
-  }
-});
-
-export const changeItemCounter = createAsyncThunk<
-  IPutCart,
-  IPutCart,
-  { rejectValue: string }
->("cartSlice/changeItemCounter", async (obj, { rejectWithValue }) => {
-  try {
-    await patchCartItem(obj);
-    return obj;
-  } catch (error) {
-    return rejectWithValue(`Failed change counter: ${error}`);
   }
 });
 
@@ -76,7 +92,7 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     resetCart(state) {
-      state.cart = [];
+      state.cart.order_products = [];
     },
   },
   extraReducers: builder =>
@@ -97,16 +113,25 @@ const cartSlice = createSlice({
       .addCase(deleteFromCart.pending, state => {
         state.status = "pending";
       })
-      .addCase(deleteFromCart.fulfilled, (state, action) => {
+      .addCase(deleteFromCart.fulfilled, state => {
         state.status = "fulfilled";
-        state.cart = state.cart.filter(item => item.id !== action.payload);
       })
       .addCase(changeItemCounter.fulfilled, (state, action) => {
-        const { amount, productId } = action.payload;
+        state.status = "fulfilled";
 
-        state.cart = state.cart.map(item =>
-          item.id === productId ? { ...item, amount } : item
-        );
+        state.cart = {
+          ...state.cart,
+          order_products: state.cart.order_products.map(product => {
+            if (product.id === action.payload.id) {
+              return {
+                ...product,
+                amount: action.payload.options.amount,
+              };
+            }
+
+            return product;
+          }),
+        };
       }),
 });
 

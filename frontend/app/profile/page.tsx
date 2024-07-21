@@ -44,7 +44,6 @@ const Profile = () => {
     profilePageOrders,
     profilePageReviews,
     orderPagePhone,
-    orderPageSearch,
   } = useTranslate();
 
   useEffect(() => {
@@ -126,7 +125,7 @@ const Profile = () => {
 
               <input
                 className="profile-content_orders-header-input"
-                placeholder={orderPageSearch}
+                placeholder={"Поиск..."}
                 type="search"
               />
             </div>

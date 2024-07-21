@@ -1,0 +1,286 @@
+{
+  "prefixes": [
+    {
+      "code": "+7",
+      "name": "Russia",
+      "flag": "https://flagcdn.com/ru.svg",
+      "phone_mask": "(999) 999-99-99"
+    },
+    {
+      "code": "+90",
+      "name": "Turkey",
+      "flag": "https://flagcdn.com/tr.svg",
+      "phone_mask": "999 999 9999"
+    },
+    {
+      "code": "+1",
+      "name": "United States",
+      "flag": "https://flagcdn.com/us.svg",
+      "phone_mask": "(999) 999-9999"
+    },
+    {
+      "code": "+971",
+      "name": "United Arab Emirates",
+      "flag": "https://flagcdn.com/ae.svg",
+      "phone_mask": "99 999 9999"
+    },
+    {
+      "code": "+93",
+      "name": "Afghanistan",
+      "flag": "https://flagcdn.com/af.svg",
+      "phone_mask": "99 999 9999"
+    },
+    {
+      "code": "+355",
+      "name": "Albania",
+      "flag": "https://flagcdn.com/al.svg",
+      "phone_mask": "99 999 9999"
+    },
+    {
+      "code": "+213",
+      "name": "Algeria",
+      "flag": "https://flagcdn.com/dz.svg",
+      "phone_mask": "99 999 9999"
+    },
+    {
+      "code": "+376",
+      "name": "Andorra",
+      "flag": "https://flagcdn.com/ad.svg",
+      "phone_mask": "999 999"
+    },
+    {
+      "code": "+244",
+      "name": "Angola",
+      "flag": "https://flagcdn.com/ao.svg",
+      "phone_mask": "99 999 9999"
+    },
+    {
+      "code": "+54",
+      "name": "Argentina",
+      "flag": "https://flagcdn.com/ar.svg",
+      "phone_mask": "999 9999 9999"
+    },
+    {
+      "code": "+374",
+      "name": "Armenia",
+      "flag": "https://flagcdn.com/am.svg",
+      "phone_mask": "99 999 9999"
+    },
+    {
+      "code": "+297",
+      "name": "Aruba",
+      "flag": "https://flagcdn.com/aw.svg",
+      "phone_mask": "999 9999"
+    },
+    {
+      "code": "+61",
+      "name": "Australia",
+      "flag": "https://flagcdn.com/au.svg",
+      "phone_mask": "99 9999 9999"
+    },
+    {
+      "code": "+43",
+      "name": "Austria",
+      "flag": "https://flagcdn.com/at.svg",
+      "phone_mask": "9999 9999"
+    },
+    {
+      "code": "+994",
+      "name": "Azerbaijan",
+      "flag": "https://flagcdn.com/az.svg",
+      "phone_mask": "99 999 99 99"
+    },
+    {
+      "code": "+1 242",
+      "name": "Bahamas",
+      "flag": "https://flagcdn.com/bs.svg",
+      "phone_mask": "(999) 999-9999"
+    },
+    {
+      "code": "+973",
+      "name": "Bahrain",
+      "flag": "https://flagcdn.com/bh.svg",
+      "phone_mask": "9999 9999"
+    },
+    {
+      "code": "+880",
+      "name": "Bangladesh",
+      "flag": "https://flagcdn.com/bd.svg",
+      "phone_mask": "999-9999999"
+    },
+    {
+      "code": "+1 246",
+      "name": "Barbados",
+      "flag": "https://flagcdn.com/bb.svg",
+      "phone_mask": "(999) 999-9999"
+    },
+    {
+      "code": "+375",
+      "name": "Belarus",
+      "flag": "https://flagcdn.com/by.svg",
+      "phone_mask": "99 999 9999"
+    },
+    {
+      "code": "+32",
+      "name": "Belgium",
+      "flag": "https://flagcdn.com/be.svg",
+      "phone_mask": "999 999 999"
+    },
+    {
+      "code": "+501",
+      "name": "Belize",
+      "flag": "https://flagcdn.com/bz.svg",
+      "phone_mask": "999-9999"
+    },
+    {
+      "code": "+229",
+      "name": "Benin",
+      "flag": "https://flagcdn.com/bj.svg",
+      "phone_mask": "99 99 99 99"
+    },
+    {
+      "code": "+975",
+      "name": "Bhutan",
+      "flag": "https://flagcdn.com/bt.svg",
+      "phone_mask": "99 999 999"
+    },
+    {
+      "code": "+591",
+      "name": "Bolivia",
+      "flag": "https://flagcdn.com/bo.svg",
+      "phone_mask": "9 999 9999"
+    },
+    {
+      "code": "+387",
+      "name": "Bosnia and Herzegovina",
+      "flag": "https://flagcdn.com/ba.svg",
+      "phone_mask": "99 999 999"
+    },
+    {
+      "code": "+267",
+      "name": "Botswana",
+      "flag": "https://flagcdn.com/bw.svg",
+      "phone_mask": "99 999 999"
+    },
+    {
+      "code": "+55",
+      "name": "Brazil",
+      "flag": "https://flagcdn.com/br.svg",
+      "phone_mask": "(99) 99999-9999"
+    },
+    {
+      "code": "+359",
+      "name": "Bulgaria",
+      "flag": "https://flagcdn.com/bg.svg",
+      "phone_mask": "999 999 999"
+    },
+    {
+      "code": "+226",
+      "name": "Burkina Faso",
+      "flag": "https://flagcdn.com/bf.svg",
+      "phone_mask": "99 99 99 99"
+    },
+    {
+      "code": "+257",
+      "name": "Burundi",
+      "flag": "https://flagcdn.com/bi.svg",
+      "phone_mask": "99 99 9999"
+    },
+    {
+      "code": "+855",
+      "name": "Cambodia",
+      "flag": "https://flagcdn.com/kh.svg",
+      "phone_mask": "99 999 999"
+    },
+    {
+      "code": "+237",
+      "name": "Cameroon",
+      "flag": "https://flagcdn.com/cm.svg",
+      "phone_mask": "9999 9999"
+    },
+    {
+      "code": "+238",
+      "name": "Cape Verde",
+      "flag": "https://flagcdn.com/cv.svg",
+      "phone_mask": "999 99 99"
+    },
+    {
+      "code": "+236",
+      "name": "Central African Republic",
+      "flag": "https://flagcdn.com/cf.svg",
+      "phone_mask": "99 99 99 99"
+    },
+    {
+      "code": "+235",
+      "name": "Chad",
+      "flag": "https://flagcdn.com/td.svg",
+      "phone_mask": "99 99 99 99"
+    },
+    {
+      "code": "+56",
+      "name": "Chile",
+      "flag": "https://flagcdn.com/cl.svg",
+      "phone_mask": "99 9999 9999"
+    },
+    {
+      "code": "+86",
+      "name": "China",
+      "flag": "https://flagcdn.com/cn.svg",
+      "phone_mask": "999 9999 9999"
+    },
+    {
+      "code": "+57",
+      "name": "Colombia",
+      "flag": "https://flagcdn.com/co.svg",
+      "phone_mask": "999 999 9999"
+    },
+    {
+      "code": "+269",
+      "name": "Comoros",
+      "flag": "https://flagcdn.com/km.svg",
+      "phone_mask": "99 99 99"
+    },
+    {
+      "code": "+242",
+      "name": "Congo",
+      "flag": "https://flagcdn.com/cg.svg",
+      "phone_mask": "99 999 9999"
+    },
+    {
+      "code": "+243",
+      "name": "Congo, Dem. Rep. of (Zaire)",
+      "flag": "https://flagcdn.com/cd.svg",
+      "phone_mask": "99 999 9999"
+    },
+    {
+      "code": "+682",
+      "name": "Cook Islands",
+      "flag": "https://flagcdn.com/ck.svg",
+      "phone_mask": "99 999"
+    },
+    {
+      "code": "+506",
+      "name": "Costa Rica",
+      "flag": "https://flagcdn.com/cr.svg",
+      "phone_mask": "9999 9999"
+    },
+    {
+      "code": "+385",
+      "name": "Croatia",
+      "flag": "https://flagcdn.com/hr.svg",
+      "phone_mask": "99 999 999"
+    },
+    {
+      "code": "+53",
+      "name": "Cuba",
+      "flag": "https://flagcdn.com/cu.svg",
+      "phone_mask": "999 999 9999"
+    },
+    {
+      "code": "+537",
+      "name": "Cyprus",
+      "flag": "https://flagcdn.com/cy.svg",
+      "phone_mask": "999 9999"
+    }
+  ]
+}

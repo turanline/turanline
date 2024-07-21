@@ -177,11 +177,12 @@
 }
 
 .product-card__option[data-color] {
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   border: 2px solid white;
-  box-shadow: 0px 2px 4px 0px #0000001a;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 }
 
 .product-card__option--active {

@@ -2,20 +2,12 @@
 
 //Global
 import Link from "next/link";
-import { CSSProperties, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 //Components
-import {
-  Button,
-  Input,
-  Radio,
-  RadioGroup,
-  Select,
-  SelectItem,
-} from "@nextui-org/react";
+import { Button, Input, Radio, RadioGroup } from "@nextui-org/react";
 import { Icons } from "@/components/Icons/Icons";
-import InputMask from "react-input-mask";
 
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
@@ -23,28 +15,32 @@ import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useCart } from "@/hooks/useCart";
 
 //Utils
-import { POLITIC_ROUTE, SHOP_ROUTE } from "@/utils/Consts";
+import { POLITIC_ROUTE, PROFILE_ROUTE, SHOP_ROUTE } from "@/utils/Consts";
 
 //Styles
 import "./order.scss";
+import { showToastMessage } from "../toastsChange";
 
 export default function Order() {
   const { status: cartStatus } = useTypedSelector(state => state.cart),
-    { isAuth, status: userStatus } = useTypedSelector(state => state.user);
+    {
+      isAuth,
+      status: userStatus,
+      userState,
+    } = useTypedSelector(state => state.user);
 
   const { push } = useRouter();
 
-  const { calculateTotalPrice, returnAllProductsCounter } = useCart();
+  const { returnAllProductsCounter, calculateTotalPrice, onPostUserOrder } =
+    useCart();
 
   useEffect(() => {
     if (!isAuth && userStatus === "fulfilled") push(SHOP_ROUTE);
   }, [isAuth, userStatus, push]);
 
   const {
-    orderPageAddress,
     orderPageButton,
     orderPageCart,
-    orderPageDiscount,
     orderPageEmailText,
     orderPageLink,
     orderPageLinkText,
@@ -52,7 +48,6 @@ export default function Order() {
     orderPagePersonalData,
     orderPagePhone,
     orderPageProductsText,
-    orderPageSearch,
     orderPageSum,
     orderPageTotal,
     registrationLabelName,
@@ -64,33 +59,29 @@ export default function Order() {
     paymentPageCrypto,
   } = useTranslate();
 
-  const mapPayments = () =>
-    payments.map(value => (
+  const mapPayments = () => {
+    const payments = [
+      paymentPageBank,
+      paymentPageCard,
+      paymentPageCheck,
+      paymentPageCrypto,
+      "PayPal",
+    ];
+
+    return payments.map(value => (
       <Radio key={value} classNames={{ label: "text-textAcc" }} value={value}>
         {value}
       </Radio>
     ));
-
-  const payments = [
-    paymentPageBank,
-    paymentPageCard,
-    paymentPageCheck,
-    paymentPageCrypto,
-    "PayPal",
-  ];
-
-  const inputClassName = {
-    input: "px-[21px]",
-    inputWrapper: "border-1 border-border shadow-none rounded-md",
   };
 
-  const selectClassName = {
-    innerWrapper: "w-fit",
-    popoverContent: "w-[74px]",
-    mainWrapper: "w-[74px]",
-    base: "w-[74px]",
-    trigger:
-      "rounded-md rounded-r-none shadow-none w-[74px] border-1 border-r-0 border-border",
+  const handleButtonClick = () => {
+    push(PROFILE_ROUTE);
+    showToastMessage("success", "Здесь вы изменить свои данные для заказа!");
+  };
+
+  const inputClassName = {
+    inputWrapper: "border-1 border-border shadow-none rounded-md",
   };
 
   if (!isAuth || userStatus === "pending" || cartStatus === "pending")
@@ -99,88 +90,70 @@ export default function Order() {
   return (
     <main className="container mx-auto mt-[30px] mb-[100px] px-[28px] md:px-0">
       <div className="w-full flex flex-col lg:grid grid-cols-2 gap-[79px]">
-        <div className="flex flex-col">
-          <h2 className="family-medium text-[32px] mb-[46px]">
-            {orderPagePersonalData}
-          </h2>
+        <div className="flex flex-col gap-[45px]">
+          <h2 className="family-medium text-[32px]">{orderPagePersonalData}</h2>
+
           <form className="flex flex-col gap-[20px]">
             <div className="flex flex-col gap-[17px]">
-              <label htmlFor="" className="text-[18px]">
+              <label className="text-[18px] flex flex-col gap-[5px]">
                 {registrationLabelName}
-              </label>
-              <Input classNames={inputClassName} placeholder="Имя *" />
-            </div>
-            <div className="flex flex-col gap-[17px]">
-              <label htmlFor="" className="text-[18px]">
-                {orderPagePhone} *
-              </label>
-              <div className="flex">
-                <Select
-                  disallowEmptySelection
-                  defaultSelectedKeys={["+7"]}
-                  className="max-w-xs"
-                  classNames={selectClassName}
-                >
-                  <SelectItem key="+7" value="+7">
-                    +7
-                  </SelectItem>
-                </Select>
 
-                <InputMask
-                  alwaysShowMask
-                  mask="(999) 999-99-99"
-                  className="w-full bg-gray-search focus:outline-none border-1 border-border px-[21px] rounded-r-md"
-                  placeholder="(999) 999-99-99"
-                  type="phone"
+                <Input
+                  readOnly
+                  classNames={inputClassName}
+                  value={userState?.user.first_name}
                 />
-              </div>
+              </label>
+            </div>
+
+            <div className="flex flex-col gap-[17px]">
+              <label className="text-[18px] flex flex-col gap-[5px]">
+                {orderPagePhone}
+
+                <Input
+                  readOnly
+                  value={userState?.phone_number}
+                  type="phone"
+                  classNames={inputClassName}
+                />
+              </label>
             </div>
             <div className="flex flex-col gap-[17px]">
-              <label htmlFor="" className="text-[18px]">
-                {registrationLabelEmail} *
+              <label className="text-[18px] flex flex-col gap-[5px]">
+                {registrationLabelEmail}
+
+                <Input
+                  classNames={inputClassName}
+                  readOnly
+                  value={userState?.user.email}
+                />
+
+                <span className="text-[12px] text-textAcc">
+                  {orderPageEmailText}
+                </span>
               </label>
-              <Input
-                classNames={inputClassName}
-                placeholder={`${registrationLabelEmail} *`}
-              />
-              <p className="text-[12px] text-textAcc">{orderPageEmailText}</p>
             </div>
-            <div className="flex flex-col gap-[17px]">
-              <label htmlFor="" className="text-[18px]">
-                {orderPageAddress}
-              </label>
-              <div className="flex h-[56px]">
-                <div className="flex items-center w-full lg:w-[600px] h-full bg-gray-search border-1 border-border rounded-l-md gap-[4px] sm:gap-[40px]">
-                  <input
-                    className="w-full bg-gray-search focus:outline-none pl-[16px] sm:px-[16px]"
-                    type="text"
-                    placeholder={orderPageSearch}
-                  />
-                  <div className="flex items-center w-[160px] h-full border-l-1 border-border p-[13px] gap-[8px] sm:gap-[14px]">
-                    <Icons id="address" />
-                    <p className="text-textAcc text-[14px]">Россия</p>
-                  </div>
-                </div>
-                <button className="h-full bg-tiffani rounded-r-md px-[28px]">
-                  <Icons id="search" />
-                </button>
-              </div>
-            </div>
+
+            <Button onClick={handleButtonClick} className="button-change">
+              Изменить
+            </Button>
           </form>
         </div>
 
-        <div className="flex flex-col">
-          <h2 className="text-[32px] family-medium mb-[46px]">
-            {orderPageCart}
-          </h2>
-          <p className="text-[12px] text-textGray">{orderPageTotal}:</p>
-          <div className="flex flex-col gap-[4px] text-textGray mb-[23px]">
+        <div className="flex flex-col gap-[15px]">
+          <h2 className="text-[32px] family-medium">{orderPageCart}</h2>
+
+          <p className="text-[20px] text-textGray">{orderPageTotal}:</p>
+
+          <div className="flex flex-col gap-[4px] text-textGray">
             <div className="flex justify-between">
               <p className="text-[24px] text-textGray">{orderPageSum}</p>
+
               <p className="text-[24px] text-tiffani">
                 {calculateTotalPrice().toFixed(2)} $
               </p>
             </div>
+
             <div className="flex justify-between">
               <p>
                 {returnAllProductsCounter()} {orderPageProductsText}
@@ -188,26 +161,31 @@ export default function Order() {
 
               <p>{calculateTotalPrice().toFixed(2)} $</p>
             </div>
+
             <div className="flex justify-between">
               <p>{headerDelivery}</p>
+
               <p>1000 $</p>
             </div>
-            <div className="flex justify-between">
-              <p>{orderPageDiscount}</p>
-              <p>- 500$</p>
-            </div>
           </div>
-          <Button className="bg-tiffani text-[24px] text-white rounded-lg w-full h-[73px] py-[10px] mb-[14px]">
+
+          <Button
+            onClick={onPostUserOrder}
+            className="bg-tiffani text-[24px] text-white rounded-lg w-full h-[73px] py-[10px]"
+          >
             {orderPageButton}
           </Button>
-          <div className="text-textAcc mb-[42px]">
+
+          <div className="text-textAcc">
             {orderPageLinkText}{" "}
             <Link href={POLITIC_ROUTE} className="text-textGray politics">
               {orderPageLink}
             </Link>
           </div>
+
           <div className="flex flex-col">
-            <p className="text-[18px] mb-[14px]">{orderPagePayment}</p>
+            <p className="text-[18px]">{orderPagePayment}</p>
+
             <RadioGroup>{mapPayments()}</RadioGroup>
           </div>
         </div>

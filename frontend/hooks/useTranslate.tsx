@@ -7,6 +7,9 @@ import { useEffect } from "react";
 import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useLanguage } from "./useLanguage";
 
+//Cookies
+import { getCookie } from "cookies-next";
+
 //Utils
 import * as locales from "@/utils/locales";
 
@@ -16,7 +19,7 @@ const useTranslate = () => {
   const { changeSelectedLanguage } = useLanguage();
 
   useEffect(() => {
-    const language = localStorage.getItem("selectedLanguage");
+    const language = getCookie("selectedLanguage");
 
     if (language) changeSelectedLanguage(language);
   }, [changeSelectedLanguage]);

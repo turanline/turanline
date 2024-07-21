@@ -90,9 +90,9 @@ const ModalChange: FC<IModalChangeProps> = ({ isChange, setIsChange }) => {
 
         <label className="w-full" htmlFor="#">
           <Input
-            {...returnInputProperties("first_name")}
-            placeholder={`${profileModalName}...`}
-            name="first_name"
+            {...returnInputProperties("last_name")}
+            placeholder={`${profileModalSurName}...`}
+            name="last_name"
             classNames={{ inputWrapper: "change-content-input" }}
             type="text"
           />
@@ -101,9 +101,9 @@ const ModalChange: FC<IModalChangeProps> = ({ isChange, setIsChange }) => {
 
         <label className="w-full" htmlFor="#">
           <Input
-            {...returnInputProperties("first_name")}
-            placeholder={`${profileModalName}...`}
-            name="first_name"
+            {...returnInputProperties("company")}
+            placeholder={`${profileModalCompany}...`}
+            name="company"
             classNames={{ inputWrapper: "change-content-input" }}
             type="text"
           />
@@ -112,9 +112,9 @@ const ModalChange: FC<IModalChangeProps> = ({ isChange, setIsChange }) => {
 
         <label className="w-full" htmlFor="#">
           <Input
-            {...returnInputProperties("first_name")}
-            placeholder={`${profileModalName}...`}
-            name="first_name"
+            {...returnInputProperties("address")}
+            placeholder={`${profileModalAddress}...`}
+            name="address"
             classNames={{ inputWrapper: "change-content-input" }}
             type="text"
           />
@@ -138,6 +138,7 @@ const ModalChange: FC<IModalChangeProps> = ({ isChange, setIsChange }) => {
 
         <button
           onClick={() => setIsChange(false)}
+          type="button"
           className="delete-card-button"
         >
           <Icons id="deleteCard" />

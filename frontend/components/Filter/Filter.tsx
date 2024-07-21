@@ -116,9 +116,11 @@ const Filter: FC = () => {
       );
   };
 
-  const allColors = products.flatMap(product => product.color.map(c => c.name)),
-    allSizes = products.flatMap(product => product.size.map(s => s.name)),
-    allBrands = products.flatMap(product => product.brand.name);
+  const allBrands = products?.flatMap(product => product?.brand.name),
+    allColors = products?.flatMap(product => product?.color?.map(c => c.name)),
+    allSizes = products?.flatMap(product =>
+      product?.sizes_data?.map(s => s.size)
+    );
 
   const uniqueColors = returnUniqueArray(allColors),
     uniqueBrands = returnUniqueArray(allBrands),

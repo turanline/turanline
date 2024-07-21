@@ -148,10 +148,12 @@
 }
 
 .input-counter {
+  border-radius: none;
   width: 40px;
   height: 30px;
   text-align: center;
   outline: none;
+  background: transparent;
   border-top: 1px solid #0abab5;
   border-bottom: 1px solid #0abab5;
 }
@@ -164,6 +166,7 @@
 
 .input-counter {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .button-option_size {

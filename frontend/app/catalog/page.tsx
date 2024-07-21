@@ -54,7 +54,7 @@ export default function Category() {
   const mapAllProducts = useMemo(() => {
     if (status === "pending") return <Icons id="spiner" />;
 
-    if (!newProducts.length && status === "fulfilled")
+    if (!newProducts?.length && status === "fulfilled")
       return (
         <EmptyComponent
           title={emptyCatalogTitle}

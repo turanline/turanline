@@ -25,7 +25,9 @@ export const getCategoryById = async (id: number) => {
 
 export const getTypes = async () => {
   try {
-    const { data } = await $host.get("/api/types/");
+    const { data } = await $host.get("/api/categories/", {
+      params: { level: 1 },
+    });
 
     return data;
   } catch (error) {
@@ -36,7 +38,9 @@ export const getTypes = async () => {
 
 export const getSubTypes = async () => {
   try {
-    const { data } = await $host.get("/api/subtypes/");
+    const { data } = await $host.get("/api/categories/", {
+      params: { level: 2 },
+    });
 
     return data;
   } catch (error) {
