@@ -1,14 +1,52 @@
 from django.core.validators import RegexValidator
 from django.db import models
 
+from mptt.models import MPTTModel, TreeForeignKey
+from parler.models import TranslatableModel, TranslatedFieldsModel
 
-class Color(models.Model):
-    """Модель цвета."""
+from . import managers
 
-    name = models.CharField(
-        max_length=255,
-        unique=True,
+
+class Category(MPTTModel, TranslatableModel):
+    """Модель категории продукта."""
+
+    image = models.ImageField(
+        upload_to='category_images/',
+        null=True,
+        verbose_name='Картинка категории'
     )
+
+    parent = TreeForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='children'
+    )
+
+    slug = models.SlugField(
+        max_length=1024,
+        unique=True,
+        db_index=True,
+        blank=True,
+        verbose_name='Слаг категории'
+    )
+
+    objects = managers.CategoryManager()
+
+    class Meta:
+        verbose_name = 'Product category'
+        verbose_name_plural = 'Product categories'
+
+    def save(self, *args, **kwargs):
+        if self.slug:
+            return super().save(*args, **kwargs)
+        self.slug = f'{self.safe_translation_getter('name', any_language=True).lower()}'
+        return super().save(*args, **kwargs)
+
+
+class Color(TranslatableModel):
+    """Модель цвета."""
 
     color = models.CharField(
         unique=True,
@@ -22,10 +60,23 @@ class Color(models.Model):
         verbose_name='Цветовой HEX-код'
     )
 
+    slug = models.SlugField(
+        max_length=1024,
+        unique=True,
+        db_index=True,
+        blank=True,
+        verbose_name='Слаг цвета'
+    )
+
     class Meta:
-        ordering = ['-name']
         verbose_name = 'Product color'
         verbose_name_plural = 'Product colors'
+
+    def save(self, *args, **kwargs):
+        if self.slug:
+            return super().save(*args, **kwargs)
+        self.slug = f'{self.safe_translation_getter('name', any_language=True).lower()}'
+        return super().save(*args, **kwargs)
 
 
 class Brand(models.Model):
@@ -48,87 +99,27 @@ class Brand(models.Model):
         verbose_name_plural = 'Product brands'
 
 
-class Category(models.Model):
-    """Модель категорий."""
-
-    name = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-
-    class Meta:
-        ordering = ['-name']
-        verbose_name = 'Product category'
-        verbose_name_plural = 'Product categories'
-
-
-class ProductType(models.Model):
-    """Модель типа продукта."""
-
-    name = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-
-    image = models.ImageField(
-        upload_to='subtype_images/',
-        null=True,
-        verbose_name='Картинка подкатегории'
-    )
-
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.CASCADE,
-        related_name='types'
-    )
-
-    class Meta:
-        verbose_name = 'Product type'
-        verbose_name_plural = 'Product types'
-        unique_together = ('name', 'category')
-        ordering = ['-name']
-
-    def __str__(self) -> str:
-        return f'Тип: {self.name} [Категория: {self.category.name}]'
-
-
-class ProductSubType(models.Model):
-    """Модель подкатегорий."""
-
-    name = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-
-    type = models.ForeignKey(
-        ProductType,
-        on_delete=models.CASCADE,
-        related_name='subtypes'
-    )
-
-    class Meta:
-        verbose_name = 'Product subtype'
-        verbose_name_plural = 'Product subtypes'
-        unique_together = ('name', 'type')
-        ordering = ['-name']
-
-    def __str__(self) -> str:
-        return (f'Подкатегория: {self.name} [Тип: {self.type.name} '
-                f'Категория: {self.type.category.name}]')
-
-
-class ManufacturerCountry(models.Model):
+class ManufacturerCountry(TranslatableModel):
     """Модель страны производителя продукта."""
 
-    name = models.CharField(
-        max_length=255,
+    slug = models.SlugField(
+        max_length=1024,
         unique=True,
+        db_index=True,
+        blank=True,
+        verbose_name='Слаг страны производителя'
     )
 
     class Meta:
-        ordering = ['-name']
         verbose_name = 'Product manufacturer country'
         verbose_name_plural = 'Product manufacturer countries'
+
+
+    def save(self, *args, **kwargs):
+        if self.slug:
+            return super().save(*args, **kwargs)
+        self.slug = f'{self.safe_translation_getter('name', any_language=True).lower()}'
+        return super().save(*args, **kwargs)
 
 
 class Size(models.Model):
@@ -142,3 +133,57 @@ class Size(models.Model):
     class Meta:
         verbose_name = 'Product size'
         verbose_name_plural = 'Product sizes'
+
+
+class CategoryTranslation(TranslatedFieldsModel):
+
+    master = models.ForeignKey(
+        Category,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='translations'
+    )
+
+    name = models.CharField(
+        max_length=255,
+        unique=True
+    )
+
+    class Meta:
+        unique_together = ('language_code', 'master')
+
+
+class ColorTranslation(TranslatedFieldsModel):
+
+    master = models.ForeignKey(
+        Color,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='translations'
+    )
+
+    name = models.CharField(
+        max_length=255,
+        unique=True
+    )
+
+    class Meta:
+        unique_together = ('language_code', 'master')
+
+
+class ManufacturerCountryTranslation(TranslatedFieldsModel):
+
+    master = models.ForeignKey(
+        ManufacturerCountry,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='translations'
+    )
+
+    name = models.CharField(
+        max_length=255,
+        unique=True
+    )
+
+    class Meta:
+        unique_together = ('language_code', 'master')

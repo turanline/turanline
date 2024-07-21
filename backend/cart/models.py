@@ -60,15 +60,13 @@ class Order(models.Model):
         verbose_name='Статус закаказа'
     )
 
-    created_date = models.DateField(
-        null=True,
+    created_date = models.DateTimeField(
         blank=True,
+        null=True,
         verbose_name='Дата создания заказа'
     )
 
-    total_sum = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
+    total_sum = models.FloatField(
         validators=[
             MinValueValidator(
                 0,
