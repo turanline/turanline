@@ -9,6 +9,7 @@ from . import models
 class CategoryAdminForm(MPTTAdminForm, TranslatableModelForm):
     pass
 
+
 class CategoryAdmin(MPTTModelAdmin, TranslatableAdmin):
     form = CategoryAdminForm
 

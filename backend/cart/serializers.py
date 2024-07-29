@@ -5,97 +5,125 @@ from . import models
 from products import serializers as product_serializers
 from products import models as product_models
 from product_components import serializers as product_component_serializers
+from product_components import models as product_component_models
 
 
-class CartProductCreateSerializer(serializers.ModelSerializer):
-    """Модель объекта корзины."""
+class OrderProductsBaseSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = models.OrderProduct
-        fields = (
-            'id',
-            'amount',
-            'product',
-            'color',
-            'size'
-        )
-
-class CartProductUpdateSerializer(serializers.ModelSerializer):
-    """Модель объекта корзины."""
-
-    class Meta:
-        model = models.OrderProduct
-        fields = (
-            'id',
-            'amount',
-            'color',
-            'size'
-        )
-
-
-class CartOrderProductSerializer(serializers.ModelSerializer):
-    """Модель объекта корзины."""
-
-    product = product_serializers.OrderProductSerializer(read_only=True)
-    color = product_component_serializers.ColorSerializer()
-    size = product_component_serializers.SizeSerializer()
-    images = product_serializers.ImageSerializer(
-        many=True,
+    sum = serializers.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        coerce_to_string=True,
         read_only=True
     )
 
     class Meta:
         model = models.OrderProduct
-        fields = (
+
+
+class CartProductsBaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Order
+
+
+class OrderProductsCreateSerializer(OrderProductsBaseSerializer):
+
+    class Meta(OrderProductsBaseSerializer.Meta):
+        fields = [
             'id',
             'amount',
             'product',
             'color',
             'size',
-            'images'
-        )
+            'sum'
+        ]
 
     def validate_amount(self, value):
-        product_id = self.initial_data['product']
-        product = get_object_or_404(product_models.Product, id=product_id)
-        if value > product.amount:
-            return serializers.ValidationError(
-                "Товара слишком мало у поставщика"
+        product = product_models.Product.objects.get(
+            id=self.initial_data.get('product')
+        )
+        color = product_component_models.Color.objects.get(
+            id=self.initial_data['color']
+        )
+        if color in product.color.all():
+            product_color = get_object_or_404(
+                product_models.ProductColor,
+                product=product,
+                color=color
             )
-        return value
+            if value < product_color.amount:
+                return value
+            raise serializers.ValidationError(
+                "Товара данного цвета слишком мало у поставщика"
+            )
+        raise serializers.ValidationError(
+            "У товара нет такого цвета"
+        )
 
 
-class CartCreateSerializer(serializers.ModelSerializer):
-    order_products = serializers.PrimaryKeyRelatedField(
-        queryset=models.OrderProduct.objects.all(),
-        many=True
+class OrderProductsUpdateSerializer(OrderProductsBaseSerializer):
+    class Meta(OrderProductsBaseSerializer.Meta):
+        fields = [
+            'id',
+            'amount',
+            'color',
+            'size',
+            'sum'
+        ]
+
+
+class OrderProductsSerializer(OrderProductsBaseSerializer):
+
+    product = product_serializers.OrderProductSerializer(
+        read_only=True
     )
 
-    class Meta:
-        model = models.Order
+    color = product_component_serializers.ColorSerializer()
+
+    size = product_component_serializers.SizeSerializer()
+
+    images = product_serializers.ImageSerializer(
+        many=True,
+        read_only=True
+    )
+
+    class Meta(OrderProductsBaseSerializer.Meta):
         fields = [
-            'order_products'
+            'id',
+            'amount',
+            'product',
+            'color',
+            'size',
+            'images',
+            'sum'
         ]
 
-class CartTotalSumSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Order
+
+class CartProductsConfirmSerializer(CartProductsBaseSerializer):
+    class Meta(CartProductsBaseSerializer.Meta):
         fields = [
-            'total_sum'
+            'address',
+            'delivery_type',
+            'delivery_price'
         ]
 
 
-class CartUpdateSerializer(serializers.ModelSerializer):
-    order_products = serializers.PrimaryKeyRelatedField(read_only=True)
+# class CartUpdateSerializer(CartProductsBaseSerializer):
+#
+#     order_products = serializers.PrimaryKeyRelatedField(read_only=True)
+#
+#     class Meta(CartProductsBaseSerializer.Meta):
+#         exclude = (
+#             'customer',
+#         )
 
-    class Meta:
-        model = models.Order
-        exclude = ('customer',)
 
+class CartProductsRetrieveSerializer(CartProductsBaseSerializer):
 
-class CartSerializer(serializers.ModelSerializer):
-    order_products = CartOrderProductSerializer(many=True, read_only=True)
+    order_products = OrderProductsSerializer(
+        many=True,
+        read_only=True
+    )
 
-    class Meta:
-        model = models.Order
+    class Meta(CartProductsBaseSerializer.Meta):
         fields = '__all__'

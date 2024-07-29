@@ -1,8 +1,14 @@
 import django_filters
+
+
 from . import models
 
-class MyModelFilter(django_filters.FilterSet):
-    level = django_filters.NumberFilter(method='filter_by_level', required=False)
+
+class ProductCategoriesFilter(django_filters.FilterSet):
+    level = django_filters.NumberFilter(
+        method='filter_by_level',
+        required=False
+    )
 
     class Meta:
         model = models.Category

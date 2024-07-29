@@ -1,21 +1,15 @@
 import logging
 
-from tablib import Dataset
-
-from django.http import Http404
-from django.core.files.base import ContentFile
 from django.core.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
-from django.conf import settings
-from import_export import exceptions
+
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets, views, parsers, permissions, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from . import models, enums, resources, serializers, tasks
-from . import permissions as product_permissions
+from . import models, enums, serializers, tasks
 from customers import models as customer_models
 from customers import serializers as customer_serializers
 from providers import models as provider_models
@@ -70,13 +64,12 @@ class ProductsViewSet(
     lookup_field = 'slug'
     filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
     filterset_fields = ('status',)
-    ordering_fields = ('amount', 'date_and_time')
+    ordering_fields = ('date_and_time',)
 
     def get_serializer_class(self, *args, **kwargs):
         if self.action in ('update', 'partial_update'):
             return serializers.ProductUpdateSerializer
         return super().get_serializer_class(*args, **kwargs)
-
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

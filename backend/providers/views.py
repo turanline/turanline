@@ -116,21 +116,20 @@ class ProviderViewSet(
                 cart_enums.OrderStatuses.COLLECTED
             )
         ).distinct().prefetch_related(
-        Prefetch(
-            'order_products',
-            queryset=cart_models.OrderProduct.objects.filter(
-                product__provider=provider.user
-            ),
-            to_attr='filtered_order_products'
+            Prefetch(
+                'order_products',
+                queryset=cart_models.OrderProduct.objects.filter(
+                    product__provider=provider.user
+                ),
+                to_attr='filtered_order_products'
+            )
         )
-    )
         serializer = serializers.OrdersSerializers(
             orders,
             context={'request': request},
             many=True
         )
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
     @action(methods=['GET'], detail=False)
     def get_last_downloaded_file(self, request, *args, **kwargs):

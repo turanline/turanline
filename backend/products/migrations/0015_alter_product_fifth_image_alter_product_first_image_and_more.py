@@ -2,6 +2,7 @@
 
 import providers.models
 from django.db import migrations, models
+import mssite
 
 
 class Migration(migrations.Migration):
@@ -14,26 +15,26 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='product',
             name='fifth_image',
-            field=models.ImageField(blank=True, null=True, storage=providers.models.OverwriteStorage(), upload_to='', verbose_name='Пятая картинка товара'),
+            field=models.ImageField(blank=True, null=True, storage=mssite.storages.OverwriteStorage(), upload_to='', verbose_name='Пятая картинка товара'),
         ),
         migrations.AlterField(
             model_name='product',
             name='first_image',
-            field=models.ImageField(blank=True, null=True, storage=providers.models.OverwriteStorage(), upload_to='', verbose_name='Первая картинка товара'),
+            field=models.ImageField(blank=True, null=True, storage=mssite.storages.OverwriteStorage(), upload_to='', verbose_name='Первая картинка товара'),
         ),
         migrations.AlterField(
             model_name='product',
             name='fourth_image',
-            field=models.ImageField(blank=True, null=True, storage=providers.models.OverwriteStorage(), upload_to='', verbose_name='Четвертая картинка товара'),
+            field=models.ImageField(blank=True, null=True, storage=mssite.storages.OverwriteStorage(), upload_to='', verbose_name='Четвертая картинка товара'),
         ),
         migrations.AlterField(
             model_name='product',
             name='second_image',
-            field=models.ImageField(blank=True, null=True, storage=providers.models.OverwriteStorage(), upload_to='', verbose_name='Вторая картинка товара'),
+            field=models.ImageField(blank=True, null=True, storage=mssite.storages.OverwriteStorage(), upload_to='', verbose_name='Вторая картинка товара'),
         ),
         migrations.AlterField(
             model_name='product',
             name='third_image',
-            field=models.ImageField(blank=True, null=True, storage=providers.models.OverwriteStorage(), upload_to='', verbose_name='Третья картинка товара'),
+            field=models.ImageField(blank=True, null=True, storage=mssite.storages.OverwriteStorage(), upload_to='', verbose_name='Третья картинка товара'),
         ),
     ]

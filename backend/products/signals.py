@@ -7,7 +7,7 @@ from . import models
 @receiver(pre_save, sender=models.Product)
 def product_status_change(sender, instance, **kwargs):
     if instance.pk:
-        old_product =  models.Product.objects.get(pk=instance.pk)
+        old_product = models.Product.objects.get(pk=instance.pk)
         if old_product.status != instance.status:
             models.ProductStatusChangeArchive.objects.create(
                 product=instance,

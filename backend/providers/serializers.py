@@ -65,12 +65,14 @@ class ProviderSerializer(serializers.ModelSerializer):
 
 
 class OrdersSerializers(serializers.ModelSerializer):
-    order_products = cart_serializers.CartOrderProductSerializer(
+    order_products = cart_serializers.OrderProductsSerializer(
         read_only=True,
         many=True,
         source='filtered_order_products'
     )
-    customer = customer_serializers.CustomerLightSerializer(read_only=True)
+    customer = customer_serializers.CustomerLightSerializer(
+        read_only=True
+    )
 
     class Meta:
         model = cart_models.Order

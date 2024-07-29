@@ -4,12 +4,13 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import QuerySet
 from django.http.request import QueryDict
-from django.db.utils import IntegrityError
-from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 
 from . import serializers, models, permissions
 from products import serializers as product_serializers
+from cart import enums as cart_enums
 from cart import models as cart_models
+from cart import serializers as cart_serializers
 
 
 @extend_schema(tags=['customer'])
@@ -17,13 +18,40 @@ class CustomerViewSet(viewsets.ModelViewSet):
     queryset = models.Customer.objects.all()
     serializer_class = serializers.CustomerSerializer
 
+    def get_serializer_class(self, *args, **kwargs):
+        if self.action == 'favorites':
+            return product_serializers.ProductSerializer
+        elif self.action == 'get_customer_history':
+            return cart_serializers.CartProductsRetrieveSerializer
+        return super().get_serializer_class(*args, **kwargs)
+
     @action(methods=['get'], detail=False)
     def favorites(self, request, *args, **kwargs):
-        customer = models.Customer.objects.filter(user=request.user).first()
+        customer = get_object_or_404(models.Customer, user=request.user)
         customer_favorites = customer.favorites.all()
-
-        serializer = product_serializers.ProductSerializer(
+        serializer = self.get_serializer(
             customer_favorites,
+            many=True,
+            context={'request': request}
+        )
+        return Response(
+            status=status.HTTP_200_OK,
+            data=serializer.data
+        )
+
+    @action(methods=['GET'], detail=False)
+    def get_customer_history(self, request, *args, **kwargs):
+        customer = get_object_or_404(models.Customer, user=request.user)
+        customer_orders = cart_models.Order.objects.filter(
+            customer=customer,
+            status__in=(
+                cart_enums.OrderStatuses.FINISHED,
+                cart_enums.OrderStatuses.PROCESSED,
+                cart_enums.OrderStatuses.COLLECTED
+            )
+        )
+        serializer = self.get_serializer(
+            customer_orders,
             many=True,
             context={'request': request}
         )
@@ -49,7 +77,7 @@ class ReviewsViewSet(
     def apply_product_reviews_filter(
         request_data: QueryDict, queryset: QuerySet
     ) -> QuerySet | None:
-        product_id = request_data.get("product_id", None)
+        product_id = request_data.get('product_id', None)
         if product_id:
             return queryset.filter(product__id=product_id)
 
@@ -68,12 +96,3 @@ class ReviewsViewSet(
         if self.action in ('update', 'partial_update'):
             return serializers.LightReviewSerializer
         return super().get_serializer_class()
-
-    def create(self, request, *args, **kwargs):
-        try:
-            return super().create(request, *args, **kwargs)
-        except IntegrityError:
-            return HttpResponse(
-                status=status.HTTP_400_BAD_REQUEST,
-                content='That review is already created',
-            )

@@ -49,7 +49,6 @@ class News(models.Model):
 
 
 class Appeal(models.Model):
-    """Модель обращений поставщиков."""
 
     user = models.ForeignKey(
         User,

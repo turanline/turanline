@@ -14,3 +14,10 @@ class OrderStatuses(models.TextChoices):
     PROCESSED = 'PR', 'Processed'
     COLLECTED = 'CD', 'Collected'
     FINISHED = 'FD', 'Finished'
+
+
+class DeliveryTypes(models.TextChoices):
+    HIGH_SPEED = 'HR', 'High-speed'
+    OPTIMAL = 'O', 'Optimal'
+    LOW_COST = 'LC', 'Low-cost'
+    EXPRESS = 'E', 'Express'

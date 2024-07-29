@@ -1,9 +1,8 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from parler_rest.serializers import TranslatableModelSerializer
 from parler_rest.fields import TranslatedFieldsField
 
-from . import models, mixins
+from . import models, mixins, fields
 from mssite import settings
 from product_components import serializers as product_components_serializers
 from product_components import models as product_components_models
@@ -14,31 +13,61 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Image
         exclude = (
-            'id',
-            'product'
+            'product',
         )
 
 
 class ProductSizeSerializer(serializers.ModelSerializer):
 
-    size = serializers.SlugRelatedField(
+    id = serializers.PrimaryKeyRelatedField(
+        source='size',
+        read_only=True
+    )
+
+    name = serializers.SlugRelatedField(
+        source='size',
         slug_field='name',
         queryset=product_components_models.Size.objects.all()
     )
 
     class Meta:
         model = models.ProductSize
-        exclude = (
+        fields = [
             'id',
-            'product'
-        )
+            'name',
+            'amount'
+        ]
 
 
-class ProductUpdateSerializer(
-    mixins.TranslatedSerializerMixin,
-    TranslatableModelSerializer
-):
-    """Сериализатор обновления для модели продуктов."""
+class ProductColorSerializer(serializers.ModelSerializer):
+
+    id = serializers.PrimaryKeyRelatedField(
+        source='color',
+        read_only=True
+    )
+
+    slug = serializers.SlugRelatedField(
+        source='color',
+        slug_field='slug',
+        queryset=product_components_models.Color.objects.all()
+    )
+
+    color = serializers.SlugRelatedField(
+        slug_field='color',
+        read_only=True
+    )
+
+    class Meta:
+        model = models.ProductColor
+        fields = [
+            'id',
+            'slug',
+            'color',
+            'amount'
+        ]
+
+
+class ProductUpdateSerializer(TranslatableModelSerializer):
 
     name = serializers.CharField(required=False, trim_whitespace=True)
 
@@ -48,72 +77,119 @@ class ProductUpdateSerializer(
 
     brand = serializers.SlugRelatedField(
         slug_field='name',
-        queryset=product_components_models.Brand.objects.all(),
-        required=False
+        queryset=product_components_models.Brand.objects.all()
     )
 
-    color = serializers.SlugRelatedField(
-        slug_field='slug',
-        many=True,
-        queryset=product_components_models.Color.objects.all(),
-        required=False
+    colors_data = ProductColorSerializer(
+        source='productcolor_set',
+        many=True
     )
 
     sizes_data = ProductSizeSerializer(
-        many=True,
-        required=False
+        source='productsize_set',
+        many=True
     )
 
     manufacturerCountry = serializers.SlugRelatedField(
         slug_field='slug',
-        queryset=product_components_models.ManufacturerCountry.objects.all(),
-        required=False
+        queryset=product_components_models.ManufacturerCountry.objects.all()
+    )
+
+    images = serializers.ListSerializer(
+        child=fields.Base64ImageField()
     )
 
     class Meta:
         model = models.Product
         lookup_field = 'slug'
-        exclude = (
+        exclude = [
+            'color',
             'size',
             'slug',
             'article_number',
             'category',
             'is_famous',
-            'status',
             'provider'
-        )
+        ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['sizes_data'] = ProductSizeSerializer(
+            instance.productsize_set.all(),
+            many=True
+        ).data
+        representation['colors_data'] = ProductColorSerializer(
+            instance.productcolor_set.all(),
+            many=True
+        ).data
+        return representation
 
     def update(self, instance, validated_data):
-        sizes_data = validated_data.get('sizes_data')
+        sizes_data = validated_data.pop('productsize_set', None)
+        images_data = validated_data.pop('images', None)
+        colors_data = validated_data.pop('productcolor_set', None)
+
         if sizes_data:
+            sizes_list = []
+            instance.productsize_set.all().delete()
             for size_data in sizes_data:
-                obj = models.ProductSize.objects.get(
+                product_size_object = models.ProductSize(
                     product=instance,
                     size=size_data['size'],
+                    amount=size_data['amount']
                 )
-                obj.amount = size_data['amount']
-                obj.save()
+                sizes_list.append(product_size_object)
+            models.ProductSize.objects.bulk_create(sizes_list)
+
+        if colors_data:
+            colors_list = []
+            instance.productcolor_set.all().delete()
+            for color_data in colors_data:
+                product_color_object = models.ProductColor(
+                    product=instance,
+                    color=color_data['color'],
+                    amount=color_data['amount']
+                )
+                colors_list.append(product_color_object)
+            models.ProductColor.objects.bulk_create(colors_list)
+
+        if images_data:
+            images_list = []
+            for index, image_data in enumerate(images_data):
+                if image_data:
+                    instance.images.filter(
+                        product=instance,
+                        position=index
+                    ).delete()
+                    image_instance = models.Image(
+                        product=instance,
+                        image_file=image_data,
+                        position=index
+                    )
+                    images_list.append(image_instance)
+            models.Image.objects.bulk_create(images_list)
 
         for lan_code in settings.PARLER_LANGUAGES[None]:
-            obj = models.ProductTranslation.objects.get(
+            translation_instance, created = models.ProductTranslation.objects.get_or_create(
                 master=instance,
                 language_code=lan_code['code']
             )
             if validated_data.get('name'):
-                obj.name = settings.translator.translate(
+                translation_instance.name = settings.translator.translate(
                     validated_data['name'],
                     dest=lan_code['code']
                 ).text
             if validated_data.get('description'):
-                obj.description = settings.translator.translate(
+                translation_instance.description = settings.translator.translate(
                     validated_data['description'],
                     dest=lan_code['code']
                 ).text
             if validated_data.get('compound'):
-                obj.compound = settings.translator.translate(
+                translation_instance.compound = settings.translator.translate(
                     validated_data['compound'],
                     dest=lan_code['code']
                 ).text
+            translation_instance.save()
 
         return super().update(instance, validated_data)
 
@@ -124,7 +200,11 @@ class ProductLightSerializer(
 ):
     """Легкий сериализатор для модели продуктов."""
 
-    translations = TranslatedFieldsField(shared_model=models.Product)
+    translations = TranslatedFieldsField(
+        shared_model=models.Product,
+        read_only=True
+    )
+
     images = ImageSerializer(many=True)
 
     class Meta:
@@ -137,7 +217,12 @@ class OrderProductSerializer(
     TranslatableModelSerializer
 ):
     """Легкий сериализатор для модели продуктов."""
-    translations = TranslatedFieldsField(shared_model=models.Product)
+
+    translations = TranslatedFieldsField(
+        shared_model=models.Product,
+        read_only=True
+    )
+
     images = ImageSerializer(many=True)
 
     class Meta:
@@ -161,25 +246,32 @@ class ProductSerializer(
         shared_model=models.Product,
         read_only=True
     )
+
     brand = product_components_serializers.BrandSerializer(
         read_only=True
     )
-    color = product_components_serializers.ColorSerializer(
+
+    colors_data = ProductColorSerializer(
+        source='productcolor_set',
         many=True,
         read_only=True
     )
+
     sizes_data = ProductSizeSerializer(
         source='productsize_set',
         many=True,
         read_only=True
     )
+
     manufacturerCountry = product_components_serializers.ManufactoryCountrySerializer(
         read_only=True
     )
+
     category = product_components_serializers.ProductCategoriesSerializer(
         many=True,
         read_only=True
     )
+
     images = ImageSerializer(
         many=True,
         read_only=True
@@ -187,7 +279,10 @@ class ProductSerializer(
 
     class Meta:
         model = models.Product
-        exclude = ('size',)
+        exclude = (
+            'size',
+            'color'
+        )
         lookup_field = 'slug'
 
 
@@ -195,7 +290,10 @@ class ProductDataArchiveSerializer(
     mixins.TranslatedSerializerMixin,
     TranslatableModelSerializer
 ):
-    translations = TranslatedFieldsField(shared_model=models.Product)
+    translations = TranslatedFieldsField(
+        shared_model=models.Product,
+        read_only=True
+    )
 
     class Meta:
         model = models.Product

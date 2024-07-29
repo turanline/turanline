@@ -1,4 +1,5 @@
-from django.http import JsonResponse
+from datetime import datetime
+
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets, filters
@@ -13,57 +14,49 @@ from customers import models as customer_models
 @extend_schema(tags=['cart'])
 class CartProductsViewSet(
     mixins.RetrieveModelMixin,
-    mixins.CreateModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = models.Order.objects.prefetch_related('order_products')
-    serializer_class = serializers.CartCreateSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['id']
+    serializer_class = serializers.CartProductsRetrieveSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_serializer_class(self, *args, **kwargs):
+        if self.action == 'retrieve':
+            return serializers.CartProductsRetrieveSerializer
+        elif self.action == 'confirm_order':
+            return serializers.CartProductsConfirmSerializer
+        return super().get_serializer_class(*args, **kwargs)
+
     def retrieve(self, request, *args, **kwargs):
-        customer = customer_models.Customer.objects.filter(user=request.user).first()
+        customer = get_object_or_404(customer_models.Customer, user=request.user)
         instance, created = models.Order.objects.get_or_create(
             customer=customer,
             status=enums.OrderStatuses.CREATED
         )
         serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
-    def create(self, request, *args, **kwargs):
-        customer = customer_models.Customer.objects.filter(user=request.user).first()
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        cart, created_cart = models.Order.objects.get_or_create(
-            customer=customer,
-            status=enums.OrderStatuses.CREATED
-        )
-        cart.order_products.add(*serializer.validated_data['order_products'])
-        return JsonResponse(
-            status=status.HTTP_201_CREATED,
+        return Response(
+            status=status.HTTP_200_OK,
             data=serializer.data
         )
 
-    def get_serializer_class(self, *args, **kwargs):
-        if self.action == 'retrieve':
-            return serializers.CartSerializer
-        elif self.action == 'confirm_order':
-            return serializers.CartTotalSumSerializer
-        return super().get_serializer_class(*args, **kwargs)
-
     @action(methods=['POST'], detail=False)
     def confirm_order(self, request, *args, **kwargs):
-        customer = customer_models.Customer.objects.filter(user=request.user).first()
+        customer = get_object_or_404(
+            customer_models.Customer,
+            user=request.user
+        )
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        order = models.Order.objects.get(
+        cart = models.Order.objects.get(
             customer=customer,
             status=enums.OrderStatuses.CREATED
         )
-        order.status = enums.OrderStatuses.COLLECTED
-        order.total_sum=serializer.validated_data['total_sum']
-        order.save()
+        cart.status = enums.OrderStatuses.COLLECTED
+        for attr, value in serializer.validated_data.items():
+            setattr(cart, attr, value)
+        cart.save()
         return Response(
             data=serializer.data,
             status=status.HTTP_200_OK
@@ -78,9 +71,23 @@ class OrderProductsViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = models.OrderProduct.objects.all()
-    serializer_class = serializers.CartProductCreateSerializer
+    serializer_class = serializers.OrderProductsCreateSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self, *args, **kwargs):
         if self.action in ('update', 'partial_update'):
-            return serializers.CartProductUpdateSerializer
+            return serializers.OrderProductsUpdateSerializer
         return super().get_serializer_class(*args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        customer = get_object_or_404(customer_models.Customer, user=request.user)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        cart, created = models.Order.objects.get_or_create(
+            customer=customer,
+            status=enums.OrderStatuses.CREATED
+        )
+        order = serializer.save()
+        cart.order_products.add(order)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

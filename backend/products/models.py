@@ -10,10 +10,10 @@ from decimal import Decimal
 from . import enums
 from product_components import models as product_components_models
 from users import models as user_models
+from mssite import storages
 
 
 class Product(TranslatableModel):
-    """Модель продуктов."""
 
     provider = models.ForeignKey(
         user_models.User,
@@ -39,10 +39,6 @@ class Product(TranslatableModel):
         verbose_name='Артикул'
     )
 
-    amount = models.PositiveIntegerField(
-        verbose_name='Количество товара'
-    )
-
     price = models.FloatField(
         validators=[
             MinValueValidator(
@@ -51,7 +47,7 @@ class Product(TranslatableModel):
             ),
         ],
         db_index=True,
-        verbose_name='Цена товара'
+        verbose_name='Цена комплекта'
     )
 
     season = models.CharField(
@@ -70,6 +66,8 @@ class Product(TranslatableModel):
 
     color = models.ManyToManyField(
         product_components_models.Color,
+        through='ProductColor',
+        through_fields=['product', 'color'],
         verbose_name='Цвет товара'
     )
 
@@ -195,15 +193,19 @@ class Image(models.Model):
         related_name='images'
     )
 
-    image_url = models.URLField(
-        null=True,
-        blank=True
-    )
-
     image_file = models.ImageField(
         null=True,
-        blank=True
+        blank=True,
+        upload_to='product_images/',
+        storage=storages.OverwriteStorage(),
     )
+
+    position = models.IntegerField(
+        verbose_name='Позиция фотографии'
+    )
+
+    class Meta:
+        ordering = ['position']
 
 
 class ProductSize(models.Model):
@@ -222,4 +224,23 @@ class ProductSize(models.Model):
     amount = models.PositiveIntegerField(
         default=0,
         verbose_name='Количество товара для выбранного размера'
+    )
+
+
+class ProductColor(models.Model):
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE
+    )
+
+    color = models.ForeignKey(
+        product_components_models.Color,
+        on_delete=models.CASCADE,
+        related_name='color_amount'
+    )
+
+    amount = models.PositiveIntegerField(
+        default=0,
+        verbose_name='Количество товара для выбранного цвета'
     )

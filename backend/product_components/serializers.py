@@ -3,8 +3,6 @@ from parler_rest.serializers import TranslatableModelSerializer
 from parler_rest.fields import TranslatedFieldsField
 
 from . import models
-from mssite import settings
-from products import models as product_models
 from products import mixins as product_mixins
 
 
@@ -26,7 +24,7 @@ class ColorSerializer(
 ):
     """Сериализатор для модели цветов продуктов."""
 
-    translations = TranslatedFieldsField(shared_model=models.Color)
+    translations = TranslatedFieldsField(shared_model=models.Color, read_only=True)
 
     class Meta(BaseSerializer.Meta):
         model = models.Color
@@ -59,6 +57,7 @@ class ProductCategoriesSerializer(
             'rght',
             'tree_id'
         )
+
 
 class SizeSerializer(BaseSerializer):
     """Сериализатор для модели размеров продуктов."""

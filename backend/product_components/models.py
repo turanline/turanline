@@ -8,7 +8,6 @@ from . import managers
 
 
 class Category(MPTTModel, TranslatableModel):
-    """Модель категории продукта."""
 
     image = models.ImageField(
         upload_to='category_images/',
@@ -46,7 +45,6 @@ class Category(MPTTModel, TranslatableModel):
 
 
 class Color(TranslatableModel):
-    """Модель цвета."""
 
     color = models.CharField(
         unique=True,
@@ -80,7 +78,6 @@ class Color(TranslatableModel):
 
 
 class Brand(models.Model):
-    """Модель бренда."""
 
     name = models.CharField(
         max_length=255,
@@ -100,7 +97,6 @@ class Brand(models.Model):
 
 
 class ManufacturerCountry(TranslatableModel):
-    """Модель страны производителя продукта."""
 
     slug = models.SlugField(
         max_length=1024,
@@ -139,8 +135,7 @@ class CategoryTranslation(TranslatedFieldsModel):
 
     master = models.ForeignKey(
         Category,
-        null=True,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name='translations'
     )
 
@@ -157,8 +152,7 @@ class ColorTranslation(TranslatedFieldsModel):
 
     master = models.ForeignKey(
         Color,
-        null=True,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name='translations'
     )
 
@@ -175,8 +169,7 @@ class ManufacturerCountryTranslation(TranslatedFieldsModel):
 
     master = models.ForeignKey(
         ManufacturerCountry,
-        null=True,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name='translations'
     )
 

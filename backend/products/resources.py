@@ -1,20 +1,14 @@
-from django.core.files.base import ContentFile
+from collections import Counter
 from django.shortcuts import get_object_or_404
 from mssite import settings
 from import_export import resources, fields, widgets
 
-from . import models, enums
+from . import models
 from product_components import models as product_component_models
 from users import models as user_models
 
 
 class ExportProductsResource(resources.ModelResource):
-
-    amount = fields.Field(
-        column_name='master__amount',
-        attribute='master__amount',
-        widget=widgets.IntegerWidget(coerce_to_string=False)
-    )
 
     category = fields.Field(
         column_name='master__category',
@@ -43,7 +37,6 @@ class ExportProductsResource(resources.ModelResource):
             'name',
             'description',
             'category',
-            'amount',
             'color',
             'compound',
             'master__weight',
@@ -57,12 +50,6 @@ class ExportProductsResource(resources.ModelResource):
 
 
 class ProductsResource(resources.ModelResource):
-
-    amount = fields.Field(
-        column_name='amount',
-        attribute='amount',
-        widget=widgets.IntegerWidget(coerce_to_string=False)
-    )
 
     provider = fields.Field(
         column_name='provider',
@@ -88,16 +75,6 @@ class ProductsResource(resources.ModelResource):
         widget=widgets.ForeignKeyWidget(
             product_component_models.Brand,
             field='name'
-        )
-    )
-
-    color = fields.Field(
-        column_name='color',
-        attribute='color',
-        widget=widgets.ManyToManyWidget(
-            product_component_models.Color,
-            field='slug',
-            separator=', '
         )
     )
 
@@ -134,30 +111,34 @@ class ProductsResource(resources.ModelResource):
         )
 
     def after_save_instance(self, instance, row, **kwargs):
-        translations, images, sizes = [], [], []
-        image_list = [
-            row['first_image'],
-            row['second_image'],
-            row['third_image'],
-            row['fourth_image'],
-            row['fifth_image']
-        ]
+        translations, sizes, colors = [], [], []
+        size_counts = Counter(row['sizes'].split(', '))
+        color_list = row['color'].split(', ')
 
-        for size in enums.SizeRange:
-            size_obj = models.ProductSize(
-                product=instance,
-                size=product_component_models.Size.objects.get(name=size.value),
-                amount=row[size.value]
+        for size, count in size_counts.items():
+            size_obj = get_object_or_404(
+                product_component_models.Size.objects,
+                name=size
             )
-            sizes.append(size_obj)
+            product_size_obj = models.ProductSize(
+                product=instance,
+                size=size_obj,
+                amount=count
+            )
+            sizes.append(product_size_obj)
 
-        for image_url in image_list:
-            if image_url:
-                image = models.Image(
-                    product=instance,
-                    image_url=image_url
-                )
-                images.append(image)
+        for item in color_list:
+            color_name, count = item.split('-')
+            color_obj = get_object_or_404(
+                product_component_models.Color.objects,
+                slug=color_name
+            )
+            product_color_obj = models.ProductColor(
+                product=instance,
+                color=color_obj,
+                amount=count
+            )
+            colors.append(product_color_obj)
 
         for lan_code in settings.PARLER_LANGUAGES[None]:
             translation = models.ProductTranslation(
@@ -170,12 +151,13 @@ class ProductsResource(resources.ModelResource):
             translations.append(translation)
 
         models.ProductTranslation.objects.bulk_create(translations)
-        models.Image.objects.bulk_create(images)
         models.ProductSize.objects.bulk_create(sizes)
+        models.ProductColor.objects.bulk_create(colors)
 
     class Meta:
         model = models.Product
         exclude = (
+            'color',
             'size',
             'is_famous',
             'is_published',

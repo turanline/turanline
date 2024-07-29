@@ -5,7 +5,6 @@ from products import models as product_models
 
 
 class Customer(models.Model):
-    """Модель пользователя."""
 
     user = models.OneToOneField(
         user_models.User,
@@ -36,11 +35,10 @@ class Customer(models.Model):
     )
 
     def __str__(self) -> str:
-        return f'Пользователь {self.user.username}'
+        return f'Customer {self.user.username}'
 
 
 class Review(models.Model):
-    """Модель отзыва на продукт."""
 
     text = models.TextField()
 
@@ -61,7 +59,8 @@ class Review(models.Model):
     )
 
     class Meta:
-        unique_together = ('user', 'product')
+        verbose_name = 'Review'
+        verbose_name_plural = 'Reviews'
 
     def __str__(self) -> str:
         return (f'Review {self.pk} on {self.product.pk} '

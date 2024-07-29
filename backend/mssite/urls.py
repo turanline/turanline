@@ -12,6 +12,8 @@ from cart import views as cart_views
 from customers import views as customer_views
 from providers import views as provider_views
 from product_components import views as product_component_views
+from payment import views as payment_views
+
 
 router = DefaultRouter()
 
@@ -26,18 +28,6 @@ router.register(
     product_component_views.ProductCategoriesViewSet,
     'categories'
 )
-
-# router.register(
-#     r'types',
-#     product_component_views.ProductTypesViewSet,
-#     'types'
-# )
-#
-# router.register(
-#     r'subtypes',
-#     product_component_views.ProductSubTypesViewSet,
-#     'subtypes'
-# )
 
 router.register(
     r'reviews',
@@ -64,6 +54,12 @@ router.register(
 )
 
 router.register(
+    r'color',
+    product_component_views.ColorViewSet,
+    'color'
+)
+
+router.register(
     r'provider',
     provider_views.ProviderViewSet,
     'provider'
@@ -85,6 +81,12 @@ router.register(
     r'superusernews',
     user_views.NewsViewSet,
     'news'
+)
+
+router.register(
+    r'card-payments',
+    payment_views.CardPaymentViewSet,
+    'card-payments'
 )
 
 
@@ -142,7 +144,6 @@ urlpatterns = [
         name='import_export_xlsx'
     )
 ]
-
 
 if settings.DEBUG:
     urlpatterns += static(

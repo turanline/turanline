@@ -27,7 +27,6 @@ class TokenObtainPairViewDoc(views.TokenObtainPairView):
 
 @extend_schema(tags=['jwt auth'])
 class TokenRefreshViewDoc(views.TokenRefreshView):
-    """Класс нужный для визуализации обновления токена в схеме."""
 
     pass
 
@@ -67,11 +66,9 @@ class UserViewSet(
         if self.action in ('list', 'retrieve'):
             return serializers.UserReadLoginSerializer
         elif self.action == 'orders':
-            return cart_serializers.OrderSerializer
+            return cart_serializers.CartProductsRetrieveSerializer
         elif self.action == 'reviews':
             return customer_serializers.ReviewSerializer
-        elif self.action == 'favorites':
-            return product_serializers.ProductSerializer
         return super().get_serializer_class()
 
     @action(
@@ -102,7 +99,7 @@ class UserViewSet(
             .prefetch_related('order_products')
             .order_by('-created_date')
         )
-        serializer = cart_serializers.CartProductReadSerializer(
+        serializer = self.get_serializer(
             user_orders,
             context={'request': request},
             many=True
@@ -121,7 +118,10 @@ class UserViewSet(
         user_reviews = customer_models.Review.objects.filter(
             user=request.user
         ).order_by('-created_datetime')
-        serializer = customer_serializers.ReviewSerializer(user_reviews, many=True)
+        serializer = self.get_serializer(
+            user_reviews,
+            many=True
+        )
         return Response(
             status=status.HTTP_200_OK,
             data=serializer.data
