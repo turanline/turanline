@@ -1,6 +1,31 @@
-.family-bold{
-    font-family: geometria-bold;
+.family-bold {
+  font-family: geometria-bold;
 }
-.family-medium{
-    font-family: Geometria-Medium;
+.family-medium {
+  font-family: Geometria-Medium;
+}
+
+@media (max-width: 8000px) {
+  .yandex-map {
+    width: 100%;
+    height: 482px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .contacts-page_wrapper {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .yandex-map {
+    height: 241px;
+  }
+}
+
+.contacts-page_wrapper {
+  display: flex;
+  margin-top: 30px;
+  gap: 30px;
 }

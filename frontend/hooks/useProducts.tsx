@@ -13,7 +13,7 @@ import {
 } from "@/redux/reducers/productsSlice";
 
 //Hooks
-import { useAppDispatch } from "./useReduxHooks";
+import { useAppDispatch, useTypedSelector } from "./useReduxHooks";
 
 //Component Types
 import { Color, IProductMainPage, Size } from "@/types/componentTypes";
@@ -22,6 +22,8 @@ import { Color, IProductMainPage, Size } from "@/types/componentTypes";
 import { IProductsState } from "@/types/reduxTypes";
 
 const useProducts = () => {
+  const { selectedLanguage } = useTypedSelector(state => state.language);
+
   const dispatch = useAppDispatch();
 
   const onSetFilters = useCallback(
@@ -31,17 +33,17 @@ const useProducts = () => {
 
   const onSetCategory = useCallback(
     (newCategory: string) => dispatch(setCategory(newCategory)),
-    [dispatch]
+    [dispatch, selectedLanguage]
   );
 
   const setAllProducts = useCallback(
     () => dispatch(fetchProducts()),
-    [dispatch]
+    [dispatch, selectedLanguage]
   );
 
   const onSetFiltered = useCallback(
     () => dispatch(fetchFilteredProducts()),
-    [dispatch]
+    [dispatch, selectedLanguage]
   );
 
   const onSetSearchText = useCallback(
@@ -83,7 +85,7 @@ const useProducts = () => {
   ): CSSProperties => {
     const isSelected = isColor
       ? (item as Color).id === selectedOption
-      : (item as Size).size_id === selectedOption;
+      : (item as Size).id === selectedOption;
 
     return {
       borderColor: isSelected ? "#0abab5" : "",
@@ -98,16 +100,13 @@ const useProducts = () => {
     setSelectedOption: Dispatch<SetStateAction<number>>,
     isColor: boolean
   ) => {
-    const optionId = isColor ? (item as Color).id : (item as Size).size_id;
-    if (optionId !== selectedOption) {
-      setSelectedOption(optionId);
-    } else {
-      setSelectedOption(0);
-    }
+    const optionId = isColor ? (item as Color).id : (item as Size).id;
+    if (optionId !== selectedOption) setSelectedOption(optionId);
+    else setSelectedOption(0);
   };
 
   const mapProductOptions = (
-    options: IProductMainPage["sizes_data"] | IProductMainPage["color"],
+    options: IProductMainPage["sizes_data"] | IProductMainPage["colors_data"],
     selectedOption: number,
     setSelectedOption: Dispatch<SetStateAction<number>>,
     className: string,
@@ -130,7 +129,7 @@ const useProducts = () => {
               className={className}
               style={getButtonStyles(item, selectedOption, isColor)}
             >
-              {!isColor && (item as Size).size}
+              {!isColor && (item as Size).name}
             </button>
           ))}
         </div>

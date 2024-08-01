@@ -31,11 +31,59 @@ export const SHOP_NAME = "Mis Express",
     "Oba Mahallesi 225 Dk. Summer Park Sitesi C Block Kat: 3 No: 13 ALANYA";
 
 //Regular Matches
-export const phoneRegular = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/,
-  passwordRegular = /^[a-zA-Z0-9]+$/,
+export const passwordRegular = /^[a-zA-Z0-9]+$/,
   nameRegular = /^[A-Z][a-zA-Z]*$/,
   surnameRegular = /^[A-Z][a-zA-Z]*$/,
   usernameRegular = /^[a-zA-Z0-9_]{3,20}$/,
   addressRegular = /^[a-zA-Z0-9\s,.-]+$/,
   companyNameRegular = /^[a-zA-Z0-9\s\-_.,!@#$%^&*()+=]+$/,
-  emailRegular = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+  emailRegular = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
+  phoneRegular = /\(?\d{2,4}\)?[-.\s]?\d{2,4}[-.\s]?\d{2,4}[-.\s]?\d{0,4}/;
+
+//All Cities
+export const cities: string[] = [
+  "Москва",
+  "Красноярск",
+  "Иркутск",
+  "Казань",
+  "Якутск",
+  "Екатеринбург",
+  "Стамбул (Лалели)",
+  "Омск",
+  "Ростов-на-Дону",
+  "Краснодар",
+  "Оренбург",
+  "Крым",
+  "Ульяновск",
+  "Челябинск",
+  "Новосибирск",
+  "Самара",
+  "Санкт-Петербург",
+  "Ханты-Мансийск",
+  "Липецк",
+  "Нальчик",
+  "Пятигорск",
+  "Махачкала",
+  "Грозный",
+  "Дербент",
+  "Хасавюрт",
+  "Буйнакск",
+  "Каспийск",
+  "Кизляр",
+  "Кизилюрт",
+  "Минеральные воды",
+  "Ессентуки",
+  "Магас",
+  "Сургут",
+  "Чита",
+  "Бурса",
+  "Стамбул (Еникапы)",
+  "Стамбул (Велиефенди)",
+];
+
+export const tariffes: string[] = [
+  "Скоростной",
+  "Оптимальный",
+  "Бюджетный",
+  "Express",
+];

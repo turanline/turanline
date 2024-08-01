@@ -17,18 +17,18 @@ import { useAppDispatch, useTypedSelector } from "./useReduxHooks";
 
 //Styles
 import "@/components/Header/Header.scss";
+import { ICurrentCategory } from "@/types/componentTypes";
 
 const useCategories = (color: string) => {
   const { status, categories, types, subtypes } = useTypedSelector(
     state => state.categories
   );
 
+  const { selectedLanguage } = useTypedSelector(state => state.language);
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const [currentCategory, setCurrentCategory] = useState<{
-    id: number;
-    name: string;
-  }>({
+  const [currentCategory, setCurrentCategory] = useState<ICurrentCategory>({
     id: 0,
     name: "",
   });
@@ -56,7 +56,7 @@ const useCategories = (color: string) => {
 
   const onSetCategories = useCallback(
     () => dispatch(fetchCategories()),
-    [dispatch]
+    [dispatch, selectedLanguage]
   );
 
   const renderDesktopCategories = () =>

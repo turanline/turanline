@@ -17,12 +17,9 @@ export const getCart = async (id: number) => {
 
 export const postToCart = async (obj: IPostCartApi) => {
   try {
-    const { data: orderData } = await $authHost.post("/api/order/", obj),
-      { data: cartData } = await $authHost.post("/api/cart/", {
-        order_products: [orderData.id],
-      });
+    const { data: orderData } = await $authHost.post("/api/order/", obj);
 
-    return cartData;
+    return orderData;
   } catch (error) {
     console.error("Failed post to user cart:" + error);
     throw error;
@@ -41,10 +38,8 @@ export const deleteFromCartById = async (id: number) => {
 };
 
 export const patchCartItem = async (product: IPutCart, id: number) => {
-  const newOptions: IPutCart = product;
-
   try {
-    const { data } = await $authHost.put(`/api/order/${id}/`, newOptions);
+    const { data } = await $authHost.put(`/api/order/${id}/`, product);
 
     return data;
   } catch (error) {
@@ -52,11 +47,9 @@ export const patchCartItem = async (product: IPutCart, id: number) => {
   }
 };
 
-export const postUserOrder = async (total_sum: number) => {
+export const postUserOrder = async (obj: any) => {
   try {
-    const { data } = await $authHost.post("/api/cart/confirm_order/", {
-      total_sum,
-    });
+    const { data } = await $authHost.post("/api/cart/confirm_order/", obj);
 
     return data;
   } catch (error) {

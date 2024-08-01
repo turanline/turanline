@@ -3,6 +3,7 @@
 //Global
 import React, { FC, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 //Hooks
 import { useTypedSelector } from "@/hooks/useReduxHooks";
@@ -31,6 +32,8 @@ import "./LanguageSelect.scss";
 const LanguageSelect: FC<{ color: string }> = ({ color }) => {
   const { selectedLanguage } = useTypedSelector(state => state.language);
 
+  const { refresh } = useRouter();
+
   const { changeSelectedLanguage } = useLanguage();
 
   useEffect(() => {
@@ -42,6 +45,7 @@ const LanguageSelect: FC<{ color: string }> = ({ color }) => {
   const onChangeLanguage = (language: string) => {
     setCookie("selectedLanguage", language);
     changeSelectedLanguage(language);
+    refresh();
   };
 
   const returnImageByState = (language: string) => {

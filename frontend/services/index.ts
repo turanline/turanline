@@ -9,18 +9,21 @@ const baseURL = process.env.NEXT_PUBLIC_URL;
 const $host = axios.create({ baseURL }),
   $authHost = axios.create({ baseURL });
 
-const language = getCookie("selectedLanguage");
-
 const authorizationInterceptor = (config: any) => {
-  const accessToken = getCookie("AuthTokenMis");
+  const accessToken = getCookie("AuthTokenMis"),
+    language = getCookie("selectedLanguage");
 
   if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+
   if (language) config.headers["Accept-Language"] = language;
+  else config.headers["Accept-Language"] = "en";
 
   return config;
 };
 
 const unauthorizedInterceptor = (config: any) => {
+  const language = getCookie("selectedLanguage");
+
   if (language) config.headers["Accept-Language"] = language;
 
   return config;

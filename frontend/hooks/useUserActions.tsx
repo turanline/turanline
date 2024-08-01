@@ -4,6 +4,7 @@
 import { showToastMessage } from "@/app/toastsChange";
 import { Dispatch, SetStateAction, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { UseFormReset, UseFormSetValue } from "react-hook-form";
 
 //Components
 import { Icons } from "@/components/Icons/Icons";
@@ -23,7 +24,7 @@ import {
 } from "@/redux/reducers/userSlice";
 
 //Hooks
-import { useAppDispatch, useTypedSelector } from "./useReduxHooks";
+import { useAppDispatch } from "./useReduxHooks";
 import { useFavorites } from "./useFavorites";
 import { useTranslate } from "./useTranslate";
 import { useCart } from "./useCart";
@@ -39,13 +40,17 @@ import {
   IInputsRegistration,
 } from "@/types/types";
 
+//Component Types
+import { ISortConfig } from "@/types/componentTypes";
+
 //Redux Types
-import { IUserInformationApi } from "@/types/reduxTypes";
-import { UseFormReset, UseFormSetValue } from "react-hook-form";
+import {
+  ICartState,
+  IUserInformationApi,
+  IUserState,
+} from "@/types/reduxTypes";
 
 const useUserActions = () => {
-  const { userReviews, userOrders } = useTypedSelector(state => state.user);
-
   const dispatch = useAppDispatch();
 
   const { push } = useRouter();
@@ -151,8 +156,11 @@ const useUserActions = () => {
     }
   }, [dispatch, onResetCart, onResetFavorites]);
 
-  const returnUserOrders = () => {
-    if (!userOrders?.length) {
+  const returnUserOrders = (
+    orders: ICartState["cart"][],
+    handleSort: (key: ISortConfig["key"]) => void
+  ) => {
+    if (!orders?.length) {
       return (
         <EmptyComponent
           buttonText={emptyBasketButtonText}
@@ -166,35 +174,48 @@ const useUserActions = () => {
     return (
       <div className="profile-content_orders-content">
         <div className="profile-content_orders-content-filters">
-          <button className="profile-content_orders-content-filters-button">
+          <button
+            data-name
+            className="profile-content_orders-content-filters-button"
+          >
             Название
-            <Icons id="arrowDownProfile" />
           </button>
 
-          <button className="profile-content_orders-content-filters-button">
+          <button
+            data-date
+            onClick={() => handleSort("created_date")}
+            className="profile-content_orders-content-filters-button"
+          >
             Дата
             <Icons id="arrowDownProfile" />
           </button>
 
-          <button className="profile-content_orders-content-filters-button">
+          <button
+            data-price
+            onClick={() => handleSort("total_sum")}
+            className="profile-content_orders-content-filters-button"
+          >
             Стоимость
             <Icons id="arrowDownProfile" />
           </button>
 
-          <button className="profile-content_orders-content-filters-button">
+          <button
+            data-status
+            className="profile-content_orders-content-filters-button"
+          >
             Статус
-            <Icons id="arrowDownProfile" />
           </button>
         </div>
 
         <div className="profile-content_orders-content-list">
-          {userOrders?.map(order => (
+          {orders?.map(order => (
             <UserOrderWrapper
               key={order.id}
-              orderDate={order.created_date}
-              orderNumber={order.id}
-              orderPrice={order.total_sum}
-              orderStatus={order.status}
+              orderNumber={order?.id}
+              orderDate={order?.created_date}
+              orderStatus={order?.status}
+              orderProducts={order.order_products}
+              orderSum={order.total_sum}
             />
           ))}
         </div>
@@ -202,9 +223,9 @@ const useUserActions = () => {
     );
   };
 
-  const returnUserReviews = () => (
+  const returnUserReviews = (reviews: IUserState["userReviews"]) => (
     <>
-      {!userReviews?.length ? (
+      {!reviews?.length ? (
         <EmptyComponent
           buttonText={emptyBasketButtonText}
           route={CATALOG_ROUTE}
@@ -213,7 +234,7 @@ const useUserActions = () => {
         />
       ) : (
         <div className="profile-content_reviews-list">
-          {userReviews?.map(review => (
+          {reviews?.map(review => (
             <UserReviewItem
               key={review.id}
               reviewStatus="published"

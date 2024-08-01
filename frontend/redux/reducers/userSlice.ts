@@ -28,8 +28,8 @@ import {
 
 const initialState: IUserState = {
   userState: null,
-  userOrders: [],
   userReviews: [],
+  userOrders: [],
   isAuth: false,
   status: "pending",
 };

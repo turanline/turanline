@@ -4,26 +4,35 @@
 import { showToastMessage } from "@/app/toastsChange";
 import { FC } from "react";
 
+//Actions
+import { setPrefixConfig } from "@/redux/reducers/prefixSlice";
+
 //Components
-import InputMask from "react-input-mask";
 import { Icons } from "../Icons/Icons";
 import { Button, Input } from "@nextui-org/react";
+import { PrefixMask } from "../PrefixMask/PrefixMask";
 
 //Global Types
 import { IChangeUserData, IInputsChangeProfile } from "@/types/types";
 
 //Component Types
-import { IModalChangeProps } from "@/types/componentTypes";
+import { IModalChangeProps, IPrefixConfig } from "@/types/componentTypes";
 
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
 import { useCustomForm } from "@/hooks/useCustomForm.";
 import { useUserActions } from "@/hooks/useUserActions";
+import { useAppDispatch, useTypedSelector } from "@/hooks/useReduxHooks";
 
 //Styles
 import "./ModalChange.scss";
+import "@/app/registration/registration.scss";
 
 const ModalChange: FC<IModalChangeProps> = ({ isChange, setIsChange }) => {
+  const { code } = useTypedSelector(state => state.prefix);
+
+  const dispatch = useAppDispatch();
+
   const {
     profileModalAddress,
     profileModalButton,
@@ -32,6 +41,7 @@ const ModalChange: FC<IModalChangeProps> = ({ isChange, setIsChange }) => {
     profileModalSurName,
     profileModalTitle,
     messageModalChangeWarn,
+    registrationLabelEmail,
   } = useTranslate();
 
   const {
@@ -47,14 +57,20 @@ const ModalChange: FC<IModalChangeProps> = ({ isChange, setIsChange }) => {
   const { onChangeUserData } = useUserActions();
 
   const handleChangeUserData = () => {
-    const { address, company, first_name, last_name, phone_number } =
+    const { address, company, first_name, last_name, phone_number, email } =
       getValues();
 
+    console.log(getValues());
+
     const requestBody: IChangeUserData = {
-      user: { first_name, last_name },
+      user: {
+        first_name,
+        last_name,
+        email,
+      },
       address,
       company,
-      phone_number,
+      phone_number: `${code} ${phone_number}`,
     };
 
     if (!isValid) {
@@ -63,6 +79,11 @@ const ModalChange: FC<IModalChangeProps> = ({ isChange, setIsChange }) => {
     }
 
     onChangeUserData(requestBody, reset, setValue, setIsChange);
+  };
+
+  const handleSelectClick = (item: IPrefixConfig) => {
+    dispatch(setPrefixConfig(item));
+    setValue("phone_number", "");
   };
 
   return (
@@ -122,13 +143,22 @@ const ModalChange: FC<IModalChangeProps> = ({ isChange, setIsChange }) => {
         </label>
 
         <label className="w-full" htmlFor="#">
-          <InputMask
-            {...returnInputProperties("phone_number")}
-            name="phone_number"
-            className="change-content-input"
-            mask={"+7 (999) 999-99-99"}
-            alwaysShowMask={true}
+          <Input
+            {...returnInputProperties("email")}
+            placeholder={`${registrationLabelEmail}...`}
+            name="email"
+            classNames={{ inputWrapper: "change-content-input" }}
+            type="text"
           />
+          {returnInputError("email")}
+        </label>
+
+        <label className="w-full" htmlFor="#">
+          <PrefixMask
+            onClickFunction={handleSelectClick}
+            properties={returnInputProperties}
+          />
+
           {returnInputError("phone_number")}
         </label>
 

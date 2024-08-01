@@ -109,7 +109,7 @@ const useCustomForm = <T extends CustomFormType>() => {
       last_name: 2,
       password: 8,
       username: 3,
-      phone_number: 18,
+      phone_number: 6,
       address: 1,
       company: 1,
     };

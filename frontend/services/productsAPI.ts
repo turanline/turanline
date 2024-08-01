@@ -4,7 +4,7 @@ import { $host } from "./index";
 //Redux Types
 import { IProductsState } from "@/types/reduxTypes";
 
-export const getFamousProducts = async (language: string) => {
+export const getFamousProducts = async () => {
   try {
     const { data } = await $host.get("/api/catalog/famous/");
 
@@ -15,7 +15,7 @@ export const getFamousProducts = async (language: string) => {
   }
 };
 
-export const getSimilarProducts = async (slug: string, language: string) => {
+export const getSimilarProducts = async (slug: string) => {
   try {
     const { data } = await $host.get(`/api/catalog/${slug}/similar/`);
 
@@ -29,7 +29,7 @@ export const getSimilarProducts = async (slug: string, language: string) => {
 export const getAllProducts = async (
   category: string,
   filters: IProductsState["filters"]
-): Promise<any> => {
+) => {
   try {
     const params: Record<string, string | number> = {};
 
@@ -52,7 +52,9 @@ export const getAllProducts = async (
       }
     });
 
-    const { data } = await $host.get("/api/catalog/", { params });
+    const { data } = await $host.get("/api/catalog/", {
+      params,
+    });
 
     return data;
   } catch (error) {
@@ -61,9 +63,11 @@ export const getAllProducts = async (
   }
 };
 
-export const getProductBySlug = async (slug: string) => {
+export const getProductBySlug = async (slug: string, language: string) => {
   try {
-    const { data } = await $host.get(`/api/catalog/${slug}/`);
+    const { data } = await $host.get(`/api/catalog/${slug}/`, {
+      headers: { "Accept-Language": language },
+    });
 
     return data;
   } catch (error) {

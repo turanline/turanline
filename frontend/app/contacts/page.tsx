@@ -37,14 +37,14 @@ export default function Contacts() {
   } = useTranslate();
 
   return (
-    <main className="container mx-auto mt-[30px] mb-[100px] px-[28px] md:px-0">
+    <main className="container mx-auto mb-[30px] px-[28px] md:px-0">
       <Breadcrumbs>
         <BreadcrumbItem href={SHOP_ROUTE}>{mainPageRoute}</BreadcrumbItem>
 
         <BreadcrumbItem>{headerContacts}</BreadcrumbItem>
       </Breadcrumbs>
 
-      <div className="flex w-full mt-[48px]">
+      <div className="contacts-page_wrapper">
         <div className="flex flex-col gap-[50px]">
           <div className="w-full flex flex-col">
             <h5 className="family-medium text-tiffani">{headerContacts}</h5>
@@ -116,14 +116,12 @@ export default function Contacts() {
         </div>
 
         <YMaps>
-          <div className="w-full">
-            <Map
-              className="w-full h-full min-h-[250px]"
-              defaultState={{ center: [36.542576, 32.037462], zoom: 14 }}
-            >
-              <Placemark defaultGeometry={[36.542576, 32.037462]} />
-            </Map>
-          </div>
+          <Map
+            className="yandex-map"
+            defaultState={{ center: [36.542576, 32.037462], zoom: 14 }}
+          >
+            <Placemark defaultGeometry={[36.542576, 32.037462]} />
+          </Map>
         </YMaps>
       </div>
     </main>

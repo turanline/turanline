@@ -147,8 +147,9 @@ const useCart = () => {
     let totalPrice = 0;
 
     cart.order_products.forEach(item => {
-      const { product, amount } = item;
-      const itemPrice = +product.price * amount;
+      const { product, amount } = item,
+        itemPrice = +product.price * amount;
+
       totalPrice += itemPrice;
     });
 
@@ -162,12 +163,8 @@ const useCart = () => {
     );
   }, [cart]);
 
-  const onPostUserOrder = async () => {
-    const totalSum = calculateTotalPrice();
-
-    console.log(totalSum);
-
-    await postUserOrder(totalSum)
+  const onPostUserOrder = async (obj: any) => {
+    await postUserOrder(obj)
       .then(() => {
         showToastMessage("success", "Заказ успешно отправлен!");
         onFetchCart();
@@ -179,8 +176,9 @@ const useCart = () => {
     () =>
       cart?.order_products?.length ? (
         <>
-          <h5 className="text-[24px]">{headerCart}</h5>
-          <div className="flex flex-col gap-[23px]">
+          <h5 className="text-[24px] leading-none">{headerCart}</h5>
+
+          <div className="flex flex-col gap-[30px]">
             {cart.order_products.map(item => (
               <UserCartItem product={item} key={item.product.id} />
             ))}
@@ -194,7 +192,7 @@ const useCart = () => {
                   {cartContinue}
                 </Link>
               </Button>
-              <p className="text-[24px]">
+              <p className="text-[24px] leading-none">
                 {`${cartTotalPriceText} $${calculateTotalPrice().toFixed(2)}`}
               </p>
             </div>

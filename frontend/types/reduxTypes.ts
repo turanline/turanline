@@ -1,5 +1,5 @@
 //Component Types
-import { IOrderProduct, IUserOrdersState } from "./componentTypes";
+import { IOrderProduct } from "./componentTypes";
 
 //Component Types
 import { IProductCart, IProductMainPage } from "./componentTypes";
@@ -12,7 +12,7 @@ interface IUserReviewState {
   user: number;
 }
 
-interface ICart {
+export interface ICart {
   id: number | null;
   order_products: IProductCart[];
   address: string;
@@ -55,7 +55,7 @@ export interface IUserInformationApi {
 export interface IUserState {
   userState: IUserInformationApi | null;
   userReviews: IUserReviewState[];
-  userOrders: IUserOrdersState[];
+  userOrders: ICartState["cart"][];
   isAuth: boolean;
   status: "pending" | "fulfilled";
 }

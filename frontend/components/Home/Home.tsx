@@ -105,7 +105,7 @@ const Home = () => {
   };
 
   return (
-    <main className="container mx-auto mt-[30px] px-[28px] sm:px-0">
+    <main className="container mx-auto px-[28px] sm:px-0">
       <div className="flex flex-col lg:flex-row gap-[15px] lg:gap-[24px] mb-[15px] lg:mb-[24px]">
         <Link className="lg:h-auto   w-full  " href={CATALOG_ROUTE}>
           <div className="h-[200px]  lg:max-h-[230px] max-h-[300px] flex-col p-[24px] sm:p-[36px] sm:h-[240px] text-white relative">
@@ -282,7 +282,7 @@ const Home = () => {
           <Icons id="arrowBlack" />
         </div>
       </div>
-      <div className="flex flex-col mt-[90px] w-full">
+      <div className="flex flex-col mt-[30px] w-full">
         <div className="flex justify-between mb-[26px]">
           <h5 className="text-[24px]">{bestsellers}</h5>
 
@@ -301,7 +301,7 @@ const Home = () => {
         {mapAllProducts()}
       </div>
 
-      <h5 className="text-[24px] mt-[80px] mb-[25px]">{foundation}</h5>
+      <h5 className="text-[24px] mt-[30px] mb-[25px]">{foundation}</h5>
 
       <Filter />
     </main>

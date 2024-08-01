@@ -11,13 +11,9 @@ import "./payment.scss";
 
 export default function Payment() {
   const {
-    paymentPageBank,
     paymentPageBankText,
-    paymentPageCard,
     paymentPageCardText,
-    paymentPageCheck,
     paymentPageCheckText,
-    paymentPageCrypto,
     paymentPageCryptoText,
     paymentPagePayPal,
     paymentPageText,
@@ -40,7 +36,7 @@ export default function Payment() {
             <div className="flex flex-col items-center gap-[6px]">
               <Icons id="featureIcon" />
               <p className="family-medium text-tiffani font-medium">
-                {paymentPageBank}
+                Оплата банком
               </p>
               <p className="text-gray/500 text-center text-[13px]">
                 {paymentPageBankText}
@@ -49,7 +45,7 @@ export default function Payment() {
             <div className="flex flex-col items-center gap-[6px]">
               <Icons id="paymentIcon" />
               <p className="family-medium text-tiffani font-medium">
-                {paymentPageCard}
+                Оплата картой
               </p>
               <p className="text-gray/500 text-center text-[13px]">
                 {paymentPageCardText}
@@ -58,7 +54,7 @@ export default function Payment() {
             <div className="flex flex-col items-center gap-[6px]">
               <Icons id="paperIcon" />
               <p className="family-medium text-tiffani font-medium">
-                {paymentPageCheck}
+                Оплата чеком
               </p>
               <p className="text-gray/500 text-center text-[13px]">
                 {paymentPageCheckText}
@@ -69,7 +65,7 @@ export default function Payment() {
             <div className="flex flex-col items-center gap-[6px]">
               <Icons id="cryptoIcon" />
               <p className="family-medium text-tiffani font-medium">
-                {paymentPageCrypto}
+                Криптовалютой
               </p>
               <p className="text-gray/500 text-center text-[13px]">
                 {paymentPageCryptoText}

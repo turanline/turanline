@@ -87,9 +87,10 @@ export default function Category() {
   };
 
   return (
-    <main className="container mx-auto mt-[30px] mb-[100px] px-[28px] md:px-0">
+    <main className="catalog-wrapper container mx-auto">
       <Breadcrumbs>
         <BreadcrumbItem href={SHOP_ROUTE}>{mainPageRoute}</BreadcrumbItem>
+
         <BreadcrumbItem>{headerCatalog}</BreadcrumbItem>
       </Breadcrumbs>
 

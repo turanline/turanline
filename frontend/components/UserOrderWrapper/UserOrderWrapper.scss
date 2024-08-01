@@ -19,22 +19,12 @@
     justify-content: space-between;
   }
 
-  .profile-content_orders-content-order-span[data-date] {
-    width: 90px;
-  }
-
   .profile-content_orders-content-order-span:first-of-type {
     @include profile-text(geometria-medium, 16px, 20px);
   }
 
   .profile-content_orders-content-order-span:last-of-type {
     @include profile-text("Geometria-Light", 16px, 20px);
-  }
-}
-
-@media (max-width: 768px) {
-  .profile-content_orders-content-order-span[data-date] {
-    width: auto;
   }
 }
 
@@ -64,8 +54,9 @@
   gap: 10px;
 }
 
-.profile-content_orders-content-order-span[data-date] {
+.profile-content_orders-content-order-span {
   text-align: left;
+  width: 100px;
 }
 
 .profile-content_orders-content-order-span:first-of-type {

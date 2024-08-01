@@ -1,5 +1,8 @@
 //Global
 import { Dispatch, SetStateAction } from "react";
+import { ICartState } from "./reduxTypes";
+import { IInputsLength } from "./types";
+import { UseFormRegister } from "react-hook-form";
 
 interface Image {
   image_url: string;
@@ -32,14 +35,15 @@ interface CartSize {
 
 export interface Color {
   id: number;
-  name: string;
+  slug: string;
   color: string;
+  amount: number;
 }
 
 export interface Size {
   amount: number;
-  size: string;
-  size_id: number;
+  name: string;
+  id: number;
 }
 
 export interface IProductCart {
@@ -58,7 +62,7 @@ export interface IProductMainPage {
   description: string;
   compound: string;
   brand: Brand;
-  color: Color[];
+  colors_data: Color[];
   sizes_data: Size[];
   manufacturerCountry: ManufacturerCountry;
   category: any[];
@@ -76,11 +80,26 @@ export interface IProductMainPage {
   provider: number;
 }
 
+export interface IUserOrderItem {
+  amount: number;
+  color: IProductCart["color"];
+  size: IProductCart["size"];
+  product: IProductCart["product"];
+}
+
 export interface IUserOrderProduct {
   id: number;
   product: IOrderProduct;
   amount: number;
   order: number;
+}
+
+export interface IUserOrderWrapper {
+  orderNumber: number | null;
+  orderDate: string;
+  orderStatus: ICartState["cart"]["status"];
+  orderProducts: IProductCart[];
+  orderSum: string | null;
 }
 
 export interface IOrderProduct {
@@ -103,34 +122,10 @@ export interface IOrderProduct {
   subTypes: number[];
 }
 
-export interface IUserOrdersState {
-  id: number;
-  order_products: IUserOrderProduct[];
-  address: string;
-  payment_method: "BT" | "CC" | "COD" | "Other";
-  status: "processing" | "delivered";
-  created_date: string;
-  total_sum: string;
-  user: number;
-}
-
-export interface IUserOrderWrapperProps {
-  orderNumber: number;
-  orderDate: string;
-  orderPrice: string;
-  orderStatus: IUserOrdersState["status"];
-}
-
 export interface IUserReviewItemProps {
   reviewStatus: "published" | "moderation";
   reviewTitle: string;
   reviewText: string;
-}
-
-export interface IUserOrderItemProps {
-  cardTitle: string;
-  cardPrice: number;
-  cardSize: string;
 }
 
 export interface IEmptyComponentProps {
@@ -163,4 +158,28 @@ export interface IHeaderSearchProps {
 export interface IProductPageProducts {
   isSimilar: boolean;
   products: IProductMainPage[];
+}
+
+export interface ISortConfig {
+  key: "created_date" | "total_sum";
+  direction: "desc" | "asc";
+}
+
+export interface IPrefixConfig {
+  code: string;
+  name: string;
+  flag: string;
+  phone_mask: string;
+}
+
+export interface PrefixMaskProps {
+  onClickFunction: (item: IPrefixConfig) => void;
+  properties: (
+    inputType: keyof IInputsLength
+  ) => ReturnType<UseFormRegister<IInputsLength>>;
+}
+
+export interface ICurrentCategory {
+  id: number;
+  name: string;
 }

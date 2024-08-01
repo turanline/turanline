@@ -104,3 +104,14 @@
     border-color: #0abab5;
   }
 }
+
+.imageWrapper {
+  width: 100%;
+  max-width: 422px;
+  height: 422px;
+}
+
+.image {
+  width: 100%;
+  object-fit: cover;
+}

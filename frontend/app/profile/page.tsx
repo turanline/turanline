@@ -1,32 +1,46 @@
 "use client";
 
-//Global
-import React, { useEffect, useState } from "react";
+// Global
+import React, {
+  ChangeEvent,
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+} from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-//Components
+// Components
 import { Icons } from "@/components/Icons/Icons";
 import { ModalChange } from "@/components/ModalChange/ModalChange";
 
-//Utils
+// Utils
 import { SHOP_ROUTE } from "@/utils/Consts";
 
-//Hooks
+// Hooks
 import { useTranslate } from "@/hooks/useTranslate";
 import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useUserActions } from "@/hooks/useUserActions";
 
-//Images
+// Images
 import profile from "../../public/assets/other/profile-photo.png";
 
-//Styles
+// Styles
 import "./profile.scss";
+import { ICart } from "@/types/reduxTypes";
+import { ISortConfig } from "@/types/componentTypes";
 
 const Profile = () => {
-  const { isAuth, userState, status } = useTypedSelector(state => state.user);
+  const { isAuth, userState, status, userOrders, userReviews } =
+    useTypedSelector(state => state.user);
 
-  const [isChange, setIsChange] = useState<boolean>(false);
+  const [isChange, setIsChange] = useState<boolean>(false),
+    [value, setValue] = useState<string>(""),
+    [sortConfig, setSortConfig] = useState<ISortConfig>({
+      key: "created_date",
+      direction: "desc",
+    });
 
   const { push } = useRouter();
 
@@ -37,7 +51,6 @@ const Profile = () => {
     returnUserOrders,
     returnUserReviews,
   } = useUserActions();
-
   const {
     profilePageAddress,
     profilePageCompany,
@@ -61,6 +74,42 @@ const Profile = () => {
     }
   }, [onGetOrders, onGetReviews, isAuth]);
 
+  const handleChangeInput = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value),
+    []
+  );
+
+  const sortOrders = useCallback((orders: ICart[], config: ISortConfig) => {
+    return [...orders].sort((a, b) => {
+      const aValue = a[config.key as keyof ICart];
+      const bValue = b[config.key as keyof ICart];
+
+      if (aValue && bValue) {
+        if (aValue < bValue) return config.direction === "asc" ? -1 : 1;
+        if (aValue > bValue) return config.direction === "asc" ? 1 : -1;
+      }
+
+      return 0;
+    });
+  }, []);
+
+  const filteredAndSortedOrders = useMemo(() => {
+    const filtered = userOrders.filter(order =>
+      String(order.id).includes(value)
+    );
+    return sortOrders(filtered, sortConfig);
+  }, [value, userOrders, sortConfig, sortOrders]);
+
+  const handleSort = useCallback((key: ISortConfig["key"]) => {
+    setSortConfig(prevSortConfig => ({
+      key,
+      direction:
+        prevSortConfig.key === key && prevSortConfig.direction === "asc"
+          ? "desc"
+          : "asc",
+    }));
+  }, []);
+
   if (!userState) return <Icons id="spiner" />;
 
   return (
@@ -82,7 +131,7 @@ const Profile = () => {
                   </span>
 
                   <span className="profile-content_header-user-data-block-light">
-                    {!userState.company ? "Не указана" : userState.company}
+                    {userState.company || "Не указана"}
                   </span>
                 </div>
 
@@ -102,7 +151,7 @@ const Profile = () => {
                   </span>
 
                   <span className="profile-content_header-user-data-block-light">
-                    {!userState.address ? "Не указан" : userState.address}
+                    {userState.address || "Не указан"}
                   </span>
                 </div>
               </div>
@@ -124,6 +173,8 @@ const Profile = () => {
               <Icons id="search2" />
 
               <input
+                value={value}
+                onChange={handleChangeInput}
                 className="profile-content_orders-header-input"
                 placeholder={"Поиск..."}
                 type="search"
@@ -131,7 +182,7 @@ const Profile = () => {
             </div>
           </div>
 
-          {returnUserOrders()}
+          {returnUserOrders(filteredAndSortedOrders, handleSort)}
         </div>
 
         <div className="profile-content_reviews">
@@ -139,7 +190,7 @@ const Profile = () => {
             {profilePageReviews}
           </h5>
 
-          {returnUserReviews()}
+          {returnUserReviews(userReviews)}
         </div>
       </div>
 
@@ -148,4 +199,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default React.memo(Profile);

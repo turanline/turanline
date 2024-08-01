@@ -6,23 +6,26 @@ import { useRouter } from "next/navigation";
 
 //Components
 import { Icons } from "@/components/Icons/Icons";
-import InputMask from "react-input-mask";
-import { Checkbox, Button, Input, Select, SelectItem } from "@nextui-org/react";
+import { Checkbox, Button, Input } from "@nextui-org/react";
+import { PrefixMask } from "@/components/PrefixMask/PrefixMask";
 
 //Utils
 import { LOGIN_ROUTE, PROFILE_ROUTE } from "@/utils/Consts";
 
-//Locales
-import { prefixes } from "@/locales/prefixes.json";
+//Actions
+import { setPrefixConfig } from "@/redux/reducers/prefixSlice";
 
 //Hooks
 import { useCustomForm } from "@/hooks/useCustomForm.";
 import { useTranslate } from "@/hooks/useTranslate";
-import { useTypedSelector } from "@/hooks/useReduxHooks";
+import { useTypedSelector, useAppDispatch } from "@/hooks/useReduxHooks";
 import { useUserActions } from "@/hooks/useUserActions";
 
 //Types
 import { IInputsRegistration } from "@/types/types";
+
+//Component Types
+import { IPrefixConfig } from "@/types/componentTypes";
 
 //Redux Types
 import { IUserInformationApi } from "@/types/reduxTypes";
@@ -31,7 +34,10 @@ import { IUserInformationApi } from "@/types/reduxTypes";
 import "./registration.scss";
 
 const Registration = () => {
-  const { isAuth, status } = useTypedSelector(state => state.user);
+  const { isAuth, status } = useTypedSelector(state => state.user),
+    { code } = useTypedSelector(state => state.prefix);
+
+  const dispatch = useAppDispatch();
 
   const {
     returnInputError,
@@ -75,7 +81,7 @@ const Registration = () => {
       getValues();
 
     const requestBody: Omit<IUserInformationApi, "address" | "company"> = {
-      phone_number,
+      phone_number: `${code} ${phone_number}`,
       user: {
         email,
         first_name,
@@ -87,6 +93,11 @@ const Registration = () => {
     };
 
     isValid && onRegistrationUser(requestBody, reset, setValue);
+  };
+
+  const handleSelectClick = (item: IPrefixConfig) => {
+    dispatch(setPrefixConfig(item));
+    setValue("phone_number", "");
   };
 
   if (isAuth || status === "pending") return <Icons id="spiner" />;
@@ -173,11 +184,9 @@ const Registration = () => {
               {registrationPhoneNumber}
             </span>
 
-            <InputMask
-              {...returnInputProperties("phone_number")}
-              className="form-content_bottom-label-input"
-              mask={"+7 (999) 999-99-99"}
-              alwaysShowMask={true}
+            <PrefixMask
+              onClickFunction={handleSelectClick}
+              properties={returnInputProperties}
             />
 
             {returnInputError("phone_number")}

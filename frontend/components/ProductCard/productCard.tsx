@@ -9,9 +9,6 @@ import Link from "next/link";
 import like from "@/public/assets/other/likeProduct.png";
 import likeRed from "@/public/assets/other/likeProductActive.png";
 
-//Utils
-import { getGoogleDriveImageUrl } from "@/utils/googleImage";
-
 //Components
 import { Button } from "@nextui-org/react";
 
@@ -66,20 +63,21 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({
       });
 
   const imageUrl = productInfo.images[0]
-    ? getGoogleDriveImageUrl(productInfo.images[0].image_url)
+    ? productInfo.images[0].image_file
     : "";
 
   return (
     <div className="product_card">
       <div className="w-full h-fit relative">
-        <Link href={`/product/${productInfo.slug}`}>
-          <Image
-            className="product_image"
-            src={imageUrl}
-            alt="cardImg"
-            width={500}
-            height={500}
-          />
+        <Link className="imageWrapper" href={`/product/${productInfo.slug}`}>
+          <div className="imageWrapper">
+            <Image
+              className="image"
+              src={imageUrl}
+              alt={productInfo.name}
+              layout="fill"
+            />
+          </div>
         </Link>
 
         <button
@@ -95,7 +93,7 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({
           />
         </button>
       </div>
-      <div className="flex flex-col gap-[25px]">
+      <div className="flex flex-col gap-[15px]">
         <Link
           href={`product/${productInfo.slug}`}
           className="product_card_link"
@@ -115,7 +113,7 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({
         )}
 
         {mapProductOptions(
-          productInfo?.color,
+          productInfo?.colors_data,
           colorId,
           setColorId,
           "button-option_color",

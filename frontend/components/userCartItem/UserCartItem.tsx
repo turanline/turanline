@@ -11,9 +11,6 @@ import { useTranslate } from "@/hooks/useTranslate";
 //Components
 import { Icons } from "../Icons/Icons";
 
-//Utils
-import { getGoogleDriveImageUrl } from "@/utils/googleImage";
-
 //Component Types
 import { IProductCart } from "@/types/componentTypes";
 
@@ -48,22 +45,20 @@ const UserCartItem: FC<{
     cartItemTotalPrice,
   } = useTranslate();
 
-  const productCartImage = product.product.images[0].image_url
-    ? getGoogleDriveImageUrl(product.product.images[0].image_url)
+  const imageUrl = product.product.images[0].image_file
+    ? product.product.images[0].image_file
     : "";
 
   return (
     <div id={String(product.product.id)} className="product-card">
       <div className="product-card__image-container">
-        <Link
-          className="product-card-img-link"
-          href={`/product/${product.product.slug}`}
-        >
+        <Link className="imgWrapper" href={`/product/${product.product.slug}`}>
           <Image
-            src={productCartImage}
+            className="img"
+            src={imageUrl}
             alt={product.product.name}
-            width={500}
-            height={500}
+            width={111}
+            height={111}
           />
         </Link>
 

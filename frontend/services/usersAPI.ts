@@ -44,7 +44,9 @@ export const changeUserData = async (id: number, user: IChangeUserData) => {
 
 export const getUserOrders = async () => {
   try {
-    const { data } = await $authHost.get(`/api/users/orders/`);
+    const { data } = await $authHost.get(
+      `/api/customer/get_customer_history//`
+    );
 
     return data;
   } catch (error) {

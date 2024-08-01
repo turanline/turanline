@@ -1,5 +1,6 @@
 //Components
 import React from "react";
+import { cookies } from "next/headers";
 
 //Services
 import {
@@ -47,7 +48,10 @@ export async function generateMetadata({
   params: { slug: string };
 }) {
   try {
-    const product = await getProductBySlug(params.slug);
+    const data = cookies()?.get("selectedLanguage")?.value,
+      language = data ? data : "en";
+
+    const product = await getProductBySlug(params.slug, language);
 
     return {
       title: `${product.name}`,
@@ -64,7 +68,10 @@ export default async function Product({
 }) {
   async function getProductByParams() {
     try {
-      const oneProduct = await getProductBySlug(params.slug);
+      const data = cookies()?.get("selectedLanguage")?.value,
+        language = data ? data : "en";
+
+      const oneProduct = await getProductBySlug(params.slug, language);
 
       if (oneProduct) return <ProductComponent oneProduct={oneProduct} />;
     } catch (error) {

@@ -100,7 +100,7 @@ const Filter: FC = () => {
   ) => {
     if (array.length)
       return (
-        <div className="w-full flex flex-col rounded-sm border-1 border-border py-[24px] px-[18px]">
+        <div className="w-full flex flex-col rounded-sm border-1 border-border py-[24px] px-[18px] filter-block_shadow">
           <h5 className="family-medium mb-[20px]">{text}</h5>
 
           <div className="flex flex-col gap-2">
@@ -116,11 +116,14 @@ const Filter: FC = () => {
       );
   };
 
-  const allBrands = products?.flatMap(product => product?.brand.name),
-    allColors = products?.flatMap(product => product?.color?.map(c => c.name)),
-    allSizes = products?.flatMap(product =>
-      product?.sizes_data?.map(s => s.size)
+  const allBrands = products?.flatMap(product => product?.brand?.name),
+    allColors = products?.flatMap(product =>
+      product?.colors_data?.map(c => c?.slug)
     );
+
+  const allSizes = products?.flatMap(product =>
+    product?.sizes_data?.map(s => s?.name)
+  );
 
   const uniqueColors = returnUniqueArray(allColors),
     uniqueBrands = returnUniqueArray(allBrands),
@@ -136,7 +139,7 @@ const Filter: FC = () => {
 
   return (
     <div id="filter" className="mb-[40px]">
-      <div className="rounded-sm md:border-1 border-border md:shadow-md py-[25px] md:px-[24px] lg:px-[65px] md:mb-[37px]">
+      <div className="rounded-sm md:border-1 border-border md:shadow-md md:px-[24px] lg:px-[65px] lg:py-[25px] md:py-[25px] sm:py-[0px] md:mb-[37px]">
         <div className="flex flex-col md:flex-row gap-[18px]">
           <div className="w-full flex flex-col gap-[16px] capitalize">
             {renderFilterOptions(uniqueColors, color, setColor, filterColor)}
@@ -144,19 +147,18 @@ const Filter: FC = () => {
             {renderFilterOptions(uniqueSizes, size, setSize, filterSize)}
           </div>
           <div className="w-full flex flex-col gap-[16px]">
-            <div className="w-full flex flex-col rounded-sm border-1 border-border py-[24px] px-[18px]">
+            <div className="w-full flex flex-col rounded-sm border-1 border-border py-[24px] px-[18px] filter-block_shadow">
               <h5 className="family-medium mb-[20px]">{filterPrice}</h5>
 
               <Slider
                 label={`${filterPriceText}:`}
                 formatOptions={{ style: "currency", currency: "USD" }}
-                step={150}
+                step={100}
                 maxValue={10000}
                 minValue={0}
                 value={value}
                 //@ts-ignore
                 onChange={setValue}
-                className="w-full"
                 classNames={sliderClassName}
               />
 

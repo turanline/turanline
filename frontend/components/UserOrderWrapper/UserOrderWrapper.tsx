@@ -8,19 +8,20 @@ import { Icons } from "../Icons/Icons";
 import { UserOrderItem } from "@/components/UserOrderItem/UserOrderItem";
 
 //Component Types
-import { IUserOrderWrapperProps } from "@/types/componentTypes";
+import { IUserOrderWrapper } from "@/types/componentTypes";
 
 //styles
 import "./UserOrderWrapper.scss";
 
-const UserOrderWrapper: FC<IUserOrderWrapperProps> = ({
+const UserOrderWrapper: FC<IUserOrderWrapper> = ({
   orderDate,
   orderNumber,
-  orderPrice,
   orderStatus,
+  orderProducts,
+  orderSum,
 }) => {
-  const [isHidden, setIsHidden] = useState<boolean>(true);
-  const [wrapperHeight, setWrapperHeight] = useState<number | null>(null);
+  const [isHidden, setIsHidden] = useState<boolean>(true),
+    [wrapperHeight, setWrapperHeight] = useState<number | null>(null);
 
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -37,9 +38,7 @@ const UserOrderWrapper: FC<IUserOrderWrapperProps> = ({
 
     const currentContentRef = contentRef.current;
 
-    if (currentContentRef) {
-      resizeObserver.observe(currentContentRef);
-    }
+    if (currentContentRef) resizeObserver.observe(currentContentRef);
 
     return () => {
       if (currentContentRef) {
@@ -48,25 +47,87 @@ const UserOrderWrapper: FC<IUserOrderWrapperProps> = ({
     };
   }, []);
 
-  // const returnOrderStatus = (status: typeof orderStatus) => {
+  const returnOrderDate = () => {
+    const date = new Date(orderDate);
 
-  //   const orderStatusText = status === "processing" ? "В процессе" : "Доставлено";
+    const day = String(date.getDate()).padStart(2, "0"),
+      month = String(date.getMonth() + 1).padStart(2, "0"),
+      year = date.getFullYear();
 
-  //   const iconId = status === "delivered" ? "deliveredOrder" : "car";
+    return `${day}.${month}.${year}`;
+  };
 
-  //   const butonStyles = {"backgroundColor": orderStatus === "processing" ? "#fff3fa" : "#ECFFFE", color: orderStatus === "processing" ? "#e30387" : "#0ABAB5",};
+  const renderOrderProducts = () =>
+    orderProducts.map(product => (
+      <UserOrderItem
+        key={product.id}
+        amount={product.amount}
+        color={product.color}
+        product={product.product}
+        size={product.size}
+      />
+    ));
 
-  //   return (
-  //     <button
-  //       style={butonStyles}
-  //       className="profile-content_orders-content-order-status"
-  //     >
-  //       <Icons id={iconId} />
+  const returnOrderStatus = (status: string) => {
+    let orderStatusText, iconId, buttonStyles;
 
-  //       {orderStatusText}
-  //     </button>
-  //   );
-  // };
+    switch (status) {
+      case "FD":
+        orderStatusText = "Доставлено";
+        iconId = "deliveredOrder";
+        buttonStyles = {
+          backgroundColor: "#ECFFFE",
+          color: "#0ABAB5",
+        };
+        break;
+
+      case "CD":
+        orderStatusText = "В сборке";
+        iconId = "Packed";
+        buttonStyles = {
+          backgroundColor: "#FEFFF3",
+          color: "#FFD600",
+        };
+        break;
+
+      case "PR":
+        orderStatusText = "В пути";
+        iconId = "car";
+        buttonStyles = {
+          backgroundColor: "#fff3fa",
+          color: "#e30387",
+        };
+        break;
+
+      case "CR":
+        orderStatusText = "Создан";
+        iconId = "deliveredOrder";
+        buttonStyles = {
+          backgroundColor: "#ECFFFE",
+          color: "#0ABAB5",
+        };
+        break;
+
+      default:
+        orderStatusText = "Неизвестный статус";
+        iconId = "car";
+        buttonStyles = {
+          backgroundColor: "#fff3fa",
+          color: "#e30387",
+        };
+        break;
+    }
+
+    return (
+      <button
+        style={buttonStyles}
+        className="profile-content_orders-content-order-status"
+      >
+        <Icons id={iconId} />
+        {orderStatusText}
+      </button>
+    );
+  };
 
   const wrapperStyles = {
     maxHeight: isHidden ? "27px" : `${wrapperHeight}px`,
@@ -88,14 +149,14 @@ const UserOrderWrapper: FC<IUserOrderWrapperProps> = ({
         </span>
 
         <span data-date className="profile-content_orders-content-order-span">
-          {orderDate}
+          {returnOrderDate()}
         </span>
 
         <span className="profile-content_orders-content-order-span">
-          ${orderPrice}
+          ${orderSum}
         </span>
 
-        {/* {returnOrderStatus(orderStatus)} */}
+        {returnOrderStatus(orderStatus)}
 
         <button className="profile-content_orders-content-order-button">
           <Icons id="repeat" />
@@ -108,11 +169,7 @@ const UserOrderWrapper: FC<IUserOrderWrapperProps> = ({
         </button>
       </div>
 
-      <UserOrderItem
-        cardSize="XXL"
-        cardPrice={100}
-        cardTitle="Лонгслив HEATTECH С ХЛОПКОМ"
-      />
+      {renderOrderProducts()}
     </div>
   );
 };

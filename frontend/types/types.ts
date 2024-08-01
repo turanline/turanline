@@ -17,6 +17,7 @@ export interface IChangeUserData {
   user: {
     first_name: string;
     last_name: string;
+    email: string;
   };
   company: string;
   address: string;
@@ -50,8 +51,9 @@ export interface IInputsChangeProfile {
   first_name: string;
   last_name: string;
   company: string;
-  phone_number: string;
   address: string;
+  email: string;
+  phone_number: string;
 }
 
 export interface IUserResponse {
