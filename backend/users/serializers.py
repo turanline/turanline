@@ -1,94 +1,96 @@
 import logging
 
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
+from rest_framework_simplejwt import serializers as jwt_serializers
 
-from . import models
-from providers import models as provider_models
+from . import models, mixins
 
 logger = logging.getLogger(__name__)
 
 
+class CustomTokenObtainPairSerializer(
+    jwt_serializers.TokenObtainPairSerializer
+):
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        if not self.user.is_verified:
+            raise exceptions.PermissionDenied(
+                detail={
+                    'detail': 'User account is not verified.'
+                }
+            )
+        return data
+
+
+class BaseVerificationSerializer(serializers.Serializer):
+
+    phone_number = serializers.CharField(max_length=16)
+
+
+class VerificationSerializer(BaseVerificationSerializer):
+
+    purpose = serializers.ChoiceField(
+        choices=[
+            ('verification', 'Verification'),
+            ('reset_password', 'Reset Password')
+        ]
+    )
+
+
+class NumberVerificationSerializer(BaseVerificationSerializer):
+
+    verification_code = serializers.CharField(max_length=6)
+
+
 class BaseUserSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.User
 
 
 class BaseNewsSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.News
 
 
-class UserReadLoginSerializer(BaseUserSerializer):
+class UserSerializer(
+    mixins.UserMixin,
+    BaseUserSerializer
+):
 
-    state = serializers.SerializerMethodField('get_state_field')
-
-    def get_state_field(self, obj):
-        try:
-            provider = provider_models.Provider.objects.get(user=obj)
-            return provider.state
-        except provider_models.Provider.DoesNotExist:
-            return None
+    phone_number = serializers.CharField(validators=[])
 
     class Meta(BaseUserSerializer.Meta):
-        exclude = (
+        exclude = [
+            'username',
             'date_joined',
             'is_superuser',
             'is_active',
             'is_staff',
-            'groups',
-            'user_permissions',
-            'last_login',
-            'password',
-        )
-
-
-class UserLightSerializer(BaseUserSerializer):
-
-    class Meta(BaseUserSerializer.Meta):
-        fields = ['email']
-
-
-class UserLoginSerializer(BaseUserSerializer):
-    class Meta(BaseUserSerializer.Meta):
-        exclude = (
-            'date_joined',
-            'is_superuser',
-            'is_active',
-            'is_staff',
+            'is_customer',
+            'is_provider',
+            'is_verified',
             'groups',
             'user_permissions',
             'last_login'
-        )
-
-    def update(self, instance, validated_data):
-        password = validated_data.pop('password')
-        instance.set_password(password)
-        return super().update(instance, validated_data)
-
-    def create(self, validated_data):
-        return models.User.objects.create_user(**validated_data)
+        ]
 
 
-class AppealSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели обращений поставщиков."""
+class UserReadSerializer(BaseUserSerializer):
 
-    class Meta:
-        model = models.Appeal
-        fields = '__all__'
+    class Meta(BaseUserSerializer.Meta):
+        fields = [
+            'id',
+            'email',
+            'phone_number',
+            'first_name',
+            'last_name'
+        ]
 
 
-class NewsReadSerializer(BaseNewsSerializer):
-
-    author = serializers.SlugRelatedField(
-        queryset=models.User.objects.all(),
-        slug_field='username'
-    )
+class NewsSerializer(BaseNewsSerializer):
 
     class Meta(BaseNewsSerializer.Meta):
         fields = '__all__'
-
-
-class NewsWriteSerializer(BaseNewsSerializer):
-
-    class Meta(BaseNewsSerializer.Meta):
-        exclude = ('author',)

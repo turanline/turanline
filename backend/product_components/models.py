@@ -7,7 +7,10 @@ from parler.models import TranslatableModel, TranslatedFieldsModel
 from . import managers
 
 
-class Category(MPTTModel, TranslatableModel):
+class Category(
+    MPTTModel,
+    TranslatableModel
+):
 
     image = models.ImageField(
         upload_to='category_images/',
@@ -91,7 +94,9 @@ class Brand(models.Model):
     )
 
     class Meta:
-        ordering = ['-name']
+        ordering = [
+            '-name'
+        ]
         verbose_name = 'Product brand'
         verbose_name_plural = 'Product brands'
 
@@ -110,7 +115,6 @@ class ManufacturerCountry(TranslatableModel):
         verbose_name = 'Product manufacturer country'
         verbose_name_plural = 'Product manufacturer countries'
 
-
     def save(self, *args, **kwargs):
         if self.slug:
             return super().save(*args, **kwargs)
@@ -119,7 +123,6 @@ class ManufacturerCountry(TranslatableModel):
 
 
 class Size(models.Model):
-    """Модель размера продукта."""
 
     name = models.CharField(
         max_length=6,
@@ -145,7 +148,10 @@ class CategoryTranslation(TranslatedFieldsModel):
     )
 
     class Meta:
-        unique_together = ('language_code', 'master')
+        unique_together = (
+            'language_code',
+            'master'
+        )
 
 
 class ColorTranslation(TranslatedFieldsModel):
@@ -162,7 +168,10 @@ class ColorTranslation(TranslatedFieldsModel):
     )
 
     class Meta:
-        unique_together = ('language_code', 'master')
+        unique_together = (
+            'language_code',
+            'master'
+        )
 
 
 class ManufacturerCountryTranslation(TranslatedFieldsModel):
@@ -179,4 +188,7 @@ class ManufacturerCountryTranslation(TranslatedFieldsModel):
     )
 
     class Meta:
-        unique_together = ('language_code', 'master')
+        unique_together = (
+            'language_code',
+            'master'
+        )

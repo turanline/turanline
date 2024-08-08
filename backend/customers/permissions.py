@@ -2,7 +2,6 @@ from rest_framework import permissions
 
 
 class IsOwnerOrAdminUserReviewPermission(permissions.BasePermission):
-    """Класс разрешения для доступа к обзорам."""
 
     def has_permission(self, request, view):
         is_admin = bool(request.user and request.user.is_staff)

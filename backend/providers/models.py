@@ -29,13 +29,6 @@ class Provider(models.Model):
         verbose_name='Страна поставщика'
     )
 
-    phone_number = models.CharField(
-        max_length=20,
-        unique=False,
-        blank=False,
-        verbose_name='Номер телефона поставщика'
-    )
-
     company = models.CharField(
         max_length=2048,
         null=False,

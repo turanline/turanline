@@ -13,6 +13,7 @@ from customers import views as customer_views
 from providers import views as provider_views
 from product_components import views as product_component_views
 from payment import views as payment_views
+from delivery import views as delivery_views
 
 
 router = DefaultRouter()
@@ -37,8 +38,14 @@ router.register(
 
 router.register(
     r'cart',
-    cart_views.CartProductsViewSet,
+    cart_views.CartViewSet,
     'cart'
+)
+
+router.register(
+    r'order',
+    cart_views.OrderViewSet,
+    'order'
 )
 
 router.register(
@@ -72,13 +79,13 @@ router.register(
 )
 
 router.register(
-    r'order',
+    r'order-products',
     cart_views.OrderProductsViewSet,
-    'order'
+    'order-products'
 )
 
 router.register(
-    r'superusernews',
+    r'news',
     user_views.NewsViewSet,
     'news'
 )
@@ -87,6 +94,12 @@ router.register(
     r'card-payments',
     payment_views.CardPaymentViewSet,
     'card-payments'
+)
+
+router.register(
+    r'delivery',
+    delivery_views.DeliveryViewSet,
+    'delivery'
 )
 
 

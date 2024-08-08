@@ -8,7 +8,7 @@ from slugify import slugify
 from decimal import Decimal
 
 from . import enums
-from product_components import models as product_components_models
+from product_components import models as product_component_models
 from users import models as user_models
 from mssite import storages
 
@@ -22,12 +22,12 @@ class Product(TranslatableModel):
     )
 
     category = mptt_models.TreeManyToManyField(
-        product_components_models.Category,
+        product_component_models.Category,
         verbose_name='Категории товаров'
     )
 
     brand = models.ForeignKey(
-        product_components_models.Brand,
+        product_component_models.Brand,
         on_delete=models.CASCADE,
         db_index=True,
         verbose_name='Бренд товара'
@@ -39,7 +39,9 @@ class Product(TranslatableModel):
         verbose_name='Артикул'
     )
 
-    price = models.FloatField(
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
         validators=[
             MinValueValidator(
                 Decimal(0),
@@ -65,14 +67,14 @@ class Product(TranslatableModel):
     )
 
     color = models.ManyToManyField(
-        product_components_models.Color,
+        product_component_models.Color,
         through='ProductColor',
         through_fields=['product', 'color'],
         verbose_name='Цвет товара'
     )
 
     manufacturerCountry = models.ForeignKey(
-        product_components_models.ManufacturerCountry,
+        product_component_models.ManufacturerCountry,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -80,7 +82,7 @@ class Product(TranslatableModel):
     )
 
     size = models.ManyToManyField(
-        product_components_models.Size,
+        product_component_models.Size,
         through='ProductSize',
         through_fields=['product', 'size'],
         verbose_name='Размер товара'
@@ -151,7 +153,9 @@ class ProductStatusChangeArchive(models.Model):
     )
 
     class Meta:
-        ordering = ['id']
+        ordering = [
+            'id'
+        ]
 
 
 class ProductTranslation(TranslatedFieldsModel):
@@ -174,15 +178,17 @@ class ProductTranslation(TranslatedFieldsModel):
         verbose_name='Описание товара'
     )
 
-    compound = models.CharField(
-        max_length=1024,
+    compound = models.TextField(
         null=True,
         blank=True,
         verbose_name='Состав товара'
     )
 
     class Meta:
-        unique_together = ('language_code', 'master')
+        unique_together = (
+            'language_code',
+            'master'
+        )
 
 
 class Image(models.Model):
@@ -205,7 +211,9 @@ class Image(models.Model):
     )
 
     class Meta:
-        ordering = ['position']
+        ordering = [
+            'position'
+        ]
 
 
 class ProductSize(models.Model):
@@ -216,7 +224,7 @@ class ProductSize(models.Model):
     )
 
     size = models.ForeignKey(
-        product_components_models.Size,
+        product_component_models.Size,
         on_delete=models.CASCADE,
         related_name='size_amount'
     )
@@ -235,7 +243,7 @@ class ProductColor(models.Model):
     )
 
     color = models.ForeignKey(
-        product_components_models.Color,
+        product_component_models.Color,
         on_delete=models.CASCADE,
         related_name='color_amount'
     )

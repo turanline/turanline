@@ -12,26 +12,20 @@ class Customer(models.Model):
         primary_key=True
     )
 
-    phone_number = models.CharField(
-        max_length=20,
-        unique=True,
-        blank=True,
-    )
-
     favorites = models.ManyToManyField(
         product_models.Product,
-        blank=True,
+        blank=True
     )
 
     company = models.CharField(
         max_length=2048,
         null=True,
-        blank=True,
+        blank=True
     )
 
     address = models.TextField(
         blank=True,
-        null=True,
+        null=True
     )
 
     def __str__(self) -> str:
@@ -44,21 +38,24 @@ class Review(models.Model):
 
     created_datetime = models.DateTimeField(
         auto_now_add=True,
-        null=False,
+        null=False
     )
 
     user = models.ForeignKey(
         user_models.User,
         on_delete=models.SET_NULL,
-        null=True,
+        null=True
     )
 
     product = models.ForeignKey(
         product_models.Product,
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE
     )
 
     class Meta:
+        ordering = [
+            '-created_datetime'
+        ]
         verbose_name = 'Review'
         verbose_name_plural = 'Reviews'
 

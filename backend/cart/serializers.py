@@ -1,9 +1,10 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from . import models
+from . import models, mixins
 from products import serializers as product_serializers
 from products import models as product_models
+from payment import serializers as payment_serializers
 from product_components import serializers as product_component_serializers
 from product_components import models as product_component_models
 
@@ -13,15 +14,24 @@ class OrderProductsBaseSerializer(serializers.ModelSerializer):
     sum = serializers.DecimalField(
         max_digits=10,
         decimal_places=2,
-        coerce_to_string=True,
-        read_only=True
+        coerce_to_string=True
     )
 
     class Meta:
-        model = models.OrderProduct
+        model = models.OrderProducts
+        read_only_fields = [
+            'sum'
+        ]
 
 
-class CartProductsBaseSerializer(serializers.ModelSerializer):
+class CartBaseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Cart
+
+
+class OrderBaseSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.Order
 
@@ -34,7 +44,6 @@ class OrderProductsCreateSerializer(OrderProductsBaseSerializer):
             'amount',
             'product',
             'color',
-            'size',
             'sum'
         ]
 
@@ -62,29 +71,24 @@ class OrderProductsCreateSerializer(OrderProductsBaseSerializer):
 
 
 class OrderProductsUpdateSerializer(OrderProductsBaseSerializer):
+
     class Meta(OrderProductsBaseSerializer.Meta):
         fields = [
             'id',
             'amount',
             'color',
-            'size',
             'sum'
         ]
 
 
 class OrderProductsSerializer(OrderProductsBaseSerializer):
 
-    product = product_serializers.OrderProductSerializer(
-        read_only=True
-    )
+    product = product_serializers.OrderProductSerializer()
 
     color = product_component_serializers.ColorSerializer()
 
-    size = product_component_serializers.SizeSerializer()
-
     images = product_serializers.ImageSerializer(
-        many=True,
-        read_only=True
+        many=True
     )
 
     class Meta(OrderProductsBaseSerializer.Meta):
@@ -93,37 +97,41 @@ class OrderProductsSerializer(OrderProductsBaseSerializer):
             'amount',
             'product',
             'color',
-            'size',
             'images',
             'sum'
         ]
-
-
-class CartProductsConfirmSerializer(CartProductsBaseSerializer):
-    class Meta(CartProductsBaseSerializer.Meta):
-        fields = [
-            'address',
-            'delivery_type',
-            'delivery_price'
+        read_only_fields = [
+            'product',
+            'images'
         ]
 
 
-# class CartUpdateSerializer(CartProductsBaseSerializer):
-#
-#     order_products = serializers.PrimaryKeyRelatedField(read_only=True)
-#
-#     class Meta(CartProductsBaseSerializer.Meta):
-#         exclude = (
-#             'customer',
-#         )
-
-
-class CartProductsRetrieveSerializer(CartProductsBaseSerializer):
+class CartSerializer(CartBaseSerializer):
 
     order_products = OrderProductsSerializer(
-        many=True,
-        read_only=True
+        many=True
     )
 
-    class Meta(CartProductsBaseSerializer.Meta):
+    class Meta(CartBaseSerializer.Meta):
         fields = '__all__'
+        read_only_fields = [
+            'order_products'
+        ]
+
+
+class OrderSerializer(
+    mixins.OrderMixin,
+    OrderBaseSerializer
+):
+
+    payment = payment_serializers.CardPaymentSerializer()
+
+    class Meta(OrderBaseSerializer.Meta):
+        exclude = [
+            'customer',
+            'status',
+            'is_paid'
+        ]
+        read_only_fields = [
+            'total_sum'
+        ]

@@ -10,7 +10,7 @@ class ProductCategoriesViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = models.Category.objects.filter(level=0)
+    queryset = models.Category.objects.all()
     serializer_class = serializers.ProductCategoriesSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.ProductCategoriesFilter

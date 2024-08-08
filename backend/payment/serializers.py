@@ -1,15 +1,19 @@
 from rest_framework import serializers
 
-from . import models
+from . import models, mixins
 
 
 class CardSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.Card
         fields = '__all__'
 
 
-class CardPaymentSerializer(serializers.ModelSerializer):
+class CardPaymentSerializer(
+    mixins.CardPaymentMixin,
+    serializers.ModelSerializer
+):
 
     content_object = CardSerializer()
 
@@ -20,11 +24,3 @@ class CardPaymentSerializer(serializers.ModelSerializer):
             'comment',
             'customer'
         ]
-
-    def create(self, validated_data):
-        content_object = validated_data.pop('content_object')
-        card = models.Card.objects.create(**content_object)
-        return models.CardPayment.objects.create(
-            content_object=card,
-            **validated_data
-        )

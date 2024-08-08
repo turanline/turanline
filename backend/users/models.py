@@ -1,17 +1,41 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from .managers import UserManager
-from .enums import NewsCategories, AppealStatus
+from . import managers, enums
 
 
 class User(AbstractUser):
 
-    objects = UserManager()
+    objects = managers.UserManager()
+
+    phone_number = models.CharField(
+        max_length=16,
+        unique=True,
+        verbose_name='Номер телефона'
+    )
+
+    is_customer = models.BooleanField(
+        default=False
+    )
 
     is_provider = models.BooleanField(
         default=False
     )
+
+    is_verified = models.BooleanField(
+        default=False
+    )
+
+    USERNAME_FIELD = 'phone_number'
+
+    REQUIRED_FIELDS = [
+        'email',
+        'password'
+    ]
+
+    def save(self, *args, **kwargs):
+        self.username = self.email.split('@')[0] + self.phone_number[-4:]
+        return super().save(*args, **kwargs)
 
 
 class News(models.Model):
@@ -23,7 +47,7 @@ class News(models.Model):
     )
 
     category = models.CharField(
-        choices=NewsCategories,
+        choices=enums.NewsCategories,
         verbose_name='Категория новости'
     )
 
@@ -45,26 +69,4 @@ class News(models.Model):
         User,
         on_delete=models.SET_NULL,
         null=True,
-    )
-
-
-class Appeal(models.Model):
-
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE
-    )
-
-    text = models.TextField(
-        verbose_name='Текст обращения'
-    )
-
-    status = models.CharField(
-        choices=AppealStatus,
-        verbose_name='Статус обращения'
-    )
-
-    answer = models.TextField(
-        null=True,
-        verbose_name='Ответ на обращение'
     )

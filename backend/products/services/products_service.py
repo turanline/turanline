@@ -1,68 +1,87 @@
-from django.db.models import QuerySet
-from django.http.request import QueryDict
+from collections import OrderedDict
+
+from mssite import settings
+
+from .. import models
 
 
 class ProductsService:
+
     @staticmethod
-    def apply_categories_filter(
-            request_data: QueryDict,
-            queryset: QuerySet
-    ) -> QuerySet:
-        categories = request_data.getlist('cats', None)
-        if categories:
-            return queryset.filter(
-                subTypes__type__category__name__in=categories,
+    def create_size_product_many_relations(
+        instance: models.Product,
+        sizes_data: dict
+    ) -> None:
+        sizes_list = []
+        instance.productsize_set.all().delete()
+        for size_data in sizes_data:
+            product_size_object = models.ProductSize(
+                product=instance,
+                size=size_data['size'],
+                amount=size_data['amount']
             )
-        return queryset
+            sizes_list.append(product_size_object)
+        models.ProductSize.objects.bulk_create(sizes_list)
 
     @staticmethod
-    def apply_color_filter(request_data: QueryDict,
-                           queryset: QuerySet) -> QuerySet:
-        color = request_data.get('color', None)
-        if color:
-            return queryset.filter(color__name=color)
-        return queryset
+    def create_color_product_many_relations(
+        instance: models.Product,
+        colors_data: dict
+    ) -> None:
+        colors_list = []
+        instance.productcolor_set.all().delete()
+        for color_data in colors_data:
+            product_color_object = models.ProductColor(
+                product=instance,
+                color=color_data['color'],
+                amount=color_data['amount']
+            )
+            colors_list.append(product_color_object)
+        models.ProductColor.objects.bulk_create(colors_list)
 
     @staticmethod
-    def apply_size_filter(request_data: QueryDict,
-                          queryset: QuerySet) -> QuerySet:
-        size = request_data.get('size', None)
-        if size:
-            return queryset.filter(size__name=size)
-        return queryset
-
-    @staticmethod
-    def apply_price_filter(request_data: QueryDict,
-                           queryset: QuerySet) -> QuerySet:
-        low_border_price = request_data.get('lbprice', None)
-        high_border_price = request_data.get('hbprice', None)
-        if low_border_price and high_border_price:
-            return queryset.filter(
-                price__range=(
-                    low_border_price,
-                    high_border_price,
+    def create_image_product_relations(
+        instance: models.Product,
+        images_data: dict
+    ) -> None:
+        images_list = []
+        for index, image_data in enumerate(images_data):
+            if image_data:
+                instance.images.filter(
+                    product=instance,
+                    position=index
+                ).delete()
+                image_instance = models.Image(
+                    product=instance,
+                    image_file=image_data,
+                    position=index
                 )
+                images_list.append(image_instance)
+        models.Image.objects.bulk_create(images_list)
+
+    @staticmethod
+    def create_translation_product_relations(
+        instance: models.Product,
+        validated_data: OrderedDict
+    ) -> None:
+        for lan_code in settings.PARLER_LANGUAGES[None]:
+            translation_instance, created = models.ProductTranslation.objects.get_or_create(
+                master=instance,
+                language_code=lan_code['code']
             )
-        return queryset
-
-    @staticmethod
-    def apply_brands_filter(request_data: QueryDict,
-                            queryset: QuerySet) -> QuerySet:
-        brands = request_data.getlist('brands', None)
-        if brands:
-            return queryset.filter(brand__name__in=brands)
-        return queryset
-
-    @staticmethod
-    def get_category_relations(queryset: QuerySet) -> dict:
-        types_data = {}
-        for product_subtype in queryset:
-            type_name = product_subtype.type.name
-            subtype_name = product_subtype.name
-            if type_name in types_data:
-                types_data[type_name]['subtypes'].append(subtype_name)
-            else:
-                types_data[type_name] = {
-                    'subtypes': [subtype_name],
-                }
-        return types_data
+            if validated_data.get('name'):
+                translation_instance.name = settings.translator.translate(
+                    validated_data['name'],
+                    dest=lan_code['code']
+                ).text
+            if validated_data.get('description'):
+                translation_instance.description = settings.translator.translate(
+                    validated_data['description'],
+                    dest=lan_code['code']
+                ).text
+            if validated_data.get('compound'):
+                translation_instance.compound = settings.translator.translate(
+                    validated_data['compound'],
+                    dest=lan_code['code']
+                ).text
+            translation_instance.save()
