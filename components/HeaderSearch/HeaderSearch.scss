@@ -1,0 +1,16 @@
+.search-mobile {
+  display: flex;
+  width: 100%;
+  max-width: 542px;
+}
+
+.search-button-mobile {
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background-color: white !important;
+}
+
+.search-button-mobile:hover {
+  background: #e4e4e7 !important;
+  opacity: 1 !important;
+}

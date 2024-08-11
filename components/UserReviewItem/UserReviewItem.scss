@@ -1,0 +1,70 @@
+
+  
+  @mixin profile-text($family, $size, $height) {
+    font-family: $family;
+    font-size: $size;
+    line-height: $height;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  @media (max-width: 768px) {
+    .profile-content_review-header {
+      flex-direction: column;
+      gap: 15px;
+    }
+  }
+  
+  .profile-content_reviews-title {
+    @include profile-text(geometria-medium, 26px, 24px);
+  }
+  
+  .profile-content_review-header {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .profile-content_review-header-title {
+    @include profile-text("Geometria-Light", 26px, 32px);
+    color: #252b42;
+  }
+  
+  .profile-content_review-header-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    @include profile-text("Geometria-Light", 16px, 20px);
+  }
+  
+  .profile-content_review-text {
+    @include profile-text("Geometria-Light", 16px, 26px);
+    color: #252b42;
+  }
+  
+  .profile-content_reviews {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .profile-content_reviews-list {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .profile-content_review {
+    padding: 30px;
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+    border: 1px solid #ebebeb;
+    border-left: 3px solid #e30387;
+  }
+  
