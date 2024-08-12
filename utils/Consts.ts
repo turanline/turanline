@@ -25,6 +25,7 @@ export const SHOP_LINK = "https://mis-express.com/";
 //Shop Information
 export const SHOP_NAME = "Mis Express",
   SHOP_PHONE = "+905525977888",
+  SHOP_SECOND_PHONE = "+905010008882",
   SHOP_EMAIL = "mis.express@mail.ru",
   SHOP_ADDRESS_2 = "Antalya/Alanya: 07400. İlçe Alanya, Oba Mahallesi, 225",
   SHOP_ADDRESS =
