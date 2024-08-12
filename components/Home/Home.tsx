@@ -117,7 +117,7 @@ const Home = () => {
             <p className="font-light">{deliveryText}</p>
           </div>
           <Swiper
-            className="sm:min-w-[400px] w-full h-[177px] lg:max-w-[400px] min-h-[230px]"
+            className="sm:min-w-[400px] w-full h-[177px] lg:max-w-[400px] sm:h-[230px]"
             spaceBetween={0}
             slidesPerView={1}
             watchSlidesProgress
