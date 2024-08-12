@@ -150,7 +150,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
 
           <div className="border-1 border-border shadow-xl product-page_info">
             <div className="product-info">
-              <div className="flex flex-col">
+              <div className="flex flex-col product-info_table">
                 <div className="block-option_product">
                   <p className="text-textAcc w-[160px]">
                     {productPageArticle}:&nbsp;
@@ -166,7 +166,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
                     {productPageCompound}:&nbsp;
                   </p>
 
-                  <p className="family-medium truncate w-[140px]">
+                  <p className="family-medium w-[140px]">
                     {oneProduct?.compound}
                   </p>
                 </div>
