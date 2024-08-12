@@ -32,10 +32,10 @@ export const SHOP_NAME = "Mis Express",
 
 //Regular Matches
 export const passwordRegular = /^[a-zA-Z0-9]+$/;
-export const nameRegular = /^[A-Z][a-zA-Z]*$/;
-export const surnameRegular = /^[A-Z][a-zA-Z]*$/;
+export const nameRegular = /^[A-ZА-ЯЁĞÜŞİÖÇ][a-zA-Zа-яёА-ЯЁğüşiöç]*$/;
+export const surnameRegular = /^[A-ZА-ЯЁĞÜŞİÖÇ][a-zA-Zа-яёА-ЯЁğüşiöç]*$/;
 export const usernameRegular = /^[a-zA-Z0-9_]{3,20}$/;
-export const addressRegular = /^[a-zA-Z0-9\s,.-]+$/;
+export const addressRegular = /^[a-zA-Zа-яА-ЯёЁĞÜŞİÖÇğüşiöç0-9\s,.-]+$/;
 export const companyNameRegular = /^[a-zA-Z0-9\s\-_.,!@#$%^&*()+=]+$/;
 export const emailRegular = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 export const phone_login_Regular = /^\+[0-9]+$/;
