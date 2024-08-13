@@ -10,7 +10,6 @@ export interface IPostCartApi {
   amount: number;
   product: number;
   color: number;
-  size: number;
 }
 
 export interface IChangeUserData {
@@ -77,5 +76,4 @@ export interface IUserResponse {
 export interface IPutCart {
   amount: number;
   color: number;
-  size: number;
 }

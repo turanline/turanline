@@ -30,7 +30,6 @@ const UserCartItem: FC<{product: IProductCart;}> = ({ product }) => {
     const patchObject: IPutCart = {
       amount: action === "dec" ? product.amount - 1 : product.amount + 1,
       color: product.color.id,
-      size: product.size.id,
     };
 
     onChangeCardCounter(patchObject, product.id);
@@ -70,15 +69,6 @@ const UserCartItem: FC<{product: IProductCart;}> = ({ product }) => {
 
           <div className="product-card__options-container">
             <div className="product-card__description-container-wrapper">
-              <div className="product-card__description-container">
-                <span className="product-card__description">{filterSize}</span>
-
-                <div className="product-card__option">
-                  <p className="product-card__option--active font-medium">
-                    {product?.size?.name}
-                  </p>
-                </div>
-              </div>
 
               <div className="product-card__description-container">
                 <p className="product-card__description">{filterColor}</p>

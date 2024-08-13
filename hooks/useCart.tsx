@@ -92,8 +92,7 @@ const useCart = () => {
       const itemInCart = cart?.order_products?.find(
         item =>
           item.product.id === obj.product &&
-          item.color.id === obj.color &&
-          item.size.id === obj.size
+          item.color.id === obj.color
       );
 
       if (itemInCart) {
@@ -101,8 +100,8 @@ const useCart = () => {
         return;
       }
 
-      if (!obj.color || !obj.size) {
-        showToastMessage("warn", "Вы не выбрали размер или цвет!");
+      if (!obj.color) {
+        showToastMessage("warn", "Вы не выбрали цвет!");
         return;
       }
 

@@ -38,7 +38,7 @@ export default function Registration({nextStep}: {nextStep: () => void}) {
   const [forgetModal, setForgetModal] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [selectPhone,setSelectPhone] = useState<string>('');
-  const [prefixCode,setPrefixCode] = useState<string>('');
+  const [prefixCode,setPrefixCode] = useState<string>('+7');
 
   const selectClassName = {
     innerWrapper: "w-fit h-[30px]",

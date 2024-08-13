@@ -51,7 +51,6 @@ export interface IProductCart {
   amount: number;
   product: Product;
   color: Color;
-  size: CartSize;
   images: Image[];
   sum: string;
 }
