@@ -25,6 +25,7 @@ export const SHOP_LINK = "https://mis-express.com/";
 //Shop Information
 export const SHOP_NAME = "Mis Express",
   SHOP_PHONE = "+905525977888",
+  SHOP_SECOND_PHONE = "+905010008882",
   SHOP_EMAIL = "mis.express@mail.ru",
   SHOP_ADDRESS_2 = "Antalya/Alanya: 07400. İlçe Alanya, Oba Mahallesi, 225",
   SHOP_ADDRESS =
@@ -32,10 +33,10 @@ export const SHOP_NAME = "Mis Express",
 
 //Regular Matches
 export const passwordRegular = /^[a-zA-Z0-9]+$/;
-export const nameRegular = /^[A-Z][a-zA-Z]*$/;
-export const surnameRegular = /^[A-Z][a-zA-Z]*$/;
+export const nameRegular = /^[A-ZА-ЯЁĞÜŞİÖÇ][a-zA-Zа-яёА-ЯЁğüşiöç]*$/;
+export const surnameRegular = /^[A-ZА-ЯЁĞÜŞİÖÇ][a-zA-Zа-яёА-ЯЁğüşiöç]*$/;
 export const usernameRegular = /^[a-zA-Z0-9_]{3,20}$/;
-export const addressRegular = /^[a-zA-Z0-9\s,.-]+$/;
+export const addressRegular = /^[a-zA-Zа-яА-ЯёЁĞÜŞİÖÇğüşiöç0-9\s,.-]+$/;
 export const companyNameRegular = /^[a-zA-Z0-9\s\-_.,!@#$%^&*()+=]+$/;
 export const emailRegular = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 export const phone_login_Regular = /^\+[0-9]+$/;

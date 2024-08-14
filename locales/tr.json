@@ -290,11 +290,11 @@
   "errorPageText": "Sunucu tarafında bir hata meydana geldi, bunu düzeltmek için çok çalışıyoruz!",
 
   "formEmail": "Lütfen geçerli bir e-posta adresi girin.",
-  "formName": "Lütfen büyük bir İngilizce harfle başlayan ve ardından yalnızca küçük harflerin geldiği geçerli bir değer girin.",
+  "formName": "Lütfen büyük bir İngilizce, Türkçe veya Rusça başlayan ve ardından yalnızca küçük harflerin geldiği geçerli bir değer girin.",
   "formPassword": "Şifre yalnızca harfler (büyük ve küçük harfler) ve rakamlar içerebilir. Lütfen şifrenizin bu gereksinimleri karşıladığından emin olun.",
   "formUsername": "Kullanıcı adı yalnızca harfler (büyük ve küçük harfler), rakamlar ve alt çizgiler içerebilir. Lütfen kullanıcı adınızın yalnızca bu karakterlerden oluştuğundan emin olun.",
   "formPhone": "Lütfen telefon numarasını şu formatta girin: +1 234 567 89 00",
-  "formAddress": "Adres yalnızca Latin harfleri, rakamlar, boşluklar, virgüller, noktalar ve tireler içerebilir. Lütfen geçerli bir adres girin.",
+  "formAddress": "Adres yalnızca Latin veya Kiril harfleri, rakamlar, boşluklar, virgüller, noktalar ve tireler içerebilir. Lütfen geçerli bir adres girin.",
   "formCompany": "Lütfen geçerli bir şirket adı girin!",
   "formRequired": "Bu alan gereklidir!",
   "formMin": "En az",

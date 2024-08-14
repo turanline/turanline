@@ -1,6 +1,12 @@
 "use client";
 //Global
-import React, { CSSProperties, ChangeEvent, useMemo, useState } from "react";
+import React, {
+  CSSProperties,
+  ChangeEvent,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import Image from "next/image";
 //Components
 import { Icons } from "../Icons/Icons";
@@ -25,7 +31,6 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 
 const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
-  
   const [productCounter, setProductCounter] = useState<number | string>(1),
     [thumbsSwiper, setThumbsSwiper] = useState<any | null>(null),
     [colorId, setColorId] = useState<number>(0),
@@ -33,7 +38,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
     { addItemToCart } = useCart(),
     { mapProductOptions } = useProducts();
 
-  const allImages = [...oneProduct.images.map(image => image.image_file)];
+  const allImages = [...oneProduct.images.map((image) => image.image_file)];
 
   const {
     mainPageRoute,
@@ -53,15 +58,14 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
     addItemToCart({
       amount: +productCounter,
       color: colorId,
-      size: sizeId,
       product: oneProduct.id,
     });
 
   const changeProductCounter = (action: "inc" | "dec") => {
     if (action === "dec" && +productCounter > 1)
-      setProductCounter(prev => +prev - 1);
+      setProductCounter((prev) => +prev - 1);
 
-    if (action === "inc") setProductCounter(prev => +prev + 1);
+    if (action === "inc") setProductCounter((prev) => +prev + 1);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -130,6 +134,16 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
     );
   }, [oneProduct?.name, thumbsSwiper]);
 
+  const renderSizes = useMemo(
+    () =>
+      oneProduct?.sizes_data.map((size) => (
+        <p className="button-option_size">
+          {size.name} {size.amount}
+        </p>
+      )),
+    [oneProduct]
+  );
+
   return (
     <>
       <Breadcrumbs>
@@ -150,7 +164,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
 
           <div className="border-1 border-border shadow-xl product-page_info">
             <div className="product-info">
-              <div className="flex flex-col">
+              <div className="flex flex-col product-info_table">
                 <div className="block-option_product">
                   <p className="text-textAcc w-[160px]">
                     {productPageArticle}:&nbsp;
@@ -166,7 +180,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
                     {productPageCompound}:&nbsp;
                   </p>
 
-                  <p className="family-medium truncate w-[140px]">
+                  <p className="family-medium w-[140px]">
                     {oneProduct?.compound}
                   </p>
                 </div>
@@ -218,13 +232,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
                 </p>
 
                 <p className="text-textAcc">{productPageInStock}</p>
-
-                {mapProductOptions(
-                  oneProduct?.sizes_data,
-                  sizeId,
-                  setSizeId,
-                  "button-option_size"
-                )}
+                <div className="flex gap-[10px] flex-wrap">{renderSizes}</div>
 
                 {mapProductOptions(
                   oneProduct?.colors_data,

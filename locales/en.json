@@ -284,11 +284,11 @@
   "errorPageText": "Some error occurred on the server side, we are already working hard to fix it!",
 
   "formEmail": "Please enter a valid email address.",
-  "formName": "Please enter a valid value starting with an uppercase English letter, followed by lowercase letters only.",
+  "formName": "Please enter a valid value starting with an uppercase English, Turkish or Russian letter, followed by lowercase letters only.",
   "formPassword": "Password can contain only letters (uppercase and lowercase) and numbers. Please ensure your password meets these requirements.",
   "formUsername": "Username can contain only letters (uppercase and lowercase), numbers, and underscores. Please ensure your username consists of these characters only.",
   "formPhone": "Please enter the phone number in the format: +1 234 567 89 00",
-  "formAddress": "Address can contain only Latin letters, numbers, spaces, commas, periods, and hyphens. Please enter a valid address.",
+  "formAddress": "Address can contain only Latin and Cyrillic letters, numbers, spaces, commas, periods, and hyphens. Please enter a valid address.",
   "formCompany": "Please enter a valid company name!",
   "formRequired": "This field is required!",
   "formMin": "At least",

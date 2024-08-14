@@ -27,6 +27,7 @@ import {
   SHOP_TELEGRAM,
   SHOP_WHATSAPP,
   PROVIDER_SITE,
+  SHOP_SECOND_PHONE,
 } from "@/utils/Consts";
 
 //Images
@@ -118,6 +119,9 @@ export function Footer() {
               <div className="flex flex-col">
                 <Link className="text-[14px]" href={`tel:${SHOP_PHONE}`}>
                   {SHOP_PHONE}
+                </Link>
+                <Link className="text-[14px]" href={`tel:${SHOP_SECOND_PHONE}`}>
+                  {SHOP_SECOND_PHONE}
                 </Link>
               </div>
 
