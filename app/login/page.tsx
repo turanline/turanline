@@ -76,6 +76,7 @@ const LogIn: NextPage = () => {
   useEffect(()=>{
     onSetForgetPassword(false);
   },[])
+  
   useEffect(() => {
     const savedUser = getCookie('userPhoneRemember');
       
