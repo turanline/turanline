@@ -1,14 +1,11 @@
 "use client";
-
 //Global
 import React, { FC } from "react";
-
 //Components
 import { Filter } from "../Modals/Filter/Filter";
-
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
-
+ 
 const CategoryPageComponent: FC = () => {
   const { selectProductText } = useTranslate();
 

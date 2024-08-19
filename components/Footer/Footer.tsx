@@ -1,17 +1,13 @@
 "use client";
-
 //Global
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
 //Components
 import { Icons } from "../Icons/Icons";
-
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
 import { useCategories } from "@/hooks/useCategories";
-
 //Utils
 import {
   ABOUT_ROUTE,
@@ -29,24 +25,13 @@ import {
   PROVIDER_SITE,
   SHOP_SECOND_PHONE,
 } from "@/utils/Consts";
-
 //Images
 import logo from "../../public/assets/other/logo2.svg";
-
 //Styles
 import "./Footer.scss";
-
+  
 export function Footer() {
-  const {
-    footerPayment,
-    footerPolitics,
-    footerTextUnderEmail,
-    footerUsing,
-    footerWriteUs,
-    headerAbout,
-    headerDelivery,
-    footerProviders,
-  } = useTranslate();
+  const translate = useTranslate();
 
   const { onSetCategories, mapCategoriesOnDesktop } = useCategories("#0ABAB5");
 
@@ -63,16 +48,16 @@ export function Footer() {
           </Link>
 
           <div className="footer-links">
-            <Link href={ABOUT_ROUTE}>{headerAbout}</Link>
+            <Link href={ABOUT_ROUTE}>{translate.headerAbout}</Link>
 
-            <Link href={DELIVERY_ROUTE}>{headerDelivery}</Link>
+            <Link href={DELIVERY_ROUTE}>{translate.headerDelivery}</Link>
 
-            <Link href={PAYMENT_ROUTE}>{footerPayment}</Link>
+            <Link href={PAYMENT_ROUTE}>{translate.footerPayment}</Link>
 
-            <Link href={POLITIC_ROUTE}>{footerPolitics}</Link>
+            <Link href={POLITIC_ROUTE}>{translate.footerPolitics}</Link>
 
             <Link target="_blank" href={PROVIDER_SITE}>
-              {footerProviders}
+              {translate.footerProviders}
             </Link>
           </div>
         </nav>
@@ -82,14 +67,14 @@ export function Footer() {
               <Image src={logo} alt="logo" />
             </Link>
             <div className="flex flex-col gap-[16px] md:gap-[57px]">
-              <Link href={ABOUT_ROUTE}>{headerAbout}</Link>
+              <Link href={ABOUT_ROUTE}>{translate.headerAbout}</Link>
 
-              <Link href={DELIVERY_ROUTE}>{headerDelivery}</Link>
+              <Link href={DELIVERY_ROUTE}>{translate.headerDelivery}</Link>
 
-              <Link href={PAYMENT_ROUTE}>{footerPayment}</Link>
+              <Link href={PAYMENT_ROUTE}>{translate.footerPayment}</Link>
 
               <Link target="_blank" href={PROVIDER_SITE}>
-                {footerProviders}
+                {translate.footerProviders}
               </Link>
             </div>
           </div>
@@ -97,7 +82,7 @@ export function Footer() {
             <div className="w-full flex flex-col-reverse md:flex-col gap-[12px] md:gap-[32px]">
               <p className="family_bold footer_shop_address">{SHOP_ADDRESS}</p>
               <div className="flex flex-col sm:flex-row lg:hidden sm:items-center gap-[13px]">
-                <p className="font-bold">{footerWriteUs}:</p>
+                <p className="font-bold">{translate.footerWriteUs}:</p>
 
                 <div className="flex gap-[10px]">
                   <Link href={SHOP_TELEGRAM}>
@@ -134,13 +119,13 @@ export function Footer() {
                 </Link>
 
                 <p className="hidden md:block text-[10px]">
-                  {footerTextUnderEmail}
+                  {translate.footerTextUnderEmail}
                 </p>
               </div>
             </div>
 
             <nav className="w-full hidden lg:flex items-center justify-end gap-[13px]">
-              <span className="family_bold">{footerWriteUs}:</span>
+              <span className="family_bold">{translate.footerWriteUs}:</span>
 
               <Link href={SHOP_TELEGRAM}>
                 <Icons id="telegram" />
@@ -163,7 +148,7 @@ export function Footer() {
       </div>
 
       <div className="w-full container mx-auto flex justify-between items-center mb-4 px-[28px] sm:px-0">
-        <span className="text-[10px]">{footerUsing}</span>
+        <span className="text-[10px]">{translate.footerUsing}</span>
 
         <span className="hidden sm:block">{`© ${SHOP_NAME}`}</span>
       </div>

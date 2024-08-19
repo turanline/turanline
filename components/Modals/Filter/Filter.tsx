@@ -26,23 +26,14 @@ const Filter: FC = () => {
 
   const { push } = useRouter();
   const pathname = usePathname();
+  const translate = useTranslate();
+  const { onSetFilters, areFiltersEqual } = useProducts();
   const { filters, products, status } = useTypedSelector(state => state.products);
-  const { onSetFilters, compareObjects } = useProducts();
 
-  const {
-    filterBrand,
-    filterColor,
-    filterPrice,
-    filterSize,
-    filterPriceText,
-    filterSelectedBudget,
-    filterReset,
-    filterShow,
-  } = useTranslate();
 
-  function returnUniqueArray(array: string[]): string[] {
-    const uniqueSet = new Set(array),
-      uniqueArray = Array.from(uniqueSet);
+  const returnUniqueArray = (array: string[]): string[] => {
+    const uniqueSet = new Set(array);
+    const uniqueArray = Array.from(uniqueSet);
 
     return uniqueArray;
   }
@@ -58,7 +49,7 @@ const Filter: FC = () => {
       hbprice: value[1],
     };
 
-    const areEqual = compareObjects(newFilters, filters);
+    const areEqual = areFiltersEqual(newFilters, filters);
 
     if (!areEqual) onSetFilters(newFilters);
   };
@@ -72,7 +63,7 @@ const Filter: FC = () => {
       hbprice: null,
     };
 
-    const areEqual = compareObjects(newFilters, filters);
+    const areEqual = areFiltersEqual(newFilters, filters);
 
     if (!areEqual) onSetFilters(newFilters);
 
@@ -89,7 +80,7 @@ const Filter: FC = () => {
 
           <div className="flex flex-col gap-2">
             <RadioGroup value={value} onChange={e => setValue(e.target.value)}>
-              {array.map(uniqueColor => (
+              {array?.map(uniqueColor => (
                 <Radio key={uniqueColor} value={uniqueColor}>
                   {uniqueColor}
                 </Radio>
@@ -100,18 +91,14 @@ const Filter: FC = () => {
       );
   };
 
-  const allBrands = products?.flatMap(product => product?.brand?.name),
-    allColors = products?.flatMap(product =>
-      product?.colors_data?.map(c => c?.slug)
-    );
+  const allBrands = products?.flatMap(product => product?.brand);
+  const allColors = products?.flatMap(product => product?.colors_data?.map(c => c?.slug));
 
-  const allSizes = products?.flatMap(product =>
-    product?.sizes_data?.map(s => s?.name)
-  );
+  const allSizes = products?.flatMap(product => product?.sizes_data?.map(s => s?.name));
 
-  const uniqueColors = returnUniqueArray(allColors),
-    uniqueBrands = returnUniqueArray(allBrands),
-    uniqueSizes = returnUniqueArray(allSizes);
+  const uniqueColors = returnUniqueArray(allColors);
+  const uniqueBrands = returnUniqueArray(allBrands);
+  const uniqueSizes = returnUniqueArray(allSizes);
 
   const sliderClassName = {
     thumb: "bg-tiffani",
@@ -119,23 +106,24 @@ const Filter: FC = () => {
     track: "h-[10px]",
   };
 
-  if (status === "pending") return <Icons id="spiner" />;
+  if (status === "pending") 
+  return <Icons id="spiner" />;
 
   return (
     <div id="filter" className="mb-[40px]">
       <div className="rounded-sm md:border-1 border-border md:shadow-md md:px-[24px] lg:px-[65px] lg:py-[25px] md:py-[25px] sm:py-[0px] md:mb-[37px]">
         <div className="flex flex-col md:flex-row gap-[18px]">
           <div className="w-full flex flex-col gap-[16px] capitalize">
-            {renderFilterOptions(uniqueColors, color, setColor, filterColor)}
+            {renderFilterOptions(uniqueColors, color, setColor, translate.filterColor)}
 
-            {renderFilterOptions(uniqueSizes, size, setSize, filterSize)}
+            {renderFilterOptions(uniqueSizes, size, setSize, translate.filterSize)}
           </div>
           <div className="w-full flex flex-col gap-[16px]">
             <div className="w-full flex flex-col rounded-sm border-1 border-border py-[24px] px-[18px] filter-block_shadow">
-              <h5 className="family-medium mb-[20px]">{filterPrice}</h5>
+              <h5 className="family-medium mb-[20px]">{translate.filterPrice}</h5>
 
               <Slider
-                label={`${filterPriceText}:`}
+                label={`${translate.filterPriceText}:`}
                 formatOptions={{ style: "currency", currency: "USD" }}
                 step={100}
                 maxValue={10000}
@@ -147,12 +135,12 @@ const Filter: FC = () => {
               />
 
               <p className="text-default-500 font-medium text-small mt-[15px]">
-                {filterSelectedBudget}:{" "}
+                {translate.filterSelectedBudget}:{" "}
                 {Array.isArray(value) && value.map(b => `$${b}`).join(" – ")}
               </p>
             </div>
 
-            {renderFilterOptions(uniqueBrands, brand, setBrand, filterBrand)}
+            {renderFilterOptions(uniqueBrands, brand, setBrand, translate.filterBrand)}
 
             <div className="flex justify-center gap-[25px]">
               <Button
@@ -160,7 +148,7 @@ const Filter: FC = () => {
                 className="w-full md:w-[270px] h-[44px] bg-tiffani text-white"
                 radius="sm"
               >
-                {filterShow}
+                {translate.filterShow}
               </Button>
 
               <Button
@@ -168,7 +156,7 @@ const Filter: FC = () => {
                 className="w-full md:w-[270px] h-[44px] bg-transparent text-tiffani"
                 radius="sm"
               >
-                {filterReset}
+                {translate.filterReset}
               </Button>
             </div>
           </div>

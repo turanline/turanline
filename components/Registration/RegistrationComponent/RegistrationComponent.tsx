@@ -38,7 +38,7 @@ export default function Registration({nextStep}: {nextStep: () => void}) {
   const [forgetModal, setForgetModal] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [selectPhone,setSelectPhone] = useState<string>('');
-  const [prefixCode,setPrefixCode] = useState<string>('+7');
+  const [prefixCode,setPrefixCode] = useState<string>('+1');
 
   const selectClassName = {
     innerWrapper: "w-fit h-[30px]",
@@ -49,7 +49,10 @@ export default function Registration({nextStep}: {nextStep: () => void}) {
   };
 
   const createAccount = async () => {
-    if(!isValid) return;
+    if(!isValid){
+      showToastMessage('warn','Заполните все поля')
+      return;
+    }
 
     try {
       const { email, first_name, last_name, password } = getValues();
@@ -64,29 +67,31 @@ export default function Registration({nextStep}: {nextStep: () => void}) {
         company:"company",
         address:"address"
       };
-      console.log(requestBody)
       const response = await onRegistrationUser(requestBody);
       
-        if(response.payload.status === 200){
-          showToastMessage('success','Регистрация прошла успешно');
-          onGetUser();
-          push(PROFILE_ROUTE);
-          return;
-        };
-        if(response.payload.status === 201){
-          showToastMessage('success','Регистрация прошла успешно');
-          showToastMessage('warn','Подтвердите номер телефона');
+      if(response.payload.status === 200){
+        showToastMessage('success','Регистрация прошла успешно');
+        onGetUser();
+        push(PROFILE_ROUTE);
+        return;
+      };
+      if(response.payload.status === 201){
+        showToastMessage('success','Регистрация прошла успешно');
+        showToastMessage('warn','Подтвердите номер телефона');
 
-          nextStep();
-          setCookie('phoneNumber',(prefixCode + selectPhone).replace(/[^\d+]/g, ''))
-          return;
-        };
-        if ("error" in response && response.error.message === "Rejected") {
-          showToastMessage("error", translate.messageRegistrationError);
-          return;
-        };
+        nextStep();
+        setCookie('phoneNumber',(prefixCode + selectPhone).replace(/[^\d+]/g, ''))
+        return;
+      };
+      if ("error" in response && response.error.message === "Rejected") {
+        showToastMessage("error", translate.messageRegistrationError);
+        return;
+      };
 
-      if(rememberMe) setCookie('userPhone',(prefixCode + selectPhone).replace(/[^\d+]/g, ''));
+      if(rememberMe){
+        setCookie('userPhoneRemember',selectPhone.replace(/[^\d+]/g, ''));
+        setCookie('phonePrefix', prefixCode);
+      }
 
     } catch (error) {
       console.error(error);

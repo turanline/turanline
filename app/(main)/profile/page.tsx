@@ -16,7 +16,7 @@ import { useUserActions } from "@/hooks/useUserActions";
 import { ICart } from "@/types/reduxTypes";
 import { ISortConfig } from "@/types/componentTypes";
 // Images
-import profile from "../../public/assets/other/profile-photo.png";
+import profile from "@/public/assets/other/profile-photo.png";
 // Styles
 import "./profile.scss";
 
@@ -151,7 +151,7 @@ const Profile = () => {
             </div>
           </div>
 
-          {returnUserOrders(filteredAndSortedOrders, handleSort)}
+          {returnUserOrders(filteredAndSortedOrders,handleSort)}
         </div>
 
         <div className="profile-content_reviews">

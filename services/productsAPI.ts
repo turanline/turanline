@@ -3,14 +3,13 @@ import { $host,$authHost } from "./index";
 //Redux Types
 import { IProductsState } from "@/types/reduxTypes";
 
-export const getFamousProducts = async () => {
+export const getFamousProducts = async (language: string) => {
   try {
-    const { data } = await $host.get("/api/catalog/famous/");
+    const { data } = await $host.get("/api/catalog/famous/",{headers: { "Accept-Language": language }});
 
     return data;
   } catch (error) {
     console.error("Failed get famous products:" + error);
-    throw error;
   }
 };
 
@@ -25,14 +24,13 @@ export const getAllCities = async () => {
   }
 };
 
-export const getSimilarProducts = async (slug: string) => {
+export const getSimilarProducts = async (article_number: string,language: string) => {
   try {
-    const { data } = await $host.get(`/api/catalog/${slug}/similar/`);
+    const { data } = await $host.get(`/api/catalog/${article_number}/similar/`,{headers: { "Accept-Language": language }});
 
     return data;
   } catch (error) {
     console.error("Failed get similar products:" + error);
-    throw error;
   }
 };
 
@@ -59,9 +57,7 @@ export const getAllProducts = async (category: string, filters: IProductsState["
       }
     });
 
-    const { data } = await $host.get("/api/catalog/", {
-      params,
-    });
+    const { data } = await $host.get("/api/catalog/", { params });
 
     return data;
   } catch (error) {
@@ -70,13 +66,12 @@ export const getAllProducts = async (category: string, filters: IProductsState["
   }
 };
 
-export const getProductBySlug = async (slug: string, language: string) => {
+export const getProductBySlug = async (article_number: string, language: string) => {
   try {
-    const { data } = await $host.get(`/api/catalog/${slug}/`, {headers: { "Accept-Language": language }});
+    const { data } = await $host.get(`/api/catalog/${article_number}/`, {headers: { "Accept-Language": language }});
 
     return data;
   } catch (error) {
-    console.error("Error get product by slug:" + error);
-    throw error;
+    console.error("Error get product by article_number:" + error);
   }
 };

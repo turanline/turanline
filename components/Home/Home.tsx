@@ -33,57 +33,63 @@ import "./Home.scss";
 import "swiper/css";
 
 const Home = () => {
-  const {
-    newRevenues,
-    newRevenuesLink,
-    newRevenuesText,
-    manufacturer,
-    manufacturerText,
-    headerDelivery,
-    deliveryText,
-    promotions,
-    promotionsText,
-    seasonThings,
-    productSelection,
-    lookAll,
-    bestsellers,
-    foundation,
-    emptyCatalogTitle,
-    emptyCatalogButtonText,
-    emptyCatalogText,
-  } = useTranslate();
-
+  const translate = useTranslate();
+  const { setAllProducts } = useProducts();
   const { products, status } = useTypedSelector(state => state.products);
 
-  const { setAllProducts } = useProducts();
-
-  useEffect(() => {
-    setAllProducts();
-  }, [setAllProducts]);
 
   const mapAllProducts = () => {
     const threeProducts = products.slice(0, 3);
 
     if (status === "pending") return <Icons id="spiner" />;
 
-    if (!threeProducts.length && status === "fulfilled")
-      return (
+    if (!threeProducts?.length && status === "fulfilled")
+    return (
         <EmptyComponent
-          title={emptyCatalogTitle}
-          text={emptyCatalogText}
+          title={translate.emptyCatalogTitle}
+          text={translate.emptyCatalogText}
           route={SHOP_ROUTE}
-          buttonText={emptyCatalogButtonText}
+          buttonText={translate.emptyCatalogButtonText}
         />
       );
 
     return (
       <div className="home-products-wrapper">
-        {threeProducts.map(product => (
-          <ProductCard key={product.id} productInfo={product} />
+        {threeProducts?.map(product => (
+          <ProductCard key={product?.id} productInfo={product} />
         ))}
       </div>
     );
   };
+
+  const renderSlider = () => (
+    <Swiper
+      className="sm:min-w-[400px] max-h-[231px] w-full h-[177px] lg:max-w-[400px] sm:h-[230px] rounded-lg"
+      spaceBetween={0}
+      slidesPerView={1}
+      watchSlidesProgress
+      modules={[Pagination]}
+      pagination={true}
+    >
+      <SwiperSlide>
+        <div className="w-full h-full relative flex flex-col items-center justify-center text-center text-white">
+          <Image
+            className="absolute w-full h-full z-0"
+            src={slide1}
+            alt="slide1"
+          />
+          <h5 className="relative z-10 family_bold text-[26px]">
+            {translate.manufacturer}
+          </h5>
+          <p className="relative z-10 font-light">{translate.manufacturerText}</p>
+        </div>
+      </SwiperSlide>
+    </Swiper>
+  );
+
+  useEffect(() => {
+    setAllProducts();
+  }, [setAllProducts]);
 
   return (
     <main className="container mx-auto px-[28px] sm:px-0">
@@ -96,11 +102,11 @@ const Home = () => {
               alt="back1"
             />
             <h3 className="family_bold relative z-10 text-[26px] sm:text-[42px]">
-              {newRevenues}
+              {translate.newRevenues}
             </h3>
-            <p className="relative z-10">{newRevenuesText}</p>
+            <p className="relative z-10">{translate.newRevenuesText}</p>
             <div className="flex absolute right-[20px] bottom-[16px] gap-[7px] items-center">
-              <p>{newRevenuesLink}</p>
+              <p>{translate.newRevenuesLink}</p>
               <Icons id="arrow" />
             </div>
           </div>
@@ -113,31 +119,10 @@ const Home = () => {
               src={airplane}
               alt="airplane"
             />
-            <h5 className="family_bold text-[26px]">{headerDelivery}</h5>
-            <p className="font-light">{deliveryText}</p>
+            <h5 className="family_bold text-[26px]">{translate.headerDelivery}</h5>
+            <p className="font-light">{translate.deliveryText}</p>
           </div>
-          <Swiper
-            className="sm:min-w-[400px] w-full h-[177px] lg:max-w-[400px] sm:h-[230px]"
-            spaceBetween={0}
-            slidesPerView={1}
-            watchSlidesProgress
-            modules={[Pagination]}
-            pagination={true}
-          >
-            <SwiperSlide>
-              <div className="w-full h-full relative flex flex-col items-center justify-center text-center text-white">
-                <Image
-                  className="absolute w-full h-full z-0"
-                  src={slide1}
-                  alt="slide1"
-                />
-                <h5 className="relative z-10 family_bold text-[26px]">
-                  {manufacturer}
-                </h5>
-                <p className="relative z-10 font-light">{manufacturerText}</p>
-              </div>
-            </SwiperSlide>
-          </Swiper>
+          {renderSlider()}
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 sm:h-[230px] gap-[15px] lg:gap-[24px]">
@@ -148,9 +133,9 @@ const Home = () => {
             alt="back2"
           />
           <h5 className="family_bold relative z-10 text-[26px]">
-            {promotions}
+            {translate.promotions}
           </h5>
-          <p className="relative z-10 font-light">{promotionsText}</p>
+          <p className="relative z-10 font-light">{translate.promotionsText}</p>
         </div>
 
         <Link
@@ -162,8 +147,8 @@ const Home = () => {
             src={airplane}
             alt="airplane"
           />
-          <h5 className="family_bold text-[26px]">{headerDelivery}</h5>
-          <p className="font-light">{deliveryText}</p>
+          <h5 className="family_bold text-[26px]">{translate.headerDelivery}</h5>
+          <p className="font-light">{translate.deliveryText}</p>
         </Link>
 
         <div className="relative rounded-md text-white h-[177px] sm:h-auto flex flex-col items-center justify-center p-4">
@@ -173,28 +158,28 @@ const Home = () => {
             alt="back3"
           />
           <h5 className="family_bold relative z-10 text-[26px] text-center">
-            {seasonThings}
+            {translate.seasonThings}
           </h5>
         </div>
         <Link href={"#filter"} className="choose_good_card">
           <Image src={packageImg} alt="packageImg" width={500} height={500} />
 
           <p className="text-[26px] family_bold sm:text-[20px]">
-            {productSelection}
+            {translate.productSelection}
           </p>
         </Link>
       </div>
      
       <div className="flex flex-col mt-[30px] w-full">
         <div className="flex justify-between mb-[26px]">
-          <h5 className="text-[24px]">{bestsellers}</h5>
+          <h5 className="text-[24px]">{translate.bestsellers}</h5>
 
           <div className="flex gap-[7px] items-center">
             <Link
               className="hover:text-tiffani transition-colors"
               href={CATALOG_ROUTE}
             >
-              {lookAll}
+              {translate.lookAll}
             </Link>
 
             <Icons id="arrowBlack" />
@@ -204,7 +189,7 @@ const Home = () => {
         {mapAllProducts()}
       </div>
 
-      <h5 className="text-[24px] mt-[30px] mb-[25px]">{foundation}</h5>
+      <h5 className="text-[24px] mt-[30px] mb-[25px]">{translate.foundation}</h5>
 
       <Filter />
     </main>

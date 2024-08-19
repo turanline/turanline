@@ -4,7 +4,8 @@ import { AxiosError } from "axios";
 export type CustomFormType =
   | IInputsLogin
   | IInputsRegistration
-  | IInputsChangeProfile;
+  | IInputsChangeProfile
+  | IInputsCard;
 
 export interface IPostCartApi {
   amount: number;
@@ -33,6 +34,19 @@ export interface IInputsLength {
   address: number;
   company: number;
   code: number;
+  card_number: number;  
+  cardholder_name: number;
+  cvv: number;
+  expiration_month: number;
+  expiration_year: number;
+}
+
+export interface IInputsCard{
+  card_number: number;  
+  cardholder_name: number;
+  cvv: number;
+  expiration_month: number;
+  expiration_year: number;
 }
 
 export interface IInputsLogin {

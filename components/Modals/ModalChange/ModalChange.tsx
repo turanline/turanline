@@ -17,7 +17,6 @@ import { useUserActions } from "@/hooks/useUserActions";
 import prefixes from "@/locales/prefixes.json";
 //Styles
 import "./ModalChange.scss";
-import "@/app/registration/registration.scss";
 
 const ModalChange: FC<IModalChangeProps> = ({ isChange, setIsChange }) => {
 
@@ -62,8 +61,22 @@ const ModalChange: FC<IModalChangeProps> = ({ isChange, setIsChange }) => {
       return;
     }
 
-    onChangeUserData(requestBody, reset, setValue, setIsChange);
+    onChangeUserData(requestBody)
+    .then(response => {
+      if ("error" in response && response.error.message === "Rejected") {
+        showToastMessage("error", translate.messageModalChangeError);
+        return;
+      }
+      showToastMessage("success", translate.messageModalChangeSuccess);
+      setIsChange(false);
+    })
+    .catch(error => console.log(error))
+    .finally(() => {
+      reset();
+      setValue("phone_number", "");
+    })
   };
+  
   const renderAllPrefixes = () => {
     if (!prefixes.prefixes) return (
       <SelectItem key="+1" value="+1">

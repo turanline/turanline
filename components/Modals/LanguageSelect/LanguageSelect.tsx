@@ -1,19 +1,15 @@
 "use client";
-
 //Global
 import React, { FC, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
 //Hooks
 import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useLanguage } from "@/hooks/useLanguage";
-
 //Images
 import rus from "@/public/rus.png";
 import tur from "@/public/tur.png";
 import eng from "@/public/eng.png";
-
 //Components
 import {
   Dropdown,
@@ -22,25 +18,17 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
-
 //Cookies
 import { getCookie, setCookie } from "cookies-next";
-
 //Styles
 import "./LanguageSelect.scss";
 
 const LanguageSelect: FC<{ color: string }> = ({ color }) => {
   const { selectedLanguage } = useTypedSelector(state => state.language);
-
   const { refresh } = useRouter();
-
   const { changeSelectedLanguage } = useLanguage();
 
-  useEffect(() => {
-    const language = getCookie("selectedLanguage");
-
-    if (language) changeSelectedLanguage(language);
-  }, [changeSelectedLanguage]);
+  const flags = ["RU", "TR", "EN"];
 
   const onChangeLanguage = (language: string) => {
     setCookie("selectedLanguage", language);
@@ -59,13 +47,27 @@ const LanguageSelect: FC<{ color: string }> = ({ color }) => {
     }
   };
 
-  const flags = ["RU", "TR", "EN"];
+  const renderAllFlags = () => (
+    flags.map(flag => (
+      <DropdownItem
+        key={flag}
+        startContent={
+          <Image src={returnImageByState(flag)} alt={flag} width={24} />
+        }
+      >
+        {flag}
+      </DropdownItem>
+    ))
+  );
+
+  useEffect(() => {
+    const language = getCookie("selectedLanguage");
+
+    if (language) changeSelectedLanguage(language);
+  }, [changeSelectedLanguage]);
 
   return (
-    <Dropdown
-      classNames={{ content: "dropdown-content" }}
-      isKeyboardDismissDisabled
-    >
+    <Dropdown classNames={{ content: "dropdown-content" }} isKeyboardDismissDisabled>
       <DropdownTrigger>
         <Button variant="light" style={{ padding: 0, color }}>
           <Image
@@ -86,16 +88,7 @@ const LanguageSelect: FC<{ color: string }> = ({ color }) => {
         selectedKeys={[selectedLanguage]}
         classNames={{ base: "dropdown-content" }}
       >
-        {flags.map(flag => (
-          <DropdownItem
-            key={flag}
-            startContent={
-              <Image src={returnImageByState(flag)} alt={flag} width={24} />
-            }
-          >
-            {flag}
-          </DropdownItem>
-        ))}
+        {renderAllFlags()}
       </DropdownMenu>
     </Dropdown>
   );

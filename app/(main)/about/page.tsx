@@ -3,19 +3,19 @@
 import Image from "next/image";
 import Link from "next/link";
 //Images
-import lcWaikiki from "../../public/assets/companies/lcWaikiki.png";
-import armani from "../../public/assets/companies/armani.png";
-import mavi from "../../public/assets/companies/mavi.png";
-import koton from "../../public/assets/companies/koton.png";
-import prada from "../../public/assets/companies/prada.png";
-import fangi from "../../public/assets/companies/fangi.png";
-import chanel from "../../public/assets/companies/chanel.png";
-import defacto from "../../public/assets/companies/defacto.png";
-import dior from "../../public/assets/companies/dior.png";
-import luiviton from "../../public/assets/companies/luiviton.png";
-import rolex from "../../public/assets/companies/rolex.png";
-import colins from "../../public/assets/companies/colins.png";
-import mapImg from "../../public/assets/other/mapImg.png";
+import lcWaikiki from "@/public/assets/companies/lcWaikiki.png";
+import armani from "@/public/assets/companies/armani.png";
+import mavi from "@/public/assets/companies/mavi.png";
+import koton from "@/public/assets/companies/koton.png";
+import prada from "@/public/assets/companies/prada.png";
+import fangi from "@/public/assets/companies/fangi.png";
+import chanel from "@/public/assets/companies/chanel.png";
+import defacto from "@/public/assets/companies/defacto.png";
+import dior from "@/public/assets/companies/dior.png";
+import luiviton from "@/public/assets/companies/luiviton.png";
+import rolex from "@/public/assets/companies/rolex.png";
+import colins from "@/public/assets/companies/colins.png";
+import mapImg from "@/public/assets/other/mapImg.png";
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
 //Components

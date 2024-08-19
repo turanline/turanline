@@ -15,7 +15,11 @@ import {
   phoneRegular,
   addressRegular,
   companyNameRegular,
-  codeRegular
+  codeRegular,
+  cardNumberRegular,
+  cardHolderNameRegular,
+  cvvRegular,
+  expirationDateRegular,
 } from "@/utils/Consts";
 
 const useCustomForm = <T extends CustomFormType>() => {
@@ -40,8 +44,18 @@ const useCustomForm = <T extends CustomFormType>() => {
         return addressRegular;
       case "company":
         return companyNameRegular;
-        case "code":
-          return codeRegular; 
+      case "code":
+        return codeRegular;
+      case "card_number":
+        return cardNumberRegular; 
+      case "cardholder_name":
+        return cardHolderNameRegular; 
+      case "cvv":
+       return cvvRegular; 
+      case "expiration_month":
+        return expirationDateRegular; 
+      case "expiration_year":
+        return expirationDateRegular; 
     }
   };
 
@@ -64,7 +78,17 @@ const useCustomForm = <T extends CustomFormType>() => {
       case "company":
         return translate.formCompany;
       case "code":
-        return translate.checkCode;  
+        return translate.checkCode;
+      case "card_number":
+        return 'Введите корректный номер карты'; 
+      case "cardholder_name":
+        return 'Введите корректное имя владельца карты'; 
+      case "cvv":
+       return 'Введите корректный CVV'; 
+      case "expiration_month":
+        return 'Введите корректный месяц'; 
+      case "expiration_year":
+        return 'Введите корректный год'; 
     }
     
   };
@@ -79,7 +103,12 @@ const useCustomForm = <T extends CustomFormType>() => {
       phone_number: 18,
       address: 150,
       company: 30,
-      code:6,  
+      code:6,
+      card_number:20,  
+      cardholder_name:100,
+      cvv:3,
+      expiration_month:2,
+      expiration_year:4,
     };
 
     const minLengthInput: IInputsLength = {
@@ -92,6 +121,11 @@ const useCustomForm = <T extends CustomFormType>() => {
       address: 1,
       company: 1,
       code:6,
+      card_number:16,  
+      cardholder_name:5,
+      cvv:3,
+      expiration_month:2,
+      expiration_year:4,
     };
 
     return {

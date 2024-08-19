@@ -37,7 +37,7 @@ export const fetchCart = createAsyncThunk<ICartState["cart"],undefined,{ rejectV
   }
 });
 
-export const addToCart = createAsyncThunk<undefined,IPostCartApi,{ rejectValue: string }>("cartSlice/addToCart", async (cartItem, { rejectWithValue }) => {
+export const addToCart = createAsyncThunk<any,IPostCartApi,{ rejectValue: string }>("cartSlice/addToCart", async (cartItem, { rejectWithValue }) => {
   try {
     await postToCart(cartItem);
   } catch (error) {

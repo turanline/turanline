@@ -71,9 +71,8 @@ export const postConfirmCode = async (phone_number: string,verification_code: st
 
     return {data,status};
   } catch (error: any) {
-    console.error(error);
-
     console.error(`Failed to post SMS: ${error.message}`);
+    return error;
   }
 };
 

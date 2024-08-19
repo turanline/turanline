@@ -1,13 +1,10 @@
 "use client";
-
 //Global
 import { NextPage } from "next";
 import React from "react";
 import Link from "next/link";
-
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
-
 //Utils
 import { CATALOG_ROUTE } from "@/utils/Consts";
 

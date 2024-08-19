@@ -33,6 +33,27 @@
   "bestsellers": "Хиты продаж",
   "foundation": "Подберите товар",
 
+  "paymentSelectCategory":"Выберите категорию",
+  "paymentSelectCity":"Выберите город",
+  "paymentSelectTarif":"Выберите тариф",
+
+  "productWeight":"Вес товара",
+
+  "productMold":"Лекало",
+
+
+  "paymentCardNumber":"Номер карты",
+  "paymentCardHolder":"Имя держателя карты",
+  "paymentCardMonth":"Срок действия карты - Месяц",
+  "paymentCardYear":"Срок действия карты - Год",
+  "paymentPayOrder":"Оплатить заказ",
+  "paymentNameSurname":"Имя Фамилия",
+
+
+
+
+
+
   "footerPayment": "Оплата",
   "footerPolitics": "Политика конфиденциальности",
   "footerTextUnderEmail": "Пишите в любое время дня и ночи",

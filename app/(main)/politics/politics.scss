@@ -32,13 +32,13 @@
 @font-face {
   font-family: "Geometria-Bold";
   src: local("Geometria-Bold"),
-    url("../../fonts/Geometria-Bold.ttf") format("truetype");
+    url("../../../fonts//Geometria-Bold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Geometria-Medium";
   src: local("Geometria-Medium"),
-    url("../../fonts/Geometria-Medium.ttf") format("truetype");
+    url("../../../fonts/Geometria-Medium.ttf") format("truetype");
 }
 
 @mixin politics-text($size, $height, $align, $weight, $color, $family) {

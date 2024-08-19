@@ -17,6 +17,20 @@
   "paymentUnsuccess": "Satın alma gerçekleşmedi!",
   "paymentUnsuccessText": "Maalesef beklenmedik bir hata oluştu",
   "paymentButton": "Mağazaya",
+  "paymentSelectCategory": "Kategori Seçin",
+  "paymentSelectCity": "Şehir Seçin",
+  "paymentSelectTarif": "Tarife Seçin",
+
+  "productWeight":"Ürün ağırlığı",
+  "productMold":"Model",
+  "paymentNameSurname": "Ad Soyad",
+
+  "paymentCardNumber": "Kart Numarası",
+  "paymentCardHolder": "Kart Sahibi",
+  "paymentCardMonth": "Kart Son Kullanma Tarihi - Ay",
+  "paymentCardYear": "Kart Son Kullanma Tarihi - Yıl",
+  "paymentPayOrder": "Siparişi Öde",
+
 
   "newRevenues": "Yeni gelirler",
   "newRevenuesText": "Endüstrinin geleceğini şekillendiren ürünleri ilk olarak keşfedin!",

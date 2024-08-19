@@ -3,11 +3,11 @@ import { CategoryPageComponent } from "@/components/CategoryPageComponent/Catego
 import { CategoryComponent } from "@/components/CategoryComponent/CategoryComponent";
 
 //Services
-import { getCategoryById, getCategories } from "@/services/categoriesAPI";
+import { getCategoryById, getAllCategories } from "@/services/categoriesAPI";
 
 export async function generateStaticParams() {
   try {
-    const categories = await getCategories();
+    const categories = await getAllCategories();
 
     return categories.map(({ id }: { id: number }) => ({
       id: id.toString(),
@@ -19,7 +19,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
   try {
-    const categoriesObject = await getCategoryById(params.id);
+    const categoriesObject = await getCategoryById(params?.id);
     const categoryName = Object.keys(categoriesObject)[0];
 
     return {
@@ -33,12 +33,12 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
 export default async function Category({ params }: { params: { id: number } }) {
   async function getCategoryByParams() {
     try {
-      const categoriesObject = await getCategoryById(params.id);
+      const categoriesObject = await getCategoryById(params?.id);
 
       return (
         <CategoryComponent
           categoryObject={categoriesObject}
-          categoryId={+params.id}
+          categoryId={+params?.id}
         />
       );
     } catch (error) {

@@ -16,6 +16,19 @@
   "paymentUnsuccess": "Purchase failed!",
   "paymentUnsuccessText": "Unfortunately, an unexpected error occurred",
   "paymentButton": "To the store",
+  "paymentSelectCategory": "Select Category",
+  "paymentSelectCity": "Select City",
+  "paymentSelectTarif": "Select Tariff",
+  "paymentNameSurname": "Name Surname",
+  "productWeight":"Product weight",
+
+  "productMold":"Mold",
+
+  "paymentCardNumber": "Card Number",
+  "paymentCardHolder": "Cardholder Name",
+  "paymentCardMonth": "Card Expiry - Month",
+  "paymentCardYear": "Card Expiry - Year",
+  "paymentPayOrder": "Pay Order",
 
   "newRevenues": "New Arrivals",
   "newRevenuesText": "Be the first to know about products shaping the future of the industry",

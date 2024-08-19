@@ -26,6 +26,7 @@ const HeaderSearch: FC<IHeaderSearchProps> = ({ allCategories, onSetCategory, ca
 
   const handleSubmitForm = () => {
     if (pathname !== CATALOG_ROUTE) push(CATALOG_ROUTE);
+
     onSetSearchText(getValues().search);
   };
 
@@ -50,16 +51,14 @@ const HeaderSearch: FC<IHeaderSearchProps> = ({ allCategories, onSetCategory, ca
     { id: 4, name: "Все категории", image: null },
     ...allCategories,
   ];
-
+  //ClassNames
   const selectClassName = {
     popoverContent: "w-[170px]",
     mainWrapper: "w-[170px]",
     base: "w-[170px]",
     trigger: "rounded-none shadow-none transition duration-200 ease bg-white",
   };
-
   const formClassName = `${isHidden ? "hidden" : "search-mobile"} lg:flex h-[56px] overflow-hidden rounded-[10px]`;
-
   const inputClassName = {
     inputWrapper: "shadow-none border-none h-[56px] bg-white",
     mainWrapper: "h-[56px] transition duration-200 ease",

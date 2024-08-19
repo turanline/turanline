@@ -46,12 +46,14 @@ import logo2 from "@/public/assets/other/logo2.svg";
 //Styles
 import "./Header.scss";
 
+
+
 export function Header() {
   const [searchModal, setSearchModal] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const { push } = useRouter();
   //Hooks
+  const { push } = useRouter();
   const translate = useTranslate();
   const { category } = useTypedSelector(state => state.products);
   const { categories } = useTypedSelector(state => state.categories);

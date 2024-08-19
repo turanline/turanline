@@ -3,53 +3,42 @@
 import React, { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
 //Hooks
 import { useCart } from "@/hooks/useCart";
 import { useTranslate } from "@/hooks/useTranslate";
-
+//Images
+import noImage from '@/public/assets/other/no_picture_create.png';
 //Components
 import { Icons } from "../Icons/Icons";
-
 //Component Types
 import { IProductCart } from "@/types/componentTypes";
-
 //Global Types
 import { IPutCart } from "@/types/types";
-
 //Styles
 import "./UserCartItem.scss";
 
 const UserCartItem: FC<{product: IProductCart;}> = ({ product }) => {
 
+  const translate = useTranslate();
   const { deleteCardFromBasket, onChangeCardCounter } = useCart();
 
   const handleChangeProductCounter = (action: "inc" | "dec") => {
-    if (action === "dec" && product.amount <= 1) return;
+    if (action === "dec" && product?.amount <= 1) return;
 
     const patchObject: IPutCart = {
-      amount: action === "dec" ? product.amount - 1 : product.amount + 1,
-      color: product.color.id,
+      amount: action === "dec" ? product?.amount - 1 : product?.amount + 1,
+      color: product?.color?.id,
     };
 
-    onChangeCardCounter(patchObject, product.id);
+    onChangeCardCounter(patchObject, product?.id);
   };
 
-  const {
-    filterSize,
-    filterColor,
-    cartItemCounterText,
-    cartItemPrice,
-    cartItemTotalPrice,
-  } = useTranslate();
-
-
-  const imageUrl = product?.product?.images[0]?.image_file ? product?.product?.images[0]?.image_file : "";
+  const imageUrl = product?.product?.images[0]?.image_file ? product?.product?.images[0]?.image_file : noImage;
 
   return (
     <div id={String(product?.product?.id)} className="product-card">
       <div className="product-card__image-container">
-        <Link className="imgWrapper" href={`/product/${product?.product?.slug}`}>
+        <Link className="imgWrapper" href={`/product/${product?.product?.article_number}`}>
           <Image
             className="img"
             src={imageUrl}
@@ -61,7 +50,7 @@ const UserCartItem: FC<{product: IProductCart;}> = ({ product }) => {
 
         <div className="product-card__info-container">
           <Link
-            href={`/product/${product.product.slug}`}
+            href={`/product/${product?.product?.article_number}`}
             className="product-card__title"
           >
             {product?.product?.name}
@@ -71,7 +60,7 @@ const UserCartItem: FC<{product: IProductCart;}> = ({ product }) => {
             <div className="product-card__description-container-wrapper">
 
               <div className="product-card__description-container">
-                <p className="product-card__description">{filterColor}</p>
+                <p className="product-card__description">{translate.filterColor}</p>
 
                 <div
                   data-color
@@ -81,7 +70,7 @@ const UserCartItem: FC<{product: IProductCart;}> = ({ product }) => {
               </div>
 
               <div className="product-card__description-container">
-                <p className="product-card__description">{cartItemPrice}</p>
+                <p className="product-card__description">{translate.cartItemPrice}</p>
 
                 <div className="product-card__option">
                   <p className="font-medium">${product?.product?.price}</p>
@@ -92,7 +81,7 @@ const UserCartItem: FC<{product: IProductCart;}> = ({ product }) => {
             <div className="product-card__total-container">
               <div className="product-card__total-description-container">
                 <p className="product-card__description">
-                  {cartItemCounterText}
+                  {translate.cartItemCounterText}
                 </p>
 
                 <div className="flex">
@@ -118,7 +107,7 @@ const UserCartItem: FC<{product: IProductCart;}> = ({ product }) => {
 
               <div className="product-card__total-description-container">
                 <p className="product-card__description">
-                  {cartItemTotalPrice}
+                  {translate.cartItemTotalPrice}
                 </p>
 
                 <div className="product-card__option">

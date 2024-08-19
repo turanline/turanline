@@ -1,7 +1,7 @@
 //Global
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 //Services
-import { getCategories, getTypes, getSubTypes } from "@/services/categoriesAPI";
+import { getAllCategories, getTypes, getSubTypes } from "@/services/categoriesAPI";
 //Interfaces
 interface Category {
   id: number;
@@ -28,7 +28,7 @@ const initialState: ICategoriesState = {
 
 export const fetchCategories = createAsyncThunk<ICategoriesState["categories"],undefined,{ rejectValue: string }>("categoriesSlice/fetchCategories", async (_, { rejectWithValue }) => {
   try {
-    const categories = getCategories();
+    const categories = getAllCategories();
 
     return categories;
   } catch (error) {

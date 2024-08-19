@@ -19,7 +19,7 @@ interface Product {
   id: number;
   name: string;
   images: Image[];
-  slug: string;
+  article_number: string;
   price: string;
 }
 
@@ -60,10 +60,10 @@ export interface IProductMainPage {
   name: string;
   description: string;
   compound: string;
-  brand: Brand;
+  brand: string;
   colors_data: Color[];
   sizes_data: Size[];
-  manufacturerCountry: ManufacturerCountry;
+  manufacturerCountry: string;
   category: any[];
   images: Image[];
   article_number: string;
@@ -77,12 +77,14 @@ export interface IProductMainPage {
   status: string;
   date_and_time: string;
   provider: number;
+  mold: string;
 }
+
 
 export interface IUserOrderItem {
   amount: number;
   color: IProductCart["color"];
-  size: IProductCart["size"];
+  // size: IProductCart["size"];
   product: IProductCart["product"];
 }
 

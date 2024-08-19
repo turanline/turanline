@@ -1,39 +1,31 @@
 "use client";
-
 //Global
 import Image from "next/image";
 import { FC } from "react";
-
 //Components
 import { Icons } from "@/components/Icons/Icons";
 import { Divider } from "@nextui-org/react";
 import { Accordion, AccordionItem } from "@nextui-org/react";
 import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
-
 //Utils
 import { SHOP_ROUTE } from "@/utils/Consts";
-
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
 import { useCategories } from "@/hooks/useCategories";
 import { useTypedSelector } from "@/hooks/useReduxHooks";
-
 //Styles
 import "swiper/css";
 import "./CategoryComponent.scss";
 import "swiper/css/pagination";
 
-const CategoryComponent: FC<{ categoryObject: any; categoryId: number }> = ({
-  categoryObject,
-  categoryId }) => {
-  const { status } = useTypedSelector(state => state.categories);
 
+const CategoryComponent: FC<{ categoryObject: any; categoryId: number }> = ({ categoryObject, categoryId }) => {
+
+  const {status } = useTypedSelector(state => state.categories);
   const { mainPageRoute, lookAll } = useTranslate();
-
   const { returnSubtypesByType, returnTypesByCategory } = useCategories("");
-
   const categoryName = Object.keys(categoryObject)[0];
-
+  
   if (status === "pending") return <Icons id="spiner" />;
 
   const renderCategory = () =>
@@ -45,7 +37,7 @@ const CategoryComponent: FC<{ categoryObject: any; categoryId: number }> = ({
           <div key={index} className="w-full flex flex-col">
             <Image
               className="w-full h-[300px] rounded-md mb-[20px]"
-              src={image.toString()}
+              src={image?.toString()}
               alt={name}
               width={150}
               height={300}

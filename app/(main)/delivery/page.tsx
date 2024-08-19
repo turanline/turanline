@@ -4,11 +4,11 @@ import Image from "next/image";
 //Utils
 import { SHOP_ROUTE } from "@/utils/Consts";
 //Images
-import magnumCargo from "../../public/assets/companies/magnumCargo.png";
-import skKargo from "../../public/assets/companies/skKargo.png";
-import kargo63 from "../../public/assets/companies/kargo63.png";
-import kitkaTrans from "../../public/assets/companies/kitkaTrans.png";
-import coupex from "../../public/assets/companies/coupex.png";
+import magnumCargo from "@/public/assets/companies/magnumCargo.png";
+import skKargo from "@/public/assets/companies/skKargo.png";
+import kargo63 from "@/public/assets/companies/kargo63.png";
+import kitkaTrans from "@/public/assets/companies/kitkaTrans.png";
+import coupex from "@/public/assets/companies/coupex.png";
 //Components
 import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 //Hooks

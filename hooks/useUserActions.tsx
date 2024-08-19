@@ -27,15 +27,14 @@ import { useAppDispatch } from "./useReduxHooks";
 import { useFavorites } from "./useFavorites";
 import { useTranslate } from "./useTranslate";
 import { useCart } from "./useCart";
+import { useTypedSelector } from "./useReduxHooks";
 //Utils
-import { CATALOG_ROUTE, PROFILE_ROUTE } from "@/utils/Consts";
+import { CATALOG_ROUTE } from "@/utils/Consts";
 //Global Types
 import {
   IChangeUserData,
   IInputsChangeProfile,
-  IInputsLogin,
   IInputsLoginPost,
-  IInputsRegistration,
 } from "@/types/types";
 //Component Types
 import { ISortConfig } from "@/types/componentTypes";
@@ -62,13 +61,14 @@ interface IUserState {
 }
 
 const useUserActions = () => {
-  const dispatch = useAppDispatch();
+  //Hooks
   const { push } = useRouter();
-
-  const { onResetCart } = useCart();
-  const { onResetFavorites } = useFavorites();
-
   const translate = useTranslate();
+  const { onResetCart } = useCart();
+  const dispatch = useAppDispatch();
+  const { onResetFavorites } = useFavorites();
+  const {userOrders} = useTypedSelector(state => state.user)
+
 
   const onLogInUser = useCallback(
     (information: IInputsLoginPost) =>
@@ -97,32 +97,13 @@ const useUserActions = () => {
   );
 
   const onChangeUserData = useCallback(
-    (
-      newUserData: IChangeUserData,
-      reset: UseFormReset<IInputsChangeProfile>,
-      setValue: UseFormSetValue<IInputsChangeProfile>,
-      setIsChange: Dispatch<SetStateAction<boolean>>
-    ) =>
-      dispatch(changeUserDataProfile(newUserData))
-        .then(data => {
-          if ("error" in data && data.error.message === "Rejected") {
-            showToastMessage("error", translate.messageModalChangeError);
-            return;
-          }
-          showToastMessage("success", translate.messageModalChangeSuccess);
-          setIsChange(false);
-        })
-        .catch(error => console.log(error))
-        .finally(() => {
-          reset();
-          setValue("phone_number", "");
-        }),
-    [dispatch]
+    (newUserData: IChangeUserData) =>
+      dispatch(changeUserDataProfile(newUserData)),[dispatch]
   );
 
-  const onGetUser = useCallback(() => dispatch(getUser()), [dispatch]),
-    onGetOrders = useCallback(() => dispatch(getOrders()), [dispatch]),
-    onGetReviews = useCallback(() => dispatch(getReviews()), [dispatch]);
+  const onGetUser = useCallback(() => dispatch(getUser()), [dispatch]);
+  const onGetOrders = useCallback(() => dispatch(getOrders()), [dispatch]);
+  const onGetReviews = useCallback(() => dispatch(getReviews()), [dispatch]);
 
   const onLogOutUser = useCallback(async () => {
     try {
@@ -138,11 +119,9 @@ const useUserActions = () => {
     }
   }, [dispatch, onResetCart, onResetFavorites]);
 
-  const returnUserOrders = (
-    orders: ICartState["cart"][],
-    handleSort: (key: ISortConfig["key"]) => void
-  ) => {
-    if (!orders?.length) {
+
+  const returnUserOrders = ( orders: ICartState["cart"][], handleSort: (key: ISortConfig["key"]) => void) => {
+    if (!userOrders?.length) {
       return (
         <EmptyComponent
           buttonText={translate.emptyBasketButtonText}
@@ -192,12 +171,12 @@ const useUserActions = () => {
         <div className="profile-content_orders-content-list">
           {orders?.map(order => (
             <UserOrderWrapper
-              key={order.id}
+              key={order?.id}
               orderNumber={order?.id}
               orderDate={order?.created_date}
               orderStatus={order?.status}
-              orderProducts={order.order_products}
-              orderSum={order.total_sum}
+              orderProducts={order?.order_products}
+              orderSum={order?.total_sum}
             />
           ))}
         </div>

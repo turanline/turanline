@@ -35,12 +35,15 @@ export default function PhoneConfirmation(){
         const response = await resetUserPassword({phone_number:phoneNumber,verification_code: getValues().code})
            if(response?.status === 200){
             showToastMessage('success','Проверка прошла успешно');
-            deleteCookie('userPhone');
+            deleteCookie('phoneNumber');
             push(LOGIN_ROUTE);
             onSetForgetPassword(false);
+            return;
            };
-           if(!response) showToastMessage('error','Проверка не прошла');
-           return;
+           if(response?.response?.status){
+            showToastMessage('error','Проверка не прошла');
+            return;
+           };
        } catch (error) {
            showToastMessage('error','Проверка не прошла')
            return;
@@ -48,13 +51,17 @@ export default function PhoneConfirmation(){
     }
     try {
       const response = await postConfirmCode(phoneNumber,getValues().code)
-         if(response?.status === 200){
+         if(response?.status === 201){
            onGetUser();
            push(PROFILE_ROUTE)
+          return;
          };
-         if(!response) showToastMessage('error','Проверка не прошла');
+         if(response?.response?.status){
+          showToastMessage('error','Проверка не прошла');
+          return;
+         }
      } catch (error) {
-         showToastMessage('error','Проверка не прошла')
+         console.error(error);
      }
   }
  

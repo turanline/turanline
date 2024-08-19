@@ -4,8 +4,9 @@ import { useRouter } from "next/navigation";
 import { SubmitHandler } from "react-hook-form";
 import React, { useEffect, useState } from "react";
 //Components
+import InputMask from "react-input-mask";
 import { Icons } from "@/components/Icons/Icons";
-import { Checkbox, Button, Input } from "@nextui-org/react";
+import { Checkbox, Button, Input , Select, SelectItem } from "@nextui-org/react";
 import { NextPage } from "next";
 import { setCookie ,getCookie} from "cookies-next";
 import { showToastMessage } from "../toastsChange";
@@ -21,33 +22,56 @@ import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useUserActions } from "@/hooks/useUserActions";
 //Global Types
 import { IInputsLogin } from "@/types/types";
+import { Country } from "@/types/componentTypes";
+//Prefixes
+import prefixes from "@/locales/prefixes.json";
 //Styles
-import "../../app/login/login.scss";
+import "./login.scss";
 
 const LogIn: NextPage = () => {
   //Hooks
   const { push } = useRouter();
   const translate = useTranslate();
-  const { onLogInUser, onSetRegistrationPage ,onSetForgetPassword} = useUserActions();
+  const { onLogInUser, onSetRegistrationPage ,onSetForgetPassword,onGetUser} = useUserActions();
   const { isAuth, status } = useTypedSelector(state => state.user);
   const { returnInputError, returnInputProperties, isValid, handleSubmit, getValues, reset ,setValue} = useCustomForm<IInputsLogin>();
 
   const [forgetModal, setForgetModal] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [selectPhone,setSelectPhone] = useState<string>("");
+  const [prefixCode,setPrefixCode] = useState<string>('+1');
+
+  const selectClassName = {
+    innerWrapper: "w-fit h-[30px]",
+    popoverContent: "w-[130px] h-[250px]",
+    mainWrapper: "w-[74px] h-[50px]",
+    base: "w-[74px] h-[40px]",
+    trigger: "rounded-tl-[10px] rounded-bl-[10px] rounded-tr-none rounded-br-none shadow-none w-[74px] h-[40px] border border-r-0"
+  };
 
   const logInAccount: SubmitHandler<IInputsLogin> = () => {
-    if(!isValid) return;
+    if(!isValid){
+      showToastMessage('warn','Заполните все поля');
+      return;
+    };
+
+    const phoneNumber = getValues().phone_login_number.replace(/[^\d+]/g, '');
+
+    const requestBody = {
+      phone_number:prefixCode + phoneNumber,
+      password:getValues().password
+    };
+
 
     try {
-      onLogInUser({phone_number:getValues().phone_login_number,password:getValues().password})
+      onLogInUser(requestBody)
       .then(response => {
         if(response.payload?.access){
           showToastMessage("success", translate.messageLogInSuccess);
           return;
         };
         if (response.payload === 'Error: 403') {
-          setCookie('userPhone',selectPhone);
+          setCookie('phoneNumber',selectPhone);
           onSetRegistrationPage(2);
           push(REGISTRATION_ROUTE);
           getVerifySmsCode(selectPhone,'verification');
@@ -67,23 +91,54 @@ const LogIn: NextPage = () => {
     }catch (error) {
       console.error(error);
     }
-    if(rememberMe) setCookie('userPhone',selectPhone);
-
+    if(rememberMe){
+      setCookie('userPhoneRemember',selectPhone.replace(/[^\d+]/g, ''));
+      setCookie('phonePrefix', prefixCode);
+    }
   };
 
+
+
+
   const showModalForgetPassword = () => setForgetModal(!forgetModal);
+
+  const renderAllPrefixes = () => {
+    if (!prefixes.prefixes) return (
+      <SelectItem key="+1" value="+1">
+        Ошибка
+      </SelectItem>
+    );
+  
+    return (
+      prefixes.prefixes?.map((country: Country) => (
+        <SelectItem aria-label={`${country?.code}`} key={country?.code} value={`${country?.code}`}>
+          <img src={country?.flag} alt={country?.name} className="inline-block w-4 h-4 mr-2" />
+          {country?.code}
+        </SelectItem>
+      ))
+    );
+  };
 
   useEffect(()=>{
     onSetForgetPassword(false);
   },[])
+
+  useEffect(() => {
+    onGetUser();
+  }, [onGetUser]);
   
   useEffect(() => {
     const savedUser = getCookie('userPhoneRemember');
+    const savedPrfix = getCookie('phonePrefix');
+
       
     if (savedUser) setSelectPhone(savedUser);
+    if (savedPrfix) setPrefixCode(savedPrfix);
 
-    setValue('phone_login_number',selectPhone)
+
+    setValue('phone_login_number',(prefixCode + selectPhone).replace(/[^\d+]/g, ''))
   },[rememberMe]);
+
 
   useEffect(() => {
     if (status === "fulfilled" && isAuth) push(PROFILE_ROUTE);
@@ -101,21 +156,34 @@ const LogIn: NextPage = () => {
         </div>
 
         <div className="form-content_bottom">
-          <label htmlFor="#" className="form-content_bottom-label">
+        <label htmlFor="#" className="form-content_bottom-label">
             <span className="form-content_bottom-label-span">
               {translate.registrationPhoneNumber}
             </span>
-                <input
-                    {...returnInputProperties("phone_login_number")}
-                    className="form-content-login-label-input phone"
-                    type="tel"
-                    onChange={event => setSelectPhone(event.target.value)}
-                    placeholder={translate.registrationPhoneNumber}
-                    value={selectPhone}
-                    minLength={12}
-                    maxLength={14}
-                  />
-                  {returnInputError("phone_login_number")}
+
+           <div className="flex">
+            <Select
+                radius="none"
+                disallowEmptySelection
+                defaultSelectedKeys={[prefixCode]}
+                classNames={selectClassName}
+                onChange={event => setPrefixCode(event.target.value)}
+              >
+                {renderAllPrefixes()}
+              </Select>
+
+              <InputMask
+                {...returnInputProperties("phone_login_number")}
+                data-phone
+                value={selectPhone}
+                className="form-content-login-label-input-phone"
+                mask='(999) 999-99-99'
+                alwaysShowMask={true}
+                onChange={event => setSelectPhone(event.target.value)}
+              />
+           </div>
+
+            {returnInputError("phone_login_number")}
           </label>
 
           <label htmlFor="#" className="form-content_bottom-label">

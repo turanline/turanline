@@ -1,19 +1,15 @@
 //Global
 import React, { FC } from "react";
 import Link from "next/link";
-
 //Components
 import { Button } from "@nextui-org/react";
-
 //Component Types
 import { IEmptyComponentProps } from "@/types/componentTypes";
 
-const EmptyComponent: FC<IEmptyComponentProps> = ({
-  route,
-  title,
-  text,
-  buttonText,
-}) => {
+
+const EmptyComponent: FC<IEmptyComponentProps> = ({ route, title, text, buttonText }) => {
+
+
   return (
     <div className="w-full flex flex-col items-center">
       <h1 className="text-[40px] text-center text-tiffani family-medium mb-[20px]">

@@ -64,7 +64,7 @@ const ForgetPasswordModal:FC <IModalForgetPassword> = ({forgetModal,setForgetMod
             push(REGISTRATION_ROUTE);
             onSetRegistrationPage(2);
             onSetForgetPassword(true);
-            setCookie('userPhone',phone);
+            setCookie('phoneNumber',phone);
             return;
           };
           if(resetPassword.response.status === 404){
@@ -75,7 +75,7 @@ const ForgetPasswordModal:FC <IModalForgetPassword> = ({forgetModal,setForgetMod
             showToastMessage('warn','Пользователь не верифицирован');
             push(REGISTRATION_ROUTE);
             onSetRegistrationPage(2);
-            setCookie('userPhone',phone);
+            setCookie('phoneNumber',phone);
             return;
           }
     } catch (error) {
@@ -118,21 +118,6 @@ const ForgetPasswordModal:FC <IModalForgetPassword> = ({forgetModal,setForgetMod
     <main onClick={closeModal} className={wrapperClassName}>
       <form onSubmit={handleSubmit(sendRequestToRecoverPassword)} className={contentClassName} onClick={stopPropagation}>
         <h4 className="forget-content-title">{translate.recoverPasswordTitle}</h4>
-        {/* <label htmlFor="#" className="form-content-forget-label">
-            <span className="form-content-forget-label-span">
-              {translate.inputEmail}
-            </span>
-
-            <input
-              {...returnInputProperties("email")}
-              placeholder={translate.inputEmailPlaceHolder}
-              type="username"
-              // value={userData}
-              className="form-content-forget-label-input"
-            />
-            {returnInputError("email")}
-          </label> */}
-
           <label htmlFor="#" className="form-content-forget-label">
             <span className="form-content-forget-label-span">
               {translate.registrationPhoneNumber}

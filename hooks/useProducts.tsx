@@ -1,8 +1,6 @@
 "use client";
-
 //Global
 import { CSSProperties, Dispatch, SetStateAction, useCallback } from "react";
-
 //Actions
 import {
   setFilters,
@@ -11,13 +9,10 @@ import {
   fetchFilteredProducts,
   setSearchText,
 } from "@/redux/reducers/productsSlice";
-
 //Hooks
 import { useAppDispatch, useTypedSelector } from "./useReduxHooks";
-
 //Component Types
-import { Color, IProductMainPage, Size } from "@/types/componentTypes";
-
+import { Color, IProductMainPage } from "@/types/componentTypes";
 //Redux Types
 import { IProductsState } from "@/types/reduxTypes";
 
@@ -55,96 +50,80 @@ const useProducts = () => {
     if (!searchText) return filtered;
 
     const lowercasedSearchText = searchText.toLowerCase();
+
     return filtered.filter(({ name }) =>
       name.toLowerCase().includes(lowercasedSearchText)
     );
   };
 
-  const compareObjects = (
-    obj1: IProductsState["filters"],
-    obj2: IProductsState["filters"]
-  ) => {
-    const keys1 = Object.keys(obj1);
-    const keys2 = Object.keys(obj2);
+// Функция сравнения двух объектов фильтров на идентичность
+const areFiltersEqual = ( filters1: IProductsState["filters"], filters2: IProductsState["filters"]): boolean => {
+  const filterKeys1 = Object.keys(filters1);
+  const filterKeys2 = Object.keys(filters2);
 
-    return (
-      keys1.length === keys2.length &&
-      keys1.every(
-        key =>
-          obj2.hasOwnProperty(key) &&
-          obj1[key as keyof IProductsState["filters"]] ===
-            obj2[key as keyof IProductsState["filters"]]
-      )
-    );
+  // Проверяем, что количество ключей совпадает
+  if (filterKeys1.length !== filterKeys2.length) return false;
+
+  // Проверяем идентичность значений по ключам в обоих объектах
+  return filterKeys1.every(
+    key =>
+      filters2.hasOwnProperty(key) &&
+      filters1[key as keyof IProductsState["filters"]] === filters2[key as keyof IProductsState["filters"]]
+  );
+};
+
+// Функция получения стилей для кнопок выбора цвета
+const getColorButtonStyles = (colorOption: Color, selectedColorId: number): CSSProperties => {
+  const isSelected = colorOption?.id === selectedColorId;
+
+  return {
+    borderColor: isSelected ? "#0abab5" : "",
+    background: colorOption?.color || "transparent",
   };
+};
 
-  const getButtonStyles = (
-    item: Size | Color,
-    selectedOption: number,
-    isColor: boolean
-  ): CSSProperties => {
-    const isSelected = isColor
-      ? (item as Color).id === selectedOption
-      : (item as Size).id === selectedOption;
+// Обработка клика на кнопку выбора цвета
+const handleColorSelection = ( colorOptionId: number, selectedColorId: number, setSelectedColorId: Dispatch<SetStateAction<number>> ) => {
+  if (colorOptionId !== selectedColorId) {
+    setSelectedColorId(colorOptionId);
+  } else {
+    setSelectedColorId(0); // Сброс выбора, если тот же цвет был выбран повторно
+  }
+};
 
-    return {
-      borderColor: isSelected ? "#0abab5" : "",
-      background:
-        isColor && "color" in item ? (item as Color).color : "transparent",
-    };
-  };
+// Функция отрисовки опций продукта 
+const renderColorOptions = (
+  colors: IProductMainPage["colors_data"],
+  selectedColorId: number,
+  setSelectedColorId: Dispatch<SetStateAction<number>>,
+  buttonClassName: string
+) => {
+  if (!colors?.length) return null;
 
-  const handleButtonClick = (
-    item: Size | Color,
-    selectedOption: number,
-    setSelectedOption: Dispatch<SetStateAction<number>>,
-    isColor: boolean
-  ) => {
-    const optionId = isColor ? (item as Color).id : (item as Size).id;
-    if (optionId !== selectedOption) setSelectedOption(optionId);
-    else setSelectedOption(0);
-  };
+  return (
+    <div className="flex flex-wrap gap-[10px]">
+      {colors?.map((colorOption, index) => (
+        <button
+          key={index}
+          onClick={() => handleColorSelection(colorOption?.id, selectedColorId, setSelectedColorId)}
+          className={buttonClassName}
+          style={getColorButtonStyles(colorOption, selectedColorId)}
+        />
+      ))}
+    </div>
+  );
+};
 
-  const mapProductOptions = (
-    options: IProductMainPage["sizes_data"] | IProductMainPage["colors_data"],
-    selectedOption: number,
-    setSelectedOption: Dispatch<SetStateAction<number>>,
-    className: string,
-    isColor: boolean = false
-  ) => {
-    if (options.length)
-      return (
-        <div className="flex flex-wrap gap-[10px]">
-          {options?.map((item, index) => (
-            <button
-              onClick={() =>
-                handleButtonClick(
-                  item,
-                  selectedOption,
-                  setSelectedOption,
-                  isColor
-                )
-              }
-              key={index}
-              className={className}
-              style={getButtonStyles(item, selectedOption, isColor)}
-            >
-              {!isColor && (item as Size).name}
-            </button>
-          ))}
-        </div>
-      );
-  };
 
   return {
     onSetCategory,
     onSetFilters,
     setAllProducts,
     onSetFiltered,
-    compareObjects,
+    areFiltersEqual,
     onSetSearchText,
     handleSearch,
-    mapProductOptions,
+    renderColorOptions,
   };
 };
 

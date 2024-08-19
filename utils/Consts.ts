@@ -39,67 +39,16 @@ export const usernameRegular = /^[a-zA-Z0-9_]{3,20}$/;
 export const addressRegular = /^[a-zA-Zа-яА-ЯёЁĞÜŞİÖÇğüşiöç0-9\s,.-]+$/;
 export const companyNameRegular = /^[a-zA-Z0-9\s\-_.,!@#$%^&*()+=]+$/;
 export const emailRegular = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-export const phone_login_Regular = /^\+[0-9]+$/;
+export const phone_login_Regular = /(?:)/;
+// export const phone_login_Regular = /^\+[0-9]+$/;
 export const phoneRegular = /(?:)/;
 export const codeRegular = /^\d+$/;
-//All Cities
-export const cities = [
-  { city: "Москва", value: "Moscow" },
-  { city: "Красноярск", value: "Krasnoyarsk" },
-  { city: "Иркутск", value: "Irkutsk" },
-  { city: "Казань", value: "Kazan" },
-  { city: "Якутск", value: "Yakutsk" },
-  { city: "Екатеринбург", value: "Yekaterinburg" },
-  { city: "Стамбул (Лалели)", value: "Istanbul (Laleli)" },
-  { city: "Омск", value: "OMSK" },
-  { city: "Ростов-на-Дону", value: "Rostov-on-Don" },
-  { city: "Краснодар", value: "Krasnodar" },
-  { city: "Оренбург", value: "Orenburg" },
-  { city: "Крым", value: "Crimea" },
-  { city: "Ульяновск", value: "Ulyanovsk" },
-  { city: "Челябинск", value: "Chelyabinsk" },
-  { city: "Новосибирск", value: "Novosibirsk" },
-  { city: "Самара", value: "Samara" },
-  { city: "Санкт-Петербург", value: "Saint Petersburg" },
-  { city: "Ханты-Мансийск", value: "Khanty-Mansiysk" },
-  { city: "Липецк", value: "Lipetsk" },
-  { city: "Нальчик", value: "Nalchik" },
-  { city: "Пятигорск", value: "Pyatigorsk" },
-  { city: "Махачкала", value: "Makhachkala" },
-  { city: "Грозный", value: "Grozny" },
-  { city: "Дербент", value: "Derbent" },
-  { city: "Хасавюрт", value: "Khasavyurt" },
-  { city: "Буйнакск", value: "Buynaksk" },
-  { city: "Каспийск", value: "Kaspiysk" },
-  { city: "Кизляр", value: "Kizlyar" },
-  { city: "Кизилюрт", value: "Kizilyurt" },
-  { city: "Минеральные воды", value: "Mineralnye Vody" },
-  { city: "Ессентуки", value: "Yessentuki" },
-  { city: "Магас", value: "Magas" },
-  { city: "Сургут", value: "Surgut" },
-  { city: "Чита", value: "Chita" },
-  { city: "Бурса", value: "Bursa" },
-  { city: "Стамбул (Еникапы)", value: "Istanbul (Yenikapı)" },
-  { city: "Стамбул (Велиефенди)", value: "Istanbul (Veliefendi)" }
-];
 
+//cards
+export const cardNumberRegular = /^\d{4}-\d{4}-\d{4}-\d{4}$/;
+export const cardHolderNameRegular = /^[A-ZА-Я][a-zа-я]*\s[A-ZА-Я][a-zа-я]*$/;
+export const cvvRegular = /^\d{3,4}$/;
+export const expirationDateRegular = /^\d+$/;
+export const cardTypeRegular = /^\d+$/;
+export const paymentSystemRegular = /^\d+$/;
 
-export const tariffes = [
-  {
-    name:"Скоростной",
-    id:1,
-  },
-  {
-    name:"Оптимальный",
-    id:2,
-  },
-  {
-    name: "Бюджетный",
-    id:3,
-  },
-  {
-    name:"Express",
-    id:4,
-  },
-  
-];

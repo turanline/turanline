@@ -2,19 +2,15 @@
 import { ToastContainer } from "react-toastify";
 
 //Components
-import { Header } from "../components/Header/Header";
-import { Footer } from "../components/Footer/Footer";
+import { Header } from "@/components/Header/Header";
+import { Footer } from "@/components/Footer/Footer";
 //Redux-Wrapper
 import { ProviderComponent } from "@/redux/provider";
 
 //Styles
 import "./globals.scss";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -24,13 +20,11 @@ export default function RootLayout({
       </head>
       <body>
         <ProviderComponent>
-          <div className="wrapper">
-            <Header />
-
-            <main className="main">{children}</main>
-
-            <Footer />
-          </div>
+          {/* <div className="wrapper"> */}
+            {/* <Header /> */}
+            {children}
+            {/* <Footer /> */}
+          {/* </div> */}
         </ProviderComponent>
 
         <ToastContainer />

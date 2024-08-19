@@ -1,27 +1,17 @@
 "use client";
-
 //GLobal
 import React, { FC, useState, useRef, useEffect } from "react";
-
 //Components
 import { Icons } from "../Icons/Icons";
 import { UserOrderItem } from "@/components/UserOrderItem/UserOrderItem";
-
 //Component Types
 import { IUserOrderWrapper } from "@/types/componentTypes";
-
 //styles
 import "./UserOrderWrapper.scss";
 
-const UserOrderWrapper: FC<IUserOrderWrapper> = ({
-  orderDate,
-  orderNumber,
-  orderStatus,
-  orderProducts,
-  orderSum,
-}) => {
-  const [isHidden, setIsHidden] = useState<boolean>(true),
-    [wrapperHeight, setWrapperHeight] = useState<number | null>(null);
+const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderDate, orderNumber, orderStatus, orderProducts, orderSum }) => {
+  const [isHidden, setIsHidden] = useState<boolean>(true);
+  const [wrapperHeight, setWrapperHeight] = useState<number | null>(null);
 
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -60,11 +50,10 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({
   const renderOrderProducts = () =>
     orderProducts.map(product => (
       <UserOrderItem
-        key={product.id}
-        amount={product.amount}
-        color={product.color}
-        product={product.product}
-        size={product.size}
+        key={product?.id}
+        amount={product?.amount}
+        color={product?.color}
+        product={product?.product}
       />
     ));
 
@@ -135,11 +124,7 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({
   };
 
   return (
-    <div
-      style={wrapperStyles}
-      className="profile-content_orders-content-order-wrapper"
-      ref={contentRef}
-    >
+    <div style={wrapperStyles} className="profile-content_orders-content-order-wrapper" ref={contentRef}>
       <div className="profile-content_orders-content-order">
         <span
           className="profile-content_orders-content-order-span"

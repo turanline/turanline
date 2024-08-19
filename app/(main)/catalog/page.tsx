@@ -4,12 +4,12 @@ import { useState, useMemo, useEffect, CSSProperties } from "react";
 //Components
 import { Button, Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import { Filter } from "@/components/Modals/Filter/Filter";
-import { ProductCard } from "../../components/ProductCard/productCard";
+import { ProductCard } from "@/components/ProductCard/productCard";
 import { EmptyComponent } from "@/components/EmptyComponent/EmptyComponent";
 import { Icons } from "@/components/Icons/Icons";
 //Hooks
 import { useTypedSelector } from "@/hooks/useReduxHooks";
-import { useProducts } from "../../hooks/useProducts";
+import { useProducts } from "@/hooks/useProducts";
 import { useTranslate } from "@/hooks/useTranslate";
 //Utils
 import { SHOP_ROUTE } from "@/utils/Consts";
@@ -41,7 +41,7 @@ export default function Category() {
     if (status === "pending") return <Icons id="spiner" />;
 
     if (!newProducts?.length && status === "fulfilled")
-      return (
+    return (
         <EmptyComponent
           title={translate.emptyCatalogTitle}
           text={translate.emptyCatalogText}
@@ -51,15 +51,14 @@ export default function Category() {
       );
 
     if (newProducts.length && status === "fulfilled")
-      return (
+    return (
         <div className="main-product-wrapper">
-          {newProducts.map(productInfo => (
-            <ProductCard key={productInfo.id} productInfo={productInfo} />
+          {newProducts?.map(productInfo => (
+            <ProductCard key={productInfo?.id} productInfo={productInfo} />
           ))}
         </div>
       );
   }, [translate,newProducts,status]);
-
 
 
   useEffect(() => {
