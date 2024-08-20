@@ -7,9 +7,10 @@ import NoImage from '@/public/assets/other/no_picture_create.png';
 import { IUserOrderItem } from "@/types/componentTypes";
 //styles
 import "./UserOrderItem.scss";
+import { useTranslate } from "@/hooks/useTranslate";
 
 const UserOrderItem: FC<IUserOrderItem> = ({ amount, color, product }) => {
-
+  const translate = useTranslate()
   const productImage = product?.images[0]?.image_file ? product?.images[0]?.image_file : NoImage;
 
 
@@ -25,7 +26,7 @@ const UserOrderItem: FC<IUserOrderItem> = ({ amount, color, product }) => {
             <div className="product-card__description-container-wrapper">
 
               <div className="product-card__description-container">
-                <p className="product-card__description">Цвет</p>
+                <p className="product-card__description">{translate.filterColor}</p>
 
                 <div
                   data-color
@@ -35,7 +36,7 @@ const UserOrderItem: FC<IUserOrderItem> = ({ amount, color, product }) => {
               </div>
 
               <div className="product-card__description-container">
-                <p className="product-card__description">Стоимость, ед.</p>
+                <p className="product-card__description">{translate.cartItemPrice}</p>
 
                 <div className="product-card__option">
                   <p className="font-medium">
@@ -47,7 +48,7 @@ const UserOrderItem: FC<IUserOrderItem> = ({ amount, color, product }) => {
 
             <div className="product-card__total-container">
               <div className="product-card__total-description-container">
-                <p className="product-card__description">Количество</p>
+                <p className="product-card__description">{translate.cartItemCounterText}</p>
 
                 <div data-counter className="product-card__option">
                   <p className="font-medium">{amount}</p>
@@ -55,7 +56,7 @@ const UserOrderItem: FC<IUserOrderItem> = ({ amount, color, product }) => {
               </div>
 
               <div className="product-card__total-description-container">
-                <p className="product-card__description">Стоимость, всего</p>
+                <p className="product-card__description">{translate.cartItemTotalPrice}</p>
 
                 <div className="product-card__option">
                   <p className="font-medium">

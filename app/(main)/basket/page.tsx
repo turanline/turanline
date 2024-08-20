@@ -41,7 +41,7 @@ export default function Basket() {
         <BreadcrumbItem href={BASKET_ROUTE}>{translate.headerCart}</BreadcrumbItem>
       </Breadcrumbs>
 
-      <div className="w-full gap-[30px] mt-[30px] mb-[30px] flex flex-col">
+      <div className="w-full gap-[30px] mt-[30px] mb-[30px] flex flex-col px-[15px] lg:px-[30px]">
         {renderUserCart()}
       </div>
     </main>

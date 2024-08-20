@@ -73,7 +73,7 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
         return;
       };
       if(response?.response?.status){
-        showToastMessage('warn','Ошибка получения трафов');
+        showToastMessage('warn', translate.messageOrderTariffsError);
         return;
       };
     } catch (error) {
@@ -110,21 +110,21 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
 
       const response = await postToOrder(requestBody);
         if(response?.status === 201){
-          showToastMessage('success','Заказ успешно создан');
-          showToastMessage('warn','Переход к оплате');
+          showToastMessage('success', translate.messageOrderSuccess);
+          showToastMessage('warn', translate.messageOrderGoPayment);
           localStorage.setItem('deliveryCost',response?.data?.delivery?.price);
           nextStep();
         }
         if(response?.response?.status === 400){
-          showToastMessage('warn','Заполните все данные');
+          showToastMessage('warn', translate.messageOrderFillFields);
         }
         if(response?.response?.status === 401){
-          showToastMessage('error','Пользователь не авторизован');
+          showToastMessage('error',translate.messageOrderAuthError);
         }
      
 
     } catch (error) {
-        showToastMessage('error','Ошибка при создании ');
+        showToastMessage('error', translate.messageOrderError);
     }
   };
 
@@ -146,7 +146,7 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
 
 
   return (
-    <main className="container mx-auto mt-[30px] mb-[100px] px-[28px] md:px-0">
+    <main className="container mx-auto mt-[30px] mb-[100px] px-[15px] lg:px-[30px]">
       <Breadcrumbs>
         <BreadcrumbItem href={SHOP_ROUTE}>{translate.mainPageRoute}</BreadcrumbItem>
         <BreadcrumbItem href={BASKET_ROUTE}>{translate.headerCart}</BreadcrumbItem>

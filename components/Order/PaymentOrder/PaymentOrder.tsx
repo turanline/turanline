@@ -49,7 +49,7 @@ export default function PaymentOrder({prevStep}: {prevStep: () => void}) {
   //Handle
   const handlePostPaymentOrder = async () => {
     if(!isValid){
-      showToastMessage("warn",'Заполните все поля');
+      showToastMessage("warn", translate.messageOrderFillFields);
       return;
     };
     setIsSubmitting(true);
@@ -71,19 +71,19 @@ export default function PaymentOrder({prevStep}: {prevStep: () => void}) {
         return;
       };
       if(response?.response?.status === 401){
-        showToastMessage("error",'Пользователь не авторизован');
+        showToastMessage("error", translate.messageOrderAuthError);
         return;
       };
       if(response?.response?.status === 400){
-        showToastMessage("error",'Неверные данные');
+        showToastMessage("error",translate.messagePaymentWrongData);
         return;
       };
       if(response?.response?.status === 404){
-        showToastMessage("error",'Заказ не найден');
+        showToastMessage("error",translate.messagePaymentNotFound);
         return;
       };
       if(response?.response?.status === 500){
-        showToastMessage("error",'Ошибка в заказах');
+        showToastMessage("error",translate.messagePaymentError);
         return;
       };
     } catch (error) {
@@ -102,7 +102,7 @@ export default function PaymentOrder({prevStep}: {prevStep: () => void}) {
     return <Icons id="spiner" />;
 
   return (
-    <main className="container mx-auto mt-[30px] mb-[100px] px-[28px] sm:px-0">
+    <main className="container mx-auto mt-[30px] mb-[100px] px-[15px] lg:px-[30px]">
       <div className="w-full flex flex-col gap-[30px]">
       <Breadcrumbs>
         <BreadcrumbItem href={SHOP_ROUTE}>{translate.mainPageRoute}</BreadcrumbItem>
@@ -208,7 +208,7 @@ export default function PaymentOrder({prevStep}: {prevStep: () => void}) {
             className="bg-tiffani text-[24px] text-white rounded-lg w-full h-[73px] py-[10px] flex flex-row justify-center items-center"
           >
             {/* {translate.orderPageButton} */}
-            Оплатить {isSubmitting && <Icons id="spiner-payment"/>}
+            {translate.PaymentPay} {isSubmitting && <Icons id="spiner-payment"/>}
           </Button>
 
           <div className="text-textAcc">

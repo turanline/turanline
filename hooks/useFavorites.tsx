@@ -41,7 +41,7 @@ const useFavorites = () => {
           if ("error" in data && data.error.message === "Rejected") {
             showToastMessage(
               "error",
-              "Произошла ошибка при добавлении в избранное, попробуйте позже!"
+              translate.messageFavoritesAddError
             );
             return;
           }
@@ -61,7 +61,7 @@ const useFavorites = () => {
     dispatch(onDeleteFromFavorites(product))
       .then(data => {
         if ("error" in data && data.error.message === "Rejected") {
-          showToastMessage("error","Произошла ошибка при удалении из избранное, попробуйте позже!");
+          showToastMessage("error", translate.messageFavoritesDeleteError);
           return;
         }
 

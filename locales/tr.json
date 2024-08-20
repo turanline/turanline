@@ -11,6 +11,7 @@
   "headerAllCategories": "Tüm Kategoriler",
   "headerSearchPlaceholder": "Katalogda Ara",
   "headerToProfile": "Profiline Git",
+  "headerSearch": "Arama",
 
   "paymentSuccess": "Satın aldığınız için teşekkür ederiz!",
   "paymentSuccessText": "Ödeme başarıyla gerçekleştirildi",
@@ -25,11 +26,14 @@
   "productMold":"Model",
   "paymentNameSurname": "Ad Soyad",
 
+  "reviewModeration": "Moderasyon üzerine",
+
   "paymentCardNumber": "Kart Numarası",
   "paymentCardHolder": "Kart Sahibi",
   "paymentCardMonth": "Kart Son Kullanma Tarihi - Ay",
   "paymentCardYear": "Kart Son Kullanma Tarihi - Yıl",
   "paymentPayOrder": "Siparişi Öde",
+  "PaymentPay": "Ödeme",
 
 
   "newRevenues": "Yeni gelirler",
@@ -92,6 +96,10 @@
   "registrationPhoneNumber": "Telefon Numarası",
   "registrationButtonText": "Kaydol",
   "registrationButtonLogIn": "Zaten bir hesabınız var mı?",
+  "registrationSuccess": "Kayıt başarılı oldu",
+  "registrationConfirm": "Telefon numaranızı onaylayın",
+  "registrationError": "Hata",
+  "registrationRememberMe": "Şifreyi hatırla",
 
   "emptyBasketTitle": "Sepet Boş!",
   "emptyBasketText": "Alışveriş zamanı geldi!",
@@ -181,6 +189,12 @@
   "productPageDescription": "Ürün Açıklaması",
   "productPageSimilar": "Benzer Ürünler",
   "productPageFamous": "Popüler Ürünler",
+
+  
+  "userActionsTitle": "Başlık",
+  "userActionsDate": "Tarih",
+  "userActionsCost": "Maliyet",
+  "userActionsStatus": "Durum",
 
   "politicsGeneralProvisions": "Genel Hükümler",
   "politicsGeneralProvisionsText": "Bu kişisel veri işleme politikası, 27 Temmuz 2006 tarihli Federal Kanun No. 152-FZ «Kişisel Verilerin Korunması Hakkında» (bundan sonra «Kişisel Veriler Kanunu» olarak anılacaktır) gereğince hazırlanmış olup, kişisel verilerin işlenmesi ve kişisel verilerin güvenliğinin sağlanması için alınan önlemleri belirler. İşletme adı (bundan sonra «İşletmeci» olarak anılacaktır) tarafından alınmıştır.",
@@ -292,10 +306,26 @@
   "messageCartItemInCart": "Bu öğe zaten sepette!",
   "messageCartNotAuth": "Kimlik doğrulanmadı!",
   "messageCartDeleted": "Ürün sepetten silindi!",
+  "messageGetCartError": "Alışveriş sepetiniz alınırken bir hata oluştu, lütfen daha sonra tekrar deneyin!",
+  "messageCartColorChoose": "Bir renk seçmediniz!",
+  "messageCartDeleteError": "Bir öğeyi silerken bir hata oluştu, lütfen daha sonra tekrar deneyin!",
+  "messageCartOrderSend": "Sipariş başarıyla gönderildi!",
   "messageFavoritesSuccess": "Ürün favorilere eklendi!",
   "messageFavoritesWarn": "Oturum açana kadar favorilere öğe ekleyemezsiniz!",
   "messageFavoritesDeleted": "Ürün favorilerden silindi!",
+  "messageFavoritesAddError": "Favorilere eklerken bir hata oluştu, daha sonra tekrar deneyin!",
+  "messageFavoritesDeleteError": "Sık kullanılanlardan silerken bir hata oluştu, daha sonra tekrar deneyin!",
   "messageLogOutSuccess": "Başarıyla çıkış yaptınız!",
+  "messageOrderTariffsError": "Tarifelerin alınmasında hata",
+  "messageOrderSuccess": "Sipariş başarıyla oluşturuldu",
+  "messageOrderGoPayment": "Ödemeye geçiş",
+  "messageOrderFillFields": "Tüm ayrıntıları doldurun",
+  "messageOrderAuthError": "Kullanıcı yetkili değil",
+  "messageOrderError": "Oluşturma hatası",
+  "messagePaymentWrongData": "Yanlış veri",
+  "messagePaymentNotFound": "Sipariş bulunamadı",
+  "messagePaymentError": "Siparişlerde hata",
+
 
   "notFoundTitle": "Küçük bir hata",
   "notFoundText": "Hoppala... Görünüşe göre bu sayfa mevcut değil! Anasayfaya gidin ve tekrar deneyin.",
@@ -314,6 +344,12 @@
   "formMin": "En az",
   "formMax": "En fazla",
   "formSymbols": "karakter",
+  "formCorrectCardNumber": "Doğru kart numarasını girin",
+  "formCorrectCardName": "Kart sahibinin doğru adını girin",
+  "formCorrectCardCVV": "Doğru CVV'yi girin",
+  "formCorrectCardMonth": "Doğru ayı girin",
+  "formCorrectCardYear": "Doğru yılı girin",
+
 
   "recoverPasswordTitle": "Şifre Kurtarma",
   "recoverAppeal": "Kurtar",
@@ -325,5 +361,7 @@
   "PhoneConfirmText2": "6 haneli doğrulama kodu içeren",
   "PhoneConfirmCode": "Mesajdaki kod",
   "PhoneConfirmCodePlaceHolder": "Doğrulama kodunu girin",
+  "phoneConfirmSuccess": "Onaylama başarılı oldu",
+  "phoneConfirmError": "Onaylama işlemi gerçekleşmedi",
   "ConfirmPhoneButton": "Onayla"
 }

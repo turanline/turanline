@@ -401,8 +401,8 @@ export const Icons: FC<{id: string }> = ({ id }) => {
     case "shopping":
       return (
         <svg
-          width="40"
-          height="40"
+          width="36"
+          height="36"
           viewBox="0 0 28 20"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -416,8 +416,8 @@ export const Icons: FC<{id: string }> = ({ id }) => {
     case "searchMobile":
       return (
         <svg
-          width="40"
-          height="40"
+          width="30"
+          height="30"
           viewBox="0 0 35 36"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

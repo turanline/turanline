@@ -10,7 +10,7 @@ export default function Payment() {
   const translate = useTranslate();
 
   return (
-    <main className="container mx-auto mt-[30px] mb-[100px] px-[28px] md:px-0">
+    <main className="container mx-auto mt-[30px] mb-[100px] px-[15px] lg:px-[30px]">
       <div className="w-full mt-[48px]">
         <div className="w-full flex flex-col items-center mb-[60px]">
           <h1 className="family-bold text-[40px] text-tiffani font-semibold mb-[20px]">

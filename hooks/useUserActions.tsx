@@ -139,7 +139,7 @@ const useUserActions = () => {
             data-name
             className="profile-content_orders-content-filters-button"
           >
-            Название
+            {translate.userActionsTitle}
           </button>
 
           <button
@@ -147,7 +147,7 @@ const useUserActions = () => {
             onClick={() => handleSort("created_date")}
             className="profile-content_orders-content-filters-button"
           >
-            Дата
+            {translate.userActionsDate}
             <Icons id="arrowDownProfile" />
           </button>
 
@@ -156,7 +156,7 @@ const useUserActions = () => {
             onClick={() => handleSort("total_sum")}
             className="profile-content_orders-content-filters-button"
           >
-            Стоимость
+            {translate.userActionsCost}
             <Icons id="arrowDownProfile" />
           </button>
 
@@ -164,7 +164,7 @@ const useUserActions = () => {
             data-status
             className="profile-content_orders-content-filters-button"
           >
-            Статус
+            {translate.userActionsStatus}
           </button>
         </div>
 

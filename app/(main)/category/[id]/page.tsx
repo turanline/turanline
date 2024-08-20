@@ -47,10 +47,10 @@ export default async function Category({ params }: { params: { id: number } }) {
   }
 
   return (
-    <div className="container mx-auto mt-[30px] px-[28px] sm:px-0">
+    <main className="container mx-auto mt-[30px] px-[15px] lg:px-[30px]">
       {getCategoryByParams()}
 
       <CategoryPageComponent />
-    </div>
+    </main>
   );
 }

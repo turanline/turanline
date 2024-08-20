@@ -92,7 +92,7 @@ const useCategories = (color: string) => {
             padding: "15px 0",
           }}
         >
-          <div className="w-full container flex justify-between text-white">
+          <div className="w-full container px-[15px] flex justify-between text-white">
             {renderDesktopCategories()}
           </div>
 

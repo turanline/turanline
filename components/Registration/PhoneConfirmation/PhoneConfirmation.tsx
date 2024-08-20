@@ -34,18 +34,18 @@ export default function PhoneConfirmation(){
       try {
         const response = await resetUserPassword({phone_number:phoneNumber,verification_code: getValues().code})
            if(response?.status === 200){
-            showToastMessage('success','Проверка прошла успешно');
+            showToastMessage('success', translate.phoneConfirmSuccess);
             deleteCookie('phoneNumber');
             push(LOGIN_ROUTE);
             onSetForgetPassword(false);
             return;
            };
            if(response?.response?.status){
-            showToastMessage('error','Проверка не прошла');
+            showToastMessage('error', translate.phoneConfirmError);
             return;
            };
        } catch (error) {
-           showToastMessage('error','Проверка не прошла')
+           showToastMessage('error',translate.phoneConfirmError)
            return;
        }
     }
@@ -57,7 +57,7 @@ export default function PhoneConfirmation(){
           return;
          };
          if(response?.response?.status){
-          showToastMessage('error','Проверка не прошла');
+          showToastMessage('error', translate.phoneConfirmError);
           return;
          }
      } catch (error) {

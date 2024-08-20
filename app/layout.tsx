@@ -20,11 +20,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <ProviderComponent>
-          {/* <div className="wrapper"> */}
+          <div className="wrapper">
             {/* <Header /> */}
             {children}
             {/* <Footer /> */}
-          {/* </div> */}
+          </div>
         </ProviderComponent>
 
         <ToastContainer />

@@ -8,7 +8,7 @@
     display: none;
   }
 
-  .header-burder {
+  .header-burger {
     display: none;
 
     &.active {
@@ -31,20 +31,19 @@
     display: block;
   }
 
-  .header-burder {
+  .header-burger {
     opacity: 0;
     max-height: 0px;
     display: grid;
     visibility: hidden;
-    transform: scaleY(0.2);
-    transition: 0.5s all ease-in;
+    transition: 0.5s all ease-in-out;
 
     &.active {
-      transform: scaleY(1);
       opacity: 1;
       display: grid;
       max-height: 614px;
       visibility: visible;
+      padding-bottom: 40px;
     }
   }
 
@@ -54,18 +53,16 @@
 }
 
 @media (max-width: 640px) {
-  .header-burder {
+  .header-burger {
     grid-template-columns: repeat(1, minmax(0fr));
   }
 }
 
 @media (max-width: 639px) {
-  .header-burder {
+  .header-burger {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 }
-
-
 
 .family-bold {
   font-family: geometria-bold;

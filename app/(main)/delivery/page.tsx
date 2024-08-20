@@ -21,7 +21,7 @@ export default function Delivery() {
   const translate = useTranslate();
 
   return (
-    <main className="container mx-auto mt-[30px] mb-[100px] px-[28px] md:px-0">
+    <main className="container mx-auto mt-[30px] mb-[100px] px-[15px] lg:px-[30px]">
       <Breadcrumbs>
         <BreadcrumbItem href={SHOP_ROUTE}>{translate.mainPageRoute}</BreadcrumbItem>
 

@@ -36,7 +36,7 @@ const useCart = () => {
       dispatch(fetchCart())
         .then(response => {
           if ("error" in response && response?.error?.message === "Rejected")
-          showToastMessage("error", "Произошла ошибка при получении корзины корзины, попробуйте позже!");
+          showToastMessage("error", translate.messageGetCartError);
         })
         .catch(error => console.error(error)),
     [dispatch]
@@ -71,7 +71,7 @@ const useCart = () => {
       };
 
       if (!obj?.color) {
-        showToastMessage("warn", "Вы не выбрали цвет!");
+        showToastMessage("warn", translate.messageCartColorChoose);
         return;
       };
 
@@ -85,7 +85,7 @@ const useCart = () => {
           if ("error" in response && response?.error?.message === "Rejected") {
             showToastMessage(
               "error",
-              "Произошла ошибка при удалении товара, попробуйте позже!"
+              translate.messageCartDeleteError
             );
             return;
           }
@@ -120,7 +120,7 @@ const useCart = () => {
   // const onPostUserOrder = async (obj: any) => {
   //   await postUserOrder(obj)
   //     .then(() => {
-  //       showToastMessage("success", "Заказ успешно отправлен!");
+  //       showToastMessage("success", translate.messageCartOrderSend);
   //       onFetchCart();
   //     })
   //     .catch(error => console.error(error));
