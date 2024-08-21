@@ -115,6 +115,9 @@
   width: 100%;
   max-width: 422px;
   height: 422px;
+  @media (max-width: 767px) {
+    height: 322px;
+  }
 }
 .image {
   width: 100%;

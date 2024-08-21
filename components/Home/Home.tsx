@@ -171,7 +171,7 @@ const Home = () => {
       </div>
      
       <div className="flex flex-col mt-[30px] w-full">
-        <div className="flex justify-between mb-[26px]">
+        <div className="flex items-center justify-between mb-[26px]">
           <h5 className="text-[24px]">{translate.bestsellers}</h5>
 
           <div className="flex gap-[7px] items-center">

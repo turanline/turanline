@@ -123,7 +123,7 @@ export function Header() {
     //ClassNames
     const headerLinksClassName = `flex ${
       !isMobile ? "flex-col" : "flex-row gap-[10px] basis-[50%]"
-    } items-center justify-between`;
+    } items-center`;
     const renderLinkIdClassName = !isMobile
       ? "profileAccountWhite"
       : "profile-account";

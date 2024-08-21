@@ -12,7 +12,7 @@ const NotFoundPage: NextPage = () => {
   const { emptyBasketButtonText, notFoundText, notFoundTitle } = useTranslate();
 
   return (
-    <div className="h-[358px] flex justify-center items-center flex-col gap-[40px]">
+    <div className="h-[358px] my-auto flex justify-center items-center flex-col gap-[40px]">
       <div className="flex flex-col gap-[20px]">
         <div className="flex flex-col items-center gap-[10px]">
           <h5 className="text-tiffani font-medium text-[14px]">
