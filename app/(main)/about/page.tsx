@@ -145,12 +145,6 @@ export default function About() {
           </div>
         </div>
 
-        <div className="absolute right-0 bottom-[-50px] flex gap-[7px] items-center mt-[30px]">
-          <Link href={MANUFACTURES_ROUTE}>{translate.lookAll}</Link>
-
-          <Icons id="arrowBlack" />
-        </div>
-
         <div className="flex flex-col items-center gap-[30px] mt-[40px] sm:mt-[70px] lg:mt-[100px]">
           <h2 className="family-bold   text-tiffani text-[26px] max-lg:text-center sm:text-[32px] xl:text-[40px]">
             {translate.aboutPageTextPopular}

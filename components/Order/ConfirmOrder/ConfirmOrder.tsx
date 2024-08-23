@@ -162,14 +162,14 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
               <label className="text-[18px] flex flex-col gap-[5px]">
                 {translate.registrationLabelName}
 
-                <div className='inputs-order'>{userState?.user.first_name}</div>
+                <div className='inputs-order truncate'>{userState?.user.first_name}</div>
               </label>
             </div>
 
             <div className="flex flex-col gap-[17px]">
               <label className="text-[18px] flex flex-col gap-[5px]">
                 {translate.orderPagePhone}
-                <div className='inputs-order'>{userState?.user.phone_number}</div>
+                <div className='inputs-order truncate'>{userState?.user.phone_number}</div>
               </label>
             </div>
 
@@ -177,7 +177,7 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
               <label className="text-[18px] flex flex-col gap-[5px]">
                 {translate.registrationLabelEmail}
 
-                <div className='inputs-order'>{userState?.user.email}</div>
+                <div className='inputs-order truncate'>{userState?.user.email}</div>
 
                 <span className="text-[12px] text-textAcc">
                   {translate.orderPageEmailText}

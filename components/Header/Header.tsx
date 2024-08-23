@@ -122,7 +122,7 @@ export function Header() {
   const returnHeaderElement = (isMobile: boolean) => {
     //ClassNames
     const headerLinksClassName = `flex ${
-      !isMobile ? "flex-col" : "flex-row gap-[10px] basis-[50%]"
+      !isMobile ? "flex-col" : "flex-row gap-[10px] max-sm:basis-[50%]"
     } items-center`;
     const renderLinkIdClassName = !isMobile
       ? "profileAccountWhite"
@@ -275,8 +275,8 @@ export function Header() {
         </nav>
 
         <div className={burgerMenuClass}>
-          <nav className="flex items-start justify-between flex-wrap gap-[20px]">
-            <div className="flex flex-col gap-[20px]">
+          <nav className="flex items-start justify-start sm:justify-between flex-wrap sm:gap-[20px]">
+            <div className="flex flex-col max-sm:basis-[50%] gap-[20px]">
               <Link href={CATALOG_ROUTE}>{translate.headerCatalog}</Link>
 
               <Link href={ABOUT_ROUTE}>{translate.headerAbout}</Link>
@@ -296,7 +296,7 @@ export function Header() {
 
             <Link
               href={FAVORITE_ROUTER}
-              className="block basis-[50%]"
+              className="block max-sm:basis-[50%]"
               onClick={() =>
                 handleClickButton(translate.messageHeaderFavorites)
               }
@@ -315,7 +315,7 @@ export function Header() {
             </Link>
 
             <button
-              className="flex items-center basis-[50%] gap-[10px]"
+              className="flex items-center max-sm:basis-[50%] gap-[10px]"
               onClick={() => setSearchModal(!searchModal)}
             >
               <Icons id="searchMobile" />
@@ -324,7 +324,7 @@ export function Header() {
             </button>
 
             <Link
-              className="flex items-center basis-[50%] gap-[10px]"
+              className="flex items-center max-sm:basis-[50%] gap-[10px]"
               href={BASKET_ROUTE}
               onClick={() => handleClickButton(translate.messageHeaderCart)}
             >

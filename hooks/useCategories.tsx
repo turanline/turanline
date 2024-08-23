@@ -18,8 +18,10 @@ import "@/components/Header/Header.scss";
 
 const useCategories = (color: string) => {
   //Hooks
-  const { status, categories, types, subtypes } = useTypedSelector(state => state.categories);
-  const { selectedLanguage } = useTypedSelector(state => state.language);
+  const { status, categories, types, subtypes } = useTypedSelector(
+    (state) => state.categories
+  );
+  const { selectedLanguage } = useTypedSelector((state) => state.language);
   const dispatch = useAppDispatch();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -28,11 +30,17 @@ const useCategories = (color: string) => {
     name: "",
   });
 
-  const filterByProperty = <T, K extends keyof T>(items: T[], property: K,value: T[K]) => items.filter(item => item[property] === value);
+  const filterByProperty = <T, K extends keyof T>(
+    items: T[],
+    property: K,
+    value: T[K]
+  ) => items.filter((item) => item[property] === value);
 
-  const returnTypesByCategory = (id: number) => filterByProperty(types, "parent", id);
+  const returnTypesByCategory = (id: number) =>
+    filterByProperty(types, "parent", id);
 
-  const returnSubtypesByType = (id: number) => filterByProperty(subtypes, "parent", id);
+  const returnSubtypesByType = (id: number) =>
+    filterByProperty(subtypes, "parent", id);
 
   const onSetSubtypes = useCallback(
     () => dispatch(fetchSubtypes()),
@@ -47,7 +55,7 @@ const useCategories = (color: string) => {
   );
 
   const renderDesktopCategories = () =>
-    categories?.map(category => (
+    categories?.map((category) => (
       <Link
         onMouseEnter={() => {
           setCurrentCategory(category);
@@ -60,17 +68,19 @@ const useCategories = (color: string) => {
       </Link>
     ));
 
-  const renderTypesByCategory = () =>
-    isOpen && (
-      <div className="w-full container flex gap-[50px] flex-wrap text-white">
-        {returnTypesByCategory(currentCategory.id).map(type => (
+  const renderTypesByCategory = () => {
+    if (!isOpen) return;
+
+    return (
+      <div className="w-full container flex gap-[50px] justify-between flex-wrap text-white">
+        {returnTypesByCategory(currentCategory.id).map((type) => (
           <div key={type.id} className="flex flex-col gap-[10px]">
             <Link className="font-bold" href={`/category/${type.parent}`}>
               {type.name}
             </Link>
 
             <div className="flex flex-col gap-[5px]">
-              {returnSubtypesByType(type.id).map(subtype => (
+              {returnSubtypesByType(type.id).map((subtype) => (
                 <Link key={subtype.id} href={`/category/${type.parent}`}>
                   {subtype.name}
                 </Link>
@@ -80,10 +90,11 @@ const useCategories = (color: string) => {
         ))}
       </div>
     );
+  };
 
   const mapCategoriesOnDesktop = () => {
     if (status === "fulfilled")
-    return (
+      return (
         <nav
           onMouseLeave={() => setIsOpen(false)}
           className="header-block flex flex-col justify-center items-center gap-[15px]"
@@ -103,9 +114,9 @@ const useCategories = (color: string) => {
 
   const mapCategoriesOnPhone = () => {
     if (status === "fulfilled")
-    return (
-        <div className="flex flex-col gap-[20px] row-span-4">
-          {categories?.map(category => (
+      return (
+        <div className="flex flex-col max-sm:basis-[50%] gap-[20px] row-span-4">
+          {categories?.map((category) => (
             <Link key={category?.id} href={`/category/${category?.id}`}>
               {category?.name}
             </Link>

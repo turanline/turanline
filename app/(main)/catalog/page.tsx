@@ -29,7 +29,8 @@ export default function Category() {
   const buttonStyles: CSSProperties = {
     background: isOpen ? "#E30387" : "#0ABAB5",
     color: "white",
-    fontSize: "25px",
+    fontSize: "22px",
+    textTransform: 'none'
   };
   //ClassNames
   const filterWrapperClassName = isOpen ? "filter_wrapper active" : "filter_wrapper";

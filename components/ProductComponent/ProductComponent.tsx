@@ -266,7 +266,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-[10px] w-[200px]">
+              <div className="flex flex-col gap-[10px] max-md:w-[100%] max-md:max-w-[300px] w-[200px] max-md:mx-auto">
                 <p className="text-[32px] family-medium leading-none">
                   {(+productCounter * +oneProduct?.price).toFixed(2)} $
                 </p>
@@ -311,7 +311,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
 
               <Button
                 onClick={handleAddToCart}
-                className="bg-tiffani text-white rounded-md w-full sm:w-[200px] h-[44px] py-[10px]"
+                className="bg-tiffani text-white rounded-md w-full lg:w-[200px] h-[44px] py-[10px]"
               >
                 {translate.productPageButton}
               </Button>
