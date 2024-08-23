@@ -25,7 +25,7 @@ export const getAllCategories = async () => {
 
 export const getCategoryById = async (id: number) => {
   try {
-    const { data } = await $host.get(`/api/categories/${id}/`);
+    const { data } = await $host.get(`/api/categories/?children=${id}/`);
 
     return data;
   } catch (error) {

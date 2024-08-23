@@ -69,11 +69,9 @@ const OrderPage = () => {
 
 
   return (
-    <div>
-      <Suspense fallback={<div className="products-content_spiner"><Icons id="spiner" /></div>}>
-        {renderCurrentStep()}
-      </Suspense>
-    </div>
+    <Suspense fallback={<div className="products-content_spiner"><Icons id="spiner" /></div>}>
+      {renderCurrentStep()}
+    </Suspense>
   );
 };
 

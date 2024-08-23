@@ -146,14 +146,14 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
 
 
   return (
-    <main className="container mx-auto mt-[30px] mb-[100px] px-[15px] lg:px-[30px]">
+    <main className="container mx-auto mt-[30px] flex flex-col justify-center mb-[70px] px-[15px] lg:px-[30px]">
       <Breadcrumbs>
         <BreadcrumbItem href={SHOP_ROUTE}>{translate.mainPageRoute}</BreadcrumbItem>
         <BreadcrumbItem href={BASKET_ROUTE}>{translate.headerCart}</BreadcrumbItem>
         <BreadcrumbItem>{translate.orderPageButton}</BreadcrumbItem>
       </Breadcrumbs>
 
-      <div className="w-full flex flex-col lg:grid grid-cols-2 gap-[79px]">
+      <div className="w-full flex flex-col lg:grid grid-cols-2 gap-[40px] sm:gap-[79px]">
         <div className="flex flex-col gap-[45px]">
           <h2 className="family-medium text-[32px]">{translate.orderPagePersonalData}</h2>
 
@@ -234,7 +234,7 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
 
           <Button
             onClick={handlePostUserOrder}
-            className="bg-tiffani text-[24px] text-white rounded-lg w-full h-[73px] py-[10px]"
+            className="bg-tiffani text-[22px] text-white rounded-lg w-full h-[63px] py-[10px]"
           >
             {translate.orderPageButton}
           </Button>

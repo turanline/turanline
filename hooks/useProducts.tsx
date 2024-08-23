@@ -85,10 +85,11 @@ const getColorButtonStyles = (colorOption: Color, selectedColorId: number): CSSP
 // Handling a click on the color selection button
 const handleColorSelection = ( colorOptionId: number, selectedColorId: number, setSelectedColorId: Dispatch<SetStateAction<number>> ) => {
   if (colorOptionId !== selectedColorId) {
-    setSelectedColorId(colorOptionId);
-  } else {
-    setSelectedColorId(0); // Resets the selection if the same color is selected again
-  }
+     setSelectedColorId(colorOptionId);
+     return;
+  } 
+  setSelectedColorId(0); // Resets the selection if the same color is selected again
+  
 };
 
 // Product options rendering function 

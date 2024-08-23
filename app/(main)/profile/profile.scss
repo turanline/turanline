@@ -175,6 +175,13 @@
   font-family: geometria-medium;
   text-transform: capitalize;
   @include profile-text(42px, 52px);
+  @media (max-width: 1023px) {
+    @include profile-text(36px, 1.5);
+  }
+  @media (max-width: 767px) {
+    text-align: center;
+    @include profile-text(28px, 1.5);
+  }
 }
 
 .profile-content_header-user-data-block {
@@ -273,6 +280,12 @@
 .profile-content_orders-content-filters-button[data-price],
 .profile-content_orders-content-filters-button[data-status] {
   width: 100px;
+  @media (max-width: 767px) {
+    width: fit-content;
+    padding: 5px 8px;
+    background-color: #eeeeee;
+    border-radius: 8px;
+  }
 }
 
 .profile-content_orders-content-list {

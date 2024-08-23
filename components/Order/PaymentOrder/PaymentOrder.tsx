@@ -102,7 +102,7 @@ export default function PaymentOrder({prevStep}: {prevStep: () => void}) {
     return <Icons id="spiner" />;
 
   return (
-    <main className="container mx-auto mt-[30px] mb-[100px] px-[15px] lg:px-[30px]">
+    <main className="container mx-auto mt-[30px] flex flex-col justify-center mb-[70px] px-[15px] lg:px-[30px]">
       <div className="w-full flex flex-col gap-[30px]">
       <Breadcrumbs>
         <BreadcrumbItem href={SHOP_ROUTE}>{translate.mainPageRoute}</BreadcrumbItem>
@@ -205,7 +205,7 @@ export default function PaymentOrder({prevStep}: {prevStep: () => void}) {
           <Button
             disabled={isSubmitting}
             type="submit"
-            className="bg-tiffani text-[24px] text-white rounded-lg w-full h-[73px] py-[10px] flex flex-row justify-center items-center"
+            className="bg-tiffani text-[22px] text-white rounded-lg w-full h-[63px] py-[10px] flex flex-row justify-center items-center"
           >
             {/* {translate.orderPageButton} */}
             {translate.PaymentPay} {isSubmitting && <Icons id="spiner-payment"/>}

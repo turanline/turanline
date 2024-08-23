@@ -62,7 +62,7 @@ const useCategories = (color: string) => {
 
   const renderTypesByCategory = () =>
     isOpen && (
-      <div className="w-full container flex justify-between text-white">
+      <div className="w-full container flex gap-[50px] flex-wrap text-white">
         {returnTypesByCategory(currentCategory.id).map(type => (
           <div key={type.id} className="flex flex-col gap-[10px]">
             <Link className="font-bold" href={`/category/${type.parent}`}>

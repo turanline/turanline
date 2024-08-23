@@ -11,7 +11,7 @@ const CategoryPageComponent: FC = () => {
 
   return (
     <>
-      <h5 className="text-[24px] mt-[80px] mb-[25px]">{selectProductText}</h5>
+      <h5 className="text-[24px] mb-[25px]">{selectProductText}</h5>
 
       <Filter />
     </>

@@ -145,7 +145,7 @@ const Filter: FC = () => {
             <div className="flex justify-center gap-[25px]">
               <Button
                 onClick={handleSearch}
-                className="w-full md:w-[270px] h-[44px] bg-tiffani text-white"
+                className="w-full md:w-full md:max-w-[270px] h-[44px] bg-tiffani text-white"
                 radius="sm"
               >
                 {translate.filterShow}
@@ -153,7 +153,7 @@ const Filter: FC = () => {
 
               <Button
                 onClick={resetFilters}
-                className="w-full md:w-[270px] h-[44px] bg-transparent text-tiffani"
+                className="w-full md:w-full md:max-w-[270px] h-[44px] bg-transparent text-tiffani"
                 radius="sm"
               >
                 {translate.filterReset}
