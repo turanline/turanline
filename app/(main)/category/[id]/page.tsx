@@ -4,6 +4,7 @@ import { CategoryComponent } from "@/components/CategoryComponent/CategoryCompon
 
 //Services
 import { getCategoryById, getAllCategories } from "@/services/categoriesAPI";
+import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
   try {
@@ -31,26 +32,20 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
 }
 
 export default async function Category({ params }: { params: { id: number } }) {
-  async function getCategoryByParams() {
-    try {
-      const categoriesObject = await getCategoryById(params?.id);
-
-      return (
+  try {
+    const categoriesObject = await getCategoryById(params?.id);
+    if (!categoriesObject) return notFound();
+    return (
+      <main className="container mx-auto mt-[30px] px-[15px] lg:px-[30px]">
         <CategoryComponent
           categoryObject={categoriesObject}
           categoryId={+params?.id}
         />
-      );
-    } catch (error) {
-      console.log(error);
-    }
+        <CategoryPageComponent />
+      </main>
+    );
+  } catch (error) {
+    console.log(error);
+    return notFound();
   }
-
-  return (
-    <div className="container mx-auto mt-[30px] px-[28px] sm:px-0">
-      {getCategoryByParams()}
-
-      <CategoryPageComponent />
-    </div>
-  );
 }

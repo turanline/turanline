@@ -13,9 +13,9 @@ const UnsuccessfulPaymentPage: NextPage = () => {
     useTranslate();
 
   return (
-    <div className="h-[358px] flex justify-center items-center flex-col gap-[40px]">
+    <div className="h-[358px] my-auto flex justify-center items-center flex-col gap-[40px]">
       <div className="flex flex-col gap-[20px]">
-        <h5 className="text-pink text-center font-medium text-[50px]">
+        <h5 className="text-pink text-center font-medium text-[31px] lg:text-[50px]">
           {paymentUnsuccess}
         </h5>
 

@@ -41,7 +41,7 @@ export function Footer() {
 
   return (
     <footer>
-      <div className="container mx-auto mb-[47px] px-[28px] md:px-0">
+      <div className="container mx-auto mb-[47px] px-[15px] lg:px-[30px]">
         <nav className="hidden md:flex justify-between items-center mb-[32px]">
           <Link href={SHOP_ROUTE}>
             <Image src={logo} alt="logo" />

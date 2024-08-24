@@ -56,15 +56,15 @@ const useProducts = () => {
     );
   };
 
-// Функция сравнения двух объектов фильтров на идентичность
+// Function for comparing two filter objects for identity
 const areFiltersEqual = ( filters1: IProductsState["filters"], filters2: IProductsState["filters"]): boolean => {
   const filterKeys1 = Object.keys(filters1);
   const filterKeys2 = Object.keys(filters2);
 
-  // Проверяем, что количество ключей совпадает
+  // Check that the number of keys matches
   if (filterKeys1.length !== filterKeys2.length) return false;
 
-  // Проверяем идентичность значений по ключам в обоих объектах
+  // Check the identity of values by keys in both objects
   return filterKeys1.every(
     key =>
       filters2.hasOwnProperty(key) &&
@@ -72,7 +72,7 @@ const areFiltersEqual = ( filters1: IProductsState["filters"], filters2: IProduc
   );
 };
 
-// Функция получения стилей для кнопок выбора цвета
+// Function for obtaining styles for color selection buttons
 const getColorButtonStyles = (colorOption: Color, selectedColorId: number): CSSProperties => {
   const isSelected = colorOption?.id === selectedColorId;
 
@@ -82,16 +82,17 @@ const getColorButtonStyles = (colorOption: Color, selectedColorId: number): CSSP
   };
 };
 
-// Обработка клика на кнопку выбора цвета
+// Handling a click on the color selection button
 const handleColorSelection = ( colorOptionId: number, selectedColorId: number, setSelectedColorId: Dispatch<SetStateAction<number>> ) => {
   if (colorOptionId !== selectedColorId) {
-    setSelectedColorId(colorOptionId);
-  } else {
-    setSelectedColorId(0); // Сброс выбора, если тот же цвет был выбран повторно
-  }
+     setSelectedColorId(colorOptionId);
+     return;
+  } 
+  setSelectedColorId(0); // Resets the selection if the same color is selected again
+  
 };
 
-// Функция отрисовки опций продукта 
+// Product options rendering function 
 const renderColorOptions = (
   colors: IProductMainPage["colors_data"],
   selectedColorId: number,

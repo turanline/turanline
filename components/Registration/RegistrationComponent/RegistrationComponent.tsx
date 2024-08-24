@@ -50,7 +50,7 @@ export default function Registration({nextStep}: {nextStep: () => void}) {
 
   const createAccount = async () => {
     if(!isValid){
-      showToastMessage('warn','Заполните все поля')
+      showToastMessage('warn',translate.messageOrderFillFields)
       return;
     }
 
@@ -70,14 +70,14 @@ export default function Registration({nextStep}: {nextStep: () => void}) {
       const response = await onRegistrationUser(requestBody);
       
       if(response.payload.status === 200){
-        showToastMessage('success','Регистрация прошла успешно');
+        showToastMessage('success', translate.registrationSuccess);
         onGetUser();
         push(PROFILE_ROUTE);
         return;
       };
       if(response.payload.status === 201){
-        showToastMessage('success','Регистрация прошла успешно');
-        showToastMessage('warn','Подтвердите номер телефона');
+        showToastMessage('success', translate.registrationSuccess);
+        showToastMessage('warn', translate.registrationConfirm);
 
         nextStep();
         setCookie('phoneNumber',(prefixCode + selectPhone).replace(/[^\d+]/g, ''))
@@ -101,7 +101,7 @@ export default function Registration({nextStep}: {nextStep: () => void}) {
   const renderAllPrefixes = () => {
     if (!prefixes.prefixes) return (
       <SelectItem key="+1" value="+1">
-        Ошибка
+        {translate.registrationError}
       </SelectItem>
     );
   
@@ -230,7 +230,7 @@ export default function Registration({nextStep}: {nextStep: () => void}) {
           <div className="form-content_checkbox">
             <Checkbox
               className="form-content_checkbox-content"
-              value="Запомнить пароль"
+              value={translate.registrationRememberMe}
               checked={rememberMe}
               onChange={(event)=> setRememberMe(event.target.checked)}
             >

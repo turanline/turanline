@@ -101,7 +101,7 @@
 
 @media (max-width: 640px) {
   .profile-content {
-    padding: 0 30px;
+    padding: 0 15px;
   }
 
   .profile-content_orders-header {
@@ -116,12 +116,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  @media (max-width: 1023px) {
+    padding: 40px 0;
+  }
 }
 
 .profile-content {
   gap: 100px;
   display: flex;
   flex-direction: column;
+  @media (max-width: 1023px) {
+    gap: 70px;
+  }
 }
 
 .profile-content_header {
@@ -132,6 +138,9 @@
 .profile-content_header-user {
   display: flex;
   gap: 50px;
+  @media (max-width: 767px) {
+    gap: 30px;
+  }
 }
 
 .input-user-change {
@@ -139,13 +148,12 @@
   border: 1px solid #dadada;
   font-family: geometria-medium;
   font-size: 42px;
-  font-weight: 500;
   outline: none;
 }
 
 .input-user-change-data {
   border: 1px solid #dadada;
-  font-weight: 300;
+  font-family: geometria-light;
   width: 155px;
   height: 20px;
   font-size: 16px;
@@ -166,6 +174,13 @@
   font-family: geometria-medium;
   text-transform: capitalize;
   @include profile-text(42px, 52px);
+  @media (max-width: 1023px) {
+    @include profile-text(36px, 1.5);
+  }
+  @media (max-width: 767px) {
+    text-align: center;
+    @include profile-text(28px, 1.5);
+  }
 }
 
 .profile-content_header-user-data-block {
@@ -203,6 +218,10 @@
 .search-wrapper {
   position: relative;
   display: inline-block;
+  @media (max-width: 767px) {
+    width: 100%;
+    margin-top: 15px;
+  }
 }
 
 .profile-content_orders-header-input {
@@ -213,6 +232,9 @@
   border: 1px solid #dadada;
   outline: none;
   padding-left: 60px;
+  @media (max-width: 767px) {
+    width: 100%;
+  }
 }
 
 .search-wrapper > svg {
@@ -257,6 +279,12 @@
 .profile-content_orders-content-filters-button[data-price],
 .profile-content_orders-content-filters-button[data-status] {
   width: 100px;
+  @media (max-width: 767px) {
+    width: fit-content;
+    padding: 5px 8px;
+    background-color: #eeeeee;
+    border-radius: 8px;
+  }
 }
 
 .profile-content_orders-content-list {

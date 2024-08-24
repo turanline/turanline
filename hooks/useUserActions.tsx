@@ -20,7 +20,7 @@ import {
   logOutUser,
   setRegistrationPageNumber,
   setForgetPassword,
-  setPaymenPageNumber
+  setPaymenPageNumber,
 } from "@/redux/reducers/userSlice";
 //Hooks
 import { useAppDispatch } from "./useReduxHooks";
@@ -39,10 +39,7 @@ import {
 //Component Types
 import { ISortConfig } from "@/types/componentTypes";
 //Redux Types
-import {
-  ICartState,
-  IUserInformationApi,
-} from "@/types/reduxTypes";
+import { ICartState, IUserInformationApi } from "@/types/reduxTypes";
 import { IOrderProduct } from "@/types/componentTypes";
 
 interface IUserReviewState {
@@ -67,18 +64,17 @@ const useUserActions = () => {
   const { onResetCart } = useCart();
   const dispatch = useAppDispatch();
   const { onResetFavorites } = useFavorites();
-  const {userOrders} = useTypedSelector(state => state.user)
-
+  const { userOrders } = useTypedSelector((state) => state.user);
 
   const onLogInUser = useCallback(
-    (information: IInputsLoginPost) =>
-      dispatch(logInUser(information)),
+    (information: IInputsLoginPost) => dispatch(logInUser(information)),
     [dispatch]
   );
 
   const onRegistrationUser = useCallback(
-    (information: IUserInformationApi) => dispatch(registrationUser(information))
-    ,[dispatch]
+    (information: IUserInformationApi) =>
+      dispatch(registrationUser(information)),
+    [dispatch]
   );
 
   const onSetRegistrationPage = useCallback(
@@ -98,7 +94,8 @@ const useUserActions = () => {
 
   const onChangeUserData = useCallback(
     (newUserData: IChangeUserData) =>
-      dispatch(changeUserDataProfile(newUserData)),[dispatch]
+      dispatch(changeUserDataProfile(newUserData)),
+    [dispatch]
   );
 
   const onGetUser = useCallback(() => dispatch(getUser()), [dispatch]);
@@ -107,20 +104,21 @@ const useUserActions = () => {
 
   const onLogOutUser = useCallback(async () => {
     try {
-      await dispatch(logOutUser())
-        .then(() => {
-          showToastMessage("success", translate.messageLogOutSuccess);
-          onResetCart();
-          onResetFavorites();
-        })
-        .catch(error => console.error(error));
+      const response = await dispatch(logOutUser());
+      if (response.meta.requestStatus === "fulfilled") {
+        showToastMessage("success", translate.messageLogOutSuccess);
+        onResetCart();
+        onResetFavorites();
+      }
     } catch (error) {
       console.error(error);
     }
   }, [dispatch, onResetCart, onResetFavorites]);
 
-
-  const returnUserOrders = ( orders: ICartState["cart"][], handleSort: (key: ISortConfig["key"]) => void) => {
+  const returnUserOrders = (
+    orders: ICartState["cart"][],
+    handleSort: (key: ISortConfig["key"]) => void
+  ) => {
     if (!userOrders?.length) {
       return (
         <EmptyComponent
@@ -139,7 +137,7 @@ const useUserActions = () => {
             data-name
             className="profile-content_orders-content-filters-button"
           >
-            Название
+            {translate.userActionsTitle}
           </button>
 
           <button
@@ -147,7 +145,7 @@ const useUserActions = () => {
             onClick={() => handleSort("created_date")}
             className="profile-content_orders-content-filters-button"
           >
-            Дата
+            {translate.userActionsDate}
             <Icons id="arrowDownProfile" />
           </button>
 
@@ -156,7 +154,7 @@ const useUserActions = () => {
             onClick={() => handleSort("total_sum")}
             className="profile-content_orders-content-filters-button"
           >
-            Стоимость
+            {translate.userActionsCost}
             <Icons id="arrowDownProfile" />
           </button>
 
@@ -164,12 +162,12 @@ const useUserActions = () => {
             data-status
             className="profile-content_orders-content-filters-button"
           >
-            Статус
+            {translate.userActionsStatus}
           </button>
         </div>
 
         <div className="profile-content_orders-content-list">
-          {orders?.map(order => (
+          {orders?.map((order) => (
             <UserOrderWrapper
               key={order?.id}
               orderNumber={order?.id}
@@ -195,7 +193,7 @@ const useUserActions = () => {
         />
       ) : (
         <div className="profile-content_reviews-list">
-          {reviews?.map(review => (
+          {reviews?.map((review) => (
             <UserReviewItem
               key={review.id}
               reviewStatus="published"

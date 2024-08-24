@@ -80,15 +80,15 @@ const useCustomForm = <T extends CustomFormType>() => {
       case "code":
         return translate.checkCode;
       case "card_number":
-        return 'Введите корректный номер карты'; 
+        return translate.formCorrectCardNumber; 
       case "cardholder_name":
-        return 'Введите корректное имя владельца карты'; 
+        return translate.formCorrectCardName; 
       case "cvv":
-       return 'Введите корректный CVV'; 
+       return translate.formCorrectCardCVV; 
       case "expiration_month":
-        return 'Введите корректный месяц'; 
+        return translate.formCorrectCardMonth; 
       case "expiration_year":
-        return 'Введите корректный год'; 
+        return translate.formCorrectCardYear; 
     }
     
   };

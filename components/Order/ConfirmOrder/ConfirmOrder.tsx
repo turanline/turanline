@@ -73,7 +73,7 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
         return;
       };
       if(response?.response?.status){
-        showToastMessage('warn','Ошибка получения трафов');
+        showToastMessage('warn', translate.messageOrderTariffsError);
         return;
       };
     } catch (error) {
@@ -110,21 +110,21 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
 
       const response = await postToOrder(requestBody);
         if(response?.status === 201){
-          showToastMessage('success','Заказ успешно создан');
-          showToastMessage('warn','Переход к оплате');
+          showToastMessage('success', translate.messageOrderSuccess);
+          showToastMessage('warn', translate.messageOrderGoPayment);
           localStorage.setItem('deliveryCost',response?.data?.delivery?.price);
           nextStep();
         }
         if(response?.response?.status === 400){
-          showToastMessage('warn','Заполните все данные');
+          showToastMessage('warn', translate.messageOrderFillFields);
         }
         if(response?.response?.status === 401){
-          showToastMessage('error','Пользователь не авторизован');
+          showToastMessage('error',translate.messageOrderAuthError);
         }
      
 
     } catch (error) {
-        showToastMessage('error','Ошибка при создании ');
+        showToastMessage('error', translate.messageOrderError);
     }
   };
 
@@ -146,14 +146,14 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
 
 
   return (
-    <main className="container mx-auto mt-[30px] mb-[100px] px-[28px] md:px-0">
+    <main className="container mx-auto mt-[30px] flex flex-col justify-center mb-[70px] px-[15px] lg:px-[30px]">
       <Breadcrumbs>
         <BreadcrumbItem href={SHOP_ROUTE}>{translate.mainPageRoute}</BreadcrumbItem>
         <BreadcrumbItem href={BASKET_ROUTE}>{translate.headerCart}</BreadcrumbItem>
         <BreadcrumbItem>{translate.orderPageButton}</BreadcrumbItem>
       </Breadcrumbs>
 
-      <div className="w-full flex flex-col lg:grid grid-cols-2 gap-[79px]">
+      <div className="w-full flex flex-col lg:grid grid-cols-2 gap-[40px] sm:gap-[79px]">
         <div className="flex flex-col gap-[45px]">
           <h2 className="family-medium text-[32px]">{translate.orderPagePersonalData}</h2>
 
@@ -162,14 +162,14 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
               <label className="text-[18px] flex flex-col gap-[5px]">
                 {translate.registrationLabelName}
 
-                <div className='inputs-order'>{userState?.user.first_name}</div>
+                <div className='inputs-order truncate'>{userState?.user.first_name}</div>
               </label>
             </div>
 
             <div className="flex flex-col gap-[17px]">
               <label className="text-[18px] flex flex-col gap-[5px]">
                 {translate.orderPagePhone}
-                <div className='inputs-order'>{userState?.user.phone_number}</div>
+                <div className='inputs-order truncate'>{userState?.user.phone_number}</div>
               </label>
             </div>
 
@@ -177,7 +177,7 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
               <label className="text-[18px] flex flex-col gap-[5px]">
                 {translate.registrationLabelEmail}
 
-                <div className='inputs-order'>{userState?.user.email}</div>
+                <div className='inputs-order truncate'>{userState?.user.email}</div>
 
                 <span className="text-[12px] text-textAcc">
                   {translate.orderPageEmailText}
@@ -234,7 +234,7 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
 
           <Button
             onClick={handlePostUserOrder}
-            className="bg-tiffani text-[24px] text-white rounded-lg w-full h-[73px] py-[10px]"
+            className="bg-tiffani text-[22px] text-white rounded-lg w-full h-[63px] py-[10px]"
           >
             {translate.orderPageButton}
           </Button>

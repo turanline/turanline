@@ -11,6 +11,7 @@
   "headerAllCategories": "Все категории",
   "headerSearchPlaceholder": "Поиск по каталогу",
   "headerToProfile": "В личный кабинет",
+  "headerSearch": "Поиск",
 
   "paymentSuccess": "Спасибо за покупку !",
   "paymentSuccessText": "Оплата успешно была выполена",
@@ -48,6 +49,8 @@
   "paymentCardYear":"Срок действия карты - Год",
   "paymentPayOrder":"Оплатить заказ",
   "paymentNameSurname":"Имя Фамилия",
+  "PaymentPay": "Оплатить",
+
 
 
 
@@ -98,6 +101,10 @@
   "registrationPhoneNumber": "Номер телефона",
   "registrationButtonText": "Зарегистрироваться",
   "registrationButtonLogIn": "Уже есть аккаунт?",
+  "registrationSuccess": "Регистрация прошла успешно",
+  "registrationConfirm": "Подтвердите номер телефона",
+  "registrationError": "Ошибка",
+  "registrationRememberMe": "Запомнить пароль",
 
   "emptyBasketTitle": "Корзина пока пуста!",
   "emptyBasketText": "Пришла пора отправиться за покупками!",
@@ -187,6 +194,12 @@
   "productPageDescription": "Описание товара",
   "productPageSimilar": "Похожие товары",
   "productPageFamous": "Популярные товары",
+
+
+  "userActionsTitle": "Название",
+  "userActionsDate": "Дата",
+  "userActionsCost": "Стоимость",
+  "userActionsStatus": "Статус",
 
   "politicsGeneralProvisions": "Общие положения",
   "politicsGeneralProvisionsText": "Настоящая политика обработки персональных данных составлена в соответствии с требованиями Федерального закона от 27.07.2006. № 152-ФЗ «О персональных данных» (далее — Закон о персональных данных) и определяет порядок обработки персональных данных и меры по обеспечению безопасности персональных данных, предпринимаемые Название организации (далее — Оператор).",
@@ -298,13 +311,29 @@
   "messageCartItemInCart": "Этот товар уже в корзине!",
   "messageCartNotAuth": "Вы не авторизованы!",
   "messageCartDeleted": "Товар удалён из корзины!",
+  "messageGetCartError": "Произошла ошибка при получении корзины корзины, попробуйте позже!",
+  "messageCartColorChoose": "Вы не выбрали цвет!",
+  "messageCartDeleteError": "Произошла ошибка при удалении товара, попробуйте позже!",
+  "messageCartOrderSend": "Заказ успешно отправлен!",
   "messageFavoritesSuccess": "Товар добавлен в избранное!",
   "messageFavoritesWarn": "Вы не можете добавить товар в избранное, пока не авторизуйтесь!",
   "messageFavoritesDeleted": "Товар удален из избранного!",
+  "messageFavoritesAddError": "Произошла ошибка при добавлении в избранное, попробуйте позже!",
+  "messageFavoritesDeleteError": "Произошла ошибка при удалении из избранное, попробуйте позже!",
   "messageLogOutSuccess": "Вы успешно вышли из аккаунта!",
+  "messageOrderTariffsError": "Ошибка получения тарифов",
+  "messageOrderSuccess": "Заказ успешно создан",
+  "messageOrderGoPayment": "Переход к оплате",
+  "messageOrderFillFields": "Заполните все данные",
+  "messageOrderAuthError": "Пользователь не авторизован",
+  "messageOrderError": "Ошибка при создании",
+  "messagePaymentWrongData": "Неверные данные",
+  "messagePaymentNotFound": "Заказ не найден",
+  "messagePaymentError": "Ошибка в заказах",
+
 
   "notFoundTitle": "Небольшая ошибка",
-  "notFoundText": "НУпс... Кажется, этой страницы не существует! Перейдите на главную и попробуйте ещё раз.",
+  "notFoundText": "Упс... Кажется, этой страницы не существует! Перейдите на главную и попробуйте ещё раз.",
 
   "errorPageTitle": "Сетевая ошибка",
   "errorPageText": "Произошла какая-то ошибка со стороны сервера, мы уже усердно ее исправляем!",
@@ -320,8 +349,11 @@
   "formMin": "Не менее",
   "formMax": "Не более",
   "formSymbols": "символов",
-
-
+  "formCorrectCardNumber": "Введите корректный номер карты",
+  "formCorrectCardName": "Введите корректное имя владельца карты",
+  "formCorrectCardCVV": "Введите корректный CVV",
+  "formCorrectCardMonth": "Введите корректный месяц",
+  "formCorrectCardYear": "Введите корректный год",
 
   "Russia":"Россия",
   "China":"Китай",
@@ -344,5 +376,7 @@
   "PhoneConfirmText2": "было отправлено сообщение с 6-и значным кодом подтверждения",
   "PhoneConfirmCode":"Код из сообщения",
   "PhoneConfirmCodePlaceHolder":"Введите код подтверждения",
+  "phoneConfirmSuccess": "Проверка прошла успешно",
+  "phoneConfirmError": "Проверка не прошла",
   "ConfirmPhoneButton":"Подтвердить"
 }

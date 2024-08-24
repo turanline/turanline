@@ -66,35 +66,35 @@ export default function About() {
   };
 
   return (
-    <main className="container mx-auto mt-[30px] mb-[100px] px-[28px] md:px-0">
+    <main className="container mx-auto mb-[70px] lg:mb-[100px] px-[15px] lg:px-[30px]">
       <Breadcrumbs>
         <BreadcrumbItem href={SHOP_ROUTE}>{translate.mainPageRoute}</BreadcrumbItem>
         <BreadcrumbItem>{translate.headerAbout}</BreadcrumbItem>
       </Breadcrumbs>
 
-      <div className="w-full mt-[48px]">
-        <div className="w-full flex flex-col items-center mb-[60px]">
-          <h1 className="family-bold text-[40px] text-tiffani mb-[20px]">
+      <div className="w-full mt-[30px] lg:mt-[48px]">
+        <div className="w-full flex flex-col items-center mb-[40px] sm:mb-[60px]">
+          <h1 className="family-bold text-[32px] xl:text-[40px] text-tiffani mb-[20px]">
             {SHOP_NAME}
           </h1>
 
-          <p className="text-gray/500 mb-[40px]">{translate.aboutPageText}</p>
+          <p className="text-gray/500">{translate.aboutPageText}</p>
         </div>
 
-        <div className="grid grid-rows-2 lg:grid-rows-1 lg:grid-cols-2 gap-[80px]">
-          <div className="w-full h-[460px] bg-black"></div>
+        <div className="flex flex-col lg:flex-row gap-[40px] xl:gap-[80px]">
+          <div className="w-full lg:flex-[0_1_50%] h-[280px] lg:h-[460px] bg-black"></div>
 
-          <div className="flex flex-col">
-            <h5 className="family-bold  mb-[10px]">{translate.aboutPageTextProducts}</h5>
+          <div className="flex flex-col flex-1">
+            <h5 className="family-bold max-lg:text-center mb-[10px]">{translate.aboutPageTextProducts}</h5>
 
-            <h2 className="family-bold  text-[40px] text-tiffani   mb-[20px]">
+            <h2 className="family-bold text-[26px] sm:text-[32px] max-lg:text-center  xl:text-[40px] text-tiffani   mb-[20px]">
               {translate.aboutPageTextWork}
             </h2>
 
-            <div className="flex gap-[60px]">
+            <div className="flex max-lg:justify-center  gap-[60px]">
               <div className="flex flex-col gap-[20px]">
                 <div className="flex flex-col">
-                  <p className="family-bold    text-[40px]">1000+</p>
+                  <p className="family-bold text-[26px] sm:text-[32px] xl:text-[40px]">1000+</p>
 
                   <p className="family-bold  text-tiffani text-[15px]">
                     {translate.aboutPageTextOrder}
@@ -102,7 +102,7 @@ export default function About() {
                 </div>
 
                 <div className="flex flex-col">
-                  <p className="family-bold    text-[40px]">15k</p>
+                  <p className="family-bold text-[26px] sm:text-[32px] xl:text-[40px]">15k</p>
 
                   <p className="family-bold  text-tiffani text-[15px]">
                     {translate.aboutPageTextStock}
@@ -112,7 +112,7 @@ export default function About() {
 
               <div className="flex flex-col gap-[20px]">
                 <div className="flex flex-col">
-                  <p className="family-bold    text-[40px]">20+</p>
+                  <p className="family-bold text-[26px] sm:text-[32px] xl:text-[40px]">20+</p>
 
                   <p className="family-bold  text-tiffani text-[15px]">
                     {translate.aboutPageTextCountry}
@@ -120,7 +120,7 @@ export default function About() {
                 </div>
 
                 <div className="flex flex-col">
-                  <p className="family-bold    text-[40px]">200+</p>
+                  <p className="family-bold text-[26px] sm:text-[32px] xl:text-[40px]">200+</p>
 
                   <p className="family-bold  text-tiffani text-[15px]">
                     {translate.aboutPageTextStars}
@@ -131,30 +131,22 @@ export default function About() {
           </div>
         </div>
 
-        <div className="hidden md:flex flex-col items-center relative mb-[100px]">
-          <div className="flex text-center flex-col gap-[40px] mt-[100px]">
-            <h2 className="family-bold   text-tiffani text-[40px]">
-              {translate.aboutPageTextPartners}
-            </h2>
+        <div className="flex text-center flex-col gap-[40px] relative mt-[40px] sm:mt-[70px] lg:mt-[100px]">
+          <h2 className="family-bold   text-tiffani text-[26px] sm:text-[32px] xl:text-[40px]">
+            {translate.aboutPageTextPartners}
+          </h2>
 
-            <div className="flex gap-[30px] lg:gap-[50px] ml-[67px] cursor-pointer">
-              {renderPartners(firstPartners)}
-            </div>
-
-            <div className="flex gap-[30px] lg:gap-[50px] cursor-pointer">
-              {renderPartners(secondPartners)}
-            </div>
+          <div className="flex justify-center flex-wrap gap-[30px] lg:gap-[50px] cursor-pointer">
+            {renderPartners(firstPartners)}
           </div>
 
-          <div className="absolute right-0 bottom-[-50px] flex gap-[7px] items-center mt-[30px]">
-            <Link href={MANUFACTURES_ROUTE}>{translate.lookAll}</Link>
-
-            <Icons id="arrowBlack" />
+          <div className="flex flex-wrap justify-center gap-[30px] lg:gap-[50px] cursor-pointer">
+            {renderPartners(secondPartners)}
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-[44px]">
-          <h2 className="family-bold   text-tiffani text-[40px]">
+        <div className="flex flex-col items-center gap-[30px] mt-[40px] sm:mt-[70px] lg:mt-[100px]">
+          <h2 className="family-bold   text-tiffani text-[26px] max-lg:text-center sm:text-[32px] xl:text-[40px]">
             {translate.aboutPageTextPopular}
           </h2>
 

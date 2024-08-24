@@ -12,7 +12,7 @@ const EmptyComponent: FC<IEmptyComponentProps> = ({ route, title, text, buttonTe
 
   return (
     <div className="w-full flex flex-col items-center">
-      <h1 className="text-[40px] text-center text-tiffani family-medium mb-[20px]">
+      <h1 className="text-[26px] sm:text-[32px] lg:text-[40px] text-center text-tiffani family-medium mb-[20px]">
         {title}
       </h1>
       <p className="text-gray/500 mb-[40px] text-center">{text}</p>

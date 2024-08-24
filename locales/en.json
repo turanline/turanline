@@ -10,6 +10,7 @@
   "headerCategorySelect": "Category",
   "headerSearchPlaceholder": "Search in catalog",
   "headerToProfile": "To Profile",
+  "headerSearch": "Search",
 
   "paymentSuccess": "Thank you for your purchase!",
   "paymentSuccessText": "Payment was successfully completed",
@@ -20,9 +21,14 @@
   "paymentSelectCity": "Select City",
   "paymentSelectTarif": "Select Tariff",
   "paymentNameSurname": "Name Surname",
+  "PaymentPay": "Pay",
+
   "productWeight":"Product weight",
 
   "productMold":"Mold",
+
+  "reviewModeration": "On moderation",
+
 
   "paymentCardNumber": "Card Number",
   "paymentCardHolder": "Cardholder Name",
@@ -89,6 +95,10 @@
   "registrationPhoneNumber": "Phone Number",
   "registrationButtonText": "Register",
   "registrationButtonLogIn": "Already have an account?",
+  "registrationSuccess": "Registration was successful",
+  "registrationConfirm": "Confirm phone number",
+  "registrationError": "Error",
+  "registrationRememberMe": "Remember password",
 
   "emptyBasketTitle": "Basket is Empty!",
   "emptyBasketText": "It's time to go shopping!",
@@ -174,6 +184,12 @@
   "productPageDescription": "Product Description",
   "productPageSimilar": "Similar Products",
   "productPageFamous": "Popular Products",
+
+
+  "userActionsTitle": "Title",
+  "userActionsDate": "Date",
+  "userActionsCost": "Cost",
+  "userActionsStatus": "Status",
 
   "politicsGeneralProvisions": "General Provisions",
   "politicsGeneralProvisionsText": "This privacy policy has been prepared in accordance with the requirements of Federal Law of 27.07.2006. № 152-FZ \"On Personal Data\" (hereinafter - the Personal Data Law) and defines the procedure for processing personal data and measures to ensure the security of personal data taken by Organization Name (hereinafter - the Operator).",
@@ -285,10 +301,26 @@
   "messageCartItemInCart": "This item is already in the cart!",
   "messageCartNotAuth": "You are not authenticated!",
   "messageCartDeleted": "Item deleted from cart!",
+  "messageGetCartError": "There was an error retrieving the shopping cart cart, try again later!",
+  "messageCartColorChoose": "You didn't pick a color!",
+  "messageCartDeleteError": "There was an error when deleting an item, please try again later!",
+  "messageCartOrderSend": "Order has been successfully shipped!",
   "messageFavoritesSuccess": "Item added to favorites!",
   "messageFavoritesWarn": "You cannot add item to favorites until you log in!",
   "messageFavoritesDeleted": "Item deleted from favorites!",
+  "messageFavoritesAddError": "An error occurred while adding to favorites, try again later!",
+  "messageFavoritesDeleteError": "An error occurred while deleting from favorites, try again later!",
   "messageLogOutSuccess": "You have successfully logged out!",
+  "messageOrderTariffsError": "Error receiving tariffs",
+  "messageOrderSuccess": "The order was successfully created",
+  "messageOrderGoPayment": "Move to payment",
+  "messageOrderFillFields": "Fill in all the details",
+  "messageOrderAuthError": "User not authorized",
+  "messageOrderError": "Error during creation",
+  "messagePaymentWrongData": "Invalid data",
+  "messagePaymentNotFound": "Order not found",
+  "messagePaymentError": "Error in orders",
+
 
   "notFoundTitle": "Small Error",
   "notFoundText": "Oops... It looks like this page doesn't exist! Please go to the homepage and try again.",
@@ -307,6 +339,12 @@
   "formMin": "At least",
   "formMax": "No more than",
   "formSymbols": "characters",
+  "formCorrectCardNumber": "Enter the valid card number",
+  "formCorrectCardName": "Enter the valid name of the cardholder",
+  "formCorrectCardCVV": "Enter the valid CVV",
+  "formCorrectCardMonth": "Enter the valid month",
+  "formCorrectCardYear": "Enter a valid year",
+
 
   "recoverPasswordTitle": "Recover Password",
   "recoverAppeal": "Recover",
@@ -318,5 +356,7 @@
   "PhoneConfirmText2": "your phone number",
   "PhoneConfirmCode": "Code from the message",
   "PhoneConfirmCodePlaceHolder": "Enter the confirmation code",
+  "phoneConfirmSuccess": "The confirmation was successful",
+  "phoneConfirmError": "Confirmation failed",
   "ConfirmPhoneButton": "Confirm"
 }

@@ -23,11 +23,10 @@ import { IProductMainPage } from "@/types/componentTypes";
 
 const useFavorites = () => {
   //Hooks
-  const { favorites } = useTypedSelector(state => state.favorites);
+  const { favorites } = useTypedSelector((state) => state.favorites);
   const dispatch = useAppDispatch();
   const translate = useTranslate();
   const { push } = useRouter();
-
 
   const fetchFavorites = useCallback(
     () => dispatch(onFetchFavorites()),
@@ -35,19 +34,16 @@ const useFavorites = () => {
   );
 
   const addToFavorites = (product: IProductMainPage, isAuth: boolean) => {
-    if (isAuth){
+    if (isAuth) {
       dispatch(onAddToFavorites(product))
-        .then(data => {
+        .then((data) => {
           if ("error" in data && data.error.message === "Rejected") {
-            showToastMessage(
-              "error",
-              "Произошла ошибка при добавлении в избранное, попробуйте позже!"
-            );
+            showToastMessage("error", translate.messageFavoritesAddError);
             return;
           }
           showToastMessage("success", translate.messageFavoritesSuccess);
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     }
 
     showToastMessage("warn", translate.messageFavoritesWarn);
@@ -57,47 +53,41 @@ const useFavorites = () => {
 
   const onResetFavorites = () => dispatch(resetFavorites());
 
-  const deleteFromFavorites = (product: IProductMainPage) => {
-    dispatch(onDeleteFromFavorites(product))
-      .then(data => {
-        if ("error" in data && data.error.message === "Rejected") {
-          showToastMessage("error","Произошла ошибка при удалении из избранное, попробуйте позже!");
-          return;
-        }
-
-        showToastMessage("success", translate.messageFavoritesDeleted);
-      })
-      .catch(error => console.log(error));
+  const deleteFromFavorites = async (product: IProductMainPage) => {
+    try {
+      const response = await dispatch(onDeleteFromFavorites(product));
+      if (response.meta.requestStatus === "rejected") {
+        showToastMessage("error", translate.messageFavoritesDeleteError);
+        return;
+      }
+      showToastMessage("success", translate.messageFavoritesDeleted);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const renderFavorites = () => (
-    favorites?.map(item => (
-      <ProductCard key={item?.id} productInfo={item} />
-    ))
-  );
+  const renderFavorites = () =>
+    favorites?.map((item) => <ProductCard key={item?.id} productInfo={item} />);
 
   const renderUserFavorites = () => {
+    if (!favorites.length)
+      return (
+        <EmptyComponent
+          title={translate.emptyFavoritesTitle}
+          text={translate.emptyBasketText}
+          route={CATALOG_ROUTE}
+          buttonText={translate.emptyBasketButtonText}
+        />
+      );
 
-    if(!favorites.length) return(
-      <EmptyComponent
-        title={translate.emptyFavoritesTitle}
-        text={translate.emptyBasketText}
-        route={CATALOG_ROUTE}
-        buttonText={translate.emptyBasketButtonText}
-      />
-    );
-
-    return(
+    return (
       <>
         <h5 className="text-[24px] mb-[25px]">{translate.headerFavorites}</h5>
 
-        <div className="favorites_wrapper">
-          {renderFavorites()}
-        </div>
+        <div className="favorites_wrapper">{renderFavorites()}</div>
       </>
-    )
-      
-};
+    );
+  };
 
   return {
     addToFavorites,

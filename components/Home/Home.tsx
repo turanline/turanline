@@ -92,7 +92,7 @@ const Home = () => {
   }, [setAllProducts]);
 
   return (
-    <main className="container mx-auto px-[28px] sm:px-0">
+    <main className="container mx-auto px-[15px] lg:px-[30px]">
       <div className="flex flex-col lg:flex-row gap-[15px] lg:gap-[24px] mb-[15px] lg:mb-[24px]">
         <Link className="lg:h-auto   w-full  " href={CATALOG_ROUTE}>
           <div className="h-[200px]  lg:max-h-[230px] max-h-[300px] flex-col p-[24px] sm:p-[36px] sm:h-[240px] text-white relative">
@@ -171,7 +171,7 @@ const Home = () => {
       </div>
      
       <div className="flex flex-col mt-[30px] w-full">
-        <div className="flex justify-between mb-[26px]">
+        <div className="flex items-center justify-between mb-[26px]">
           <h5 className="text-[24px]">{translate.bestsellers}</h5>
 
           <div className="flex gap-[7px] items-center">

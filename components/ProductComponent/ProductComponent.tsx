@@ -101,7 +101,6 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
               src={image || NoPicture}
               alt={'carousel-images'}
               width={400}
-              height={400}
               className="swiper-slides-photos"
             />
           </Zoom>
@@ -178,7 +177,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
       </Breadcrumbs>
 
       <div className="flex flex-col mt-[30px]">
-        <h1 className="text-[32px] font-medium mb-[24px]">
+        <h1 className="text-[26px] sm:text-[32px] font-medium mb-[24px]">
           {oneProduct?.name}
         </h1>
 
@@ -187,7 +186,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
 
           <div className="border-1 border-border shadow-xl product-page_info">
             <div className="product-info">
-              <div className="flex flex-col product-info_table">
+              <div className="flex flex-col max-md:mx-auto max-w-[300px] w-full product-info_table">
                 <div className="block-option_product">
                   <p className="text-textAcc w-[160px]">
                     {translate.productPageArticle}:
@@ -267,7 +266,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-[10px] w-[200px]">
+              <div className="flex flex-col gap-[10px] max-md:w-[100%] max-md:max-w-[300px] w-[200px] max-md:mx-auto">
                 <p className="text-[32px] family-medium leading-none">
                   {(+productCounter * +oneProduct?.price).toFixed(2)} $
                 </p>
@@ -312,7 +311,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
 
               <Button
                 onClick={handleAddToCart}
-                className="bg-tiffani text-white rounded-md w-full sm:w-[200px] h-[44px] py-[10px]"
+                className="bg-tiffani text-white rounded-md w-full lg:w-[200px] h-[44px] py-[10px]"
               >
                 {translate.productPageButton}
               </Button>

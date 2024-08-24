@@ -25,75 +25,85 @@ import { IPostCartApi } from "@/types/types";
 
 const useCart = () => {
   //Hooks
-  const { cart } = useTypedSelector(state => state.cart);
-  const { isAuth } = useTypedSelector(state => state.user);
+  const { cart } = useTypedSelector((state) => state.cart);
+  const { isAuth } = useTypedSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const translate = useTranslate();
   const { push } = useRouter();
 
+  // Get user cart data
+  const onFetchCart = useCallback(async () => {
+    try {
+      const response = await dispatch(fetchCart());
 
-  const onFetchCart = useCallback(() =>
-      dispatch(fetchCart())
-        .then(response => {
-          if ("error" in response && response?.error?.message === "Rejected")
-          showToastMessage("error", "Произошла ошибка при получении корзины корзины, попробуйте позже!");
-        })
-        .catch(error => console.error(error)),
+      if (response.meta.requestStatus === "rejected") {
+        showToastMessage("error", translate.messageGetCartError);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [dispatch]);
+
+  const onChangeCardCounter = useCallback(
+    async (obj: Omit<IPostCartApi, "product">, id: number) => {
+      try {
+        const response = await dispatch(
+          changeItemCounter({ options: obj, id })
+        );
+
+        if (response.meta.requestStatus === "rejected") {
+          showToastMessage("error", translate.messageCartError);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
     [dispatch]
   );
 
-  const onChangeCardCounter = useCallback((obj: Omit<IPostCartApi, "product">, id: number) =>
-      dispatch(changeItemCounter({ options: obj, id }))
-        .then(response => {
-          if ("error" in response && response?.error?.message === "Rejected") {
-            showToastMessage("error", translate.messageCartError);
-            return;
-          }
-        })
-        .catch(error => console.error(error)),
-    [dispatch]
-  );
-
-  const addItemToCart = useCallback((obj: IPostCartApi) => {
+  const addItemToCart = useCallback(
+    (obj: IPostCartApi) => {
       if (!isAuth) {
         showToastMessage("warn", translate.messageCartNotAuth);
         push(LOGIN_ROUTE);
         return;
-      };
+      }
 
-      const checkProductInCart = cart?.order_products?.find(product =>
-        product?.product?.id === obj?.product && product?.color?.id === obj?.color
-      );;
+      const checkProductInCart = cart?.order_products?.find(
+        (product) =>
+          product?.product?.id === obj?.product &&
+          product?.color?.id === obj?.color
+      );
 
       if (checkProductInCart) {
         showToastMessage("warn", translate.messageCartItemInCart);
         return;
-      };
+      }
 
       if (!obj?.color) {
-        showToastMessage("warn", "Вы не выбрали цвет!");
+        showToastMessage("warn", translate.messageCartColorChoose);
         return;
-      };
+      }
 
-      return dispatch(addToCart(obj))
-    
-    },[cart, dispatch, fetchCart, push]);
+      return dispatch(addToCart(obj));
+    },
+    [cart, dispatch, fetchCart, push]
+  );
 
-  const deleteCardFromBasket = useCallback((id: number) => {
-      dispatch(deleteFromCart(id))
-        .then(response => {
-          if ("error" in response && response?.error?.message === "Rejected") {
-            showToastMessage(
-              "error",
-              "Произошла ошибка при удалении товара, попробуйте позже!"
-            );
-            return;
-          }
+  const deleteCardFromBasket = useCallback(
+    async (id: number) => {
+      try {
+        const response = await dispatch(deleteFromCart(id));
+        if (response.meta.requestStatus === "rejected") {
+          showToastMessage("error", translate.messageCartDeleteError);
+          return;
+        }
 
-          onFetchCart();
-          showToastMessage("success", translate.messageCartDeleted);
-        })
-        .catch(error => console.error(error));
+        await onFetchCart();
+        showToastMessage("success", translate.messageCartDeleted);
+      } catch (error) {
+        console.error(error);
+      }
     },
     [dispatch]
   );
@@ -103,7 +113,7 @@ const useCart = () => {
   const calculateTotalPrice = (): number => {
     let totalPrice = 0;
 
-    cart?.order_products?.forEach(item => {
+    cart?.order_products?.forEach((item) => {
       const { product, amount } = item;
       const itemPrice = +product?.price * amount;
 
@@ -114,51 +124,58 @@ const useCart = () => {
   };
 
   const returnAllProductsCounter = useCallback((): number => {
-    return cart?.order_products.reduce((total, currentItem) => total + currentItem?.amount,0);
+    return cart?.order_products.reduce(
+      (total, currentItem) => total + currentItem?.amount,
+      0
+    );
   }, [cart]);
 
   // const onPostUserOrder = async (obj: any) => {
   //   await postUserOrder(obj)
   //     .then(() => {
-  //       showToastMessage("success", "Заказ успешно отправлен!");
+  //       showToastMessage("success", translate.messageCartOrderSend);
   //       onFetchCart();
   //     })
   //     .catch(error => console.error(error));
   // };
 
-
-  const renderUserCart = useCallback(
-    () => {
-      if(!cart?.order_products?.length)
-      return(
+  const renderUserCart = useCallback(() => {
+    if (!cart?.order_products?.length)
+      return (
         <EmptyComponent
-        title={translate.emptyBasketTitle}
-        text={translate.emptyBasketText}
-        route={CATALOG_ROUTE}
-        buttonText={translate.emptyBasketButtonText}
-       />);
+          title={translate.emptyBasketTitle}
+          text={translate.emptyBasketText}
+          route={CATALOG_ROUTE}
+          buttonText={translate.emptyBasketButtonText}
+        />
+      );
 
-      return(
-        <>
-          <h5 className="text-[24px] leading-none">{translate.headerCart}</h5>
-    
-          <div className="flex flex-col gap-[30px]">
-            {cart?.order_products.map(item => (
-              <UserCartItem product={item} key={item?.product?.id} />
-            ))}
-    
-            <div className="basket_confirm">
-              <Button onClick={() => push(ORDER_ROUTE)} className="basket_button bg-tiffani text-white rounded-md w-[278px] h-[51px] py-[10px]">
-                  {translate.cartContinue}
-              </Button>
-              <p className="text-[24px] leading-none">
-                {`${translate.cartTotalPriceText} $${calculateTotalPrice().toFixed(2)}`}
-              </p>
-            </div>
+    return (
+      <>
+        <h5 className="text-[24px] leading-none">{translate.headerCart}</h5>
+
+        <div className="flex flex-col gap-[30px]">
+          {cart?.order_products.map((item) => (
+            <UserCartItem product={item} key={item?.product?.id} />
+          ))}
+
+          <div className="basket_confirm">
+            <Button
+              onClick={() => push(ORDER_ROUTE)}
+              className="basket_button bg-tiffani text-white rounded-md w-[278px] h-[51px] py-[10px]"
+            >
+              {translate.cartContinue}
+            </Button>
+            <p className="text-[24px] leading-none">
+              {`${
+                translate.cartTotalPriceText
+              } $${calculateTotalPrice().toFixed(2)}`}
+            </p>
           </div>
+        </div>
       </>
-       )
-    },[cart?.order_products]);
+    );
+  }, [cart?.order_products]);
 
   return {
     onFetchCart,

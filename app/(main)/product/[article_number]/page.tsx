@@ -63,7 +63,7 @@ const Product = async ({ params }: { params: { article_number: string }}) => {
     if (!oneProductPromise) return notFound();
 
     return (
-      <div className="container mx-auto mt-[30px] mb-[100px] px-[28px] sm:px-0">
+      <main className="container mx-auto mb-[100px] px-[15px] lg:px-[30px]">
         <ProductComponent oneProduct={oneProductPromise} />
 
         {similarProductsPromise?.length > 0 && (
@@ -73,7 +73,7 @@ const Product = async ({ params }: { params: { article_number: string }}) => {
         {famousProductsPromise?.length > 0  && (
           <ProductPageProducts products={famousProductsPromise} isSimilar={false} />
         )}
-      </div>
+      </main>
     );
   } catch (error) {
     console.error(error);

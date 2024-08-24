@@ -30,7 +30,7 @@ export default function Favorites() {
     return <Icons id="spiner" />;
 
   return (
-    <main className="container mx-auto mt-[30px] mb-[30px] px-[28px] sm:px-0">
+    <main className="container mx-auto mt-[30px] mb-[30px] px-[15px] lg:px-[30px]">
       <Breadcrumbs>
         <BreadcrumbItem href={SHOP_ROUTE}>{translate.mainPageRoute}</BreadcrumbItem>
 

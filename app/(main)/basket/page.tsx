@@ -34,14 +34,14 @@ export default function Basket() {
     return <Icons id="spiner" />;
 
   return (
-    <main className="container mx-auto px-[28px] sm:px-0">
+    <main className="container mx-auto px-[15px] lg:px-[30px]">
       <Breadcrumbs>
         <BreadcrumbItem href={SHOP_ROUTE}>{translate.mainPageRoute}</BreadcrumbItem>
 
         <BreadcrumbItem href={BASKET_ROUTE}>{translate.headerCart}</BreadcrumbItem>
       </Breadcrumbs>
 
-      <div className="w-full gap-[30px] mt-[30px] mb-[30px] flex flex-col">
+      <div className="w-full gap-[30px] mt-[30px] mb-[30px] flex flex-col ">
         {renderUserCart()}
       </div>
     </main>

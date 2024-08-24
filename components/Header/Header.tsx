@@ -46,8 +46,6 @@ import logo2 from "@/public/assets/other/logo2.svg";
 //Styles
 import "./Header.scss";
 
-
-
 export function Header() {
   const [searchModal, setSearchModal] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -55,25 +53,23 @@ export function Header() {
   //Hooks
   const { push } = useRouter();
   const translate = useTranslate();
-  const { category } = useTypedSelector(state => state.products);
-  const { categories } = useTypedSelector(state => state.categories);
-  const { isAuth, status } = useTypedSelector(state => state.user);
-  const { cart } = useTypedSelector(state => state.cart);
-  const { favorites } = useTypedSelector(state => state.favorites);
+  const { category } = useTypedSelector((state) => state.products);
+  const { categories } = useTypedSelector((state) => state.categories);
+  const { isAuth, status } = useTypedSelector((state) => state.user);
+  const { cart } = useTypedSelector((state) => state.cart);
+  const { favorites } = useTypedSelector((state) => state.favorites);
 
   const { onSetCategory } = useProducts();
   const { onGetUser, onLogOutUser } = useUserActions();
   const { onFetchCart } = useCart();
   const { fetchFavorites } = useFavorites();
   const {
-      onSetCategories,
-      mapCategoriesOnDesktop,
-      mapCategoriesOnPhone,
-      onSetTypes,
-      onSetSubtypes,
-    } = useCategories("#E30387");
-
-
+    onSetCategories,
+    mapCategoriesOnDesktop,
+    mapCategoriesOnPhone,
+    onSetTypes,
+    onSetSubtypes,
+  } = useCategories("#E30387");
 
   //Styles
   const buttonStyles = {
@@ -82,16 +78,20 @@ export function Header() {
     width: "100%",
   };
   //ClassNames
-  const burderMenuClass = isOpen ? "header-burder active" : "header-burder";
-  const cartCounter = cart?.order_products?.length ? "w-[25px] h-[25px] visible": "hidden";
-  const favoritesCounter = favorites?.length ? "w-[25px] h-[25px] visible" : "hidden";
-  const accountProfileText = !isAuth ? translate.headerLogIn : translate.headerProfile;
+  const burgerMenuClass = isOpen ? "header-burger active" : "header-burger";
+  const cartCounter = cart?.order_products?.length
+    ? "w-[25px] h-[25px] visible"
+    : "hidden";
+  const favoritesCounter = favorites?.length
+    ? "w-[25px] h-[25px] visible"
+    : "hidden";
+  const accountProfileText = !isAuth
+    ? translate.headerLogIn
+    : translate.headerProfile;
   //Routes
   const PROFILE_ROUTER = !isAuth ? LOGIN_ROUTE : PROFILE_ROUTE;
   const FAVORITE_ROUTER = !isAuth ? LOGIN_ROUTE : FAVORITES_ROUTE;
   const CART_ROUTE = !isAuth ? LOGIN_ROUTE : BASKET_ROUTE;
-
-
 
   const handleClickButton = (message: string) => {
     if (!isAuth) showToastMessage("warn", message);
@@ -100,7 +100,7 @@ export function Header() {
   const renderHeaderDropdown = () => (
     <Dropdown isKeyboardDismissDisabled>
       <DropdownTrigger>
-        <div className="flex gap-[10px]">
+        <div className="flex gap-[10px] basis-[50%]">
           <Icons id="profile" />
           <p className="text-black">{accountProfileText}</p>
         </div>
@@ -121,53 +121,52 @@ export function Header() {
 
   const returnHeaderElement = (isMobile: boolean) => {
     //ClassNames
-    const headerLinksClassName = `flex ${!isMobile ? "flex-col" : "flex-row gap-[10px]"} items-center justify-between`;
-    const renderLinkIdClassName = !isMobile ? "profileAccountWhite" : "profile-account";
-    const renderLinkPClassName =  !isMobile ? "text-white" : "text-black";
-    
-    if (!isAuth) return (
-      <Link
-        href={PROFILE_ROUTER}
-        className={headerLinksClassName}
-      >
-        <Icons id={renderLinkIdClassName} />
-        <p className={renderLinkPClassName}>
-          {accountProfileText}
-        </p>
-      </Link>
-    );
+    const headerLinksClassName = `flex ${
+      !isMobile ? "flex-col" : "flex-row gap-[10px] max-sm:basis-[50%]"
+    } items-center`;
+    const renderLinkIdClassName = !isMobile
+      ? "profileAccountWhite"
+      : "profile-account";
+    const renderLinkPClassName = !isMobile ? "text-white w-max" : "text-black";
 
-    if (!isMobile) return(
-      <Tooltip
-        classNames={{ content: "p-0 overflow-hidden" }}
-        style={{ cursor: "pointer" }}
-        content={
-          <div className="flex flex-col items-center">
-            <Button
-              className="h-[40px] flex items-center"
-              onClick={() => push(PROFILE_ROUTE)}
-              style={buttonStyles}
-            >
-              {translate.headerToProfile}
-            </Button>
-            <Button onClick={onLogOutUser} style={buttonStyles}>
-              {translate.profilePageLogOut}
-            </Button>
+    if (!isAuth)
+      return (
+        <Link href={PROFILE_ROUTER} className={headerLinksClassName}>
+          <Icons id={renderLinkIdClassName} />
+          <p className={renderLinkPClassName}>{accountProfileText}</p>
+        </Link>
+      );
+
+    if (!isMobile)
+      return (
+        <Tooltip
+          classNames={{ content: "p-0 overflow-hidden" }}
+          style={{ cursor: "pointer" }}
+          content={
+            <div className="flex flex-col items-center">
+              <Button
+                className="h-[40px] flex items-center"
+                onClick={() => push(PROFILE_ROUTE)}
+                style={buttonStyles}
+              >
+                {translate.headerToProfile}
+              </Button>
+              <Button onClick={onLogOutUser} style={buttonStyles}>
+                {translate.profilePageLogOut}
+              </Button>
+            </div>
+          }
+          className="flex flex-col items-center justify-between"
+        >
+          <div className="flex flex-col items-center cursor-pointer">
+            <Icons id="profileWhiteAccount" />
+            <span className="text-white">{accountProfileText}</span>
           </div>
-        }
-        className="flex flex-col items-center justify-between"
-      >
-        <div className="flex flex-col items-center cursor-pointer">
-          <Icons id="profileWhiteAccount" />
-          <span className="text-white">{accountProfileText}</span>
-        </div>
-      </Tooltip>
-    );
+        </Tooltip>
+      );
 
     return renderHeaderDropdown();
   };
-
-
 
   useEffect(() => {
     onGetUser();
@@ -185,12 +184,10 @@ export function Header() {
     onSetTypes();
     onSetSubtypes();
   }, [onSetCategories, onSetTypes, onSetSubtypes]);
- 
-
 
   return (
     <header className="header-color">
-      <div className="container mx-auto px-[29px] sm:px-0">
+      <div className="container mx-auto px-[15px] lg:px-[30px]">
         <nav className="hidden lg:flex justify-between py-[25px]">
           <div className="flex items-center gap-2">
             <LanguageSelect color="white" />
@@ -229,11 +226,13 @@ export function Header() {
             allCategories={categories}
           />
 
-          <div className="hidden lg:flex gap-[25px]">
+          <div className="hidden lg:flex gap-[25px] w-max">
             <Link
               href={FAVORITE_ROUTER}
               className="flex flex-col items-center"
-              onClick={() => handleClickButton(translate.messageHeaderFavorites)}
+              onClick={() =>
+                handleClickButton(translate.messageHeaderFavorites)
+              }
             >
               <Badge
                 content={favorites?.length}
@@ -264,7 +263,8 @@ export function Header() {
 
             {returnHeaderElement(false)}
           </div>
-          <div className="flex lg:hidden items-center">
+          <div className="lg:hidden flex gap-[15px] items-center">
+            <LanguageSelect color="black" />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="w-[45px] md:w-[44px] cursor-pointer"
@@ -274,9 +274,9 @@ export function Header() {
           </div>
         </nav>
 
-        <div className={burderMenuClass}>
-          <nav className="flex items-start justify-between flex-wrap gap-[20px]">
-            <div className="flex flex-col gap-[20px]">
+        <div className={burgerMenuClass}>
+          <nav className="flex items-start justify-start sm:justify-between flex-wrap sm:gap-[20px]">
+            <div className="flex flex-col max-sm:basis-[50%] gap-[20px]">
               <Link href={CATALOG_ROUTE}>{translate.headerCatalog}</Link>
 
               <Link href={ABOUT_ROUTE}>{translate.headerAbout}</Link>
@@ -289,15 +289,19 @@ export function Header() {
             </div>
 
             {mapCategoriesOnPhone()}
+          </nav>
 
-            <div className="sm:hidden flex flex-wrap items-center gap-[20px]">
-              {returnHeaderElement(true)}
+          <div className="mt-[30px] w-full flex flex-wrap items-center justify-between gap-y-[20px]">
+            {returnHeaderElement(true)}
 
-              <Link
-                href={FAVORITE_ROUTER}
-                className="block flex items-center gap-[10px]"
-                onClick={() => handleClickButton(translate.messageHeaderFavorites)}
-              >
+            <Link
+              href={FAVORITE_ROUTER}
+              className="block max-sm:basis-[50%]"
+              onClick={() =>
+                handleClickButton(translate.messageHeaderFavorites)
+              }
+            >
+              <div className="flex items-center gap-[10px]">
                 <Badge
                   content={favorites?.length}
                   color="danger"
@@ -307,83 +311,33 @@ export function Header() {
                 </Badge>
 
                 <p>{translate.headerFavorites}</p>
-              </Link>
-              <button
-                className="flex items-center gap-[10px]"
-                onClick={() => setSearchModal(!searchModal)}
+              </div>
+            </Link>
+
+            <button
+              className="flex items-center max-sm:basis-[50%] gap-[10px]"
+              onClick={() => setSearchModal(!searchModal)}
+            >
+              <Icons id="searchMobile" />
+
+              <p>{translate.headerSearch}</p>
+            </button>
+
+            <Link
+              className="flex items-center max-sm:basis-[50%] gap-[10px]"
+              href={BASKET_ROUTE}
+              onClick={() => handleClickButton(translate.messageHeaderCart)}
+            >
+              <Badge
+                content={cart?.order_products?.length}
+                color="danger"
+                className={cartCounter}
               >
-                <Icons id="searchMobile" />
+                <Icons id="shopping" />
+              </Badge>
 
-                <p>Поиск</p>
-              </button>
-              <Link
-                className="flex items-center gap-[10px]"
-                href={BASKET_ROUTE}
-                onClick={() => handleClickButton(translate.messageHeaderCart)}
-              >
-                <Badge
-                  content={cart?.order_products?.length}
-                  color="danger"
-                  className={cartCounter}
-                >
-                  <Icons id="shopping" />
-                </Badge>
-
-                <p>{translate.headerCart}</p>
-              </Link>
-              <LanguageSelect color="black" />
-            </div>
-          </nav>
-
-          <div className="hidden sm:grid flex items-start gap-[24px] pl-[38px]">
-            <div className="flex flex-wrap items-center gap-[20px]">
-              {returnHeaderElement(true)}
-
-              <Link
-                href={FAVORITE_ROUTER}
-                className="block"
-                onClick={() => handleClickButton(translate.messageHeaderFavorites)}
-              >
-                <div className="flex items-center gap-[10px]">
-                  <Badge
-                    content={favorites?.length}
-                    color="danger"
-                    className={favoritesCounter}
-                  >
-                    <Icons id="heart" />
-                  </Badge>
-
-                  <p>{translate.headerFavorites}</p>
-                </div>
-              </Link>
-
-              <button
-                className="flex items-center gap-[10px]"
-                onClick={() => setSearchModal(!searchModal)}
-              >
-                <Icons id="searchMobile" />
-
-                <p>Поиск</p>
-              </button>
-
-              <Link
-                className="flex items-center gap-[10px]"
-                href={BASKET_ROUTE}
-                onClick={() => handleClickButton(translate.messageHeaderCart)}
-              >
-                <Badge
-                  content={cart?.order_products?.length}
-                  color="danger"
-                  className={cartCounter}
-                >
-                  <Icons id="shopping" />
-                </Badge>
-
-                <p>{translate.headerCart}</p>
-              </Link>
-
-              <LanguageSelect color="black" />
-            </div>
+              <p>{translate.headerCart}</p>
+            </Link>
           </div>
         </div>
       </div>

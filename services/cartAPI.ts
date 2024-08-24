@@ -16,7 +16,10 @@ export const getCart = async (id: number) => {
 
 export const postToCart = async (obj: IPostCartApi) => {
   try {
-    const { data: orderData } = await $authHost.post("/api/order-products/", obj);
+    const { data: orderData } = await $authHost.post(
+      "/api/order-products/",
+      obj
+    );
 
     return orderData;
   } catch (error) {
