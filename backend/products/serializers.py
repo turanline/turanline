@@ -1,11 +1,12 @@
-from rest_framework import serializers
-from parler_rest.serializers import TranslatableModelSerializer
 from parler_rest.fields import TranslatedFieldsField
+from parler_rest.serializers import TranslatableModelSerializer
+from rest_framework import serializers
 
-from . import models, fields, services, mixins
 from mssite import mixins as ms_mixins
-from product_components import serializers as product_components_serializers
 from product_components import models as product_components_models
+from product_components import serializers as product_components_serializers
+
+from . import fields, mixins, models
 
 
 class ProductSizeSerializer(serializers.ModelSerializer):
@@ -58,7 +59,56 @@ class ProductColorSerializer(serializers.ModelSerializer):
         ]
 
 
-class ProductBaseSerializer(TranslatableModelSerializer):
+class ProductBaseSerializer(
+    ms_mixins.BaseLocalizationMixin,
+    TranslatableModelSerializer
+):
+
+    colors_data = ProductColorSerializer(
+        source='colors',
+        many=True
+    )
+
+    sizes_data = ProductSizeSerializer(
+        source='sizes',
+        many=True
+    )
+
+    manufacturerCountry = serializers.SlugRelatedField(
+        slug_field='slug',
+        queryset=product_components_models.ManufacturerCountry.objects.all()
+    )
+
+    images = serializers.ListSerializer(
+        child=fields.Base64ImageField()
+    )
+
+    brand = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Product
+        translated_fields = [
+            'mold',
+            'season'
+        ]
+
+    def get_brand(self, obj):
+        return obj.provider.company
+
+
+class ImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Image
+        exclude = [
+            'product'
+        ]
+
+
+class ProductCreateSerializer(
+    mixins.ProductMixin,
+    ProductBaseSerializer
+):
 
     name = serializers.CharField(
         required=False,
@@ -75,54 +125,15 @@ class ProductBaseSerializer(TranslatableModelSerializer):
         trim_whitespace=True
     )
 
-    brand = serializers.SlugRelatedField(
-        slug_field='name',
-        queryset=product_components_models.Brand.objects.all()
+    pattern = serializers.CharField(
+        required=False,
+        trim_whitespace=True
     )
-
-    colors_data = ProductColorSerializer(
-        source='productcolor_set',
-        many=True
-    )
-
-    sizes_data = ProductSizeSerializer(
-        source='productsize_set',
-        many=True
-    )
-
-    manufacturerCountry = serializers.SlugRelatedField(
-        slug_field='slug',
-        queryset=product_components_models.ManufacturerCountry.objects.all()
-    )
-
-    images = serializers.ListSerializer(
-        child=fields.Base64ImageField()
-    )
-
-    class Meta:
-        model = models.Product
-        lookup_field = 'slug'
-
-
-class ImageSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Image
-        exclude = [
-            'product'
-        ]
-
-
-class ProductCreateSerializer(
-    mixins.ProductCreateMixin,
-    ProductBaseSerializer
-):
 
     class Meta(ProductBaseSerializer.Meta):
         exclude = [
             'color',
             'size',
-            'slug',
             'article_number',
             'is_famous',
             'provider'
@@ -130,15 +141,34 @@ class ProductCreateSerializer(
 
 
 class ProductUpdateSerializer(
-    mixins.ProductUpdateMixin,
+    mixins.ProductMixin,
     ProductBaseSerializer
 ):
+
+    name = serializers.CharField(
+        required=False,
+        trim_whitespace=True
+    )
+
+    description = serializers.CharField(
+        required=False,
+        trim_whitespace=True
+    )
+
+    compound = serializers.CharField(
+        required=False,
+        trim_whitespace=True
+    )
+
+    pattern = serializers.CharField(
+        required=False,
+        trim_whitespace=True
+    )
 
     class Meta(ProductBaseSerializer.Meta):
         exclude = [
             'color',
             'size',
-            'slug',
             'article_number',
             'category',
             'is_famous',
@@ -146,28 +176,26 @@ class ProductUpdateSerializer(
         ]
 
 
-class ProductLightSerializer(
+class ProductSerializer(
     ms_mixins.TranslatedSerializerMixin,
-    TranslatableModelSerializer
+    ProductBaseSerializer
 ):
 
     translations = TranslatedFieldsField(
         shared_model=models.Product
     )
 
-    images = ImageSerializer(
-        many=True
-    )
+    category = product_components_serializers.CategoriesSerializer()
 
-    class Meta:
+    class Meta(ProductBaseSerializer.Meta):
         model = models.Product
-        fields = '__all__'
-        read_only_fields = [
-            'translations'
+        exclude = [
+            'size',
+            'color'
         ]
 
 
-class OrderProductSerializer(
+class ProductOrderSerializer(
     ms_mixins.TranslatedSerializerMixin,
     TranslatableModelSerializer
 ):
@@ -186,52 +214,12 @@ class OrderProductSerializer(
             'id',
             'translations',
             'images',
-            'slug',
+            'article_number',
             'price'
         ]
         read_only_fields = [
             'translations'
         ]
-
-
-class ProductSerializer(
-    ms_mixins.TranslatedSerializerMixin,
-    TranslatableModelSerializer
-):
-
-    translations = TranslatedFieldsField(
-        shared_model=models.Product
-    )
-
-    brand = product_components_serializers.BrandSerializer()
-
-    colors_data = ProductColorSerializer(
-        source='productcolor_set',
-        many=True
-    )
-
-    sizes_data = ProductSizeSerializer(
-        source='productsize_set',
-        many=True
-    )
-
-    manufacturerCountry = product_components_serializers.ManufactoryCountrySerializer()
-
-    category = product_components_serializers.ProductCategoriesSerializer(
-        many=True
-    )
-
-    images = ImageSerializer(
-        many=True
-    )
-
-    class Meta:
-        model = models.Product
-        exclude = [
-            'size',
-            'color'
-        ]
-        lookup_field = 'slug'
 
 
 class ProductDataArchiveSerializer(
@@ -247,7 +235,7 @@ class ProductDataArchiveSerializer(
         model = models.Product
         fields = [
             'translations',
-            'slug'
+            'article_number'
         ]
         read_only_fields = [
             'translations'

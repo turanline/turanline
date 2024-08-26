@@ -1,14 +1,19 @@
-from rest_framework import mixins, viewsets, status
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import mixins, status, viewsets
 
-from . import models, serializers, filters
+from . import models, serializers
 
 
-class DeliveryViewSet(
+class CityViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = models.Delivery.objects.all()
-    serializer_class = serializers.DeliverySerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = filters.DeliverySearchFilter
+    queryset = models.City.objects.all()
+    serializer_class = serializers.CitySerializer
+
+
+class TariffViewSet(
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    queryset = models.Tariff.objects.all()
+    serializer_class = serializers.TariffSerializer

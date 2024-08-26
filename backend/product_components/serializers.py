@@ -1,21 +1,16 @@
-from rest_framework import serializers
-from parler_rest.serializers import TranslatableModelSerializer
 from parler_rest.fields import TranslatedFieldsField
+from parler_rest.serializers import TranslatableModelSerializer
+from rest_framework import serializers
+
+from mssite import mixins
 
 from . import models
-from mssite import mixins
 
 
 class BaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = '__all__'
-
-
-class BrandSerializer(BaseSerializer):
-
-    class Meta(BaseSerializer.Meta):
-        model = models.Brand
 
 
 class ColorSerializer(
@@ -50,7 +45,7 @@ class ManufactoryCountrySerializer(
         ]
 
 
-class ProductCategoriesSerializer(
+class CategoriesSerializer(
     mixins.TranslatedSerializerMixin,
     TranslatableModelSerializer
 ):

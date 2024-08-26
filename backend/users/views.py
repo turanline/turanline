@@ -1,19 +1,21 @@
 import logging
+from typing import Any, Type
 
-from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
-from rest_framework import mixins, status, viewsets, permissions
+from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
-from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework.serializers import Serializer
 from rest_framework_simplejwt import views
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 
-import clients
-from . import models, serializers
 from customers import models as customer_models
 from customers import serializers as customer_serializers
+
+from . import models, serializers, services
 
 logger = logging.getLogger(__name__)
 
@@ -32,19 +34,27 @@ class TokenRefreshViewDoc(views.TokenRefreshView):
 @extend_schema(tags=['jwt auth'])
 class TokenVerifyViewDoc(views.TokenVerifyView):
 
-    def post(self, request, *args, **kwargs):
+    def post(
+        self,
+        request: Request,
+        *args: Any,
+        **kwargs: Any
+    ) -> Response:
         serializer = self.get_serializer(
             data=request.data
         )
         try:
             serializer.is_valid(raise_exception=True)
         except TokenError as error:
+            print(error.args[0])
             raise InvalidToken(error.args[0])
         token = AccessToken(request.data['token'])
         user_id = token['user_id']
+        roles = token['roles']
         return Response(
             data={
-                'user': user_id
+                'user': user_id,
+                'role': roles
             },
             status=status.HTTP_200_OK
         )
@@ -59,19 +69,21 @@ class TokenLogoutViewDoc(views.TokenBlacklistView):
 class UserViewSet(
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
     viewsets.GenericViewSet
 ):
-
     queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
 
-    def initial(self, request, *args, **kwargs):
+    def initial(
+        self,
+        request: Request,
+        *args: Any,
+        **kwargs: Any
+    ) -> None:
         super().initial(request, *args, **kwargs)
-        self.twilio_client = clients.TwilioClient()
-        self.redis_client = clients.RedisClient()
+        self.user_service = services.UserService()
 
-    def get_serializer_class(self):
+    def get_serializer_class(self) -> Type[Serializer]:
         if self.action == 'receive_verification_code':
             return serializers.VerificationSerializer
         elif self.action == 'reviews':
@@ -84,138 +96,72 @@ class UserViewSet(
         return super().get_serializer_class()
 
     @action(methods=['POST'], detail=False)
-    def receive_verification_code(self, request, *args, **kwargs):
+    def receive_verification_code(
+        self,
+        request: Request,
+        *args: Any,
+        **kwargs: Any
+    ) -> Response:
         serializer = self.get_serializer(
             data=request.data
         )
         serializer.is_valid(raise_exception=True)
-        user = get_object_or_404(
-            models.User,
-            phone_number=serializer.validated_data.get('phone_number')
+        response = self.user_service.check_user_and_send_verification_code(
+            data=serializer.validated_data
         )
-        purpose = serializer.validated_data.get('purpose')
-        if purpose == 'verification' and user.is_verified:
-            return Response(
-                data={
-                    'message': 'User is already verified.'
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if purpose == 'reset_password' and not user.is_verified:
-            return Response(
-                data={
-                    'message': 'User is not verified for password reset.'
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        verif_code = self.twilio_client.send_verification_code(
-            recipient=user.phone_number
-        )
-        if purpose == 'reset_password':
-            self.redis_client.add(
-                f'{user.phone_number}_password',
-                verif_code
-            )
-        self.redis_client.add(
-            f'{user.phone_number}_verif',
-            verif_code
-        )
+        if response:
+            return response
+
         return Response(
             data=serializer.data,
             status=status.HTTP_200_OK
         )
 
     @action(methods=['POST'], detail=False)
-    def compare_verification_code(self, request, *args, **kwargs):
+    def compare_verification_code(
+        self,
+        request: Request,
+        *args: Any,
+        **kwargs: Any
+    ) -> Response:
         serializer = self.get_serializer(
             data=request.data
         )
         serializer.is_valid(raise_exception=True)
-        user = get_object_or_404(
-            models.User,
-            phone_number=serializer.validated_data.get('phone_number')
+        response = self.user_service.process_user_verification(
+            data=serializer.validated_data
         )
-        check_code = self.redis_client.receive(
-            f'{user.phone_number}_verif'
-        )
-        request_code = serializer.validated_data.get('verification_code')
-        if not check_code:
-            return Response(
-                data={
-                    'message': 'Code expired.'
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if request_code == check_code:
-            self.redis_client.delete(
-                f'{user.phone_number}_verif'
-            )
-            user.is_verified = True
-            user.save()
-            refresh = RefreshToken.for_user(user)
-            return Response(
-                data={
-                    'refresh': str(refresh),
-                    'access': str(refresh.access_token)
-                },
-                status=status.HTTP_200_OK
-            )
-        return Response(
-            data={
-                'message': 'Code is invalid.'
-            },
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        return response
 
     @action(methods=['POST'], detail=False)
-    def reset_password(self, request, *args, **kwargs):
+    def reset_password(
+        self,
+        request: Request,
+        *args: Any,
+        **kwargs: Any
+    ) -> Response:
         serializer = self.get_serializer(
             data=request.data
         )
         serializer.is_valid(raise_exception=True)
-        user = get_object_or_404(
-            models.User,
-            phone_number=serializer.validated_data.get('phone_number')
+        response = self.user_service.process_user_password_reset(
+            data=serializer.validated_data
         )
-        check_code = self.redis_client.receive(
-            f'{user.phone_number}_password'
-        )
-        request_code = serializer.validated_data.get('verification_code')
-        if not check_code:
-            return Response(
-                data={
-                    'message': 'Code expired.'
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if request_code == check_code:
-            self.redis_client.delete(
-                f'{user.phone_number}_password'
-            )
-            password = self.twilio_client.send_password(
-                recipient=user.phone_number
-            )
-            user.set_password(password)
-            user.save()
-            return Response(
-                data={
-                    'message': 'Password reset completed.'
-                },
-                status=status.HTTP_200_OK
-            )
-        return Response(
-            data={
-                'message': 'Code is invalid.'
-            },
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        return response
 
     @action(
         methods=['GET'],
         detail=False,
-        permission_classes=[permissions.IsAuthenticated]
+        permission_classes=[
+            IsAuthenticated
+        ]
     )
-    def reviews(self, request, *args, **kwargs):
+    def reviews(
+        self,
+        request: Request,
+        *args: Any,
+        **kwargs: Any
+    ) -> Response:
         user_reviews = customer_models.Review.objects.filter(
             user=request.user
         )

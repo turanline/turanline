@@ -1,52 +1,65 @@
+import uuid
+
 from django.db import models
 
-from . import enums
 from customers import models as customer_models
-from products import models as product_models
 from delivery import models as delivery_models
-from payment import models as payment_models
 from product_components import models as product_components_models
+from products import models as product_models
+
+from . import enums
 
 
-class OrderProducts(models.Model):
+class BaseCartOrderModel(models.Model):
+
+    customer = models.ForeignKey(
+        customer_models.Customer,
+        on_delete=models.CASCADE,
+        null=False,
+        verbose_name='Покупатель'
+    )
+
+    class Meta:
+        abstract = True
+
+
+class OrderProducts(BaseCartOrderModel):
 
     product = models.ForeignKey(
         product_models.Product,
-        on_delete=models.CASCADE
+        on_delete=models.PROTECT,
+        verbose_name='Продукт'
     )
 
-    amount = models.PositiveIntegerField()
+    amount = models.PositiveIntegerField(
+        verbose_name='Количество'
+    )
 
     color = models.ForeignKey(
         product_components_models.Color,
-        on_delete=models.CASCADE
+        on_delete=models.PROTECT,
+        verbose_name='Цвет'
     )
 
     sum = models.DecimalField(
         max_digits=10,
-        decimal_places=2
+        decimal_places=2,
+        verbose_name='Сумма'
     )
 
     class Meta:
-        ordering = [
-            'amount'
-        ]
+        ordering = ['amount']
         verbose_name = 'Продукт в корзине'
         verbose_name_plural = 'Продукты в корзинах'
 
-    def save(self, *args, **kwargs):
-        product_sizes = product_models.ProductSize.objects.filter(
-            product=self.product
-        )
-        total_sum = sum(product_size.amount * self.product.price for product_size in product_sizes)
-        self.sum = total_sum * self.amount
-        super().save(*args, **kwargs)
-
     def __str__(self) -> str:
-        return f'Товар {self.product} в количестве {self.amount} шт.'
+        return (
+            f'{self.product} - {self.amount} шт.'
+            f' (цвет: {self.color})'
+        )
 
 
-class Cart(models.Model):
+class Cart(BaseCartOrderModel):
 
     total_sum = models.DecimalField(
         max_digits=10,
@@ -56,15 +69,10 @@ class Cart(models.Model):
         verbose_name='Общая сумма корзины'
     )
 
-    customer = models.ForeignKey(
-        customer_models.Customer,
-        on_delete=models.CASCADE,
-        null=False,
-        verbose_name='Покупатель оформивший заказ'
-    )
-
     order_products = models.ManyToManyField(
-        OrderProducts
+        OrderProducts,
+        related_name='carts',
+        verbose_name='Продукты в корзине'
     )
 
     class Meta:
@@ -72,16 +80,25 @@ class Cart(models.Model):
         verbose_name_plural = 'Корзины'
 
     def __str__(self) -> str:
-        return f'Корзина: {self.customer}'
+        return (
+            f'Корзина покупателя {self.customer}'
+            f' на сумму {self.total_sum}'
+        )
 
 
-class Order(models.Model):
+class Order(BaseCartOrderModel):
 
-    payment = models.ForeignKey(
-        payment_models.CardPayment,
+    order_id = models.UUIDField(
+        default=uuid.uuid4,
+        editable=False,
+        unique=True
+    )
+
+    payment = models.CharField(
+        max_length=16,
         null=True,
         blank=True,
-        on_delete=models.SET_NULL
+        verbose_name='Платеж'
     )
 
     total_sum = models.DecimalField(
@@ -96,12 +113,13 @@ class Order(models.Model):
         max_length=50,
         choices=enums.OrderStatuses,
         default=enums.OrderStatuses.CREATED,
-        verbose_name='Статус закаказа'
+        verbose_name='Статус заказа'
     )
 
     created_date = models.DateTimeField(
-        auto_now_add=True,
-        null=False
+        null=True,
+        blank=True,
+        verbose_name='Дата создания'
     )
 
     delivery = models.ForeignKey(
@@ -112,30 +130,22 @@ class Order(models.Model):
     )
 
     is_paid = models.BooleanField(
-        default=False
-    )
-
-    customer = models.ForeignKey(
-        customer_models.Customer,
-        on_delete=models.CASCADE,
-        null=False,
-        verbose_name='Покупатель оформивший заказ'
+        default=False,
+        verbose_name='Оплачено'
     )
 
     order_products = models.ManyToManyField(
-        OrderProducts
+        OrderProducts,
+        verbose_name='Продукты в заказе'
     )
 
     class Meta:
-        ordering = [
-            '-created_date'
-        ]
+        ordering = ['-created_date']
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
 
-    def save(self, *args, **kwargs):
-        cart = Cart.objects.get(
-            customer=self.customer
+    def __str__(self) -> str:
+        return (
+            f'Заказ {self.order_id} от {self.customer} на сумму'
+            f' {self.total_sum} (Статус: {self.status})'
         )
-        self.total_sum = cart.total_sum + self.delivery.price
-        super().save(*args, **kwargs)

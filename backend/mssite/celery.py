@@ -1,7 +1,8 @@
 import os
+
 from celery import Celery
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'mssite.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mssite.settings')
 app = Celery(
     'mssite',
     broker='redis://redis:6379',

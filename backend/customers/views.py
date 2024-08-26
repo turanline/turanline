@@ -1,39 +1,58 @@
+from typing import Any, Type
+
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.request import Request
 from rest_framework.response import Response
-from django.db.models import QuerySet
-from django.http.request import QueryDict
-from django.shortcuts import get_object_or_404
+from rest_framework.serializers import Serializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 import clients
-from . import serializers, models, permissions
-from products import serializers as product_serializers
-from users import serializers as user_serializers
 from cart import enums as cart_enums
 from cart import models as cart_models
 from cart import serializers as cart_serializers
+from products import serializers as product_serializers
+
+from . import models, permissions, serializers
 
 
 @extend_schema(tags=['customer'])
-class CustomerViewSet(viewsets.ModelViewSet):
+class CustomerViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = models.Customer.objects.all()
     serializer_class = serializers.CustomerSerializer
+    permission_classes = [
+        permissions.CreateOrIsCustomerPermission
+    ]
 
-    def initial(self, request, *args, **kwargs):
+    def initial(
+        self,
+        request: Request,
+        *args: Any,
+        **kwargs: Any
+    ) -> None:
         super().initial(request, *args, **kwargs)
         self.twilio_client = clients.TwilioClient()
         self.redis_client = clients.RedisClient()
 
-    def get_serializer_class(self, *args, **kwargs):
+    def get_serializer_class(self) -> Type[Serializer]:
         if self.action == 'favorites':
             return product_serializers.ProductSerializer
         elif self.action == 'get_customer_history':
-            return cart_serializers.CartRetrieveSerializer
-        return super().get_serializer_class(*args, **kwargs)
+            return cart_serializers.OrderCustomerHistorySerializer
+        return super().get_serializer_class()
 
-    def create(self, request, *args, **kwargs):
+    def create(
+        self,
+        request: Request,
+        *args: Any,
+        **kwargs: Any
+    ) -> Response:
         serializer = self.get_serializer(
             data=request.data
         )
@@ -49,20 +68,18 @@ class CustomerViewSet(viewsets.ModelViewSet):
                 },
                 status=status.HTTP_200_OK
             )
-        verif_code = self.twilio_client.send_verification_code(
-            recipient=customer.user.phone_number
-        )
-        self.redis_client.add(
-            f'{customer.user.phone_number}_verif',
-            verif_code
-        )
         return Response(
             data=serializer.data,
             status=status.HTTP_201_CREATED,
             headers=headers
         )
 
-    def update(self, request, *args, **kwargs):
+    def update(
+        self,
+        request: Request,
+        *args: Any,
+        **kwargs: Any
+    ) -> Response:
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(
@@ -71,25 +88,20 @@ class CustomerViewSet(viewsets.ModelViewSet):
             partial=partial
         )
         serializer.is_valid(raise_exception=True)
-        customer = serializer.save()
-        verif_code = self.twilio_client.send_verification_code(
-            recipient=customer.user.phone_number
-        )
-        self.redis_client.add(
-            customer.user.phone_number,
-            verif_code
-        )
+        self.perform_update(serializer)
         return Response(
-            data=serializer.data
+            data=serializer.data,
+            status=status.HTTP_200_OK
         )
 
     @action(methods=['GET'], detail=False)
-    def favorites(self, request, *args, **kwargs):
-        customer = get_object_or_404(
-            models.Customer,
-            user=request.user
-        )
-        customer_favorites = customer.favorites.all()
+    def favorites(
+        self,
+        request: Request,
+        *args: Any,
+        **kwargs: Any
+    ) -> Response:
+        customer_favorites = request.user.customer.favorites.all()
         serializer = self.get_serializer(
             instance=customer_favorites,
             many=True,
@@ -103,18 +115,21 @@ class CustomerViewSet(viewsets.ModelViewSet):
         )
 
     @action(methods=['GET'], detail=False)
-    def get_customer_history(self, request, *args, **kwargs):
-        customer = get_object_or_404(
-            models.Customer,
-            user=request.user
-        )
+    def get_customer_history(
+        self,
+        request: Request,
+        *args: Any,
+        **kwargs: Any
+    ) -> Response:
         customer_orders = cart_models.Order.objects.filter(
-            customer=customer,
+            customer=request.user.customer,
             status__in=(
+                cart_enums.OrderStatuses.CARGO_TRANSFERRED,
                 cart_enums.OrderStatuses.FINISHED,
                 cart_enums.OrderStatuses.PROCESSED,
                 cart_enums.OrderStatuses.COLLECTED
-            )
+            ),
+            is_paid=True
         )
         serializer = self.get_serializer(
             instance=customer_orders,
@@ -127,40 +142,3 @@ class CustomerViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK,
             data=serializer.data
         )
-
-
-@extend_schema(tags=['reviews'])
-class ReviewsViewSet(
-    mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    mixins.DestroyModelMixin,
-    mixins.UpdateModelMixin,
-    viewsets.GenericViewSet,
-):
-    queryset = models.Review.objects.select_related('user', 'product')
-    permission_classes = [permissions.IsOwnerOrAdminUserReviewPermission]
-    serializer_class = serializers.ReviewSerializer
-
-    @staticmethod
-    def apply_product_reviews_filter(
-        request_data: QueryDict, queryset: QuerySet
-    ) -> QuerySet | None:
-        product_id = request_data.get('product_id', None)
-        if product_id:
-            return queryset.filter(product__id=product_id)
-
-    def get_queryset(self):
-        request_data = self.request.GET
-        filter_result = self.apply_product_reviews_filter(
-            request_data,
-            self.queryset,
-        )
-        if filter_result:
-            self.queryset = filter_result
-            return super().get_queryset()
-        return models.Review.objects.none()
-
-    def get_serializer_class(self):
-        if self.action in ('update', 'partial_update'):
-            return serializers.LightReviewSerializer
-        return super().get_serializer_class()

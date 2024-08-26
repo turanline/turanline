@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from . import managers, enums
+from . import enums, managers
 
 
 class User(AbstractUser):
@@ -15,15 +15,18 @@ class User(AbstractUser):
     )
 
     is_customer = models.BooleanField(
-        default=False
+        default=False,
+        verbose_name='Является клиентом'
     )
 
     is_provider = models.BooleanField(
-        default=False
+        default=False,
+        verbose_name='Является провайдером'
     )
 
     is_verified = models.BooleanField(
-        default=False
+        default=False,
+        verbose_name='Проверен'
     )
 
     USERNAME_FIELD = 'phone_number'
@@ -34,8 +37,15 @@ class User(AbstractUser):
     ]
 
     def save(self, *args, **kwargs):
-        self.username = self.email.split('@')[0] + self.phone_number[-4:]
+        self.username = self.email.split('@')[0]
         return super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
+    def __str__(self) -> str:
+        return f'{self.username} ({self.phone_number[-4:]})'
 
 
 class News(models.Model):
@@ -69,4 +79,12 @@ class News(models.Model):
         User,
         on_delete=models.SET_NULL,
         null=True,
+        verbose_name='Автор'
     )
+
+    class Meta:
+        verbose_name = 'Новость'
+        verbose_name_plural = 'Новости'
+
+    def __str__(self) -> str:
+        return f'{self.title} ({self.date})'

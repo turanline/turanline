@@ -1,11 +1,17 @@
-from collections import Counter
+import logging
+from collections import Counter, OrderedDict
+from typing import Any
+
 from django.shortcuts import get_object_or_404
+from import_export import fields, resources, widgets
+
 from mssite import settings
-from import_export import resources, fields, widgets
+from product_components import models as product_component_models
+from providers import models as provider_models
 
 from . import models
-from product_components import models as product_component_models
-from users import models as user_models
+
+logger = logging.getLogger(__name__)
 
 
 class ExportProductsResource(resources.ModelResource):
@@ -13,10 +19,9 @@ class ExportProductsResource(resources.ModelResource):
     category = fields.Field(
         column_name='master__category',
         attribute='master__category',
-        widget=widgets.ManyToManyWidget(
+        widget=widgets.ForeignKeyWidget(
             product_component_models.Category,
-            field='slug',
-            separator=', '
+            field='slug'
         )
     )
 
@@ -39,13 +44,13 @@ class ExportProductsResource(resources.ModelResource):
             'category',
             'color',
             'compound',
+            'pattern',
+            'master__mold',
             'master__weight',
-            'master__brand__name',
             'master__season',
-            'master__pattern',
             'master__price',
             'master__manufacturerCountry__slug',
-            'master__provider__username'
+            'master__provider__user__username'
         ]
 
 
@@ -55,8 +60,8 @@ class ProductsResource(resources.ModelResource):
         column_name='provider',
         attribute='provider',
         widget=widgets.ForeignKeyWidget(
-            user_models.User,
-            field='pk'
+            provider_models.Provider,
+            field='user_id'
         )
     )
 
@@ -69,30 +74,25 @@ class ProductsResource(resources.ModelResource):
         )
     )
 
-    brand = fields.Field(
-        column_name='brand',
-        attribute='brand',
-        widget=widgets.ForeignKeyWidget(
-            product_component_models.Brand,
-            field='name'
-        )
-    )
-
     category = fields.Field(
         column_name='category_subchild',
         attribute='category',
-        widget=widgets.ManyToManyWidget(
+        widget=widgets.ForeignKeyWidget(
             product_component_models.Category,
-            field='slug',
-            separator=', '
+            field='slug'
         )
     )
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
         self.provider_id = kwargs['provider_id']
 
-    def before_import_row(self, row, **kwargs):
+    def before_import_row(
+        self,
+        row: OrderedDict,
+        **kwargs: Any
+    ) -> None:
+        logger.error(type(row))
         row['provider'] = self.provider_id
 
         obj_category = get_object_or_404(
@@ -110,7 +110,12 @@ class ProductsResource(resources.ModelResource):
             parent=obj_category_child
         )
 
-    def after_save_instance(self, instance, row, **kwargs):
+    def after_save_instance(
+        self,
+        instance: models.Product,
+        row: OrderedDict,
+        **kwargs: Any
+    ) -> None:
         translations, sizes, colors = [], [], []
         size_counts = Counter(row['sizes'].split(', '))
         color_list = row['color'].split(', ')
@@ -123,7 +128,7 @@ class ProductsResource(resources.ModelResource):
             product_size_obj = models.ProductSize(
                 product=instance,
                 size=size_obj,
-                amount=count
+                amount=int(count)
             )
             sizes.append(product_size_obj)
 
@@ -136,7 +141,7 @@ class ProductsResource(resources.ModelResource):
             product_color_obj = models.ProductColor(
                 product=instance,
                 color=color_obj,
-                amount=count
+                amount=int(count)
             )
             colors.append(product_color_obj)
 
@@ -146,6 +151,7 @@ class ProductsResource(resources.ModelResource):
                 name=settings.translator.translate(row['name'], dest=lan_code['code']).text,
                 description=settings.translator.translate(row['description'], dest=lan_code['code']).text,
                 compound=settings.translator.translate(row['compound'], dest=lan_code['code']).text,
+                pattern=settings.translator.translate(row['pattern'], dest=lan_code['code']).text,
                 language_code=lan_code['code']
             )
             translations.append(translation)

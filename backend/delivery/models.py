@@ -1,6 +1,6 @@
 from django.db import models
-from parler.models import TranslatableModel, TranslatedFields
 from mptt import models as mptt_models
+from parler.models import TranslatableModel, TranslatedFields
 
 from product_components import models as product_component_models
 
@@ -8,32 +8,38 @@ from product_components import models as product_component_models
 class City(TranslatableModel):
 
     translations = TranslatedFields(
-        name=models.CharField(max_length=64)
+        name=models.CharField(
+            max_length=64,
+            verbose_name='Название города'
+        )
     )
 
     class Meta:
-        verbose_name = 'Delivery city'
-        verbose_name_plural = 'Delivery cities'
+        verbose_name = 'Город доставки'
+        verbose_name_plural = 'Города доставки'
 
     def __str__(self):
-        return self.name
+        return self.safe_translation_getter('name', any_language=True)
 
 
 class Tariff(TranslatableModel):
 
     translations = TranslatedFields(
-        name=models.CharField(max_length=64)
+        name=models.CharField(
+            max_length=64,
+            verbose_name='Название тарифа'
+        )
     )
 
     class Meta:
-        verbose_name = 'Delivery tariff'
-        verbose_name_plural = 'Delivery tariffs'
+        verbose_name = 'Тариф доставки'
+        verbose_name_plural = 'Тарифы доставки'
 
     def __str__(self):
-        return self.name
+        return self.safe_translation_getter('name', any_language=True)
 
 
-class Delivery(models.Model):
+class BaseDelivery(models.Model):
 
     city = models.ForeignKey(
         City,
@@ -47,11 +53,6 @@ class Delivery(models.Model):
         verbose_name='Тариф доставки'
     )
 
-    category = mptt_models.TreeManyToManyField(
-        product_component_models.Category,
-        verbose_name='Категория товара'
-    )
-
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -59,16 +60,49 @@ class Delivery(models.Model):
     )
 
     days_min = models.IntegerField(
-        verbose_name='Минимальное кол-во дней доставки'
+        verbose_name='Минимальное количество дней доставки'
     )
 
     days_max = models.IntegerField(
-        verbose_name='Максимальное кол-во дней доставки'
+        verbose_name='Максимальное количество дней доставки'
     )
 
     class Meta:
-        verbose_name = 'Delivery'
-        verbose_name_plural = 'Deliveries'
+        abstract = True
+        verbose_name = 'Доставка'
+        verbose_name_plural = 'Доставки'
 
     def __str__(self):
-        return f'{self.tariff.name}--{self.city.name}'
+        return (
+            f'{self.tariff.safe_translation_getter('name', any_language=True)} -'
+            f' {self.city.safe_translation_getter('name', any_language=True)}:'
+            f' {self.price} $, {self.days_min}-{self.days_max} дней'
+        )
+
+
+class Delivery(BaseDelivery):
+
+    class Meta:
+        verbose_name = 'Выбранная доставка'
+        verbose_name_plural = 'Выбранные доставки'
+
+
+class DeliveryVariant(BaseDelivery):
+
+    category = mptt_models.TreeForeignKey(
+        product_component_models.Category,
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name='Категория товара'
+    )
+
+    class Meta:
+        verbose_name = 'Доставка'
+        verbose_name_plural = 'Доставки'
+
+    def __str__(self):
+        return (
+            f'{self.tariff.safe_translation_getter('name', any_language=True)} -'
+            f' {self.city.safe_translation_getter('name', any_language=True)}'
+            f' ({self.category.safe_translation_getter('name', any_language=True)})'
+        )

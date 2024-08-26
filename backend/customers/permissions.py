@@ -1,18 +1,38 @@
+from typing import Type
+
 from rest_framework import permissions
+from rest_framework.request import Request
+from rest_framework.viewsets import GenericViewSet
+
+from . import models
 
 
-class IsOwnerOrAdminUserReviewPermission(permissions.BasePermission):
+class IsCustomerPermission(permissions.BasePermission):
 
-    def has_permission(self, request, view):
-        is_admin = bool(request.user and request.user.is_staff)
-        if request.method == 'POST':
-            try:
-                is_owner = request.data['user'] == request.user.pk
-                return is_admin or is_owner
-            except KeyError:
-                return False
-        return True
+    def has_permission(
+        self,
+        request: Request,
+        view: Type[GenericViewSet],
+    ) -> bool:
+        return request.user.is_authenticated and hasattr(request.user, 'customer')
 
-    def has_object_permission(self, request, view, obj) -> bool:
-        return (bool(request.user and request.user.is_staff)
-                or obj.user == request.user)
+
+class CreateOrIsCustomerPermission(IsCustomerPermission):
+
+    def has_permission(
+        self,
+        request: Request,
+        view: Type[GenericViewSet]
+    ) -> bool:
+        if view.action == 'create':
+            return True
+        return super().has_permission(request, view)
+
+    def has_object_permission(
+        self,
+        request: Request,
+        view: Type[GenericViewSet],
+        obj: models.Customer
+    ) -> bool:
+        return request.user == obj.user
+

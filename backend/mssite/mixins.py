@@ -1,10 +1,23 @@
-from django.utils.translation import get_language_from_request
+from typing import Any, Dict, Type
+
 from django.conf import settings
+from django.db.models import Model
+from django.utils.translation import get_language_from_request
 
 
-class TranslatedSerializerMixin(object):
+class BaseLocalizationMixin:
 
-    def to_representation(self, instance):
+    def to_representation(self, instance: Type[Model]) -> Dict[str, Any]:
+        representation = super().to_representation(instance)
+        for field in self.Meta.translated_fields:
+            if hasattr(instance, f'get_{field}_display'):
+                representation[field] = getattr(instance, f'get_{field}_display')()
+        return representation
+
+
+class TranslatedSerializerMixin:
+
+    def to_representation(self, instance: Type[Model]) -> Dict[str, Any]:
         inst_rep = super().to_representation(instance)
         request = self.context.get('request')
         lang_code = get_language_from_request(request)

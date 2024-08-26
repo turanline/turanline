@@ -1,6 +1,6 @@
-from parler.managers import TranslatableManager, TranslatableQuerySet
 from mptt.managers import TreeManager
 from mptt.querysets import TreeQuerySet
+from parler.managers import TranslatableManager, TranslatableQuerySet
 
 
 class CategoryQuerySet(TranslatableQuerySet, TreeQuerySet):

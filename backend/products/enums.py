@@ -1,6 +1,7 @@
 import enum
 
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class ImportHeaders(enum.Enum):
@@ -12,8 +13,8 @@ class ImportHeaders(enum.Enum):
     sizes = 'sizes'
     color = 'color'
     compound = 'compound'
+    mold = 'mold'
     weight = 'weight'
-    brand = 'brand'
     season = 'season'
     pattern = 'pattern'
     manufacturerCountry = 'manufacturerCountry'
@@ -27,8 +28,8 @@ class ExportHeaders(enum.Enum):
     category = 'Подкатегория'
     color = 'Цвет'
     compound = 'Состав'
+    mold = 'Лекало'
     weight = 'Вес товара'
-    brand = 'Производитель'
     season = 'Сезон'
     pattern = 'Узор'
     price = 'Цена'
@@ -37,14 +38,22 @@ class ExportHeaders(enum.Enum):
 
 
 class SeasonChoices(models.TextChoices):
-    SUMMER = 'S', 'Summer'
-    WINTER = 'W', 'Winter'
-    DEMI_SEASON = 'DS', 'Demi-season'
-    ALL_SEASON = 'AS', 'All-season'
+    SUMMER = 'Summer', _('Summer')
+    AUTUMN = 'Autumn', _('Autumn')
+    WINTER = 'Winter', _('Winter')
+    SPRING = 'Spring', _('Spring')
+    DEMI_SEASON = 'Demi-season', _('Demi-season')
+
+
+class MoldChoices(models.TextChoices):
+    OVERSIZE = 'Oversize', _('Oversize')
+    SLIM = 'Slim', _('Slim')
+    SKINNY = 'Skinny', _('Skinny')
+    NORMAL = 'Normal', _('Normal')
+    NO_MOLD = 'No-mold', _('No-mold')
 
 
 class ProductStatus(models.TextChoices):
-    UNDER_CONSIDERATION = 'UC', 'Under consideration'
-    REJECTED = 'R', 'Rejected'
-    ACCEPTED = 'A', 'Accepted'
+    ACTIVE = 'A', 'Active'
     BIN = 'B', 'Bin'
+    ARCHIVE = 'AR', 'Archive'

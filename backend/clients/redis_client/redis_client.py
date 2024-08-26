@@ -1,10 +1,9 @@
 import redis
-
 from django.conf import settings
 
 
 class RedisClient:
-    def __init__(self):
+    def __init__(self) -> None:
         self.redis = redis.Redis(
             host=settings.REDIS_HOST,
             port=settings.REDIS_PORT,
@@ -12,11 +11,7 @@ class RedisClient:
         )
 
     def add(self, attr: str, value: str, expiration=1200) -> None:
-        self.redis.set(
-            attr,
-            value,
-            ex=expiration
-        )
+        self.redis.set(attr, value, ex=expiration)
 
     def receive(self, attr: str) -> str:
         return self.redis.get(attr)

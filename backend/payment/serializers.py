@@ -1,26 +1,28 @@
 from rest_framework import serializers
 
-from . import models, mixins
-
-
-class CardSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Card
-        fields = '__all__'
-
 
 class CardPaymentSerializer(
-    mixins.CardPaymentMixin,
-    serializers.ModelSerializer
+    serializers.Serializer
 ):
 
-    content_object = CardSerializer()
+    card_number = serializers.CharField(
+        max_length=16
+    )
 
-    class Meta:
-        model = models.CardPayment
-        fields = [
-            'content_object',
-            'comment',
-            'customer'
-        ]
+    expiration_year = serializers.CharField(
+        max_length=4
+    )
+
+    expiration_month = serializers.CharField(
+        max_length=2
+    )
+
+    cardholder_name = serializers.CharField(
+        max_length=64
+    )
+
+    comment = serializers.CharField(
+        max_length=32,
+        required=False,
+        allow_blank=True
+    )

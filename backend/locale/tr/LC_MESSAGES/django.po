@@ -1,0 +1,71 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-21 15:10+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: mssite/settings.py:128
+msgid "Russian"
+msgstr "Rusça"
+
+#: mssite/settings.py:129
+msgid "English"
+msgstr "İngilizce"
+
+#: mssite/settings.py:130
+msgid "Turkish"
+msgstr "Türkçe"
+
+#: products/enums.py:41
+msgid "Summer"
+msgstr "Yaz"
+
+#: products/enums.py:42
+msgid "Autumn"
+msgstr "Sonbahar"
+
+#: products/enums.py:43
+msgid "Winter"
+msgstr "Kış"
+
+#: products/enums.py:44
+msgid "Spring"
+msgstr "Bahar"
+
+#: products/enums.py:45
+msgid "Demi-season"
+msgstr "Mevsimlik"
+
+#: products/enums.py:49
+msgid "Oversize"
+msgstr "Oversize"
+
+#: products/enums.py:50
+msgid "Slim"
+msgstr "Slim"
+
+#: products/enums.py:51
+msgid "Skinny"
+msgstr "Skinny"
+
+#: products/enums.py:52
+msgid "Normal"
+msgstr "Normal"
+
+#: products/enums.py:53
+msgid "No-mold"
+msgstr "Kalipsiz"

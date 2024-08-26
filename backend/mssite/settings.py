@@ -1,11 +1,10 @@
 import os
-from googletrans import Translator
 from datetime import timedelta
 from pathlib import Path
 
 import environ
-
 from django.utils.translation import gettext_lazy as _
+from googletrans import Translator
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -130,14 +129,16 @@ LANGUAGES = [
     ("en", _("English")),
     ("tr", _("Turkish")),
 ]
-#
-# LOCALE_PATHS = [
-#     os.path.join(BASE_DIR, 'locale'),
-# ]
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
 
 TIME_ZONE = "UTC"
 
 USE_I18N = True
+
+USE_L10N = True
 
 USE_TZ = True
 
@@ -159,6 +160,14 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle"
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "100/min",
+        "user": "100/min"
+    }
 }
 
 
@@ -244,6 +253,11 @@ LOGGING = {
             "handlers": ["file"],
             "propagate": True,
         },
+        "clients": {
+            "level": "WARNING",
+            "handlers": ["file"],
+            "propagate": True,
+        },
     },
 }
 
@@ -265,6 +279,17 @@ TWILIO_ACCOUNT_SID = env("MY_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = env("TWILIO_AUTH_TOKEN")
 TWILIO_NUMBER = env("MY_TWILIO_NUMBER")
 
+#SMSAero settings
+SMSAERO_EMAIL = env("SMSAERO_EMAIL")
+SMSAERO_API_KEY = env("SMSAERO_API_KEY")
+
 #Redis settings
 REDIS_HOST = env("REDIS_HOST")
 REDIS_PORT = env("REDIS_PORT")
+
+#Payment system
+CLIENT_ID = env("CLIENT_ID")
+STORE_KEY = env("STORE_KEY")
+PAYMENT_URL = env("PAYMENT_URL")
+FRONTEND_PAYMENT_SUCCESS_URL = env("FRONTEND_PAYMENT_SUCCESS_URL")
+FRONTEND_PAYMENT_FAIL_URL = env("FRONTEND_PAYMENT_FAIL_URL")

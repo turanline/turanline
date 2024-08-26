@@ -1,13 +1,19 @@
 import base64
 import uuid
+from typing import Any, Optional, Union
 
 from django.core.files.base import ContentFile
 from rest_framework import serializers
+
 from . import serializers as product_serializers
 
 
 class Base64ImageField(serializers.ImageField):
-    def to_internal_value(self, data):
+
+    def to_internal_value(
+        self,
+        data: Union[str, Any]
+    ) -> Optional[ContentFile]:
         if isinstance(data, str) and data.startswith('data:image'):
             try:
                 format, imgstr = data.split(';base64,')
@@ -22,7 +28,10 @@ class Base64ImageField(serializers.ImageField):
             return None
         return super().to_internal_value(data)
 
-    def to_representation(self, value):
+    def to_representation(
+        self,
+        value: Optional[ContentFile]
+    ) -> Optional[dict]:
         if value:
             return product_serializers.ImageSerializer(value).data
         return None

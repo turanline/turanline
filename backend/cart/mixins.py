@@ -1,44 +1,104 @@
-from . import models
-from payment import models as payment_models
+from collections import OrderedDict
+from decimal import Decimal
+from typing import Tuple
+
+from django.core.exceptions import ValidationError
+from django.db import models, transaction
+
+from delivery import models as delivery_models
+
+from . import models as cart_models
 
 
 class OrderMixin:
 
-    def create(self, validated_data):
-        payment_data = validated_data.pop('payment')
-        customer = payment_data.get('customer')
-        order_products = validated_data.pop('order_products')
-        content_object = payment_data.pop('content_object')
-        card, created = payment_models.Card.objects.get_or_create(
-            **content_object
-        )
-        payment = payment_models.CardPayment.objects.create(
-            content_object=card,
-            **payment_data
-        )
-        order = models.Order.objects.create(
-            payment=payment,
-            customer=customer,
-            **validated_data
-        )
-        for order_product in order_products:
-            order.order_products.add(order_product)
+    def _calculate_delivery(
+        self,
+        order_products: models.QuerySet,
+        delivery_data: OrderedDict
+    ) -> Tuple[Decimal, int, int]:
+        delivery_price, total_weight, min_days, max_days = 0, 0, 0, 0
 
+        for order_product in order_products:
+            category_root = order_product.product.category.get_root()
+            delivery = delivery_models.DeliveryVariant.objects.filter(
+                category=category_root,
+                **delivery_data
+            ).first()
+
+            if not delivery:
+                raise ValidationError(
+                    'No delivery option found for request parameters.'
+                )
+
+            total_weight += order_product.product.weight * order_product.amount
+            delivery_price += delivery.price
+            min_days = max(min_days, delivery.days_min)
+            max_days = max(max_days, delivery.days_max)
+
+        delivery_multiplier = Decimal(
+            1 if total_weight <= 70
+            else (total_weight // 70) + (total_weight % 70 > 0)
+        )
+
+        return delivery_price * delivery_multiplier, min_days, max_days
+
+    def _create_order_delivery(
+        self,
+        delivery_price: Decimal,
+        min_days: int,
+        max_days: int,
+        delivery_data: OrderedDict
+    ) -> delivery_models.Delivery:
+        return delivery_models.Delivery.objects.create(
+            price=delivery_price,
+            days_min=min_days,
+            days_max=max_days,
+            **delivery_data
+        )
+
+    @transaction.atomic
+    def create(
+        self,
+        validated_data: OrderedDict
+    ) -> cart_models.Order:
+        order_products = validated_data.pop('order_products')
+        delivery_data = validated_data.pop('delivery')
+        order = cart_models.Order.objects.create(**validated_data)
+
+        delivery_price, min_days, max_days = self._calculate_delivery(
+            order_products=order_products,
+            delivery_data=delivery_data
+        )
+
+        order.order_products.add(*order_products)
+        order.delivery = self._create_order_delivery(
+            delivery_price=delivery_price,
+            min_days=min_days,
+            max_days=max_days,
+            delivery_data=delivery_data
+        )
+        order.save()
         return order
 
-    def update(self, instance, validated_data):
-        payment_data = validated_data.pop('payment', None)
+    @transaction.atomic
+    def update(
+        self,
+        instance: cart_models.Order,
+        validated_data: OrderedDict
+    ) -> cart_models.Order:
+        delivery_data = validated_data.pop('delivery')
 
-        if payment_data:
-            content_object = payment_data.pop('content_object')
-            customer = payment_data.get('customer')
-            comment = payment_data.get('comment')
-            card, created = payment_models.Card.objects.get_or_create(
-                **content_object
-            )
-            instance.payment.comment = comment
-            instance.payment.customer = customer
-            instance.payment.content_object = card
-            instance.payment.save()
+        delivery_price, min_days, max_days = self._calculate_delivery(
+            order_products=instance.order_products.all(),
+            delivery_data=delivery_data
+        )
 
-        return super().update(instance, validated_data)
+        instance.delivery = self._create_order_delivery(
+            delivery_price=delivery_price,
+            min_days=min_days,
+            max_days=max_days,
+            delivery_data=delivery_data
+        )
+        instance.save()
+        return instance

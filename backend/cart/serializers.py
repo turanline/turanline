@@ -1,12 +1,14 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from . import models, mixins
-from products import serializers as product_serializers
-from products import models as product_models
-from payment import serializers as payment_serializers
-from product_components import serializers as product_component_serializers
+from customers import serializers as customer_serializers
+from delivery import serializers as delivery_serializer
 from product_components import models as product_component_models
+from product_components import serializers as product_component_serializers
+from products import models as product_models
+from products import serializers as product_serializers
+
+from . import mixins, models
 
 
 class OrderProductsBaseSerializer(serializers.ModelSerializer):
@@ -14,14 +16,12 @@ class OrderProductsBaseSerializer(serializers.ModelSerializer):
     sum = serializers.DecimalField(
         max_digits=10,
         decimal_places=2,
-        coerce_to_string=True
+        coerce_to_string=True,
+        read_only=True
     )
 
     class Meta:
         model = models.OrderProducts
-        read_only_fields = [
-            'sum'
-        ]
 
 
 class CartBaseSerializer(serializers.ModelSerializer):
@@ -30,7 +30,11 @@ class CartBaseSerializer(serializers.ModelSerializer):
         model = models.Cart
 
 
-class OrderBaseSerializer(serializers.ModelSerializer):
+class OrderBaseSerializer(
+    serializers.ModelSerializer
+):
+
+    delivery = delivery_serializer.DeliverySerializer()
 
     class Meta:
         model = models.Order
@@ -60,7 +64,7 @@ class OrderProductsCreateSerializer(OrderProductsBaseSerializer):
                 product=product,
                 color=color
             )
-            if value < product_color.amount:
+            if value <= product_color.amount:
                 return value
             raise serializers.ValidationError(
                 "Товара данного цвета слишком мало у поставщика"
@@ -83,12 +87,13 @@ class OrderProductsUpdateSerializer(OrderProductsBaseSerializer):
 
 class OrderProductsSerializer(OrderProductsBaseSerializer):
 
-    product = product_serializers.OrderProductSerializer()
+    product = product_serializers.ProductOrderSerializer()
 
     color = product_component_serializers.ColorSerializer()
 
     images = product_serializers.ImageSerializer(
-        many=True
+        many=True,
+        read_only=True
     )
 
     class Meta(OrderProductsBaseSerializer.Meta):
@@ -101,8 +106,7 @@ class OrderProductsSerializer(OrderProductsBaseSerializer):
             'sum'
         ]
         read_only_fields = [
-            'product',
-            'images'
+            'product'
         ]
 
 
@@ -119,19 +123,76 @@ class CartSerializer(CartBaseSerializer):
         ]
 
 
-class OrderSerializer(
+class OrderSerializer(OrderBaseSerializer):
+
+    order_products = OrderProductsSerializer(
+        many=True
+    )
+
+    class Meta(OrderBaseSerializer.Meta):
+        fields = '__all__'
+
+
+class OrderCreateSerializer(
     mixins.OrderMixin,
     OrderBaseSerializer
 ):
 
-    payment = payment_serializers.CardPaymentSerializer()
-
     class Meta(OrderBaseSerializer.Meta):
         exclude = [
+            'payment',
+            'created_date',
             'customer',
             'status',
             'is_paid'
         ]
         read_only_fields = [
             'total_sum'
+        ]
+
+
+class OrderUpdateSerializer(
+    mixins.OrderMixin,
+    OrderBaseSerializer
+):
+
+    class Meta(OrderBaseSerializer.Meta):
+        exclude = [
+            'payment',
+            'order_products',
+            'created_date',
+            'customer',
+            'status',
+            'is_paid'
+        ]
+        read_only_fields = [
+            'total_sum'
+        ]
+
+
+class OrderCustomerHistorySerializer(OrderBaseSerializer):
+
+    order_products = OrderProductsSerializer(
+        many=True,
+        read_only=True
+    )
+
+    class Meta(OrderBaseSerializer.Meta):
+        fields = '__all__'
+
+
+class OrderProviderHistorySerializer(OrderBaseSerializer):
+
+    order_products = OrderProductsSerializer(
+        many=True,
+        source='filtered_order_products'
+    )
+
+    customer = customer_serializers.CustomerReadSerializer()
+
+    class Meta(OrderBaseSerializer.Meta):
+        fields = '__all__'
+        read_only_fields = [
+            'customer',
+            'order_products'
         ]

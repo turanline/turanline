@@ -1,8 +1,9 @@
 from rest_framework import serializers
 
-from . import models, mixins
-from users import serializers as user_serializers
 from products import serializers as product_serializers
+from users import serializers as user_serializers
+
+from . import mixins, models
 
 
 class BaseCustomerSerializer(serializers.ModelSerializer):
@@ -42,18 +43,10 @@ class CustomerReadSerializer(BaseCustomerSerializer):
 
 class ReviewSerializer(BaseReviewSerializer):
 
-    product = product_serializers.ProductLightSerializer()
+    product = product_serializers.ProductSerializer()
 
     class Meta(BaseReviewSerializer.Meta):
         fields = '__all__'
         read_only_fields = [
             'product'
-        ]
-
-
-class LightReviewSerializer(BaseReviewSerializer):
-
-    class Meta(BaseReviewSerializer.Meta):
-        fields = [
-            'text'
         ]

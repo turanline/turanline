@@ -1,9 +1,13 @@
 import logging
+from datetime import timedelta
 
-from rest_framework import serializers, exceptions
+from django.utils import timezone
+from rest_framework import exceptions, serializers
 from rest_framework_simplejwt import serializers as jwt_serializers
 
-from . import models, mixins
+from mssite import mixins as ms_mixins
+
+from . import mixins, models
 
 logger = logging.getLogger(__name__)
 
@@ -12,10 +16,18 @@ class CustomTokenObtainPairSerializer(
     jwt_serializers.TokenObtainPairSerializer
 ):
 
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['roles'] = {}
+        token['roles']['customer'] = hasattr(user, 'customer')
+        token['roles']['provider'] = hasattr(user, 'provider')
+        return token
+
     def validate(self, attrs):
         data = super().validate(attrs)
         if not self.user.is_verified:
-            raise exceptions.PermissionDenied(
+            raise exceptions.NotAcceptable(
                 detail={
                     'detail': 'User account is not verified.'
                 }
@@ -49,10 +61,16 @@ class BaseUserSerializer(serializers.ModelSerializer):
         model = models.User
 
 
-class BaseNewsSerializer(serializers.ModelSerializer):
+class BaseNewsSerializer(
+    ms_mixins.BaseLocalizationMixin,
+    serializers.ModelSerializer
+):
 
     class Meta:
         model = models.News
+        translated_fields = [
+            'category'
+        ]
 
 
 class UserSerializer(
@@ -63,18 +81,13 @@ class UserSerializer(
     phone_number = serializers.CharField(validators=[])
 
     class Meta(BaseUserSerializer.Meta):
-        exclude = [
-            'username',
-            'date_joined',
-            'is_superuser',
-            'is_active',
-            'is_staff',
-            'is_customer',
-            'is_provider',
-            'is_verified',
-            'groups',
-            'user_permissions',
-            'last_login'
+        fields = [
+            'id',
+            'email',
+            'phone_number',
+            'password',
+            'first_name',
+            'last_name'
         ]
 
 
@@ -90,7 +103,30 @@ class UserReadSerializer(BaseUserSerializer):
         ]
 
 
+class ModerationTimeSerializer(serializers.ModelSerializer):
+
+    time_left = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.User
+        fields = [
+            'time_left'
+        ]
+
+    def get_time_left(self, obj):
+        now = timezone.now()
+        date_joined = obj.date_joined
+        elapsed_time = now - date_joined
+        remaining_time = timedelta(hours=24) - elapsed_time
+        if remaining_time.total_seconds() < 0:
+            remaining_time = timedelta(seconds=0)
+        return int(remaining_time.total_seconds())
+
+
 class NewsSerializer(BaseNewsSerializer):
 
     class Meta(BaseNewsSerializer.Meta):
         fields = '__all__'
+        translated_fields = [
+            'category'
+        ]

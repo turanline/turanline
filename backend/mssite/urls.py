@@ -6,15 +6,14 @@ from drf_spectacular import views
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenBlacklistView
 
-from products import views as product_views
-from users import views as user_views
 from cart import views as cart_views
 from customers import views as customer_views
-from providers import views as provider_views
-from product_components import views as product_component_views
-from payment import views as payment_views
 from delivery import views as delivery_views
-
+from payment import views as payment_views
+from product_components import views as product_component_views
+from products import views as product_views
+from providers import views as provider_views
+from users import views as user_views
 
 router = DefaultRouter()
 
@@ -28,12 +27,6 @@ router.register(
     r'categories',
     product_component_views.ProductCategoriesViewSet,
     'categories'
-)
-
-router.register(
-    r'reviews',
-    customer_views.ReviewsViewSet,
-    'reviews'
 )
 
 router.register(
@@ -67,6 +60,12 @@ router.register(
 )
 
 router.register(
+    r'size',
+    product_component_views.SizeViewSet,
+    'size'
+)
+
+router.register(
     r'provider',
     provider_views.ProviderViewSet,
     'provider'
@@ -97,11 +96,16 @@ router.register(
 )
 
 router.register(
-    r'delivery',
-    delivery_views.DeliveryViewSet,
-    'delivery'
+    r'city',
+    delivery_views.CityViewSet,
+    'city'
 )
 
+router.register(
+    r'tariff',
+    delivery_views.TariffViewSet,
+    'tariff'
+)
 
 urlpatterns = [
     path(

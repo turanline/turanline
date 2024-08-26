@@ -1,9 +1,10 @@
+from parler_rest.serializers import (TranslatableModelSerializer,
+                                     TranslatedFieldsField)
 from rest_framework import serializers
-from parler_rest.serializers import TranslatableModelSerializer, TranslatedFieldsField
+
+from mssite import mixins
 
 from . import models
-from mssite import mixins
-from product_components import serializers as product_components_serializer
 
 
 class CitySerializer(
@@ -11,7 +12,9 @@ class CitySerializer(
     TranslatableModelSerializer
 ):
 
-    translations = TranslatedFieldsField(shared_model=models.City)
+    translations = TranslatedFieldsField(
+        shared_model=models.City
+    )
 
     class Meta:
         model = models.City
@@ -23,7 +26,9 @@ class TariffSerializer(
     TranslatableModelSerializer
 ):
 
-    translations = TranslatedFieldsField(shared_model=models.Tariff)
+    translations = TranslatedFieldsField(
+        shared_model=models.Tariff
+    )
 
     class Meta:
         model = models.Tariff
@@ -32,14 +37,11 @@ class TariffSerializer(
 
 class DeliverySerializer(serializers.ModelSerializer):
 
-    city = CitySerializer()
-
-    tariff = TariffSerializer()
-
-    category = product_components_serializer.ProductCategoriesSerializer(
-        many=True
-    )
-
     class Meta:
         model = models.Delivery
         fields = '__all__'
+        read_only_fields = [
+            'price',
+            'days_min',
+            'days_max'
+        ]

@@ -37,6 +37,12 @@ billiard = "^4.2.0"
 kombu = "^5.3.7"
 django-mptt = "^0.16.0"
 twilio = "^9.2.3"
+beautifulsoup4 = "^4.12.3"
+vonage = "^3.16.1"
+messagebird = "^2.2.0"
+smsaero-api = "^3.0.0"
+django-sql-debug = "^0.0.3"
+isort = "^5.13.2"
 
 
 [build-system]

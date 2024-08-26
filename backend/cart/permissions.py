@@ -1,15 +1,17 @@
-from rest_framework import permissions
+from typing import Type
 
-from . import models
+from django.db.models import Model
+from rest_framework import permissions
+from rest_framework.request import Request
+from rest_framework.viewsets import GenericViewSet
 
 
 class IsOwnerPermission(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj: models.OrderProduct):
-        return request.user == obj.order.user
 
-
-class IsCustomer(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.user.is_provider:
-            return False
-        return True
+    def has_object_permission(
+        self,
+        request: Request,
+        view: Type[GenericViewSet],
+        obj: Type[Model]
+    ) -> bool:
+        return request.user.customer == obj.customer

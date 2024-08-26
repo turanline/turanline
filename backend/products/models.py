@@ -1,40 +1,35 @@
-import random
+from decimal import Decimal
 
 from django.core.validators import MinValueValidator
 from django.db import models
 from mptt import models as mptt_models
 from parler.models import TranslatableModel, TranslatedFieldsModel
-from slugify import slugify
-from decimal import Decimal
+
+from mssite import storages
+from product_components import models as product_component_models
+from providers import models as provider_models
 
 from . import enums
-from product_components import models as product_component_models
-from users import models as user_models
-from mssite import storages
 
 
 class Product(TranslatableModel):
 
     provider = models.ForeignKey(
-        user_models.User,
+        provider_models.Provider,
         on_delete=models.CASCADE,
-        verbose_name='Поставщик',
+        verbose_name='Поставщик'
     )
 
-    category = mptt_models.TreeManyToManyField(
+    category = mptt_models.TreeForeignKey(
         product_component_models.Category,
-        verbose_name='Категории товаров'
-    )
-
-    brand = models.ForeignKey(
-        product_component_models.Brand,
-        on_delete=models.CASCADE,
-        db_index=True,
-        verbose_name='Бренд товара'
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name='Категория товаров'
     )
 
     article_number = models.CharField(
-        max_length=10,
+        max_length=9,
+        db_index=True,
         unique=True,
         verbose_name='Артикул'
     )
@@ -45,7 +40,7 @@ class Product(TranslatableModel):
         validators=[
             MinValueValidator(
                 Decimal(0),
-                message='the price cannot be a negative number'
+                message='Цена не может быть отрицательной'
             ),
         ],
         db_index=True,
@@ -59,11 +54,10 @@ class Product(TranslatableModel):
         verbose_name='Сезон для ношения'
     )
 
-    pattern = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True,
-        verbose_name='Узор товара'
+    mold = models.CharField(
+        choices=enums.MoldChoices,
+        default=enums.MoldChoices.NO_MOLD,
+        verbose_name='Лекало'
     )
 
     color = models.ManyToManyField(
@@ -88,52 +82,46 @@ class Product(TranslatableModel):
         verbose_name='Размер товара'
     )
 
-    weight = models.PositiveIntegerField(
+    weight = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
         verbose_name='Вес товара'
     )
 
-    slug = models.SlugField(
-        max_length=1024,
-        unique=True,
-        db_index=True,
-        blank=True,
-        verbose_name='Слаг товара'
-    )
-
     is_famous = models.BooleanField(
-        default=False
+        default=False,
+        verbose_name='Известный товар'
     )
 
     status = models.CharField(
         choices=enums.ProductStatus,
-        default=enums.ProductStatus.UNDER_CONSIDERATION,
+        default=enums.ProductStatus.ACTIVE,
         verbose_name='Статус проверки модерацией'
     )
 
     date_and_time = models.DateTimeField(
         auto_now_add=True,
-        verbose_name='Время и дата публикации'
+        verbose_name='Дата и время публикации'
     )
 
     class Meta:
-        ordering = ['-slug']
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
 
     def __str__(self) -> str:
-        return f'Товар поставщика {self.provider.username}'
-
-    def save(self, *args, **kwargs):
-        if self.slug and self.article_number:
-            return super().save(*args, **kwargs)
-        self.article_number = f'{random.randrange(0, 10000)}'
-        self.slug = slugify(
-            f'{self.provider.username}-{self.article_number}'
+        return (
+            f'{self.safe_translation_getter('name', any_language=True)}'
+            f' (Артикул: {self.article_number}, Поставщик: {self.provider.user.username})'
         )
-        return super().save(*args, **kwargs)
 
 
 class ProductStatusChangeArchive(models.Model):
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        verbose_name='Товар'
+    )
 
     old_status = models.CharField(
         choices=enums.ProductStatus,
@@ -145,17 +133,27 @@ class ProductStatusChangeArchive(models.Model):
         verbose_name='Новый статус'
     )
 
-    changed_at = models.DateTimeField(auto_now_add=True)
+    changed_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата и время изменения статуса'
+    )
 
     provider = models.ForeignKey(
-        user_models.User,
-        on_delete=models.CASCADE
+        provider_models.Provider,
+        on_delete=models.CASCADE,
+        verbose_name='Поставщик'
     )
 
     class Meta:
-        ordering = [
-            'id'
-        ]
+        ordering = ['id']
+        verbose_name = 'Архив изменений статуса товара'
+        verbose_name_plural = 'Архив изменений статуса товаров'
+
+    def __str__(self) -> str:
+        return (
+            f'Изменение статуса товара {self.product.safe_translation_getter('name', any_language=True)}:'
+            f' {self.old_status} → {self.new_status} (Поставщик: {self.provider.user.username})'
+        )
 
 
 class ProductTranslation(TranslatedFieldsModel):
@@ -164,7 +162,8 @@ class ProductTranslation(TranslatedFieldsModel):
         Product,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='translations'
+        related_name='translations',
+        verbose_name='Основной товар'
     )
 
     name = models.CharField(
@@ -184,11 +183,23 @@ class ProductTranslation(TranslatedFieldsModel):
         verbose_name='Состав товара'
     )
 
+    pattern = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        verbose_name='Узор товара'
+    )
+
     class Meta:
         unique_together = (
             'language_code',
             'master'
         )
+        verbose_name = 'Перевод товара'
+        verbose_name_plural = 'Переводы товаров'
+
+    def __str__(self) -> str:
+        return f'{self.name} ({self.language_code})'
 
 
 class Image(models.Model):
@@ -196,7 +207,8 @@ class Image(models.Model):
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
-        related_name='images'
+        related_name='images',
+        verbose_name='Товар'
     )
 
     image_file = models.ImageField(
@@ -204,29 +216,38 @@ class Image(models.Model):
         blank=True,
         upload_to='product_images/',
         storage=storages.OverwriteStorage(),
+        verbose_name='Файл изображения'
     )
 
     position = models.IntegerField(
-        verbose_name='Позиция фотографии'
+        verbose_name='Позиция изображения'
     )
 
     class Meta:
-        ordering = [
-            'position'
-        ]
+        ordering = ['position']
+        verbose_name = 'Изображение товара'
+        verbose_name_plural = 'Изображения товаров'
+
+    def __str__(self) -> str:
+        return (
+            f'Изображение для товара {self.product.safe_translation_getter('name', any_language=True)}'
+            f' (Позиция: {self.position})'
+        )
 
 
 class ProductSize(models.Model):
 
     product = models.ForeignKey(
         Product,
-        on_delete=models.CASCADE
+        related_name='sizes',
+        on_delete=models.CASCADE,
+        verbose_name='Товар'
     )
 
     size = models.ForeignKey(
         product_component_models.Size,
         on_delete=models.CASCADE,
-        related_name='size_amount'
+        verbose_name='Размер'
     )
 
     amount = models.PositiveIntegerField(
@@ -234,21 +255,45 @@ class ProductSize(models.Model):
         verbose_name='Количество товара для выбранного размера'
     )
 
+    class Meta:
+        verbose_name = 'Размер товара'
+        verbose_name_plural = 'Размеры товаров'
+
+    def __str__(self) -> str:
+        return (
+            f'{self.product.safe_translation_getter('name', any_language=True)} -'
+            f' Размер: {self.size.name}, Количество: {self.amount}'
+        )
+
 
 class ProductColor(models.Model):
 
     product = models.ForeignKey(
         Product,
-        on_delete=models.CASCADE
+        related_name='colors',
+        on_delete=models.CASCADE,
+        verbose_name='Товар'
     )
 
     color = models.ForeignKey(
         product_component_models.Color,
         on_delete=models.CASCADE,
-        related_name='color_amount'
+        related_name='color_amount',
+        verbose_name='Цвет'
     )
 
     amount = models.PositiveIntegerField(
         default=0,
         verbose_name='Количество товара для выбранного цвета'
     )
+
+    class Meta:
+        verbose_name = 'Цвет товара'
+        verbose_name_plural = 'Цвета товаров'
+
+    def __str__(self) -> str:
+        return (
+            f'{self.product.safe_translation_getter('name', any_language=True)} -'
+            f' Цвет: {self.color.safe_translation_getter('name', any_language=True)},'
+            f' Количество: {self.amount}'
+        )
