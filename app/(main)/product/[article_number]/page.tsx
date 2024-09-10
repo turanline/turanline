@@ -21,9 +21,12 @@ export async function generateStaticParams() {
   const obj: IProductsState["filters"] = {
     brand: null,
     color: null,
-    hbprice: null,
-    lbprice: null,
-    size: null,
+    price_max: null,
+    price_min: null,
+    season: null,
+    material: null,
+    category: null,
+    mold:null,
   };
 
   try {

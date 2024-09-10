@@ -13,6 +13,8 @@ import { useProducts } from "@/hooks/useProducts";
 import { useTranslate } from "@/hooks/useTranslate";
 //Utils
 import { SHOP_ROUTE } from "@/utils/Consts";
+//Types
+import { IProductsState } from "@/types/reduxTypes";
 //Styles
 import "swiper/css/pagination";
 import "./catalog.scss";
@@ -21,8 +23,9 @@ import "swiper/css";
 export default function Category() {
   const [isOpen, setIsOpen] = useState(false);
   //Hooks
-  const { filtered, category, filters, status, searchText } = useTypedSelector(state => state.products);
-  const { onSetFiltered, setAllProducts, handleSearch } = useProducts();
+  const { filtered, category, filters, status, searchText,products } = useTypedSelector(state => state.products);
+
+  const {  setAllProducts, handleSearch,onSetFilters } = useProducts();
   const translate = useTranslate();
 
   //Styles
@@ -35,14 +38,22 @@ export default function Category() {
   //ClassNames
   const filterWrapperClassName = isOpen ? "filter_wrapper active" : "filter_wrapper";
 
-  const newProducts = handleSearch(searchText, filtered);
+
+  const newProducts = handleSearch(searchText, products);
   const setOpen = () => setIsOpen(!isOpen);
+
+
+
+  let productsArray = filtered.length ? filtered : newProducts
+
 
   const mapAllProducts = useMemo(() => {
     if (status === "pending") return <Icons id="spiner" />;
 
-    if (!newProducts?.length && status === "fulfilled")
-    return (
+
+
+    if (!productsArray?.length && status === "fulfilled") {
+      return (
         <EmptyComponent
           title={translate.emptyCatalogTitle}
           text={translate.emptyCatalogText}
@@ -50,25 +61,38 @@ export default function Category() {
           buttonText={translate.emptyCatalogButtonText}
         />
       );
+    }
 
-    if (newProducts.length && status === "fulfilled")
-    return (
+    if (productsArray.length && status === "fulfilled")
+      return (
         <div className="main-product-wrapper">
-          {newProducts?.map(productInfo => (
+          {productsArray?.map(productInfo => (
             <ProductCard key={productInfo?.id} productInfo={productInfo} />
           ))}
         </div>
       );
-  }, [translate,newProducts,status]);
+  }, [translate,productsArray,status]);
 
 
-  useEffect(() => {
-    onSetFiltered();
-  }, [filters, category, onSetFiltered]);
 
   useEffect(() => {
     setAllProducts();
   }, [setAllProducts]);
+
+  useEffect(()=>{
+    const newFilters: IProductsState["filters"] = {
+      brand: null,
+      color: "",
+      price_max:10000,
+      price_min:0,
+      category: "",
+      mold: null,
+      material: null,
+      season: null,
+    };
+
+    onSetFilters(newFilters)
+  },[])
 
 
   return (

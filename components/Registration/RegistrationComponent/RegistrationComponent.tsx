@@ -25,6 +25,7 @@ import prefixes from "@/locales/prefixes.json";
 import { IUserInformationApi } from "@/types/reduxTypes";
 //Styles
 import "./RegistrationComponent.scss";
+import { getVerifySmsCode } from "@/services/authAPI";
 
 export default function Registration({nextStep}: {nextStep: () => void}) {
   //Hooks
@@ -38,7 +39,7 @@ export default function Registration({nextStep}: {nextStep: () => void}) {
   const [forgetModal, setForgetModal] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [selectPhone,setSelectPhone] = useState<string>('');
-  const [prefixCode,setPrefixCode] = useState<string>('+1');
+  const [prefixCode,setPrefixCode] = useState<string>('+7');
 
   const selectClassName = {
     innerWrapper: "w-fit h-[30px]",
@@ -47,6 +48,7 @@ export default function Registration({nextStep}: {nextStep: () => void}) {
     base: "w-[74px] h-[44px]",
     trigger: "rounded-tl-[10px] rounded-bl-[10px] rounded-tr-none rounded-br-none shadow-none w-[74px] h-[44px] border border-r-0"
   };
+
 
   const createAccount = async () => {
     if(!isValid){
@@ -78,9 +80,12 @@ export default function Registration({nextStep}: {nextStep: () => void}) {
       if(response.payload.status === 201){
         showToastMessage('success', translate.registrationSuccess);
         showToastMessage('warn', translate.registrationConfirm);
+        getVerifySmsCode(response.payload.data.user.phone_number,'verification')
 
         nextStep();
-        setCookie('phoneNumber',(prefixCode + selectPhone).replace(/[^\d+]/g, ''))
+        setCookie('phoneNumber',(selectPhone).replace(/[^\d+]/g, ''))
+        setCookie('phonePrefix',(prefixCode))
+
         return;
       };
       if ("error" in response && response.error.message === "Rejected") {

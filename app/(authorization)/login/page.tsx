@@ -62,7 +62,6 @@ const LogIn: NextPage = () => {
       password:getValues().password
     };
 
-
     try {
       onLogInUser(requestBody)
       .then(response => {
@@ -70,8 +69,12 @@ const LogIn: NextPage = () => {
           showToastMessage("success", translate.messageLogInSuccess);
           return;
         };
-        if (response.payload === 'Error: 403') {
-          setCookie('phoneNumber',selectPhone);
+        if(response.payload === 'Error: Не удалось обновить токен'){
+          showToastMessage("warn", "Не удалось обновить токен");
+          return;
+        }
+        if (response.payload === 'Error: 406') {
+          setCookie('phoneNumber',selectPhone.replace(/[^\d+]/g, ''));
           onSetRegistrationPage(2);
           push(REGISTRATION_ROUTE);
           getVerifySmsCode(selectPhone,'verification');
@@ -96,10 +99,6 @@ const LogIn: NextPage = () => {
       setCookie('phonePrefix', prefixCode);
     }
   };
-
-
-
-
   const showModalForgetPassword = () => setForgetModal(!forgetModal);
 
   const renderAllPrefixes = () => {
@@ -135,8 +134,8 @@ const LogIn: NextPage = () => {
     if (savedUser) setSelectPhone(savedUser);
     if (savedPrfix) setPrefixCode(savedPrfix);
 
+    setValue('phone_login_number',String(savedUser))
 
-    setValue('phone_login_number',(prefixCode + selectPhone).replace(/[^\d+]/g, ''))
   },[rememberMe]);
 
 

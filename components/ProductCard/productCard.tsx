@@ -27,7 +27,6 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({ productInfo }) => 
   const [colorId, setColorId] = useState<number>(0);
 
 
-  const { isAuth } = useTypedSelector(state => state.user);
   const { favorites } = useTypedSelector(state => state.favorites);
   const translate = useTranslate();
   const { addItemToCart, onFetchCart} = useCart();
@@ -38,7 +37,7 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({ productInfo }) => 
 
   const likeHandleClick = () => {
     if (!itemInFavorites) {
-      addToFavorites(productInfo, isAuth);
+      addToFavorites(productInfo);
       return;
     }
     deleteFromFavorites(productInfo);

@@ -12,9 +12,9 @@ export const getFavorites = async () => {
   }
 };
 
-export const patchUserFavorites = async (id: number, favorites: number[]) => {
+export const deleteUserFavorites = async (product_id: number) => {
   try {
-    const { data } = await $authHost.patch(`/api/customer/${id}/`, {favorites});
+    const { data } = await $authHost.delete(`/api/customer/favorites/remove-favorites/${product_id}/`);
 
     return data;
   } catch (error) {
@@ -22,3 +22,15 @@ export const patchUserFavorites = async (id: number, favorites: number[]) => {
     throw error;
   }
 };
+
+export const addUserFavorites = async (product_id: number) => {
+  try {
+    const { data } = await $authHost.post(`/api/customer/favorites/add-favorites/${product_id}/`);
+
+    return data;
+  } catch (error) {
+    console.error("Failed patch user favorites:" + error);
+    throw error;
+  }
+};
+

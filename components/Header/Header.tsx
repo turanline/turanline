@@ -71,6 +71,12 @@ export function Header() {
     onSetSubtypes,
   } = useCategories("#E30387");
 
+
+  const logOut = () =>{
+    showToastMessage("success", translate.messageLogOutSuccess);
+    onLogOutUser()
+  }
+
   //Styles
   const buttonStyles = {
     backgroundColor: "transparent",
@@ -111,7 +117,7 @@ export function Header() {
         </DropdownItem>
         <DropdownItem
           style={{ textAlign: "center", height: "40px" }}
-          onClick={onLogOutUser}
+          onClick={logOut}
         >
           {translate.profilePageLogOut}
         </DropdownItem>
@@ -151,7 +157,7 @@ export function Header() {
               >
                 {translate.headerToProfile}
               </Button>
-              <Button onClick={onLogOutUser} style={buttonStyles}>
+              <Button onClick={logOut} style={buttonStyles}>
                 {translate.profilePageLogOut}
               </Button>
             </div>

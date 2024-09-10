@@ -36,9 +36,9 @@ import "./PaymentOrder.scss";
 export default function PaymentOrder({prevStep}: {prevStep: () => void}) {
   const { push } = useRouter();
   const translate = useTranslate();
-  const { status: cartStatus } = useTypedSelector(state => state.cart);
+  const { status: cartStatus ,cart} = useTypedSelector(state => state.cart);
   const { isAuth,status: userStatus } = useTypedSelector(state => state.user);
-  const { returnAllProductsCounter, calculateTotalPrice } = useCart();
+  const { returnAllProductsCounter } = useCart();
   const { returnInputError,returnInputProperties,isValid,getValues,handleSubmit,reset,setValue } = useCustomForm<IInputsCard>();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -183,7 +183,7 @@ export default function PaymentOrder({prevStep}: {prevStep: () => void}) {
               <p className="text-[24px] text-textGray">{translate.orderPageSum}</p>
 
               <p className="text-[24px] text-tiffani">
-                {(Number(deliveryCost) + calculateTotalPrice()).toFixed(2)} $
+                {(Number(deliveryCost) + Number(cart?.total_sum)).toFixed(2)} $
               </p>
             </div>
 
@@ -192,7 +192,7 @@ export default function PaymentOrder({prevStep}: {prevStep: () => void}) {
                 {returnAllProductsCounter()} {translate.orderPageProductsText}
               </p>
 
-              <p>{calculateTotalPrice().toFixed(2)} $</p>
+              <p>{cart?.total_sum} $</p>
             </div>
 
             <div className="flex justify-between">

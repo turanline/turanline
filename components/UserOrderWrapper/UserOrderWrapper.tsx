@@ -1,6 +1,7 @@
 "use client";
 //GLobal
 import React, { FC, useState, useRef, useEffect } from "react";
+import Link from "next/link";
 //Components
 import { Icons } from "../Icons/Icons";
 import { UserOrderItem } from "@/components/UserOrderItem/UserOrderItem";
@@ -54,8 +55,10 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderDate, orderNumber, order
         amount={product?.amount}
         color={product?.color}
         product={product?.product}
+        sum={product?.sum}
       />
     ));
+
 
   const returnOrderStatus = (status: string) => {
     let orderStatusText, iconId, buttonStyles;
@@ -97,6 +100,14 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderDate, orderNumber, order
         };
         break;
 
+      case "CT":
+        orderStatusText = "Передан в Карго";
+        iconId = "deliveredOrder";
+        buttonStyles = {
+          backgroundColor: "#ECFFFE",
+          color: "#0ABAB5",
+        };
+        break;
       default:
         orderStatusText = "Неизвестный статус";
         iconId = "car";
@@ -143,15 +154,10 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderDate, orderNumber, order
 
         {returnOrderStatus(orderStatus)}
 
-        <button className="profile-content_orders-content-order-button">
-          <Icons id="repeat" />
-          Повторить
-        </button>
-
-        <button className="profile-content_orders-content-order-button">
+        <Link target="_" href={`https://wa.me/${'+905525977888'}`} className="profile-content_orders-content-order-button">
           <Icons id="flag" />
           Составить обращение
-        </button>
+        </Link>
       </div>
 
       {renderOrderProducts()}

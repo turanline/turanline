@@ -24,6 +24,8 @@ import { IProductMainPage } from "@/types/componentTypes";
 const useFavorites = () => {
   //Hooks
   const { favorites } = useTypedSelector((state) => state.favorites);
+  const { isAuth } = useTypedSelector((state) => state.user);
+
   const dispatch = useAppDispatch();
   const translate = useTranslate();
   const { push } = useRouter();
@@ -33,22 +35,23 @@ const useFavorites = () => {
     [dispatch]
   );
 
-  const addToFavorites = (product: IProductMainPage, isAuth: boolean) => {
-    if (isAuth) {
-      dispatch(onAddToFavorites(product))
-        .then((data) => {
-          if ("error" in data && data.error.message === "Rejected") {
-            showToastMessage("error", translate.messageFavoritesAddError);
-            return;
-          }
-          showToastMessage("success", translate.messageFavoritesSuccess);
-        })
-        .catch((error) => console.log(error));
-    }
+  const addToFavorites = (product: IProductMainPage) => {
+      if(!isAuth){
+        showToastMessage("warn", translate.messageFavoritesWarn);
+        push(LOGIN_ROUTE);
+        return;
+      }
 
-    showToastMessage("warn", translate.messageFavoritesWarn);
-    push(LOGIN_ROUTE);
-    return;
+      dispatch(onAddToFavorites(product))
+      .then((data) => {
+        if ("error" in data && data.error.message === "Rejected") {
+          showToastMessage("error", translate.messageFavoritesAddError);
+          return;
+        }
+        showToastMessage("success", translate.messageFavoritesSuccess);
+      })
+      .catch((error) => console.log(error));
+ 
   };
 
   const onResetFavorites = () => dispatch(resetFavorites());

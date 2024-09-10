@@ -9,18 +9,19 @@ import { Icons } from "@/components/Icons/Icons";
 import { EmptyComponent } from "@/components/EmptyComponent/EmptyComponent";
 import { UserOrderWrapper } from "@/components/UserOrderWrapper/UserOrderWrapper";
 import { UserReviewItem } from "@/components/UserReviewItem/UserReviewItem";
+import { getColors } from "@/redux/reducers/productsSlice";
 //Actions
 import {
   getUser,
   logInUser,
   registrationUser,
-  changeUserDataProfile,
   getOrders,
   getReviews,
   logOutUser,
   setRegistrationPageNumber,
   setForgetPassword,
   setPaymenPageNumber,
+  updateUserState
 } from "@/redux/reducers/userSlice";
 //Hooks
 import { useAppDispatch } from "./useReduxHooks";
@@ -92,11 +93,10 @@ const useUserActions = () => {
     [dispatch]
   );
 
-  const onChangeUserData = useCallback(
-    (newUserData: IChangeUserData) =>
-      dispatch(changeUserDataProfile(newUserData)),
-    [dispatch]
-  );
+  const onUpdateUserState = useCallback(
+    (userState:IChangeUserData)=> dispatch(updateUserState(userState))
+  ,[])
+
 
   const onGetUser = useCallback(() => dispatch(getUser()), [dispatch]);
   const onGetOrders = useCallback(() => dispatch(getOrders()), [dispatch]);
@@ -106,7 +106,6 @@ const useUserActions = () => {
     try {
       const response = await dispatch(logOutUser());
       if (response.meta.requestStatus === "fulfilled") {
-        showToastMessage("success", translate.messageLogOutSuccess);
         onResetCart();
         onResetFavorites();
       }
@@ -115,10 +114,8 @@ const useUserActions = () => {
     }
   }, [dispatch, onResetCart, onResetFavorites]);
 
-  const returnUserOrders = (
-    orders: ICartState["cart"][],
-    handleSort: (key: ISortConfig["key"]) => void
-  ) => {
+
+  const returnUserOrders = ( orders: ICartState["cart"][],handleSort: (key: ISortConfig["key"]) => void) => {
     if (!userOrders?.length) {
       return (
         <EmptyComponent
@@ -169,6 +166,7 @@ const useUserActions = () => {
         <div className="profile-content_orders-content-list">
           {orders?.map((order) => (
             <UserOrderWrapper
+              // phoneNumber={order?.customer}
               key={order?.id}
               orderNumber={order?.id}
               orderDate={order?.created_date}
@@ -206,11 +204,18 @@ const useUserActions = () => {
     </>
   );
 
+  const onGetColors = useCallback(async () => {
+    try {
+      const response = await dispatch(getColors());
+    } catch (error) {
+      console.error(error)
+    }
+  },[dispatch]);
+
   return {
     onLogInUser,
     onRegistrationUser,
     onGetUser,
-    onChangeUserData,
     onGetOrders,
     onGetReviews,
     onLogOutUser,
@@ -219,6 +224,8 @@ const useUserActions = () => {
     onSetRegistrationPage,
     onSetForgetPassword,
     onSetPaymenPageNumber,
+    onGetColors,
+    onUpdateUserState
   };
 };
 

@@ -19,7 +19,7 @@ export const SHOP_ROUTE = "/",
   PAYMENT_ROUTE = "/payment",
   POLITIC_ROUTE = "/politics",
   PROFILE_ROUTE = "/profile",
-  PROVIDER_SITE ="https://mis-express-beta-git-provider-abramovs-projects.vercel.app/login";
+  PROVIDER_SITE ="https://partners.mis-express.com/login";
 export const SHOP_LINK = "https://mis-express.com/";
 
 //Shop Information
@@ -28,8 +28,7 @@ export const SHOP_NAME = "Mis Express",
   SHOP_SECOND_PHONE = "+905010008882",
   SHOP_EMAIL = "mis.express@mail.ru",
   SHOP_ADDRESS_2 = "Antalya/Alanya: 07400. İlçe Alanya, Oba Mahallesi, 225",
-  SHOP_ADDRESS =
-    "Oba Mahallesi 225 Dk. Summer Park Sitesi C Block Kat: 3 No: 13 ALANYA";
+  SHOP_ADDRESS = "Oba Mahallesi 225 Dk. Summer Park Sitesi C Block Kat: 3 No: 13 ALANYA";
 
 //Regular Matches
 export const passwordRegular = /^[a-zA-Z0-9]+$/;

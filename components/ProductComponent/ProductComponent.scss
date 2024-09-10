@@ -13,7 +13,14 @@
   }
 
   .product-page_block-pay {
-    align-items: center;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .text-price-product{
+    // overflow: hidden;
+    // text-wrap: nowrap;
   }
 }
 

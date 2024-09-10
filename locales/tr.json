@@ -12,6 +12,7 @@
   "headerSearchPlaceholder": "Katalogda Ara",
   "headerToProfile": "Profiline Git",
   "headerSearch": "Arama",
+  "materialTitle": "Malzeme",
 
   "paymentSuccess": "Satın aldığınız için teşekkür ederiz!",
   "paymentSuccessText": "Ödeme başarıyla gerçekleştirildi",
@@ -25,6 +26,7 @@
   "productWeight":"Ürün ağırlığı",
   "productMold":"Model",
   "paymentNameSurname": "Ad Soyad",
+  "productPriceDescription":"Fiyat birim başınadır",
 
   "reviewModeration": "Moderasyon üzerine",
 

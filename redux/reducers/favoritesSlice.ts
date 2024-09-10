@@ -5,9 +5,8 @@ import { IProductMainPage } from "@/types/componentTypes";
 //Redux Types
 import { IFavoritesState } from "@/types/reduxTypes";
 //Services
-import { getFavorites, patchUserFavorites } from "@/services/favoritesAPI";
-import { postVerifyToken } from "@/services/authAPI";
-import { getCookie } from "cookies-next";
+import { getFavorites, addUserFavorites,deleteUserFavorites } from "@/services/favoritesAPI";
+import { verifyAndRefreshToken } from "@/services";
 //State
 const initialState: IFavoritesState = {
   favorites: [],
@@ -26,17 +25,15 @@ export const fetchFavorites = createAsyncThunk<IFavoritesState["favorites"],unde
 
 export const addToFavorites = createAsyncThunk<IProductMainPage,IProductMainPage,{ rejectValue: string }>("favoritesSlice/addToFavorites", async (product, { rejectWithValue }) => {
   try {
-    const authToken = getCookie("AuthTokenMis");
 
-    if (authToken) {
-      const { user } = await postVerifyToken(authToken),
-        data: IProductMainPage[] = await getFavorites(),
-        serverData = data.map(item => item.id);
+      const user = await verifyAndRefreshToken();
 
-      await patchUserFavorites(user, [...serverData, product.id]);
-    }
+      if(user){
+        await addUserFavorites(product.id);
+      }
 
-    return product;
+      return product;
+
   } catch (error) {
     return rejectWithValue(`Failed add to favorites: ${error}`);
   }
@@ -44,16 +41,10 @@ export const addToFavorites = createAsyncThunk<IProductMainPage,IProductMainPage
 
 export const deleteFromFavorites = createAsyncThunk<IProductMainPage,IProductMainPage,{ rejectValue: string }>("favoritesSlice/deleteFromFavorites",async (product, { rejectWithValue }) => {
     try {
-      const authToken = getCookie("AuthTokenMis");
+      const user = await verifyAndRefreshToken();
 
-      if (authToken) {
-        const { user } = await postVerifyToken(authToken),
-          data: IProductMainPage[] = await getFavorites(),
-          serverData = data
-            .map(item => item.id)
-            .filter(item => item !== product.id);
-
-        await patchUserFavorites(user, serverData);
+      if(user){
+        await deleteUserFavorites(product.id);
       }
 
       return product;

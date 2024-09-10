@@ -6,8 +6,8 @@ import {
   setFilters,
   setCategory,
   fetchProducts,
-  fetchFilteredProducts,
   setSearchText,
+  setSearchProducts
 } from "@/redux/reducers/productsSlice";
 //Hooks
 import { useAppDispatch, useTypedSelector } from "./useReduxHooks";
@@ -31,15 +31,16 @@ const useProducts = () => {
     [dispatch, selectedLanguage]
   );
 
+  const onSetSearchProducts = useCallback(
+    (newProducts: string) => dispatch(setSearchProducts(newProducts)),
+    [dispatch, selectedLanguage]
+  );
+
   const setAllProducts = useCallback(
     () => dispatch(fetchProducts()),
     [dispatch, selectedLanguage]
   );
 
-  const onSetFiltered = useCallback(
-    () => dispatch(fetchFilteredProducts()),
-    [dispatch, selectedLanguage]
-  );
 
   const onSetSearchText = useCallback(
     (text: string) => dispatch(setSearchText(text)),
@@ -120,11 +121,11 @@ const renderColorOptions = (
     onSetCategory,
     onSetFilters,
     setAllProducts,
-    onSetFiltered,
     areFiltersEqual,
     onSetSearchText,
     handleSearch,
     renderColorOptions,
+    onSetSearchProducts
   };
 };
 

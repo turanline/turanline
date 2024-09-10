@@ -1,6 +1,6 @@
 "use client";
 //Global
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 //Components
 import { Slider, Button, RadioGroup, Radio } from "@nextui-org/react";
@@ -11,56 +11,88 @@ import { CATALOG_ROUTE } from "@/utils/Consts";
 import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useProducts } from "@/hooks/useProducts";
 import { useTranslate } from "@/hooks/useTranslate";
+import { useUserActions } from "@/hooks/useUserActions";
 //Redux Types
 import { IProductsState } from "@/types/reduxTypes";
+//Services
+import { getProductsByFilter } from "@/services/productsAPI";
 //styles
 import "./Filter.scss";
 import "swiper/css/pagination";
 import "swiper/css";
+import { showToastMessage } from "@/app/toastsChange";
 
 const Filter: FC = () => {
-  const [value, setValue] = useState<number[]>([2000, 8000]);
+  const [value, setValue] = useState<number[]>([0, 10000]);
   const [color, setColor] = useState<string>("");
-  const [size, setSize] = useState<string>("");
   const [brand, setBrand] = useState<string>("");
+  const [mold,setMold] = useState<string>("");
+  const [season,setSeason] = useState<string>("");
+  const [material,setMaterial] = useState<string>("");
+  const [category,setCategory] = useState<string>("");
+
 
   const { push } = useRouter();
   const pathname = usePathname();
   const translate = useTranslate();
-  const { onSetFilters, areFiltersEqual } = useProducts();
-  const { filters, products, status } = useTypedSelector(state => state.products);
+  const { onSetFilters, areFiltersEqual,onSetSearchProducts,setAllProducts } = useProducts();
+  const { filters, products, status,colors ,filtered} = useTypedSelector(state => state.products);
+  const { categories} = useTypedSelector(state => state.categories);
 
 
-  const returnUniqueArray = (array: string[]): string[] => {
+  const {onGetColors} = useUserActions()
+
+
+
+  const returnUniqueArray = (array: any[]): string[] => {
     const uniqueSet = new Set(array);
     const uniqueArray = Array.from(uniqueSet);
 
     return uniqueArray;
   }
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (pathname !== CATALOG_ROUTE) push(CATALOG_ROUTE);
 
     const newFilters: IProductsState["filters"] = {
       brand: brand ? brand : null,
-      color: color ? color : null,
-      size: size ? size : null,
-      lbprice: value[0],
-      hbprice: value[1],
+      color: Number(color) ? Number(color) : "",
+      price_max:value[1],
+      price_min:value[0],
+      category: Number(category) ? Number(category) : "" ,
+      mold: mold ? mold : "",
+      material: material ? material : "",
+      season: season ? material : ""
     };
 
-    const areEqual = areFiltersEqual(newFilters, filters);
 
-    if (!areEqual) onSetFilters(newFilters);
+    try {
+      const filteredFilters = Object.fromEntries(
+        Object.entries(newFilters).filter(([key, value]) => value !== undefined && value !== null && value !== '')
+      );
+
+      const products = await getProductsByFilter(filteredFilters);
+      
+      if(!products?.length) return showToastMessage('warn','По текущему фильтру ничего не найдено')
+      onSetSearchProducts(products)
+
+    } catch (error) {
+      console.error('Search failed:', error);
+    }
   };
+
+
 
   const resetFilters = () => {
     const newFilters: IProductsState["filters"] = {
       brand: null,
-      color: null,
-      size: null,
-      lbprice: null,
-      hbprice: null,
+      color: "",
+      price_max:value[1],
+      price_min:value[0],
+      category: null,
+      mold: null,
+      material: null,
+      season: null,
     };
 
     const areEqual = areFiltersEqual(newFilters, filters);
@@ -69,8 +101,13 @@ const Filter: FC = () => {
 
     setColor(prev => (prev ? "" : prev));
     setBrand(prev => (prev ? "" : prev));
-    setSize(prev => (prev ? "" : prev));
+    setMold(prev => (prev ? "" : prev));
+    setCategory(prev => (prev ? "" : prev));
+    setSeason(prev => (prev ? "" : prev));
+    setMaterial(prev => (prev ? "" : prev));
+
   };
+
 
   const renderFilterOptions = (array: string[], value: string, setValue: Dispatch<SetStateAction<string>>, text: string) => {
     if (array?.length)
@@ -90,21 +127,68 @@ const Filter: FC = () => {
         </div>
       );
   };
+  const renderFilterOptionsColor = (array: any[], value: string, setValue: Dispatch<SetStateAction<string>>, text: string) => {
+    if (array?.length)
+    return (
+        <div className="w-full flex flex-col rounded-sm border-1 border-border py-[24px] px-[18px] filter-block_shadow">
+          <h5 className="family-medium mb-[20px]">{text}</h5>
 
-  const allBrands = products?.flatMap(product => product?.brand);
-  const allColors = products?.flatMap(product => product?.colors_data?.map(c => c?.slug));
+          <div className="flex flex-col gap-2">
+            <RadioGroup onChange={e => setValue(e.target.value)}>
+              {array?.map(uniqueColor => (
+                <Radio key={uniqueColor.id} value={uniqueColor.id}>
+                  {uniqueColor.slug}
+                </Radio>
+              ))}
+            </RadioGroup>
+          </div>
+        </div>
+      );
+  };
+  const renderFilterOptionsCategory = (array: any[], value: string, setValue: Dispatch<SetStateAction<string>>, text: string) => {
+    if (array?.length)
+    return (
+        <div className="w-full flex flex-col rounded-sm border-1 border-border py-[24px] px-[18px] filter-block_shadow">
+          <h5 className="family-medium mb-[20px]">{text}</h5>
 
-  const allSizes = products?.flatMap(product => product?.sizes_data?.map(s => s?.name));
+          <div className="flex flex-col gap-2">
+            <RadioGroup onChange={e => setValue(e.target.value)}>
+              {array?.map(category => (
+                <Radio key={category.id} value={category.id}>
+                  {category.name}
+                </Radio>
+              ))}
+            </RadioGroup>
+          </div>
+        </div>
+      );
+  };
+  
+  
 
-  const uniqueColors = returnUniqueArray(allColors);
-  const uniqueBrands = returnUniqueArray(allBrands);
-  const uniqueSizes = returnUniqueArray(allSizes);
+  const allMolds = products?.flatMap(product => product?.mold);
+  const allSeasons = products?.flatMap(product => product?.season);
+  const allMaterials = products?.flatMap(product => product?.material);
+
+
+  const uniqueMolds = returnUniqueArray(allMolds);
+  const uniqueSeasons = returnUniqueArray(allSeasons);
+  const uniqueMaterial = returnUniqueArray(allMaterials).filter(Boolean);
+
 
   const sliderClassName = {
     thumb: "bg-tiffani",
     filler: "bg-tiffani",
     track: "h-[10px]",
   };
+
+  useEffect(()=>{
+    onGetColors()
+  },[onGetColors])
+
+  useEffect(() => {
+    setAllProducts();
+  }, [setAllProducts]);
 
   if (status === "pending") 
   return <Icons id="spiner" />;
@@ -114,9 +198,8 @@ const Filter: FC = () => {
       <div className="rounded-sm md:border-1 border-border md:shadow-md md:px-[24px] lg:px-[65px] lg:py-[25px] md:py-[25px] sm:py-[0px] md:mb-[37px]">
         <div className="flex flex-col md:flex-row gap-[18px]">
           <div className="w-full flex flex-col gap-[16px] capitalize">
-            {renderFilterOptions(uniqueColors, color, setColor, translate.filterColor)}
+            {renderFilterOptionsColor(colors, color, setColor, translate.filterColor)}
 
-            {renderFilterOptions(uniqueSizes, size, setSize, translate.filterSize)}
           </div>
           <div className="w-full flex flex-col gap-[16px]">
             <div className="w-full flex flex-col rounded-sm border-1 border-border py-[24px] px-[18px] filter-block_shadow">
@@ -125,7 +208,7 @@ const Filter: FC = () => {
               <Slider
                 label={`${translate.filterPriceText}:`}
                 formatOptions={{ style: "currency", currency: "USD" }}
-                step={100}
+                step={10}
                 maxValue={10000}
                 minValue={0}
                 value={value}
@@ -140,7 +223,12 @@ const Filter: FC = () => {
               </p>
             </div>
 
-            {renderFilterOptions(uniqueBrands, brand, setBrand, translate.filterBrand)}
+            {renderFilterOptions(uniqueMolds, mold, setMold, translate.productMold)}
+            {renderFilterOptionsCategory(categories, category, setCategory, translate.headerCategorySelect)}
+            {renderFilterOptions(uniqueSeasons, season, setSeason, translate.productPageSeason)}
+            {renderFilterOptions(uniqueMaterial, material, setMaterial, translate.materialTitle)}
+
+
 
             <div className="flex justify-center gap-[25px]">
               <Button

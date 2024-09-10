@@ -33,10 +33,12 @@ export const postVerifyToken = async (token: string | null) => {
 
 export const postLogIn = async (userData: IInputsLoginPost) => {
   try {
-    const { data } = await $host.post("/api/token/", userData);
+    const { data,status } = await $host.post("/api/token/", userData);
 
-    setCookie("AuthTokenMis", data.access);
-    setCookie("AuthTokenMisRef", data.refresh);
+    if(status === 200){
+      setCookie("AuthTokenMis", data.access);
+      setCookie("AuthTokenMisRef", data.refresh);
+    }
 
     return data;
   } catch (error: any) {

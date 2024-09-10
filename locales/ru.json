@@ -12,6 +12,7 @@
   "headerSearchPlaceholder": "Поиск по каталогу",
   "headerToProfile": "В личный кабинет",
   "headerSearch": "Поиск",
+  "materialTitle":"Материал",
 
   "paymentSuccess": "Спасибо за покупку !",
   "paymentSuccessText": "Оплата успешно была выполена",
@@ -158,6 +159,8 @@
   "orderPageButton": "Подтвердить заказ",
   "orderPageLinkText": "Нажимая на кнопку Подтвердить заказ, вы соглашаетесь с",
   "orderPageLink": "политикой конфиденциальности и пользовательским соглашением",
+
+  "productPriceDescription":"Цена указана за единицу товара",
 
   "paymentPageTitle": "Оплата",
   "paymentPageText": "Узнайте о вариантах оплаты товаров нашей компании",

@@ -24,6 +24,17 @@ export const getAllCities = async () => {
   }
 };
 
+
+export const getColorsAPI = async () => {
+  try {
+    const { data } = await $authHost.get("/api/color/");
+    return data;
+  } catch (error) {
+    console.error("Failed get colors: " + error);
+    throw error;
+  }
+};
+
 export const getSimilarProducts = async (article_number: string,language: string) => {
   try {
     const { data } = await $host.get(`/api/catalog/${article_number}/similar/`,{headers: { "Accept-Language": language }});
@@ -43,11 +54,10 @@ export const getAllProducts = async (category: string, filters: IProductsState["
     }
 
     const filterKeys: (keyof IProductsState["filters"])[] = [
-      "size",
       "brand",
       "color",
-      "lbprice",
-      "hbprice",
+      "price_max",
+      "price_min"
     ];
 
     filterKeys.forEach(key => {
@@ -57,11 +67,22 @@ export const getAllProducts = async (category: string, filters: IProductsState["
       }
     });
 
-    const { data } = await $host.get("/api/catalog/", { params });
+    const { data } = await $host.get("/api/catalog/?status=A", { params });
 
     return data;
   } catch (error) {
     console.error("Error fetching products:" + error);
+    throw error;
+  }
+};
+
+export const getProductsByFilter = async (filters: any) => {
+  try {
+    const { data } = await $host.get('/api/catalog/', { params: filters });
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching products: " + error);
     throw error;
   }
 };

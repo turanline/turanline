@@ -1,13 +1,12 @@
 //Global
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { verifyAndRefreshToken } from "@/services";
 //GLobal Types
 import { IPostCartApi, IPutCart } from "@/types/types";
 //Redux Types
 import { ICartState } from "@/types/reduxTypes";
 //Services
 import { getCart,postToCart,deleteFromCartById,patchCartItem } from "@/services/cartAPI";
-import { getCookie } from "cookies-next";
-import { postVerifyToken } from "@/services/authAPI";
 //State
 const initialState: ICartState = {
   cart: {
@@ -25,12 +24,11 @@ const initialState: ICartState = {
 
 export const fetchCart = createAsyncThunk<ICartState["cart"],undefined,{ rejectValue: string }>("cartSlice/fetchCart", async (_, { rejectWithValue }) => {
   try {
-    const token = getCookie("AuthTokenMis");
+    const user = await verifyAndRefreshToken();
 
-    if (token) {
-      const { user } = await postVerifyToken(token);
-
+    if(user){
       return await getCart(user);
+
     }
   } catch (error) {
     return rejectWithValue(`Failed to load user cart: ${error}`);
@@ -47,7 +45,7 @@ export const addToCart = createAsyncThunk<any,IPostCartApi,{ rejectValue: string
 
 export const changeItemCounter = createAsyncThunk<{ options: IPutCart; id: number },{ options: IPutCart; id: number },{ rejectValue: string }>("cartSlice/changeItemCounter", async (obj, { rejectWithValue }) => {
   try {
-    await patchCartItem(obj.options, obj.id);
+    await patchCartItem(obj?.options, obj?.id);
 
     return obj;
   } catch (error) {

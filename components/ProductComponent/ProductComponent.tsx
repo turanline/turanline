@@ -27,6 +27,7 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import 'react-medium-image-zoom/dist/styles.css';
+import { showToastMessage } from "@/app/toastsChange";
 
 
 
@@ -36,19 +37,39 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
   const [productCounter, setProductCounter] = useState<number>(1);
   const [thumbsSwiper, setThumbsSwiper] = useState<any | null>(null);
   const [colorId, setColorId] = useState<number>(0);
-  const { addItemToCart } = useCart();
+  const { addItemToCart,onFetchCart } = useCart();
   const { renderColorOptions } = useProducts();
   const translate = useTranslate();
   
   const allImages = [...oneProduct?.images?.map((image) => image?.image_file)];
 
 
-  const handleAddToCart = () =>
-    addItemToCart({
-      amount: +productCounter,
-      color: colorId,
-      product: oneProduct.id,
+  const handleAddToCart = () => {
+    try {
+      const requestBody = {
+        amount: +productCounter,
+        color: colorId,
+        product: oneProduct.id,
+      };
+
+    addItemToCart(requestBody)
+    ?.then(response => {
+      if ("error" in response && response?.error?.message === "Rejected") {
+        showToastMessage("error", translate.messageCartAddedError);
+        return;
+      }
+
+      onFetchCart();
+      showToastMessage("success", translate.messageCartAdded);
+    })
+    .catch(error => console.error(error))
+    .finally(() => {
+        setColorId(0);
     });
+    } catch (error) {
+      showToastMessage('warn','Товар не был добавлен в корзину');
+    }
+  }
 
   const changeProductCounter = (action: "inc" | "dec") => {
     if (action === "dec" && productCounter > 1)
@@ -101,6 +122,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
               src={image || NoPicture}
               alt={'carousel-images'}
               width={400}
+              height={400}
               className="swiper-slides-photos"
             />
           </Zoom>
@@ -213,7 +235,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
                   </p>
 
                   <p className="family-medium truncate w-[140px]">
-                    {oneProduct?.brand}
+                    {oneProduct?.provider?.company}
                   </p>
                 </div>
 
@@ -243,7 +265,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
                   </p>
 
                   <p className="family-medium truncate w-[140px]">
-                    {oneProduct?.manufacturerCountry}
+                    {oneProduct?.manufacturerCountry?.name}
                   </p>
                 </div>
                 <div className="block-option_product">
@@ -264,12 +286,32 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
                     {oneProduct?.mold}
                   </p>
                 </div>
+                <div className="block-option_product">
+                  <p className="text-textAcc w-[160px]">
+                    {translate.materialTitle}:
+                  </p>
+
+                  <p className="family-medium truncate w-[140px]">
+                    {oneProduct?.material}
+                  </p>
+                </div>
+                <div className="block-option_product">
+                  <p className="text-textAcc w-[160px]">
+                    {translate.headerCategorySelect}:
+                  </p>
+
+                  <p className="family-medium truncate w-[140px]">
+                    {oneProduct?.category?.name}
+                  </p>
+                </div>
               </div>
 
-              <div className="flex flex-col gap-[10px] max-md:w-[100%] max-md:max-w-[300px] w-[200px] max-md:mx-auto">
+              <div className="flex flex-col gap-[10px] max-md:w-[100%] max-md:max-w-[300px] w-[210px] max-md:mx-auto">
+            
                 <p className="text-[32px] family-medium leading-none">
-                  {(+productCounter * +oneProduct?.price).toFixed(2)} $
+                  {(+oneProduct?.price).toFixed(2)} $
                 </p>
+                <p className="text-price-product">{translate.productPriceDescription}*</p>
 
                 <p className="text-textAcc">{translate.productPageInStock}</p>
                 <div className="flex gap-[10px] flex-wrap">{renderSizes()}</div>
@@ -284,37 +326,39 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
             </div>
 
             <div className="product-page_block-pay">
-              <div className="flex">
-                <button
-                  onClick={() => changeProductCounter("dec")}
-                  className="w-[30px] h-[30px] flex items-center justify-center cursor-pointer border-1 border-tiffani"
-                >
-                  <Icons id="minus" />
-                </button>
+                <div className="flex flex-row items-center gap-[20px] w-full max-w-[330px]">
+                    <div className="flex flex-row">
+                      <button
+                        onClick={() => changeProductCounter("dec")}
+                        className="w-[30px] h-[30px] flex items-center justify-center cursor-pointer border-1 border-tiffani"
+                      >
+                        <Icons id="minus" />
+                      </button>
 
-                <input
-                  className="input-counter"
-                  value={productCounter}
-                  type="tel"
-                  onChange={handleInputChange}
-                  maxLength={2}
-                  minLength={1}
-                />
+                      <input
+                        className="input-counter"
+                        value={productCounter}
+                        type="tel"
+                        onChange={handleInputChange}
+                        maxLength={2}
+                        minLength={1}
+                      />
 
-                <button
-                  onClick={() => changeProductCounter("inc")}
-                  className="w-[30px] h-[30px] flex items-center justify-center cursor-pointer border-1 border-tiffani"
-                >
-                  <Icons id="plusMini" />
-                </button>
-              </div>
+                      <button
+                        onClick={() => changeProductCounter("inc")}
+                        className="w-[30px] h-[30px] flex items-center justify-center cursor-pointer border-1 border-tiffani"
+                      >
+                        <Icons id="plusMini" />
+                      </button>
+                    </div>
 
-              <Button
-                onClick={handleAddToCart}
-                className="bg-tiffani text-white rounded-md w-full lg:w-[200px] h-[44px] py-[10px]"
-              >
-                {translate.productPageButton}
-              </Button>
+                  <Button
+                    onClick={handleAddToCart}
+                    className="bg-tiffani text-white rounded-md w-full h-[44px] py-[10px]"
+                  >
+                    {translate.productPageButton}
+                  </Button>
+                </div>
             </div>
           </div>
         </div>

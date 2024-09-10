@@ -51,7 +51,7 @@ export default function PhoneConfirmation(){
     }
     try {
       const response = await postConfirmCode(phoneNumber,getValues().code)
-         if(response?.status === 201){
+         if(response?.status === 200){
            onGetUser();
            push(PROFILE_ROUTE)
           return;
@@ -80,8 +80,10 @@ export default function PhoneConfirmation(){
 
   useEffect(()=>{
     const phone = getCookie('phoneNumber');
+    const phonePrefix = getCookie('phonePrefix');
 
-    if(phone) setPhoneNumber(phone);
+    if(phone && phonePrefix) setPhoneNumber(phonePrefix + phone);
+
 
   },[phoneNumber])
 

@@ -63,8 +63,7 @@ export interface IProductMainPage {
   brand: string;
   colors_data: Color[];
   sizes_data: Size[];
-  manufacturerCountry: string;
-  category: any[];
+  material: string;
   images: Image[];
   article_number: string;
   amount: number;
@@ -76,8 +75,20 @@ export interface IProductMainPage {
   is_famous: boolean;
   status: string;
   date_and_time: string;
-  provider: number;
   mold: string;
+  provider:{
+    address: string;
+    company: string;
+    country: string;
+  }
+  category: {
+    name:string
+  };
+  manufacturerCountry:{
+    id: number;
+    name:string;
+    slug:string;
+  }
 }
 
 
@@ -85,6 +96,7 @@ export interface IUserOrderItem {
   amount: number;
   color: IProductCart["color"];
   // size: IProductCart["size"];
+  sum: string;
   product: IProductCart["product"];
 }
 

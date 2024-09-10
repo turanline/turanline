@@ -28,18 +28,18 @@ export const getUserData = async (id: number) => {
     return data;
   } catch (error) {
     console.error("Failed get user's data:" + error);
-    throw error;
   }
 };
 
 export const changeUserData = async (id: number, user: IChangeUserData) => {
   try {
-    const { data } = await $authHost.patch(`/api/customer/${id}/`, user);
+    const { data,status } = await $authHost.patch(`/api/customer/${id}/`, user);
 
-    return data;
-  } catch (error) {
+    return { data,status };
+  } catch (error:any) {
     console.error("Failed change user's data:" + error);
-    throw error;
+    if(error) return error;
+
   }
 };
 

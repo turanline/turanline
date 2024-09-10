@@ -20,7 +20,7 @@ import "./UserCartItem.scss";
 const UserCartItem: FC<{product: IProductCart;}> = ({ product }) => {
 
   const translate = useTranslate();
-  const { deleteCardFromBasket, onChangeCardCounter } = useCart();
+  const { deleteCardFromBasket, onChangeCardCounter,onFetchCart } = useCart();
 
   const handleChangeProductCounter = (action: "inc" | "dec") => {
     if (action === "dec" && product?.amount <= 1) return;
@@ -29,9 +29,10 @@ const UserCartItem: FC<{product: IProductCart;}> = ({ product }) => {
       amount: action === "dec" ? product?.amount - 1 : product?.amount + 1,
       color: product?.color?.id,
     };
-
+    onFetchCart();
     onChangeCardCounter(patchObject, product?.id);
   };
+
 
   const imageUrl = product?.product?.images[0]?.image_file ? product?.product?.images[0]?.image_file : noImage;
 
@@ -112,7 +113,7 @@ const UserCartItem: FC<{product: IProductCart;}> = ({ product }) => {
 
                 <div className="product-card__option">
                   <p className="font-medium">
-                    ${product?.amount * +product?.product?.price}
+                    ${product?.sum}
                   </p>
                 </div>
               </div>

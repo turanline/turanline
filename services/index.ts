@@ -1,5 +1,9 @@
 // Global
 import axios from "axios";
+import { postVerifyToken,postTokenRefresh } from "./authAPI";
+//Routes
+import { redirect } from "next/navigation";
+import { LOGIN_ROUTE } from "@/utils/Consts";
 // Cookies
 import { deleteCookie, getCookie } from "cookies-next";
 
@@ -36,4 +40,49 @@ export { $host, $authHost };
 export const clearTokens = () => {
   deleteCookie("AuthTokenMis");
   deleteCookie("AuthTokenMisRef");
+};
+
+
+//checkTokens
+export const verifyAndRefreshToken = async () => {
+  // Get all tokens
+  const token = getCookie("AuthTokenMis");
+  const refreshToken = getCookie("AuthTokenMisRef");
+
+  // Check if the token exists
+  if (!token) {
+    throw new Error("Токен не найден");
+  }
+
+  try {
+    const {user,roles} = await postVerifyToken(token);
+
+    switch (true) {
+      case roles?.provider && roles?.customer:
+          return user;
+      case !roles?.customer && roles?.provider:
+          redirect(LOGIN_ROUTE);
+      case !roles?.provider && roles?.customer:
+          return user;
+      default:
+          break;
+  }
+
+  } catch (error) {
+    if (refreshToken) {
+      try {
+        const newToken = await postTokenRefresh();
+        const { user } = await postVerifyToken(newToken);
+
+
+        return user;
+      } catch (refreshError) {
+        clearTokens();
+        throw new Error("Не удалось обновить токен");
+      }
+    } else {
+      clearTokens();
+      throw new Error("Токен обновления не найден");
+    }
+  }
 };

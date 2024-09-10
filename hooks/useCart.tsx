@@ -36,11 +36,8 @@ const useCart = () => {
     try {
       const response = await dispatch(fetchCart());
 
-      if (response.meta.requestStatus === "rejected") {
-        showToastMessage("error", translate.messageGetCartError);
-      }
     } catch (error) {
-      console.error(error);
+      showToastMessage("error", translate.messageGetCartError);
     }
   }, [dispatch]);
 
@@ -85,7 +82,8 @@ const useCart = () => {
         return;
       }
 
-      return dispatch(addToCart(obj));
+       return dispatch(addToCart(obj));
+
     },
     [cart, dispatch, fetchCart, push]
   );
@@ -110,19 +108,6 @@ const useCart = () => {
 
   const onResetCart = useCallback(() => dispatch(resetCart()), [dispatch]);
 
-  const calculateTotalPrice = (): number => {
-    let totalPrice = 0;
-
-    cart?.order_products?.forEach((item) => {
-      const { product, amount } = item;
-      const itemPrice = +product?.price * amount;
-
-      totalPrice += itemPrice;
-    });
-
-    return totalPrice;
-  };
-
   const returnAllProductsCounter = useCallback((): number => {
     return cart?.order_products.reduce(
       (total, currentItem) => total + currentItem?.amount,
@@ -130,14 +115,7 @@ const useCart = () => {
     );
   }, [cart]);
 
-  // const onPostUserOrder = async (obj: any) => {
-  //   await postUserOrder(obj)
-  //     .then(() => {
-  //       showToastMessage("success", translate.messageCartOrderSend);
-  //       onFetchCart();
-  //     })
-  //     .catch(error => console.error(error));
-  // };
+
 
   const renderUserCart = useCallback(() => {
     if (!cart?.order_products?.length)
@@ -169,7 +147,7 @@ const useCart = () => {
             <p className="text-[24px] leading-none">
               {`${
                 translate.cartTotalPriceText
-              } $${calculateTotalPrice().toFixed(2)}`}
+              } $${cart?.total_sum}`}
             </p>
           </div>
         </div>
@@ -185,8 +163,6 @@ const useCart = () => {
     returnAllProductsCounter,
     onResetCart,
     renderUserCart,
-    calculateTotalPrice,
-    // onPostUserOrder,
   };
 };
 

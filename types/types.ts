@@ -18,10 +18,10 @@ export interface IChangeUserData {
     first_name: string;
     last_name: string;
     email: string;
+    phone_number: string;
   };
   company: string;
   address: string;
-  phone_number: string;
 }
 
 export interface IInputsLength {

@@ -11,6 +11,9 @@
   "headerSearchPlaceholder": "Search in catalog",
   "headerToProfile": "To Profile",
   "headerSearch": "Search",
+  "materialTitle": "Material",
+
+  "productPriceDescription":"The price is per unit",
 
   "paymentSuccess": "Thank you for your purchase!",
   "paymentSuccessText": "Payment was successfully completed",

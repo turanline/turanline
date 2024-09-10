@@ -9,7 +9,7 @@ import { IUserOrderItem } from "@/types/componentTypes";
 import "./UserOrderItem.scss";
 import { useTranslate } from "@/hooks/useTranslate";
 
-const UserOrderItem: FC<IUserOrderItem> = ({ amount, color, product }) => {
+const UserOrderItem: FC<IUserOrderItem> = ({ amount, color, product,sum }) => {
   const translate = useTranslate()
   const productImage = product?.images[0]?.image_file ? product?.images[0]?.image_file : NoImage;
 
@@ -60,7 +60,7 @@ const UserOrderItem: FC<IUserOrderItem> = ({ amount, color, product }) => {
 
                 <div className="product-card__option">
                   <p className="font-medium">
-                    ${(amount * Number(product?.price)).toFixed(2)}
+                    ${sum}
                   </p>
                 </div>
               </div>

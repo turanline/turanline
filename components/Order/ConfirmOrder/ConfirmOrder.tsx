@@ -45,7 +45,7 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
   const translate = useTranslate();
   const { cart } = useTypedSelector(state => state.cart);
   const { userState } = useTypedSelector(state => state.user);
-  const { returnAllProductsCounter, calculateTotalPrice,onFetchCart } = useCart();
+  const { returnAllProductsCounter,onFetchCart } = useCart();
 
   const [allCities,setAllCities] = useState<City[]>([]);
   const [selectedCity, setSelectedCity] = useState<number>(0);
@@ -217,7 +217,7 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
               <p className="text-[24px] text-textGray">{translate.orderPageSum}</p>
 
               <p className="text-[24px] text-tiffani">
-                {(calculateTotalPrice()).toFixed(2)} $
+                {cart?.total_sum} $
               </p>
             </div>
 
@@ -226,7 +226,7 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
                 {returnAllProductsCounter()} {translate.orderPageProductsText}
               </p>
 
-              <p>{calculateTotalPrice().toFixed(2)} $</p>
+              <p>{cart?.total_sum}$</p>
             </div>
 
      

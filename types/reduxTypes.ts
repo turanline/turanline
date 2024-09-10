@@ -37,12 +37,20 @@ export interface IProductsState {
   status: IFavoritesState["status"];
   searchText: string;
   filters: {
-    size: string | null;
     brand: string | null;
-    color: string | null;
-    lbprice: number | null;
-    hbprice: number | null;
+    color: string | number | null;
+     price_max: number | null;
+     price_min: number | null;
+     mold: string | null;
+     season: string | null;
+     category: string | number | null;
+     material: string | null;
+
   };
+  colors:{
+    id:number,
+    name: string
+  }[]
 }
 
 export interface ICartState {
