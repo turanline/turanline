@@ -15,6 +15,7 @@ import {
   fetchCart,
   resetCart,
 } from "@/redux/reducers/cartSlice";
+import { setPaymenPageNumber } from "@/redux/reducers/userSlice";
 // Utils
 import { CATALOG_ROUTE, LOGIN_ROUTE, ORDER_ROUTE } from "@/utils/Consts";
 // Hooks
@@ -115,6 +116,11 @@ const useCart = () => {
     );
   }, [cart]);
 
+  const redirectToOrder = () => {
+    push(ORDER_ROUTE);
+    setPaymenPageNumber(1);
+  }
+
 
 
   const renderUserCart = useCallback(() => {
@@ -139,7 +145,7 @@ const useCart = () => {
 
           <div className="basket_confirm">
             <Button
-              onClick={() => push(ORDER_ROUTE)}
+              onClick={() => redirectToOrder()}
               className="basket_button bg-tiffani text-white rounded-md w-[278px] h-[51px] py-[10px]"
             >
               {translate.cartContinue}
