@@ -18,7 +18,7 @@ class City(TranslatableModel):
         verbose_name = 'Город доставки'
         verbose_name_plural = 'Города доставки'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.safe_translation_getter('name', any_language=True)
 
 
@@ -35,7 +35,7 @@ class Tariff(TranslatableModel):
         verbose_name = 'Тариф доставки'
         verbose_name_plural = 'Тарифы доставки'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.safe_translation_getter('name', any_language=True)
 
 
@@ -72,7 +72,7 @@ class BaseDelivery(models.Model):
         verbose_name = 'Доставка'
         verbose_name_plural = 'Доставки'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f'{self.tariff.safe_translation_getter('name', any_language=True)} -'
             f' {self.city.safe_translation_getter('name', any_language=True)}:'
@@ -100,7 +100,7 @@ class DeliveryVariant(BaseDelivery):
         verbose_name = 'Доставка'
         verbose_name_plural = 'Доставки'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f'{self.tariff.safe_translation_getter('name', any_language=True)} -'
             f' {self.city.safe_translation_getter('name', any_language=True)}'

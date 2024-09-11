@@ -1,6 +1,7 @@
 import logging
-from typing import Any, Type
+from typing import Any, List, Type, Union
 
+from django.db.models.query import QuerySet
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
@@ -15,7 +16,8 @@ from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from customers import models as customer_models
 from customers import serializers as customer_serializers
 
-from . import models, serializers, services
+from . import models as user_models
+from . import serializers, services
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +48,6 @@ class TokenVerifyViewDoc(views.TokenVerifyView):
         try:
             serializer.is_valid(raise_exception=True)
         except TokenError as error:
-            print(error.args[0])
             raise InvalidToken(error.args[0])
         token = AccessToken(request.data['token'])
         user_id = token['user_id']
@@ -54,7 +55,7 @@ class TokenVerifyViewDoc(views.TokenVerifyView):
         return Response(
             data={
                 'user': user_id,
-                'role': roles
+                'roles': roles
             },
             status=status.HTTP_200_OK
         )
@@ -67,11 +68,9 @@ class TokenLogoutViewDoc(views.TokenBlacklistView):
 
 @extend_schema(tags=['users'])
 class UserViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = models.User.objects.all()
+    queryset = user_models.User.objects.all()
     serializer_class = serializers.UserSerializer
 
     def initial(
@@ -82,6 +81,23 @@ class UserViewSet(
     ) -> None:
         super().initial(request, *args, **kwargs)
         self.user_service = services.UserService()
+
+    def get_queryset(
+        self
+    ) -> Union[
+        QuerySet,
+        List[
+            Union[
+                user_models.User,
+                customer_models.Review
+            ]
+        ]
+    ]:
+        if self.action == 'reviews':
+            return customer_models.Review.objects.filter(
+                user=self.request.user
+            )
+        super().get_queryset()
 
     def get_serializer_class(self) -> Type[Serializer]:
         if self.action == 'receive_verification_code':
@@ -162,11 +178,9 @@ class UserViewSet(
         *args: Any,
         **kwargs: Any
     ) -> Response:
-        user_reviews = customer_models.Review.objects.filter(
-            user=request.user
-        )
+        queryset = self.get_queryset()
         serializer = self.get_serializer(
-            instance=user_reviews,
+            instance=queryset,
             many=True
         )
         return Response(
@@ -180,5 +194,5 @@ class NewsViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = models.News.objects.all()
+    queryset = user_models.News.objects.select_related('author')
     serializer_class = serializers.NewsSerializer

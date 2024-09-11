@@ -5,6 +5,7 @@ from rest_framework import serializers
 from mssite import mixins as ms_mixins
 from product_components import models as product_components_models
 from product_components import serializers as product_components_serializers
+from providers import serializers as provider_serializers
 
 from . import fields, mixins, models
 
@@ -60,7 +61,6 @@ class ProductColorSerializer(serializers.ModelSerializer):
 
 
 class ProductBaseSerializer(
-    ms_mixins.BaseLocalizationMixin,
     TranslatableModelSerializer
 ):
 
@@ -74,26 +74,16 @@ class ProductBaseSerializer(
         many=True
     )
 
-    manufacturerCountry = serializers.SlugRelatedField(
-        slug_field='slug',
-        queryset=product_components_models.ManufacturerCountry.objects.all()
-    )
-
     images = serializers.ListSerializer(
         child=fields.Base64ImageField()
     )
 
-    brand = serializers.SerializerMethodField()
+    provider = provider_serializers.ProviderProductSerializer(
+        read_only=True
+    )
 
     class Meta:
         model = models.Product
-        translated_fields = [
-            'mold',
-            'season'
-        ]
-
-    def get_brand(self, obj):
-        return obj.provider.company
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -135,8 +125,7 @@ class ProductCreateSerializer(
             'color',
             'size',
             'article_number',
-            'is_famous',
-            'provider'
+            'is_famous'
         ]
 
 
@@ -171,12 +160,12 @@ class ProductUpdateSerializer(
             'size',
             'article_number',
             'category',
-            'is_famous',
-            'provider'
+            'is_famous'
         ]
 
 
 class ProductSerializer(
+    mixins.ProductMixin,
     ms_mixins.TranslatedSerializerMixin,
     ProductBaseSerializer
 ):
@@ -188,7 +177,6 @@ class ProductSerializer(
     category = product_components_serializers.CategoriesSerializer()
 
     class Meta(ProductBaseSerializer.Meta):
-        model = models.Product
         exclude = [
             'size',
             'color'

@@ -5,11 +5,10 @@ from typing import Any, Dict, Optional
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
 
 import clients
 from mssite import exceptions
-from users import models
+from users import models, tokens
 
 logger = logging.getLogger(__name__)
 
@@ -154,8 +153,8 @@ class UserService:
     def _generate_token(
         self,
         user: models.User
-    ) -> RefreshToken:
-        return RefreshToken.for_user(user)
+    ) -> tokens.CustomRefreshToken:
+        return tokens.CustomRefreshToken.for_user(user)
 
     def _handle_user_parameters_before_send_verif_code(
         self,

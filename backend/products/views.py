@@ -1,24 +1,25 @@
 import logging
-from typing import Any, Type
+from typing import Any, List, Type, Union
 
-from django.core.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
+from django.db.models.query import QuerySet
+from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.translation import get_language_from_request
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
-from rest_framework import filters, mixins, parsers, status, views, viewsets
+from rest_framework import filters, parsers, status, views, viewsets
 from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
-from django.utils.datastructures import MultiValueDictKeyError
 
 from customers import models as customer_models
 from customers import serializers as customer_serializers
 from providers import permissions as provider_permissions
 
 from . import filters as product_filters
-from . import models, serializers, tasks
+from . import models as product_models
+from . import serializers, tasks, enums
 
 logger = logging.getLogger(__name__)
 
@@ -76,25 +77,39 @@ class ImportExportProductDataView(views.APIView):
 
 @extend_schema(tags=['products'])
 class ProductsViewSet(viewsets.ModelViewSet):
-    queryset = models.Product.objects.select_related(
-        'manufacturerCountry'
+    queryset = product_models.Product.objects.select_related(
+        'provider',
+        'manufacturerCountry',
+        'category'
     ).prefetch_related(
-        'category',
         'color',
         'size'
+    ).filter(
+        status=enums.ProductStatus.ACTIVE
     )
     serializer_class = serializers.ProductSerializer
+    permission_classes = [
+        provider_permissions.IsProviderOrReadOnlyPermission
+    ]
     filter_backends = [
         filters.OrderingFilter,
         DjangoFilterBackend
     ]
-    permission_classes = [
-        provider_permissions.IsProviderOrReadOnlyPermission
-    ]
-    filterset_class = product_filters.ProductFilter
+    filterset_class = product_filters.CatalogFilter
     lookup_field = 'article_number'
-    filterset_fields = ['status']
     ordering_fields = ['date_and_time']
+
+    def get_queryset(
+        self
+    ) -> Union[
+        QuerySet,
+        List[product_models.Product]
+    ]:
+        if self.action == 'famous':
+            return self.queryset.filter(
+                is_famous=True
+            )[:3]
+        return super().get_queryset()
 
     def get_serializer_class(self) -> Type[Serializer]:
         if self.action == 'create':
@@ -105,7 +120,10 @@ class ProductsViewSet(viewsets.ModelViewSet):
             return serializers.ProductUpdateSerializer
         return super().get_serializer_class()
 
-    def perform_create(self, serializer):
+    def perform_create(
+        self,
+        serializer: serializers.ProductSerializer
+    ) -> serializers.ProductSerializer:
         return serializer.save(
             provider=self.request.user.provider
         )
@@ -124,30 +142,22 @@ class ProductsViewSet(viewsets.ModelViewSet):
             )
         except ProtectedError:
             return Response(
-                    data={
-                        'detail': 'Product cannot be removed because it is linked to other objects.'
-                    },
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+                data={
+                    'detail': 'Product cannot be removed because it is linked to other objects.'
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
-    @action(
-        methods=['GET'],
-        detail=False,
-        permission_classes=[
-            provider_permissions.IsProviderOrReadOnlyPermission
-        ]
-    )
+    @action(methods=['GET'], detail=False)
     def famous(
         self,
         request: Request,
         *args: Any,
         **kwargs: Any
     ) -> Response:
-        famous_queryset = self.queryset.filter(
-            is_famous=True
-        )[:3]
+        queryset = self.get_queryset()
         serializer = self.get_serializer(
-            instance=famous_queryset,
+            instance=queryset,
             many=True
         )
         return Response(
@@ -155,13 +165,7 @@ class ProductsViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK,
         )
 
-    @action(
-        methods=['GET'],
-        detail=True,
-        permission_classes=[
-            provider_permissions.IsProviderOrReadOnlyPermission
-        ]
-    )
+    @action(methods=['GET'], detail=True)
     def similar(
         self,
         request: Request,
@@ -169,14 +173,13 @@ class ProductsViewSet(viewsets.ModelViewSet):
         **kwargs: Any
     ) -> Response:
         obj = self.get_object()
-        obj_subtypes = obj.subTypes.all()
-        filter_queryset = self.queryset.filter(
-            subTypes__in=obj_subtypes
+        queryset = self.get_queryset().filter(
+            category=obj.category
         ).exclude(
-            name=obj.name
-        ).distinct()
+            id=obj.id
+        )
         serializer = self.get_serializer(
-            instance=filter_queryset,
+            instance=queryset,
             many=True
         )
         return Response(
@@ -184,13 +187,7 @@ class ProductsViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
 
-    @action(
-        methods=['GET'],
-        detail=True,
-        permission_classes=[
-            provider_permissions.IsProviderOrReadOnlyPermission
-        ]
-    )
+    @action(methods=['GET'], detail=True)
     def reviews(
         self,
         request: Request,
@@ -198,11 +195,11 @@ class ProductsViewSet(viewsets.ModelViewSet):
         **kwargs: Any
     ) -> Response:
         obj = self.get_object()
-        obj_reviews = customer_models.Review.objects.filter(
+        queryset = customer_models.Review.objects.filter(
             product=obj
         )
         serializer = self.get_serializer(
-            instance=obj_reviews,
+            instance=queryset,
             many=True
         )
         return Response(

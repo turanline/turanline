@@ -2,8 +2,10 @@ from collections import OrderedDict
 from typing import Any, Dict
 
 from django.db import transaction
+from django.utils.translation import get_language_from_request
 
 from mssite import settings
+from product_components import serializers as product_component_serializers
 
 from . import models, serializers
 
@@ -65,6 +67,7 @@ class ProductMixin:
     def _create_translation_product_relations(
         self,
         instance: models.Product,
+        language_code_from_request: str,
         data: dict
     ) -> None:
         for lan_code in settings.PARLER_LANGUAGES[None]:
@@ -73,25 +76,37 @@ class ProductMixin:
                 language_code=lan_code['code']
             )
             if data.get('name'):
-                translation_instance.name = settings.translator.translate(
-                    data['name'],
-                    dest=lan_code['code']
-                ).text
+                if lan_code['code'] == language_code_from_request:
+                    translation_instance.name = data['name']
+                else:
+                    translation_instance.name = settings.translator.translate(
+                        data['name'],
+                        dest=lan_code['code']
+                    ).text
             if data.get('description'):
-                translation_instance.description = settings.translator.translate(
-                    data['description'],
-                    dest=lan_code['code']
-                ).text
+                if lan_code['code'] == language_code_from_request:
+                    translation_instance.description = data['description']
+                else:
+                    translation_instance.description = settings.translator.translate(
+                        data['description'],
+                        dest=lan_code['code']
+                    ).text
             if data.get('compound'):
-                translation_instance.compound = settings.translator.translate(
-                    data['compound'],
-                    dest=lan_code['code']
-                ).text
+                if lan_code['code'] == language_code_from_request:
+                    translation_instance.compound = data['compound']
+                else:
+                    translation_instance.compound = settings.translator.translate(
+                        data['compound'],
+                        dest=lan_code['code']
+                    ).text
             if data.get('pattern'):
-                translation_instance.pattern = settings.translator.translate(
-                    data['pattern'],
-                    dest=lan_code['code']
-                ).text
+                if lan_code['code'] == language_code_from_request:
+                    translation_instance.pattern = data['pattern']
+                else:
+                    translation_instance.pattern = settings.translator.translate(
+                        data['pattern'],
+                        dest=lan_code['code']
+                    ).text
             translation_instance.save()
 
     def to_representation(
@@ -107,6 +122,10 @@ class ProductMixin:
             instance.colors.all(),
             many=True
         ).data
+        representation['manufacturerCountry'] = product_component_serializers.ManufactorerCountrySerializer(
+            instance.manufacturerCountry,
+            context=self.context
+        ).data
         return representation
 
     @transaction.atomic
@@ -114,6 +133,9 @@ class ProductMixin:
         self,
         validated_data: OrderedDict
     ) -> models.Product:
+        request = self.context.get('request')
+        language_code = get_language_from_request(request)
+
         sizes_data = validated_data.pop('sizes', None)
         images_data = validated_data.pop('images', None)
         colors_data = validated_data.pop('colors', None)
@@ -138,6 +160,7 @@ class ProductMixin:
 
         self._create_translation_product_relations(
             instance=instance,
+            language_code_from_request=language_code,
             data=validated_data
         )
 
@@ -149,6 +172,9 @@ class ProductMixin:
         instance: models.Product,
         validated_data: OrderedDict
     ) -> models.Product:
+        request = self.context.get('request')
+        language_code = get_language_from_request(request)
+
         sizes_data = validated_data.pop('sizes', None)
         images_data = validated_data.pop('images', None)
         colors_data = validated_data.pop('colors', None)
@@ -171,6 +197,7 @@ class ProductMixin:
 
         self._create_translation_product_relations(
             instance=instance,
+            language_code_from_request=language_code,
             data=validated_data
         )
 

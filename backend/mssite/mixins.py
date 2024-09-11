@@ -5,16 +5,6 @@ from django.db.models import Model
 from django.utils.translation import get_language_from_request
 
 
-class BaseLocalizationMixin:
-
-    def to_representation(self, instance: Type[Model]) -> Dict[str, Any]:
-        representation = super().to_representation(instance)
-        for field in self.Meta.translated_fields:
-            if hasattr(instance, f'get_{field}_display'):
-                representation[field] = getattr(instance, f'get_{field}_display')()
-        return representation
-
-
 class TranslatedSerializerMixin:
 
     def to_representation(self, instance: Type[Model]) -> Dict[str, Any]:

@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from . import models
+
 
 class CardPaymentSerializer(
     serializers.Serializer
@@ -26,3 +28,10 @@ class CardPaymentSerializer(
         required=False,
         allow_blank=True
     )
+
+
+class WalletSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Wallet
+        fields = '__all__'

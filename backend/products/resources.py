@@ -46,11 +46,12 @@ class ExportProductsResource(resources.ModelResource):
             'compound',
             'pattern',
             'master__mold',
+            'master__material',
             'master__weight',
             'master__season',
             'master__price',
             'master__manufacturerCountry__slug',
-            'master__provider__user__username'
+            'master__provider__user__phone_number'
         ]
 
 
@@ -92,7 +93,6 @@ class ProductsResource(resources.ModelResource):
         row: OrderedDict,
         **kwargs: Any
     ) -> None:
-        logger.error(type(row))
         row['provider'] = self.provider_id
 
         obj_category = get_object_or_404(

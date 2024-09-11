@@ -33,7 +33,7 @@ class Customer(models.Model):
     )
 
     def __str__(self) -> str:
-        return f'Клиент: {self.user.username}'
+        return f'Клиент: {self.user.phone_number}'
 
     class Meta:
         verbose_name = 'Клиент'

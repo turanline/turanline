@@ -7,3 +7,4 @@ class OrderStatuses(models.TextChoices):
     PROCESSED = 'PR', 'Processed'
     COLLECTED = 'CD', 'Collected'
     FINISHED = 'FD', 'Finished'
+    CLOSED = 'CL', 'Closed'

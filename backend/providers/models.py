@@ -58,10 +58,10 @@ class Provider(models.Model):
         verbose_name='ИНН или его аналог'
     )
 
-    bank_account_number = models.ForeignKey(
+    bank_account_number = models.OneToOneField(
         BankAccountNumber,
-        verbose_name='Номер банковского счета',
-        on_delete=models.CASCADE
+        on_delete=models.PROTECT,
+        verbose_name='Номер банковского счета'
     )
 
     state = models.CharField(
@@ -84,4 +84,4 @@ class Provider(models.Model):
         verbose_name_plural = 'Поставщики'
 
     def __str__(self) -> str:
-        return f'Поставщик {self.user.username}'
+        return f'Поставщик {self.user.phone_number}'

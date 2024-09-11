@@ -1,4 +1,4 @@
-from typing import Any, Type
+from typing import Any, Type, Union
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import filters, mixins, status, viewsets
@@ -16,7 +16,11 @@ class CartViewSet(
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = models.Cart.objects.prefetch_related('order_products')
+    queryset = models.Cart.objects.select_related(
+        'customer'
+    ).prefetch_related(
+        'order_products'
+    )
     filter_backends = [filters.SearchFilter]
     search_fields = ['id']
     serializer_class = serializers.CartSerializer
@@ -55,18 +59,32 @@ class OrderProductsViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = models.OrderProducts.objects.all()
+    queryset = models.OrderProducts.objects.select_related(
+        'customer',
+        'product',
+        'color'
+    )
     serializer_class = serializers.OrderProductsCreateSerializer
     permission_classes = [
         customer_permissions.IsCustomerPermission
     ]
 
-    def get_serializer_class(self) -> Type[Serializer]:
+    def get_serializer_class(
+        self
+    ) -> Type[
+        Union[
+            serializers.OrderProductsCreateSerializer,
+            serializers.OrderProductsUpdateSerializer
+        ]
+    ]:
         if self.action in ('update', 'partial_update'):
             return serializers.OrderProductsUpdateSerializer
         return super().get_serializer_class()
 
-    def perform_create(self, serializer):
+    def perform_create(
+        self,
+        serializer: serializers.OrderProductsCreateSerializer
+    ) -> serializers.OrderProductsCreateSerializer:
         return serializer.save(
             customer=self.request.user.customer
         )
@@ -102,19 +120,32 @@ class OrderViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = models.Order.objects.all()
+    queryset = models.Order.objects.select_related(
+        'customer',
+        'delivery'
+    ).prefetch_related(
+        'order_products'
+    )
     serializer_class = serializers.OrderSerializer
     permission_classes = [
         customer_permissions.IsCustomerPermission,
         permissions.IsOwnerPermission
     ]
 
-    def get_serializer_class(self) -> type[Serializer]:
+    def get_serializer_class(self) -> Type[Serializer]:
         if self.action == 'create':
             return serializers.OrderCreateSerializer
         elif self.action in ('update', 'partial_update'):
             return serializers.OrderUpdateSerializer
         return super().get_serializer_class()
+
+    def perform_create(
+        self,
+        serializer: serializers.OrderCreateSerializer
+    ) -> serializers.OrderCreateSerializer:
+        return serializer.save(
+            customer=self.request.user.customer
+        )
 
     def create(
         self,
@@ -137,9 +168,3 @@ class OrderViewSet(
             status=status.HTTP_201_CREATED,
             headers=headers
         )
-
-    def perform_create(self, serializer):
-        return serializer.save(
-            customer=self.request.user.customer
-        )
-

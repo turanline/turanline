@@ -1,21 +1,20 @@
-from typing import Any
+from typing import Any, Type, Union
 
 from django.conf import settings
 from django.http import HttpResponseRedirect
-from rest_framework import status, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 
 from customers import permissions as customer_permissions
 
 from . import serializers, services
 
 
-class CardPaymentViewSet(
-    viewsets.GenericViewSet
-):
+class CardPaymentViewSet(viewsets.GenericViewSet):
 
     serializer_class = serializers.CardPaymentSerializer
     permission_classes = [
@@ -31,6 +30,18 @@ class CardPaymentViewSet(
         super().initial(request, *args, **kwargs)
         self.payment_service = services.PaymentService()
 
+    def get_serializer_class(
+        self
+    ) -> Type[
+        Union[
+            Serializer,
+            serializers.CardPaymentSerializer
+        ]
+    ]:
+        if not self.action == 'process_payment':
+            return Serializer
+        return super().get_serializer_class()
+
     @action(methods=['POST'], detail=False)
     def process_payment(
         self,
@@ -44,11 +55,7 @@ class CardPaymentViewSet(
         serializer.is_valid(raise_exception=True)
         response = self.payment_service.process_payment(
             user=request.user,
-            data=serializer.validated_data,
-            url_paths={
-                'success_url': self.reverse_action(url_name='payment-success'),
-                'fail_url': self.reverse_action(url_name='payment-fail')
-            }
+            data=serializer.validated_data
         )
         return Response(
             data=response.text,

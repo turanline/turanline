@@ -29,7 +29,7 @@ class ColorSerializer(
         ]
 
 
-class ManufactoryCountrySerializer(
+class ManufactorerCountrySerializer(
     mixins.TranslatedSerializerMixin,
     TranslatableModelSerializer
 ):

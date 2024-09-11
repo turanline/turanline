@@ -36,15 +36,15 @@ class HashService:
         self,
         data: Dict[str, Any]
     ) -> Optional[bool]:
-        hash_params = data['HASHPARAMS']
-        hash_params_val = data['HASHPARAMSVAL']
-        hash_param = data['HASH']
-        client_id = data['clientId']
-        md_status = data['mdStatus']
+        hash_params = data.get('HASHPARAMS')
+        hash_params_val = data.get('HASHPARAMSVAL')
+        hash_param = data.get('HASH')
+        client_id = data.get('clientId')
+        md_status = data.get('mdStatus')
         params_val = self._build_params_value(
-            client_id,
-            hash_params,
-            **data
+            client_id=client_id,
+            hash_params=hash_params,
+            data=data
         )
         hash_val = params_val + self.store_key
         hash_con = self._convert_string_to_hash(hash_val).decode()
@@ -77,5 +77,5 @@ class HashService:
 
     def _get_micro_time(
         self
-    ) -> int:
-        return int(datetime.datetime.now().timestamp())
+    ) -> str:
+        return str(datetime.datetime.now().timestamp())

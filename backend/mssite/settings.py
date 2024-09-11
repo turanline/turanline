@@ -28,7 +28,6 @@ ALLOWED_HOSTS = [
     'www.mis-express.com'
 ]
 
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -184,8 +183,8 @@ SPECTACULAR_SETTINGS = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
@@ -248,6 +247,11 @@ LOGGING = {
             "handlers": ["file"],
             "propagate": True,
         },
+        "payment": {
+            "level": "ERROR",
+            "handlers": ["file"],
+            "propagate": True,
+        },
         "users": {
             "level": "WARNING",
             "handlers": ["file"],
@@ -291,5 +295,7 @@ REDIS_PORT = env("REDIS_PORT")
 CLIENT_ID = env("CLIENT_ID")
 STORE_KEY = env("STORE_KEY")
 PAYMENT_URL = env("PAYMENT_URL")
+BACKEND_PAYMENT_SUCCESS_URL = env("BACKEND_PAYMENT_SUCCESS_URL")
+BACKEND_PAYMENT_FAIL_URL = env("BACKEND_PAYMENT_FAIL_URL")
 FRONTEND_PAYMENT_SUCCESS_URL = env("FRONTEND_PAYMENT_SUCCESS_URL")
 FRONTEND_PAYMENT_FAIL_URL = env("FRONTEND_PAYMENT_FAIL_URL")

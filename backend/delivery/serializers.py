@@ -1,5 +1,4 @@
-from parler_rest.serializers import (TranslatableModelSerializer,
-                                     TranslatedFieldsField)
+from parler_rest import serializers as parler_serializers
 from rest_framework import serializers
 
 from mssite import mixins
@@ -9,10 +8,10 @@ from . import models
 
 class CitySerializer(
     mixins.TranslatedSerializerMixin,
-    TranslatableModelSerializer
+    parler_serializers.TranslatableModelSerializer
 ):
 
-    translations = TranslatedFieldsField(
+    translations = parler_serializers.TranslatedFieldsField(
         shared_model=models.City
     )
 
@@ -23,10 +22,10 @@ class CitySerializer(
 
 class TariffSerializer(
     mixins.TranslatedSerializerMixin,
-    TranslatableModelSerializer
+    parler_serializers.TranslatableModelSerializer
 ):
 
-    translations = TranslatedFieldsField(
+    translations = parler_serializers.TranslatedFieldsField(
         shared_model=models.Tariff
     )
 

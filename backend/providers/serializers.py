@@ -1,6 +1,6 @@
 import logging
 
-from rest_framework import exceptions, serializers
+from rest_framework import serializers
 
 from users import serializers as user_serializers
 
@@ -38,13 +38,9 @@ class ProviderSerializer(
             'state',
             'last_downloaded_file'
         ]
-        translated_fields = [
-            'category'
-        ]
 
 
 class ProviderDownloadFileSerializer(
-    mixins.ProviderMixin,
     BaseProviderSerializer
 ):
 
@@ -52,4 +48,15 @@ class ProviderDownloadFileSerializer(
         model = models.Provider
         fields = [
             'last_downloaded_file'
+        ]
+
+
+class ProviderProductSerializer(
+    BaseProviderSerializer
+):
+    class Meta(BaseProviderSerializer.Meta):
+        fields = [
+            'country',
+            'company',
+            'address'
         ]

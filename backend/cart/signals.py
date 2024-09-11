@@ -1,11 +1,11 @@
-from typing import Any, Type
+from typing import Any
 
 from django.db.models import signals
 from django.dispatch import receiver
 
 from products import enums as product_enums
 
-from . import models
+from . import enums, models
 
 
 @receiver(signals.post_save, sender=models.OrderProducts)
@@ -62,7 +62,7 @@ def update_cart_total_sum_after_m2m_change(
         instance.save(update_fields=['total_sum'])
 
 
-@receiver(signals.post_save, sender=models.Order)
+@receiver(signals.pre_save, sender=models.Order)
 def calculate_order_total_sum_before_payment_success(
     sender: models.Order,
     instance: models.Order,
@@ -109,4 +109,30 @@ def clear_cart_after_payment_success(
     if instance.is_paid:
         cart = models.Cart.objects.get(customer=instance.customer)
         cart.order_products.clear()
+
+
+@receiver(signals.post_save, sender=models.Order)
+def increase_wallet_sum_after_finished_order(
+    sender: models.Order,
+    instance: models.Order,
+    **kwargs: Any
+) -> None:
+    if instance.status == enums.OrderStatuses.FINISHED:
+        for order_product in instance.order_products.all():
+            wallet = order_product.product.provider.wallet
+            wallet.balance += order_product.sum
+            wallet.save(update_fields=['balance'])
+
+
+@receiver(signals.post_save, sender=models.Order)
+def increase_wallet_sum_after_finished_order(
+    sender: models.Order,
+    instance: models.Order,
+    **kwargs: Any
+) -> None:
+    if instance.status == enums.OrderStatuses.CLOSED:
+        for order_product in instance.order_products.all():
+            wallet = order_product.product.provider.wallet
+            wallet.balance -= order_product.sum
+            wallet.save(update_fields=['balance'])
 

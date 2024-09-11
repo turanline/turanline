@@ -4,10 +4,9 @@ from datetime import timedelta
 from django.utils import timezone
 from rest_framework import exceptions, serializers
 from rest_framework_simplejwt import serializers as jwt_serializers
+from rest_framework_simplejwt import tokens
 
-from mssite import mixins as ms_mixins
-
-from . import mixins, models
+from . import models
 
 logger = logging.getLogger(__name__)
 
@@ -17,11 +16,14 @@ class CustomTokenObtainPairSerializer(
 ):
 
     @classmethod
-    def get_token(cls, user):
+    def get_token(
+        cls,
+        user: jwt_serializers.AuthUser
+    ) -> tokens.Token:
         token = super().get_token(user)
         token['roles'] = {}
-        token['roles']['customer'] = hasattr(user, 'customer')
-        token['roles']['provider'] = hasattr(user, 'provider')
+        token['roles']['customer'] = user.is_customer
+        token['roles']['provider'] = user.is_provider
         return token
 
     def validate(self, attrs):
@@ -62,19 +64,14 @@ class BaseUserSerializer(serializers.ModelSerializer):
 
 
 class BaseNewsSerializer(
-    ms_mixins.BaseLocalizationMixin,
     serializers.ModelSerializer
 ):
 
     class Meta:
         model = models.News
-        translated_fields = [
-            'category'
-        ]
 
 
 class UserSerializer(
-    mixins.UserMixin,
     BaseUserSerializer
 ):
 
@@ -113,7 +110,7 @@ class ModerationTimeSerializer(serializers.ModelSerializer):
             'time_left'
         ]
 
-    def get_time_left(self, obj):
+    def get_time_left(self, obj: models.User) -> int:
         now = timezone.now()
         date_joined = obj.date_joined
         elapsed_time = now - date_joined
@@ -127,6 +124,3 @@ class NewsSerializer(BaseNewsSerializer):
 
     class Meta(BaseNewsSerializer.Meta):
         fields = '__all__'
-        translated_fields = [
-            'category'
-        ]

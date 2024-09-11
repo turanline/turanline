@@ -14,7 +14,11 @@ class IsCustomerPermission(permissions.BasePermission):
         request: Request,
         view: Type[GenericViewSet],
     ) -> bool:
-        return request.user.is_authenticated and hasattr(request.user, 'customer')
+        return (
+            request.user.is_authenticated
+            and request.user.is_verified
+            and request.user.is_customer
+        )
 
 
 class CreateOrIsCustomerPermission(IsCustomerPermission):

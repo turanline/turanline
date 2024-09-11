@@ -1,6 +1,6 @@
 from collections import OrderedDict
+from typing import Dict
 
-from django.contrib.auth.hashers import check_password
 from django.db import transaction
 from rest_framework import exceptions
 
@@ -13,39 +13,15 @@ class ProviderMixin:
 
     def _get_or_create_user(
         self,
-        data: dict
+        data: Dict[str, str]
     ) -> user_models.User:
-        phone_number = data.get('phone_number')
-        password = data.get('password')
 
-        user = user_models.User.objects.filter(
-            phone_number=phone_number
-        ).first()
-
-        if user:
-            if not check_password(password, user.password):
-                raise exceptions.ValidationError(
-                    {'detail': 'Provided password is incorrect.'}
-                )
-            user.is_provider = True
-        else:
-            if models.Provider.objects.filter(
-                    user__phone_number=phone_number
-            ).exists():
-                raise exceptions.ValidationError(
-                    {'detail': 'A provider with this user already exists.'}
-                )
-            user = user_models.User.objects.create_user(
-                **data
-            )
-            user.is_provider = True
-
-        user.save()
+        user, created = user_models.User.objects.get_or_create_user(**data)
         return user
 
     def _create_bank_account(
         self,
-        data: dict
+        data: Dict[str, str]
     ) -> models.BankAccountNumber:
         return models.BankAccountNumber.objects.create(
             **data
@@ -54,14 +30,15 @@ class ProviderMixin:
     def _update_user(
         self,
         user: user_models.User,
-        data: dict
+        data: Dict[str, str]
     ) -> None:
         for attr, value in data.items():
             if attr == 'password':
                 user.set_password(value)
             elif attr == 'phone_number':
-                user.phone_number = value
-                user.is_verified = False
+                if not user.phone_number == value:
+                    user.phone_number = value
+                    user.is_verified = False
             else:
                 setattr(user, attr, value)
         user.save()
@@ -69,7 +46,7 @@ class ProviderMixin:
     def _update_bank_account(
         self,
         bank_account: models.BankAccountNumber,
-        data: dict
+        data: Dict[str, str]
     ) -> None:
         for attr, value in data.items():
             setattr(bank_account, attr, value)
@@ -81,6 +58,10 @@ class ProviderMixin:
         validated_data: OrderedDict
     ) -> models.Provider:
         user_data = validated_data.pop('user')
+        if not user_data:
+            raise exceptions.ValidationError(
+                {'User data is required.'}
+            )
         bank_account_data = validated_data.pop('bank_account_number')
 
         user = self._get_or_create_user(
@@ -90,6 +71,14 @@ class ProviderMixin:
             data=bank_account_data
         )
 
+        if models.Provider.objects.filter(user=user).exists():
+            raise exceptions.ValidationError(
+                {'detail': 'A provider with this user already exists.'}
+            )
+        user.is_provider = True
+        user.save(
+            update_fields=['is_provider']
+        )
         return models.Provider.objects.create(
             user=user,
             bank_account_number=bank_account_number,

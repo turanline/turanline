@@ -68,8 +68,7 @@ class PaymentService:
     def process_payment(
         self,
         user: user_models.User,
-        data: OrderedDict[str, str],
-        url_paths: Dict[str, str]
+        data: OrderedDict[str, str]
     ) -> requests.Response:
         micro_time = self.hash_service._get_micro_time()
         order = cart_models.Order.objects.filter(
@@ -82,8 +81,8 @@ class PaymentService:
             'clientId': settings.CLIENT_ID,
             'oid': order.order_id,
             'amount': order.total_sum,
-            'okUrl': url_paths['success_url'],
-            'failUrl': url_paths['fail_url'],
+            'okUrl': settings.BACKEND_PAYMENT_SUCCESS_URL,
+            'failUrl': settings.BACKEND_PAYMENT_FAIL_URL,
             'islemtipi': 'Auth',
             'instalment': '',
             'rnd': micro_time,
@@ -108,6 +107,7 @@ class PaymentService:
     ) -> Optional[HttpResponseRedirect]:
         try:
             payment_data = {key: value[0] for key, value in data.lists()}
+            logger.error(payment_data)
             validated = self.hash_service._verify_hash(
                 data=payment_data
             )
@@ -135,6 +135,7 @@ class PaymentService:
     ) -> Optional[HttpResponseRedirect]:
         try:
             payment_data = {key: value[0] for key, value in data.lists()}
+            logger.error(payment_data)
             order = self._get_order_by_oid(
                 oid=data['oid']
             )

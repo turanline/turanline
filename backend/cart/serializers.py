@@ -1,3 +1,5 @@
+from typing import Optional
+
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
@@ -51,7 +53,7 @@ class OrderProductsCreateSerializer(OrderProductsBaseSerializer):
             'sum'
         ]
 
-    def validate_amount(self, value):
+    def validate_amount(self, value: int) -> Optional[int]:
         product = product_models.Product.objects.get(
             id=self.initial_data.get('product')
         )
@@ -181,7 +183,7 @@ class OrderCustomerHistorySerializer(OrderBaseSerializer):
         fields = '__all__'
 
 
-class OrderProviderHistorySerializer(OrderBaseSerializer):
+class OrderProviderHistorySerializer(serializers.ModelSerializer):
 
     order_products = OrderProductsSerializer(
         many=True,
@@ -190,9 +192,25 @@ class OrderProviderHistorySerializer(OrderBaseSerializer):
 
     customer = customer_serializers.CustomerReadSerializer()
 
-    class Meta(OrderBaseSerializer.Meta):
-        fields = '__all__'
+    sum_for_period = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Order
+        exclude = [
+            'delivery',
+            'payment',
+            'total_sum',
+            'is_paid'
+        ]
         read_only_fields = [
             'customer',
             'order_products'
         ]
+
+    def get_sum_for_period(self, obj: models.Order) -> str:
+        return str(
+            sum(
+                order_product.sum for order_product
+                in obj.order_products.all()
+            )
+        )

@@ -61,4 +61,7 @@ def export_products_task(
         dataset.export('xlsx'),
         name=f'{provider.company}_products.xlsx'
     )
-    provider.last_downloaded_file.save(content_file)
+    provider.last_downloaded_file.save(
+        f'{provider.company}_products.xlsx',
+        content_file
+    )

@@ -22,7 +22,7 @@ class ManufacturerCountryViewSet(
     viewsets.GenericViewSet
 ):
     queryset = models.ManufacturerCountry.objects.all()
-    serializer_class = serializers.ManufactoryCountrySerializer
+    serializer_class = serializers.ManufactorerCountrySerializer
 
 
 @extend_schema(tags=['color'])

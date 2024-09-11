@@ -8,6 +8,8 @@ class User(AbstractUser):
 
     objects = managers.UserManager()
 
+    username = None
+
     phone_number = models.CharField(
         max_length=16,
         unique=True,
@@ -36,16 +38,12 @@ class User(AbstractUser):
         'password'
     ]
 
-    def save(self, *args, **kwargs):
-        self.username = self.email.split('@')[0]
-        return super().save(*args, **kwargs)
-
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
     def __str__(self) -> str:
-        return f'{self.username} ({self.phone_number[-4:]})'
+        return f'Пользователь {self.phone_number}'
 
 
 class News(models.Model):

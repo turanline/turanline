@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.core.validators import RegexValidator
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
@@ -11,7 +13,11 @@ class BaseModel(TranslatableModel):
     class Meta:
         abstract = True
 
-    def save(self, *args, **kwargs):
+    def save(
+        self,
+        *args: Any,
+        **kwargs: Any
+    ):
         if self.slug:
             return super().save(*args, **kwargs)
         self.slug = f'{self.safe_translation_getter('name', any_language=True).lower()}'
@@ -52,7 +58,7 @@ class Category(
         verbose_name = 'Категория продукта'
         verbose_name_plural = 'Категории продуктов'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.safe_translation_getter('name', any_language=True)}'
 
 
@@ -82,7 +88,7 @@ class Color(BaseModel):
         verbose_name = 'Цвет продукта'
         verbose_name_plural = 'Цвета продуктов'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.safe_translation_getter('name', any_language=True)} ({self.color})'
 
 
@@ -100,7 +106,7 @@ class ManufacturerCountry(BaseModel):
         verbose_name = 'Страна производителя продукта'
         verbose_name_plural = 'Страны производителей продуктов'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.safe_translation_getter('name', any_language=True)}'
 
 
@@ -116,7 +122,7 @@ class Size(models.Model):
         verbose_name = 'Размер продукта'
         verbose_name_plural = 'Размеры продуктов'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -141,7 +147,7 @@ class CategoryTranslation(TranslatedFieldsModel):
             'master'
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.name} ({self.language_code})'
 
 
@@ -166,7 +172,7 @@ class ColorTranslation(TranslatedFieldsModel):
             'master'
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.name} ({self.language_code})'
 
 
@@ -191,5 +197,5 @@ class ManufacturerCountryTranslation(TranslatedFieldsModel):
             'master'
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.name} ({self.language_code})'

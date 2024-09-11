@@ -60,6 +60,13 @@ class Product(TranslatableModel):
         verbose_name='Лекало'
     )
 
+    material = models.CharField(
+        choices=enums.MaterialChoices,
+        null=True,
+        blank=True,
+        verbose_name='Материал'
+    )
+
     color = models.ManyToManyField(
         product_component_models.Color,
         through='ProductColor',
@@ -111,7 +118,7 @@ class Product(TranslatableModel):
     def __str__(self) -> str:
         return (
             f'{self.safe_translation_getter('name', any_language=True)}'
-            f' (Артикул: {self.article_number}, Поставщик: {self.provider.user.username})'
+            f' (Артикул: {self.article_number}, Поставщик: {self.provider.user.phone_number})'
         )
 
 
@@ -145,7 +152,6 @@ class ProductStatusChangeArchive(models.Model):
     )
 
     class Meta:
-        ordering = ['id']
         verbose_name = 'Архив изменений статуса товара'
         verbose_name_plural = 'Архив изменений статуса товаров'
 
