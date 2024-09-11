@@ -69,14 +69,10 @@ class ProviderViewSet(
     ]:
         if self.action == 'get_orders':
             return cart_models.Order.objects.filter(
-                order_products__product__provider=self.request.user.provider,
-                status__in=(
-                    cart_enums.OrderStatuses.FINISHED,
-                    cart_enums.OrderStatuses.PROCESSED,
-                    cart_enums.OrderStatuses.COLLECTED,
-                    cart_enums.OrderStatuses.CARGO_TRANSFERRED
-                ),
-                is_paid=True
+                order_products__product__provider=self.request.user.provider
+            ).exclude(
+                status=cart_enums.OrderStatuses.CREATED,
+                is_paid=False
             ).distinct().prefetch_related(
                 models.Prefetch(
                     'order_products',
