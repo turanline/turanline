@@ -1,0 +1,91 @@
+@use '../../styles/index.scss' as index;
+
+.header {
+    padding: 15px 0;
+    background-color: index.$base-color;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 76px;
+    z-index: 2;
+
+    @include index.tablet {
+        display: none;
+    }
+
+    .container_inner {
+        max-width: 1140px;
+        padding: 0 15px;
+        margin: 0 auto;
+        height: 100%;
+
+        .header_container {
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+
+            .menu_container {
+                display: flex;
+                align-items: center;
+            }
+
+            .search_container {
+                display: flex;
+                flex: 1;
+                align-items: center;
+                box-sizing: border-box;
+                justify-content: flex-end;
+            }
+        }
+
+        .logo {
+            width: 3.13rem;
+            height: 2.69rem;
+            margin-right: 15px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        .menu_item {
+            display: flex;
+            padding: 12px;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+
+            @media screen and (max-width: 480px) {
+                display: none;
+            }
+
+            &:hover {
+                cursor: pointer;
+
+                .title {
+                    color: index.$focus_color;
+                }
+
+                .item_icon * {
+                    fill: index.$focus_color;
+                }
+            }
+        }
+
+        .item_icon {
+            width: 22px;
+            height: 22px;
+
+        }
+
+        .title {
+            @include index.menu_text();
+            text-align: left;
+            text-decoration: none;
+        }
+    }
+
+
+}

@@ -1,0 +1,151 @@
+{
+  "Index": {
+    "title": "Teleshtorm – pesquisa de canais do Telegram. Catálogo de canais do Telegram.",
+    "description": "Teleshtorm – pesquisa prática de canais do Telegram e um catálogo estruturado com mais de 150000 canais do Telegram.",
+    "keywords": "catálogo, telegram, canal, tg",
+    "og:title": "Teleshtorm – pesquisa de canais do Telegram. Catálogo de canais do Telegram.",
+    "og:description": "Teleshtorm – pesquisa prática de canais do Telegram e um catálogo estruturado com mais de 150000 canais do Telegram."
+  },
+  "IndexChannel": {
+    "title": "Canal do Telegram {name}. Pesquisa de canais do Telegram. Catálogo de canais do Telegram.",
+    "description": "Canal do Telegram",
+    "keywords": "catálogo, telegram, canal, tg"
+  },
+  "IndexBot": {
+    "title": "Bot do Telegram {name}. Pesquisa de bots do Telegram. Catálogo de bots do Telegram.",
+    "description": "Bot do Telegram",
+    "keywords": "catálogo, telegram, bot, tg"
+  },
+  "IndexBots": {
+    "title": "Teleshtorm – pesquisa de bots do Telegram. Catálogo de bots do Telegram.",
+    "description": "Teleshtorm – pesquisa prática de bots do Telegram e um catálogo estruturado com muitos bots do Telegram.",
+    "keywords": "catálogo, telegram, bot, tg"
+  },
+  "IndexChat": {
+    "title": "Chat do Telegram {name}. Pesquisa de chats do Telegram. Catálogo de chats do Telegram.",
+    "description": "Chat do Telegram",
+    "keywords": "catálogo, telegram, chat, tg"
+  },
+  "IndexChats": {
+    "title": "Teleshtorm – pesquisa de chats do Telegram. Catálogo de chats do Telegram.",
+    "description": "Teleshtorm – pesquisa prática de chats do Telegram e um catálogo estruturado com mais de 150000 canais do Telegram.",
+    "keywords": "catálogo, telegram, chat, tg"
+  },
+  "IndexArticles": {
+    "title": "Teleshtorm – pesquisa de artigos do Telegram. Catálogo de artigos do Telegram.",
+    "description": "Artigos do Telegram",
+    "keywords": "catálogo, telegram, artigos, tg"
+  },
+  "IndexArticle": {
+    "title": "Chat do Telegram {name}. Pesquisa de chats do Telegram. Catálogo de chats do Telegram.",
+    "description": "Chat do Telegram",
+    "keywords": "catálogo, telegram, artigo, tg"
+  },
+  "IndexCategory": {
+    "title": "Canais do Telegram na categoria {name}. Pesquisa de canais do Telegram. Catálogo de canais do Telegram.",
+    "description": "Lista completa de canais do Telegram na categoria {name}, sempre atualizada.",
+    "keywords": "pesquisa, catálogo, telegram, categoria"
+  },
+  "AddChannel": {
+    "title": "Adicionar um canal ao Teleshtorm",
+    "description": "Adicionar Canal Telegram ao catálogo teleshtorm",
+    "keywords": "canais, tg, adicionar Canal, telegram, adicionar a teleshtorm"
+  },
+  "Search": {
+    "title": "Resultados da pesquisa para {name}",
+    "description": "Resultados da pesquisa para {name}. Teleshtorm – pesquisa prática de canais do Telegram.",
+    "keywords": "pesquisa, catálogo, telegram, canal"
+  },
+  "SearchPage": {
+    "Каталог телеграм каналов в категории": "Catálogo de canais do Telegram na categoria",
+    "Телеграм каналы": "Canais do Telegram"
+  },
+  "Article": {
+    "Рекомендуем статьи": "Artigos recomendados",
+    "Содержание": "Conteúdo",
+    "Поделиться": "Compartilhar com"
+  },
+  "Header": {
+    "Каталог": "Catálogo",
+    "Поиск": "Pesquisa...",
+    "Чаты": "Chats",
+    "Статьи": "Artigos",
+    "Боты": "Bots",
+    "Язык сайта": "Português",
+    "Показать больше": "Mostrar mais"
+  },
+  "Main": {
+    "Телеграм каналы": "Canais do Telegram",
+    "Каталог телеграм каналов": "Catálogo de canais do Telegram",
+    "Все категории": "Todas as categorias",
+    "Новые каналы": "Novos canais",
+    "Рекомендуем почитать": "Recomendamos ler",
+    "Читать дальше": "Leia mais",
+    "Добавить канал": "Adicionar canal"
+  },
+  "Chats": {
+    "Каталог телеграм чатов": "Catálogo de chats do Telegram",
+    "Телеграм чаты": "Chats do Telegram"
+  },
+  "Bots": {
+    "Каталог телеграм ботов": "Catálogo de bots do Telegram",
+    "Телеграм боты": "Bots do Telegram"
+  },
+  "Card": {
+    "Открыть канал": "Abrir canal",
+    "Похожие каналы": "Canais semelhantes",
+    "подписчиков": "inscritos",
+    "18+": "Conteúdo oculto devido a conteúdo ilegal",
+    "Поделиться": "Compartilhar"
+  },
+  "Breadcrumb": {
+    "Каталог": "Catálogo",
+    "Каналы": "Canais",
+    "Чаты": "Chats",
+    "Боты": "Bots",
+    "Статьи": "Artigos"
+  },
+  "Modal": {
+    "Опишите причину жалобы": "Descreva o motivo da reclamação",
+    "Ссылка на телеграм канал/чат/бот не работает": "O link para o canal/chat/bot do Telegram não funciona",
+    "Пропаганда наркотиков": "Propaganda de drogas",
+    "Ложная информация": "Informação falsa",
+    "Жестокое обращение с детьми": "Abuso infantil",
+    "Другое": "Outro",
+    "Отправить": "Enviar"
+  },
+  "ShareModal": {
+    "Поделиться": "Compartilhar",
+    "Скопировать": "Copiar",
+    "Ссылка скопирована": "Link copiado",
+    "Ссылка на канал": "Link canal"
+  },
+  "AddForm": {
+    "Заголовок формы": "Adicionar canal",
+    "Подзаголовок формы": "Seu canal será adicionado ao banco de dados na próxima atualização",
+    "Канал": "canal",
+    "Чат/Бот": "chat/bot",
+    "Ссылка на канал": "Link para o canal",
+    "Поле ввода": "@username, t.me/teleshtorm",
+    "Добавить": "Adicionar",
+    "Категория канала": "Categoria do canal",
+    "Заголовок 1 вопроса": "Quais canais são aceitos no catálogo?",
+    "Подзаголовок 1 вопроса": "O catálogo aceita canais e grupos que não violam as regras do Telegram e com mais de 100 inscritos.",
+    "Заголовок 2 вопроса": "Como saber se meu canal já foi adicionado?",
+    "Подзаголовок 2 вопроса": "Para isso, use a pesquisa no site e insira na barra de pesquisa o link para o seu canal que você indicou ao adicionar o canal ao catálogo."
+  },
+  "BurgerMenu": {
+    "Каталог": "Catálogo",
+    "Чаты": "Chats",
+    "Боты": "Bots",
+    "Статьи": "Artigos",
+    "Поддержка": "Suporte",
+    "Наш канал": "Nosso Canal"
+  },
+  "Footer": {
+    "Права": "2024 teleshtorm.com — pesquisa no Telegram, o site não armazena dados pessoais",
+    "Ссылка телеграм": "Nosso canal no Telegram",
+    "Правообладатели": "Para detentores de direitos",
+    "Техподдержка": "Contatar o suporte técnico"
+  }
+}

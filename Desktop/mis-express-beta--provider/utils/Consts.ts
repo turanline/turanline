@@ -1,0 +1,55 @@
+//routes
+export const SHOP_ROUTE = "/",
+  SHOP_TELEGRAM = "https://t.me/misexpress",
+  SHOP_WHATSAPP = "https://wa.me/+905010008882",
+  SHOP_INSTAGRAM = "https://www.instagram.com/misexpress",
+  LOGIN_ROUTE = "/login",
+  REGISTRATION_ROUTE = "/registration",
+  PAYMENT_ROUTE = "/payment",
+  POLITIC_ROUTE = "/politics",
+  PROFILE_ROUTE = "/profile",
+  PROVIDER_ROUTE = "/",
+  PROVIDER_BLOCKED_ROUTE = "/blocked/",
+  FIRST_STAGE_ROUTE = "/registration",
+  OFFER_PAGE_ROUTE = "/offer-page",
+  THIRD_STAGE_ROUTE = "/third-stage",
+  PROVIDER_PRODUCTS_ROUTE = "/products",
+  PROVIDER_PRODUCT_ROUTE = "/product",
+  PROVIDER_ORDERS_ROUTE = "/orders",
+  SUPER_ADMIN_APPLICATIONS = "/superadmin/applications",
+  ADMIN_PROVIDER_ROUTE = "/superadmin/provider",
+  CLIENT_ROUTE ="https://mis-express.com/",
+  IMPORT_INSTRUCTION ="https://docs.google.com/spreadsheets/d/1LrSJ3yBKldxbKB4B78YdaN0LHvp_XxSy0CzO8f47VQA/edit?usp=sharing";
+
+//SHOP_INFO
+export const SHOP_NAME = "Mis Express";
+export const SHOP_PHONE = "+905525977888";
+export const SHOP_EMAIL = "mis.express@mail.ru";
+export const SHOP_EMAIL_SUPPORT = "admin@mis-express.com";
+export const SHOP_ADDRESS = "Oba Mahallesi 225 Dk. Summer Park Sitesi C Block Kat: 3 No: 13 ALANYA";
+export const SHOP_ADDRESS_2 = "Antalya/Alanya: 07400. İlçe Alanya, Oba Mahallesi, 225";
+
+//regulars
+export const phone_login_Regular = /^\+[0-9]+$/;
+export const phoneRegular = /(?:)/;
+
+
+
+export const compoundRegular = /^[a-zA-Z0-9\s,.-]+$/;
+export const seasonRegular = /^[a-zA-Z0-9\s,.-]+$/;
+export const articleRegular = /^[a-zA-Z0-9\s,.-]+$/;
+export const brandRegular = /^[a-zA-Z0-9\s,.-]+$/;
+export const patternRegular = /^[a-zA-Z0-9\s,.-]+$/;
+export const countryRegular = /^[a-zA-Z0-9\s,.-]+$/;
+export const priceRegular = /^\d+$/;
+export const codeRegular = /^\d+$/;
+
+
+
+export const passwordRegular = /^[a-zA-Z0-9]+$/;
+export const nameRegular = /^[A-Z][a-zA-Z]*$/;
+export const surnameRegular = /^[A-Z][a-zA-Z]*$/;
+export const usernameRegular = /^[a-zA-Z0-9_]{3,20}$/;
+export const addressRegular = /^[a-zA-Z0-9\s,.-]+$/;
+export const companyNameRegular = /^[a-zA-Z0-9\s\-_.,!@#$%^&*()+=]+$/;
+export const emailRegular = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;

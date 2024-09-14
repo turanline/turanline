@@ -1,0 +1,41 @@
+@use "@/global/scss/vars";
+@use "@/global/scss/templates/transparent-hover";
+
+.tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	max-width: 480px;
+	margin-top: 16px;
+
+	@media (max-width: vars.$tablet) {
+		max-width: 100%;
+	}
+}
+
+.label {
+	padding: 6px 8px;
+	border: rgba(#fff, 20%) 1px solid;
+	border-radius: 8px;
+	text-transform: uppercase;
+	line-height: 120%;
+	display: inline-block;
+
+	user-select: none;
+
+	&,
+	label {
+		cursor: pointer;
+	}
+
+	@extend %transparent-hover;
+
+	.input:checked+& {
+		background-color: #fff;
+		color: #000;
+	}
+}
+
+.input {
+	display: none;
+}

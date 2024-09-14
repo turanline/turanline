@@ -1,0 +1,141 @@
+.section {
+    max-width: 1140px;
+    padding: 0 15px;
+    margin: auto;
+    margin-top: 35px;
+    margin-bottom: 25px;
+    position: relative;
+
+    &:hover .arrow_next_active {
+        visibility: visible;
+        opacity: 1;
+        transition: all .3s ease-in-out;
+    }
+
+    &:hover .arrow_prev_active {
+        visibility: visible;
+        opacity: 1;
+        transition: all .3s ease-in-out;
+    }
+
+    .arrow_prev {
+        visibility: visible;
+        opacity: 0;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) rotate(180deg);
+        left: 0px;
+        width: 35px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all .3s ease-in-out;
+        z-index: 4;
+        background: linear-gradient(90.00deg, rgba(255, 255, 255, 0), rgb(255, 255, 255) 100%);;
+
+        @media screen and (max-width: 480px) {
+            left: 0px;
+        }
+
+
+        &:hover {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 1) 100%);
+            transition: all .3s ease-in-out;
+            cursor: pointer;
+        }
+    }
+
+    .arrow_next {
+        visibility: visible;
+        opacity: 0;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 0px;
+        width: 35px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        z-index: 5;
+        transition: all .3s ease-in-out;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 1) 100%);
+
+
+        @media screen and (max-width: 480px) {
+            right: 0px;
+        }
+
+
+        &:hover {
+            transition: all .3s ease-in-out;
+            cursor: pointer;
+        }
+    }
+
+    .swiper {
+        border-radius: 25px;
+
+        @media screen and (max-width: 480px) {
+            width:100%;
+        }
+
+        .swiper-wrapper {
+            gap: 20px;
+        }
+
+        &:hover {
+            transition: background-color .3s ease-in-out;
+        }
+
+        .slide {
+            flex-shrink: 0;
+            max-width: 131px;
+            border: 1px solid rgb(217, 217, 217);
+            border-radius: 25px;
+            text-align: center;
+            padding: 8.5px 0 8.5px 0;
+            transition: background-color .3s ease-in-out;
+
+            &:hover{
+                background-color: rgb(230, 233, 240);
+                cursor: pointer;
+            }
+
+            @media screen and (max-width: 480px) {
+                margin-right: 10px;
+            }
+
+            &.active {
+                background-color: rgb(22, 27, 34);
+                transition: background-color .3s ease-in-out;
+
+                @media screen and (max-width: 480px) {
+                    max-width: 131px;
+                    margin-right: 10px;
+                }
+
+                .link {
+                    color: #fff;
+                }
+            }
+
+            .link {
+                cursor: pointer;
+                background-color: transparent;
+                border: none;
+                color: rgb(120, 129, 137);
+                text-decoration: none;
+                font-family: 'Roboto-SemiBold';
+                font-size: 16px;
+                font-weight: 600;
+                line-height: 19px;
+                letter-spacing: 0%;
+                text-align: center;
+            }
+        }
+    }
+}

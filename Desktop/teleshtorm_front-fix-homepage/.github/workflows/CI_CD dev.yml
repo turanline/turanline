@@ -1,0 +1,30 @@
+name: CI\CD DEV
+on:
+  push:
+    branches: [ "dev" ]
+
+  workflow_dispatch:
+  
+jobs:
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using ssh key
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: root
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        script_stop: true
+        script: |
+                cd /home/teleshtorm_reps/teleshtorm_front
+                git pull https://${{ secrets.GH_TOKEN }}@github.com/Delitel-WEB/teleshtorm_front.git dev
+                git checkout dev
+                docker build --build-arg BASE_URL=${{secrets.API_URL_DEV}} -t teleshtorm_front:dev .
+                cd /home/Teleshtorm
+                docker-compose stop teleshtorm_front_dev
+                docker-compose rm -f teleshtorm_front_dev
+                docker-compose up -d teleshtorm_front_dev

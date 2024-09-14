@@ -1,0 +1,26 @@
+@use "@/global/scss/templates/transparent-hover";
+
+.list {
+	display: flex;
+	align-items: center;
+	// justify-content: flex-start;
+	gap: 4px;
+
+	.item {
+		@extend %transparent-hover;
+
+		flex-basis: 40px;
+		flex-shrink: 0;
+		flex-grow: 0;
+		height: 40px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+	}
+}

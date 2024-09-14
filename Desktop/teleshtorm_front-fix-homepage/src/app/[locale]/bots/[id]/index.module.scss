@@ -1,0 +1,45 @@
+.section {
+    flex: 1;
+    padding-top: 94px;
+    padding-bottom: 25px;
+
+    @media screen and (max-width: 480px) {
+        padding-inline: 12px;
+    }
+
+    .card_section {
+        margin: 0 auto;
+        margin-top: 12px;
+        max-width: 1110px;
+        height: 100%;
+    }
+
+    .advertisement_section {
+        display: flex;
+        justify-content: space-between;
+        gap: 6px;
+        margin: 0 auto;
+        margin-top: 12px;
+        max-width: 1110px;
+
+
+        @media screen and (max-width: 480px) {
+            flex-direction: column;
+        }
+    }
+
+    .simular_section {
+        max-width: 1110px;
+        margin: 0 auto;
+        height: 100%;
+
+        .title {
+            color: #677179;
+            font-size: 20px;
+            font-family: 'Roboto-Bold';
+            font-weight: 700;
+            margin-bottom: 12px;
+            position: relative;
+        }
+    }
+}

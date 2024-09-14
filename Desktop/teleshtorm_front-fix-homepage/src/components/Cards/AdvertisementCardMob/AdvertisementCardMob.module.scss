@@ -1,0 +1,100 @@
+.ad {
+  position: relative;
+  display: none;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px 15px;
+  border: 1px solid rgb(222, 226, 228);
+  border-radius: 10px;
+  background: rgb(255, 255, 255);
+
+  @media screen and (max-width: 576px) {
+      display: flex;
+      justify-content: space-between;
+      max-height: 140px;
+      padding: 15px;
+  }
+
+  .image {
+      border-radius: 89px;
+      padding: 3px;
+      border: 1px solid #DEE2E4;
+      transition: all .3s;
+      object-fit: cover;
+
+      @media screen and (max-width: 576px) {
+          order: 2;
+          margin-bottom: 7px;
+      }
+  }
+
+  .title {
+      color: rgb(103, 113, 121);
+      font-size: 16px;
+      font-family: 'Roboto-Bold';
+      line-height: 24px;
+      transition: all .3s;
+      white-space: nowrap;
+      max-width: 212px;
+      overflow: hidden;
+
+      @media screen and (max-width: 576px) {
+          margin: 0;
+          margin-bottom: 8px;
+          font-size: 14px;
+      }
+  }
+
+  .descr {
+      max-width: 190px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+
+      @media screen and (max-width: 576px) {
+          margin-bottom: 10px;
+      }
+
+      &_item {
+          max-width: 100%;
+          margin: 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          color: rgb(120, 129, 137);
+          font-family: 'Inter-Normal';
+          font-size: 10px;
+          font-weight: 300;
+      }
+  }
+
+  .link {
+      display: flex;
+      align-items: center;
+      max-width: 106px;
+      padding: 8px 15px;
+      border-radius: 5px;
+      background: #161B22;
+      text-decoration: none;
+      color: rgb(255, 255, 255);
+      font-family: 'Roboto-Light';
+      font-size: 10px;
+
+      @media screen and (max-width: 576px) {
+          padding: 11px 18px;
+          height: 22px;
+      }
+  }
+
+  .tag {
+      position: absolute;
+      right: 15px;
+      bottom: 15px;
+      color: rgb(120, 129, 137);
+      font-size: 10px;
+      font-family: 'Roboto-Light';
+
+      @media screen and (max-width: 576px) {
+          bottom: 5px;
+      }
+  }
+}

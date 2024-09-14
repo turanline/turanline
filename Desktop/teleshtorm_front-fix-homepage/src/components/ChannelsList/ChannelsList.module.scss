@@ -1,0 +1,15 @@
+@use "../../styles/index.scss" as index;
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+
+  @include index.mini-desktop {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include index.small-tablet {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

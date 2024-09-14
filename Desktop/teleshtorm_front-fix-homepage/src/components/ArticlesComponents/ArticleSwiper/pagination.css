@@ -1,0 +1,33 @@
+.swiper-pagination {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+    gap: 10px;
+}
+
+@media screen and (max-width: 480px) {
+    .swiper-pagination {
+        width: 80px;
+        margin: 0 auto;
+        margin-top: 25px;
+    }
+
+}
+
+.swiper-pagination-bullet {
+    width: 15px;
+    height: 4px;
+    cursor: pointer;
+    background-color: rgb(217, 217, 217);
+    transition: all .3s ease-in-out;
+}
+
+.swiper-pagination-bullet-active {
+    width: 30px;
+    height: 4px;
+    cursor: pointer;
+    background-color: rgb(119, 119, 119);
+    transition: all .3s ease-in-out;
+}

@@ -1,0 +1,24 @@
+@use "@/global/scss/vars";
+
+.title {
+	font-size: 80px;
+	margin-block: 48px;
+
+	@media (max-width: vars.$medium) {
+		font-size: 60px;
+	}
+
+	@media (max-width: vars.$mobile-l) {
+		font-size: 48px;
+	}
+}
+
+.contacts {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+
+	@media (max-width: vars.$tablet) {
+		gap: 16px
+	}
+}

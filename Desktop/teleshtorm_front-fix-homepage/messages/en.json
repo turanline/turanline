@@ -1,0 +1,149 @@
+{
+  "Index": {
+    "title": "Teleshtorm – search in Telegram channels. Catalog of Telegram channels.",
+    "description": "Teleshtorm – convenient search in Telegram channels, as well as a structured catalog containing more than 150,000 Telegram channels.",
+    "keywords": "каталог, телеграм, telegram, канал, тг"
+  },
+  "IndexChannel": {
+    "title": "Telegram channel {name}. Search in Telegram channels. Catalog of Telegram channels.",
+    "description": "Telegram channel",
+    "keywords": "каталог, телеграм, telegram, канал, тг"
+  },
+  "IndexBot": {
+    "title": "Telegram bot {name}. Search in Telegram bots. Catalog of Telegram bots.",
+    "description": "Telegram bot",
+    "keywords": "каталог, телеграм, telegram, бот, тг"
+  },
+  "IndexBots": {
+    "title": "Teleshtorm – search in Telegram bots. Catalog of Telegram bots.",
+    "description": "Teleshtorm – convenient search in Telegram bots, as well as a structured catalog containing more than 150,000 Telegram bots.",
+    "keywords": "каталог, телеграм, telegram, бот, тг"
+  },
+  "IndexChat": {
+    "title": "Telegram chat {name}. Search in Telegram chats. Catalog of Telegram chats.",
+    "description": "Telegram chat",
+    "keywords": "каталог, телеграм, telegram, чат, тг"
+  },
+  "IndexChats": {
+    "title": "Teleshtorm – search in Telegram chats. Catalog of Telegram chats.",
+    "description": "Teleshtorm – convenient search in Telegram chats, as well as a structured catalog containing more than 150,000 Telegram chats.",
+    "keywords": "каталог, телеграм, telegram, чат, тг"
+  },
+  "IndexArticles": {
+    "title": "Teleshtorm – search in Telegram articles. Catalog of Telegram articles.",
+    "description": "Teleshtorm – convenient search in Telegram articles, as well as a structured catalog containing more than 150,000 Telegram articles.",
+    "keywords": "каталог, телеграм, telegram, статьи, тг"
+  },
+  "IndexArticle": {
+    "title": "Telegram article {name}. Search in Telegram articles. Catalog of Telegram articles.",
+    "description": "Telegram article",
+    "keywords": "каталог, телеграм, telegram, статья, тг"
+  },
+  "IndexCategory": {
+    "title": "Telegram channels in the category {name}. Search in Telegram channels. Catalog of Telegram channels.",
+    "description": "Complete list of Telegram channels in the category {name}, always up-to-date data.",
+    "keywords": "поиск, каталог, телеграм, telegram, категория, "
+  },
+  "AddChannel": {
+    "title": "Add a channel to Teleshtorm",
+    "description": "Add a Telegram channel to the teleshtorm directoryAdd a Telegram channel to the teleshtorm directory",
+    "keywords": "каталог, телеграм, telegram, канал, тг"
+  },
+  "Search": {
+    "title": "Search results for the query {name}",
+    "description": "Search results for the query {name}. Teleshtorm – convenient search in Telegram channels.",
+    "keywords": "поиск, каталог, телеграм, telegram, канал,"
+  },
+  "SearchPage": {
+    "Каталог телеграм каналов в категории": "Catalog of telegram channels in the category",
+    "Телеграм каналы": "Telegram channels"
+  },
+  "Article": {
+    "Рекомендуем статьи": "We recommend articles",
+    "Содержание": "Content",
+    "Поделиться": "To share"
+  },
+  "Header": {
+    "Каталог": "Catalog",
+    "Поиск": "Search...",
+    "Чаты": "Chats",
+    "Статьи": "Articles",
+    "Боты": "Bots",
+    "Язык сайта": "English",
+    "Показать больше": "Show more"
+  },
+  "Main": {
+    "Телеграм каналы": "Telegramm channels",
+    "Каталог телеграм каналов": "Catalog of telegram channels",
+    "Все категории": "All categories",
+    "Новые каналы": "New channels",
+    "Рекомендуем почитать": "Recommended to read",
+    "Читать дальше": "Read more",
+    "Добавить канал": "Add channel"
+  },
+  "Chats": {
+    "Каталог телеграм чатов": "Catalog of telegram chats",
+    "Телеграм чаты": "Telegram chats"
+  },
+  "Bots": {
+    "Каталог телеграм ботов": "Catalog of telegram bots",
+    "Телеграм боты": "Telegram bots"
+  },
+  "Card": {
+    "Открыть канал": "Open channel",
+    "Похожие каналы": "Similar channels",
+    "подписчиков": "subscribers",
+    "18+": "The content is hidden due to the presence of content that violates the law",
+    "Поделиться": "Share"
+  },
+  "Breadcrumb": {
+    "Каталог": "Catalog",
+    "Каналы": "Channels",
+    "Чаты": "Chats",
+    "Боты": "Bots",
+    "Статьи": "Articles"
+  },
+  "Modal": {
+    "Опишите причину жалобы": "Describe the reason for the complaint",
+    "Ссылка на телеграм канал/чат/бот не работает": "The link to the telegram channel/chat/bot does not work",
+    "Пропаганда наркотиков": "Drug propaganda",
+    "Ложная информация": "False information",
+    "Жестокое обращение с детьми": "Child abuse",
+    "Другое": "Other",
+    "Отправить": "Send"
+  },
+  "ShareModal": {
+    "Поделиться": "Share",
+    "Скопировать": "Copy",
+    "Ссылка скопирована": "Link copied",
+    "Ссылка на канал": "Link to the channel"
+  },
+  "AddForm": {
+    "Заголовок формы": "Add a channel",
+    "Подзаголовок формы": "Your channel will be added to the database at the next update",
+    "Канал": "channel",
+    "Чат/Бот": "chat/bot",
+    "Ссылка на канал": "Link to the channel",
+    "Поле ввода": "@username, t.me/teleshtorm",
+    "Добавить": "Add",
+    "Категория канала": "Channel Category",
+    "Заголовок 1 вопроса": "Which channels are accepted in the catalog?",
+    "Подзаголовок 1 вопроса": "The catalog accepts channels and groups that do not violate the rules of Telegram, with more than 100 subscribers.",
+    "Заголовок 2 вопроса": "How do I know that my channel has already been added?",
+    "Подзаголовок 2 вопроса": "To do this, use the site search, enter in the search bar the link to your channel that you specified when adding the channel to the catalog."
+  },
+  "BurgerMenu": {
+    "Каталог": "Catalog",
+    "Чаты": "Chats",
+    "Боты": "Bots",
+    "Статьи": "Articles",
+    "Поддержка": "Support",
+    "Наш канал": "Our Channel"
+  },
+  "Footer": {
+    "Права": "© 2024 teleshtorm.com — Telegram search, the site does not store personal data",
+    "Ссылка телеграм": "Our Telegram channel",
+    "Правообладатели": "For copyright holders",
+    "Техподдержка": "Contact support"
+  }
+}

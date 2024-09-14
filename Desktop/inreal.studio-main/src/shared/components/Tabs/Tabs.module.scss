@@ -1,0 +1,41 @@
+@use "@/global/scss/templates/transparent-hover";
+@use "@/global/scss/vars";
+
+.tabs {
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+
+	&.between {
+		justify-content: space-between;
+
+		@media (max-width: vars.$mobile-l) {
+			justify-content: flex-start;
+		}
+	}
+}
+
+.tab {
+	padding: 7px 8px 5px;
+	border-radius: 8px;
+	font-size: 18px;
+	line-height: 120%;
+	text-transform: uppercase;
+	letter-spacing: -1%;
+
+	@extend %transparent-hover;
+
+	@media (max-width: vars.$tablet) {
+		font-size: 16px;
+	}
+
+	@media (max-width: vars.$mobile-l) {
+		font-size: 14px;
+		padding: 6px 6px 4px;
+	}
+
+	&.active {
+		background-color: #fff;
+		color: #000;
+	}
+}

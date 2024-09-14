@@ -1,0 +1,136 @@
+.import-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgb(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: none;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s ease, pointer-events 0.3s ease;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+  }
+}
+
+.import-content {
+  background: white;
+  position: relative;
+  width: 1032px;
+  border-radius: 5px;
+  padding: 50px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  transform: translateY(100px);
+  transition: transform 0.3s ease;
+
+  &.active {
+    transform: translateY(0);
+  }
+
+  & > .delete-icon {
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+}
+
+.import-title {
+  font-size: 42px;
+  color: #0abab5;
+  font-family: geometria-medium;
+}
+
+.import-button {
+  border-radius: 5px;
+  background: transparent;
+  color: #344054;
+  border: 1px solid #d0d5dd;
+}
+
+.import-text {
+  color: black;
+  font-size: 16px;
+}
+
+.import-link {
+  color: #0abab5;
+}
+
+.file-upload-wrapper {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  justify-content: center;
+  width: 100%;
+  height: 300px;
+  border: 2px dashed #0abab5;
+  opacity: 1;
+  transition: opacity 0.2s ease, background 0.2s ease;
+
+  &.dragging {
+    background: rgb(10, 186, 181, 0.5);
+    opacity: 0.5;
+  }
+}
+
+.import-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  transform: translate(-50%, -50%);
+
+  &.active {
+    opacity: 1;
+  }
+}
+
+.file-upload-input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.file-upload-label {
+  display: inline-block;
+  cursor: pointer;
+  background-color: #0abab5;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  height: 44px;
+
+  &:hover {
+    background-color: #099a90;
+  }
+}
+
+.file-upload-filename {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 16px;
+  color: #333;
+  font-family: geometria-medium;
+  color: #0abab5;
+}

@@ -1,0 +1,121 @@
+@use "@/global/scss/vars";
+
+
+.footerMain {
+	display: flex;
+	justify-content: space-between;
+	gap: 40px 24px;
+	margin-top: 64px;
+	padding-block: 48px 100px;
+
+	border-top: rgba(#fff, 20%) 1px solid;
+
+	@media (max-width: vars.$tablet-l) {
+		flex-wrap: wrap;
+	}
+}
+
+.cards {
+	display: flex;
+	align-items: stretch;
+	gap: 8px;
+	justify-content: flex-end;
+
+	@media (max-width: vars.$tablet-l) {
+		width: 100%;
+		gap: 16px;
+	}
+
+	@media (max-width: vars.$mobile-l) {
+		flex-direction: column;
+		gap: 8px;
+	}
+}
+
+.card {
+	flex-basis: 230px;
+	display: block;
+
+	@media (max-width: vars.$tablet-l) {
+		flex-basis: 100%;
+	}
+}
+
+.cardItem {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+
+	svg {
+		margin-top: 8px;
+	}
+}
+
+.iconCtn {
+	flex-grow: 1;
+	display: flex;
+	align-items: flex-end;
+	justify-content: flex-end;
+}
+
+.title {
+	display: block;
+	line-height: 120%;
+	font-weight: 500;
+}
+
+.label {
+	opacity: 40%;
+	margin-top: 8px;
+}
+
+.contact {
+	max-width: 250px;
+	font-size: 18px;
+	line-height: 120%;
+	opacity: 60%;
+
+	@media (max-width: vars.$mobile-l) {
+		max-width: 100%;
+	}
+}
+
+.number {
+	display: block;
+	margin-top: 60px;
+	font-size: 18px;
+
+	@media (max-width: vars.$mobile-l) {
+		margin-top: 16px;
+	}
+}
+
+.footerLegals {
+	display: flex;
+	justify-content: space-between;
+	padding-block: 24px;
+	text-transform: uppercase;
+
+	text-align: center;
+
+	gap: 8px 16px;
+
+	@media (max-width: vars.$tablet) {
+		flex-direction: column;
+		text-align: left;
+	}
+}
+
+.legalsTitle {
+	white-space: nowrap;
+	line-height: 110%;
+}
+
+.link {
+	opacity: 40%;
+	line-height: 110%;
+
+	&:hover {
+		opacity: 50%;
+	}
+}

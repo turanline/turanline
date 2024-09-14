@@ -1,0 +1,46 @@
+.breadCrumbs {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    gap: 15px;
+    margin: 0 auto;
+    max-width: 1140px;
+    padding: 0 15px;
+
+    @media screen and (max-width: 480px) {
+        padding: 0;
+        padding: 0;
+    }
+
+    .breadCrumbs_item {
+        text-decoration: none;
+        margin: 0;
+        color: rgb(103, 113, 121);
+        font-family: 'Roboto-Bold';
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 16px;
+        text-align: left;
+        position: relative;
+
+        &::after {
+            content: '>';
+            position: absolute;
+            right: -12px;
+        }
+    }
+
+    .breadCrumbs_item_last {
+        text-decoration: none;
+        margin: 0;
+        color: rgb(103, 113, 121);
+        font-family: 'Roboto-Bold';
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 16px;
+        text-align: left;
+        cursor: pointer;
+    }
+}

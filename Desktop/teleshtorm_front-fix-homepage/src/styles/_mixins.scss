@@ -1,0 +1,105 @@
+@use "./_variables.scss" as *;
+
+@mixin menu_text() {
+  color: $text_color;
+  font-family: "Roboto-Normal";
+  font-size: 1rem;
+  line-height: 1rem;
+  letter-spacing: 0%;
+  margin: 0;
+}
+
+@mixin header_text() {
+  color: $title_color;
+  font-family: "Roboto-Bold";
+  font-size: 1.88rem;
+  line-height: 2.19rem;
+  letter-spacing: 0%;
+  margin: 0;
+}
+
+@mixin subheader_text() {
+  color: $title_color;
+  font-family: "Roboto-Bold";
+  font-size: 1.25rem;
+  line-height: 1.44rem;
+  letter-spacing: 0%;
+  margin: 0;
+}
+
+@mixin title_text() {
+  color: $title_color;
+  font-family: "Roboto-Bold";
+  font-size: 1rem;
+  line-height: 1.5rem;
+  letter-spacing: 0%;
+  margin: 0;
+}
+
+@mixin main_text() {
+  color: $text_color;
+  font-family: "Roboto-Light";
+  font-size: 0.63rem;
+  line-height: 0.75rem;
+  letter-spacing: 0%;
+  margin: 0;
+}
+
+@mixin card_text() {
+  color: $text_color;
+  font-family: "Roboto-Light";
+  font-size: 0.88rem;
+  line-height: 1rem;
+  letter-spacing: 0%;
+  margin: 0;
+}
+
+@mixin card_title() {
+  color: $card_title_color;
+  font-family: "Roboto-SemiBold";
+  font-size: 1.19rem;
+  line-height: 1.38rem;
+  letter-spacing: 0%;
+  margin: 0;
+}
+
+@mixin card_link_continue() {
+  color: $card_title_color;
+  font-family: "Roboto-SemiBold";
+  font-size: 1rem;
+  line-height: 1.19rem;
+  letter-spacing: 0%;
+  margin: 0;
+}
+
+// Breakpoints
+
+@mixin mini-desktop {
+  @media (max-width: 1110px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: 992px) {
+    @content;
+  }
+}
+
+@mixin small-tablet {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: 576px) {
+    @content;
+  }
+}
+
+@mixin small-mobile {
+  @media (max-width: 420px) {
+    @content;
+  }
+}

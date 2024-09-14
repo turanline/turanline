@@ -1,0 +1,11 @@
+.section {
+    max-width: 1140px;
+    padding: 0 15px;
+    margin: auto;
+    flex: 1;
+    padding-top: 95px;
+
+    @media screen and (max-width: 480px){
+    padding-inline: 0;
+}
+}

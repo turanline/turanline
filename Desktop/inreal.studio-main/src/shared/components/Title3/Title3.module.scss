@@ -1,0 +1,11 @@
+@use "@/global/scss/vars";
+
+.title3 {
+	font-size: 44px;
+	line-height: 110%;
+	text-transform: uppercase;
+
+	@media (max-width: vars.$tablet) {
+		font-size: 32px;
+	}
+}

@@ -1,0 +1,46 @@
+@use "@/global/scss/vars";
+
+.header {
+	transition: filter .5s, opacity .5s;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 3;
+
+	width: 100%;
+	padding: 24px 4px;
+
+	// *===============*
+
+	background-color: transparent;
+	border-bottom: transparent 1px solid;
+
+	[data-scroll] body:not(:has([data-prevent-header])) & {
+		background-color: vars.$background;
+		border-bottom-color: vars.$borders;
+	}
+
+	@media (max-width: vars.$tablet) {
+		padding-block: 16px;
+	}
+
+	&.hideHeader {
+		filter: blur(12px);
+		opacity: 0;
+		pointer-events: none;
+	}
+}
+
+.container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	max-width: 1920px;
+}
+
+.logo {
+	z-index: 999;
+	fill: #fff;
+	width: 120px;
+	height: auto;
+}

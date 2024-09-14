@@ -1,0 +1,95 @@
+@use "../../../styles/index.scss" as index;
+
+.card {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #dee2e4;
+  background: #fff;
+  align-items: center;
+  transition: all 0.3s;
+  max-width: 366px;
+  max-height: 120px;
+  text-decoration: none;
+
+  @include index.mini-desktop {
+    max-width: none;
+  }
+  
+  @media screen and (max-width: 380px) {
+    max-width: clamp(18.438rem, -1.563rem + 100vw, 22.188rem);
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  .image {
+    border-radius: 89px;
+    border: 1px solid #dee2e4;
+    padding: 3px;
+    transition: all 0.3s;
+    object-fit: cover;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  color: #677179;
+  font-size: 10px;
+  font-weight: 300;
+
+  @media screen and (max-width: 380px) {
+    max-width: 60%;
+  }
+
+  .title {
+    font-family: "Roboto-Bold";
+    color: #677179;
+    font-size: clamp(0.875rem, 0.815rem + 0.27vw, 1rem);
+    font-weight: 700;
+    line-height: 16px;
+    margin: 0;
+    margin-bottom: 8px;
+    transition: all 0.3s;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 212px;
+    text-overflow: ellipsis;
+  }
+
+  .inner {
+    display: flex;
+    gap: 3px;
+  }
+
+  .subtitle {
+    font-family: "Roboto-Light";
+    color: #788189;
+    font-size: clamp(0.75rem, 0.72rem + 0.13vw, 0.813rem);
+    font-weight: 300;
+    margin: 0;
+    margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    max-width: 233px;
+
+    @media screen and (max-width: 480px) {
+      max-height: none;
+    }
+  }
+
+  .count {
+    color: #677179;
+    font-size: 10px;
+    font-weight: 700;
+  }
+}

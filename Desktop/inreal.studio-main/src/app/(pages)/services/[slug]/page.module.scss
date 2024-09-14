@@ -1,0 +1,248 @@
+@use "@/global/scss/templates/transparent-hover";
+@use "@/global/scss/vars";
+
+.title {
+	margin-top: 64px;
+}
+
+.subtitle {
+	font-size: 20px;
+	text-transform: uppercase;
+	display: block;
+	margin-top: 24px;
+}
+
+.mainDescription {
+	margin-top: -52px;
+
+	@media (max-width: 768px) {
+		margin-top: 0;
+	}
+}
+
+.block {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 24px;
+
+	@media (max-width: 768px) {
+		grid-template-columns: 1fr;
+	}
+
+	&.reverse {
+		@media (max-width: 768px) {
+			display: flex;
+			flex-direction: column-reverse;
+		}
+	}
+
+	.content {
+		grid-column-start: 1;
+		grid-column-end: 6;
+
+		@media (max-width: 768px) {
+			grid-column-start: 1;
+			grid-column-end: 2;
+		}
+	}
+
+	.side {
+		grid-column-start: 6;
+		grid-column-end: 8;
+		max-width: 100%;
+
+		@media (max-width: 768px) {
+			grid-column-start: 1;
+			grid-column-end: 2;
+		}
+	}
+}
+
+.label {
+	display: block;
+	font-size: 18px;
+	text-transform: uppercase;
+	line-height: 120%;
+
+	&:not(.noMargin) {
+		margin-top: 24px;
+	}
+
+	&.faded {
+		opacity: 80%;
+	}
+}
+
+.fixed {
+	white-space: nowrap;
+}
+
+.buttonWrapper {
+	position: sticky;
+	top: 25px;
+	right: 0;
+	z-index: 5;
+
+	margin-right: 0px;
+
+	display: flex;
+	justify-content: flex-end;
+
+	@media (max-width: 1660px) {
+		top: 150px;
+	}
+
+	@media (max-width: 768px) {
+		position: fixed;
+		top: initial;
+		bottom: 40px;
+		right: 0;
+	}
+}
+
+.worksRange {
+	margin-top: 24px;
+	display: flex;
+	gap: 32px;
+	flex-wrap: wrap;
+}
+
+.workType {
+	cursor: default;
+	display: inline-block;
+	position: relative;
+	overflow: clip;
+	border-radius: 24px;
+
+	&:hover {
+		.image {
+			transform: scale(1.1) rotateZ(4deg);
+		}
+	}
+
+	.image {
+		transition: transform .3s;
+		width: 180px;
+		object-fit: cover;
+		height: auto;
+		aspect-ratio: 3/2;
+		border-radius: 24px;
+		opacity: 50%;
+	}
+
+	.overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.title {
+		display: inline-block;
+		text-transform: uppercase;
+		margin-top: 0;
+		margin-inline: 32px;
+		text-align: center;
+	}
+}
+
+.video {
+	max-width: 100%;
+	width: 100%;
+	object-fit: cover;
+	border-radius: 24px;
+	aspect-ratio: 9/4;
+	height: auto;
+	margin-top: 32px;
+}
+
+.logos {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 24px;
+}
+
+.logo {
+	border-radius: 24px;
+	overflow: hidden;
+
+	.image {
+		transition: transform .2s;
+		height: 90px;
+		width: auto;
+	}
+
+	&:hover .image {
+		transform: scale(1.1);
+	}
+}
+
+.toolsDescription {
+	margin-top: 24px;
+
+	@media (max-width: vars.$tablet) {
+		margin-top: 16px;
+	}
+}
+
+.toolsLogos {
+	margin-top: 24px;
+}
+
+.tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 16px;
+	max-width: 100%;
+
+	.tag {
+		padding: 6px 8px;
+		display: inline-block;
+		border: rgba(#fff, 20%) 1px solid;
+		text-transform: uppercase;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 100%;
+
+		border-radius: 8px;
+
+		@extend %transparent-hover;
+	}
+}
+
+.share {
+	margin-top: 8px;
+
+	@media (max-width: vars.$tablet) {
+		justify-content: flex-end;
+	}
+}
+
+.portfolio {
+	margin-top: 24px;
+	align-items: center;
+}
+
+.cases {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 24px;
+
+	@media (max-width: 992px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	@media (max-width: 480px) {
+		grid-template-columns: 1fr;
+	}
+
+	&>div {
+		max-width: 100%;
+	}
+}

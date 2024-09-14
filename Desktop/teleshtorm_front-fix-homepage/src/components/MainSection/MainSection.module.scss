@@ -1,0 +1,27 @@
+
+.main_section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    padding-top: 94px;
+
+    @media screen and (max-width: 480px) {
+        padding-inline: 12px;
+        padding-top: 103px;
+    }
+
+    .title {
+        color: #677179;
+        text-align: center;
+        font-size: 30px;
+        font-family: 'Roboto-Bold';
+        font-weight: 700;
+        margin: 0;
+        margin-bottom: 25px;
+
+        @media screen and (max-width: 480px) {
+            max-width: 290px;
+        }
+    }
+}

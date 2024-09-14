@@ -1,0 +1,152 @@
+@media (max-width: 8000px) {
+  .products-content {
+    width: 1536px;
+  }
+}
+
+@media (max-width: 1536px) {
+  .products-content {
+    width: 1280px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .products-content {
+    width: 1024px;
+  }
+}
+
+@mixin profile-text($family, $size, $height, $weight) {
+  font-family: $family;
+  font-size: $size;
+  line-height: $height;
+  font-weight: $weight;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.products-wrapper {
+  width: 100%;
+  padding: 30px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.products-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.products-content_navigation {
+  display: flex;
+  gap: 50px;
+  align-items: center;
+}
+
+.products-content_navigation-link {
+  @include profile-text("Geometria-Bold", 16px, 20px, 700);
+  background-color: transparent;
+  &.active {
+    color: #0abab5;
+  }
+}
+
+
+
+.products-content_filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.products-content_filters-action {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.products-content_filters-action-description {
+  display: flex;
+  gap: 30px;
+}
+
+.products-content_filters-action-description-text {
+  @include profile-text("Geometria-Bold", 12px, 15px, 700);
+  background-color: transparent;
+  &.active {
+    color: #0abab5;
+  }
+}
+
+.button-action > svg {
+  color: white;
+}
+
+.products-content_cards {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.products-content_cards-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &_title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 155px;
+  }
+
+  &_options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+.products-content_cards-item-span-empty {
+  color: #ff0090;
+  display: flex;
+  justify-content: center;
+  font-size: 30px;
+}
+
+.products-content_spiner{
+  display: flex;
+  justify-content: center;
+}
+
+.products-content_filters-action-description-text {
+  &.active{
+    color: #0abab5;
+  }
+  &.danger {
+    color: #ff0090;
+  }
+}
+
+
+
+.products-content_cards-header-button {
+  background: transparent;
+  display: flex;
+  text-align: center;
+  width: 150px;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  @include profile-text("Geometria-Bold", 12px, 15px, 700);
+}
+
+.products-content_cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 42px;
+}

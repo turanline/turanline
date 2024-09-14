@@ -1,0 +1,36 @@
+@use "@/global/scss/vars";
+
+.tabHeader {
+	padding-block: 90px;
+	display: flex;
+	gap: 20px 130px;
+
+	@media (max-width: vars.$tablet) {
+		flex-direction: column;
+	}
+
+	@media (max-width: vars.$tablet) {
+		padding-block: 60px;
+	}
+}
+
+.tabHeading {
+	flex-basis: 420px;
+	flex-shrink: 0;
+
+	@media (max-width: vars.$tablet) {
+		flex-basis: auto;
+	}
+}
+
+.tabDescription {
+	margin-top: 20px;
+}
+
+.tabTags {
+	flex-basis: 100%;
+}
+
+.tagsTitle {
+	opacity: 80%;
+}

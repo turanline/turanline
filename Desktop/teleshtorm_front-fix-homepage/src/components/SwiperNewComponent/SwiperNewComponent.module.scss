@@ -1,0 +1,75 @@
+@use "../../styles/mixins" as index;
+
+.embla {
+    overflow: hidden;
+
+    &__container {
+        display: flex;
+    }
+
+    &__slide {
+        flex: 0 0 25%;
+        min-width: 0;
+        padding: 0 10px;
+
+        @include index.tablet {
+            flex: 0 0 33%;
+        }
+
+        @include index.small-tablet {
+            flex: 0 0 50%;
+        }
+
+        @include index.mobile {
+            flex: 0 0 100%;
+        }
+    }
+}
+
+.container {
+    position: relative;
+    min-height: 200px;
+    padding: 27px 31px;
+    margin-bottom: 15px;
+    border: 1px solid rgb(222, 226, 228);
+    border-radius: 10px;
+    background: rgb(255, 255, 255);
+    --controls-offset: -20px;
+
+    @media screen and (max-width: 480px) {
+        padding: 10px 20px;
+    }
+
+    @include index.mini-desktop {
+        --controls-offset: -10px;
+    }
+
+    .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        visibility: hidden;
+        opacity: 0;
+
+        @media screen and (max-width: 480px) {
+            display: none;
+        }
+
+        &_prev {
+            left: var(--controls-offset);
+        }
+
+        &_next {
+            right: var(--controls-offset);
+        }
+    }
+
+    &:hover {
+        .arrow {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+}

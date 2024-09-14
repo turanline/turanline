@@ -1,0 +1,49 @@
+.button {
+    margin: 0;
+    margin-top: 15px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    background: rgb(242, 244, 247);
+    padding: 15px;
+    width: 100%;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    text-decoration: none;
+
+    .title {
+        margin: 0;
+        margin-bottom: 4px;
+        color: rgb(62, 67, 71);
+        font-family: 'Roboto-Bold';
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 18px;
+        text-align: left;
+
+        @media screen and (max-width: 480px) {
+            max-width: 256px;
+        }
+    }
+
+    .subtitle {
+        margin: 0;
+        color: rgb(62, 67, 71);
+        font-family: 'Roboto-Light';
+        font-size: 15px;
+        font-weight: 300;
+        line-height: 18px;
+        text-align: left;
+    }
+
+    &::after {
+        content: url('/arrow-small.svg');
+        position: absolute;
+        top: 40%;
+        right: 30px;
+        width: 8px;
+        height: 14px;
+    }
+}

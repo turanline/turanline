@@ -1,0 +1,206 @@
+@use '../../styles/index.scss' as index;
+
+
+.menu {
+    background-color: index.$base-color;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 76px;
+    z-index: 2;
+    padding-inline: 15px;
+    padding-top: 21.5px;
+    padding-bottom: 21.5px;
+
+    @include index.mobile {
+        padding-inline: 10px;
+    }
+
+    .burger_menu {
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+        position: fixed;
+        left: 0;
+        top: 76px;
+        z-index: 7;
+        padding: 0 14px;
+        visibility: visible;
+        opacity: 1;
+        transition: all .3s ease-in-out;
+        width: 234px;
+        height: 100vh;
+
+        .link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            padding: 15px 0 5px;
+            color: rgb(120, 129, 137);
+            font-family: 'Roboto-Normal';
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 16px;
+            text-align: left;
+            border-bottom: 1px solid #DEE2E4;
+        }
+
+        &.hidden {
+            visibility: hidden;
+            opacity: 0;
+            transition: all .3s ease-in-out;
+            left: -100px;
+        }
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.349);
+        z-index: 6;
+        visibility: visible;
+        opacity: 1;
+
+        &.hidden {
+            visibility: hidden;
+            opacity: 0;
+        }
+    }
+
+    @media screen and (min-width: 992px) {
+        display: none;
+    }
+
+    .left {
+        display: flex;
+        align-items: center;
+        visibility: visible !important;
+        opacity: 1 !important;
+        gap: 10px;
+        transition: all .3s ease-in-out;
+        max-height: 50px;
+
+        @media screen and (max-width: 480px) {
+            &.hidden {
+                visibility: hidden !important;
+                opacity: 0 !important;
+            }
+        }
+
+        a {
+            img {
+                height: 45px;
+                width: 45px;
+            }
+        }
+    }
+
+    .right {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        justify-content: flex-end;
+        position: relative;
+        z-index: 5;
+
+        .close_icon {
+            position: absolute;
+            right: 8px;
+            z-index: 2;
+            top: 8px;
+            cursor: pointer;
+        }
+
+        .search {
+            position: absolute;
+            top: 0;
+            right: 142px;
+            visibility: visible;
+            opacity: 1;
+            transition: all .3s ease-in-out;
+            width: 328px;
+
+            @include index.small-tablet {
+                right: 38px;
+            }
+
+            @media screen and (max-width: 480px) {
+                width: 420px;
+            }
+
+            &.hidden {
+                visibility: hidden;
+                opacity: 0;
+                top: -100px;
+            }
+        }
+
+    }
+
+    .burger {
+        height: 49px;
+        width: 40px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: all .3s;
+        color: #788189;
+
+        span {
+            display: block;
+            width: 30px;
+            height: 4px;
+            background-color: #788189;
+            border-radius: 3px;
+            margin: 4px 0;
+            transition: all .3s;
+        }
+
+        &::before {
+            content: "";
+            display: block;
+            width: 30px;
+            height: 4px;
+            background-color: #788189;
+            border-radius: 3px;
+            transition: all .3s;
+        }
+
+        &::after {
+            content: "";
+            display: block;
+            width: 30px;
+            height: 4px;
+            background-color: #788189;
+            border-radius: 3px;
+            transition: all .3s;
+        }
+
+        &.open {
+
+            span {
+                opacity: 0;
+            }
+
+            &::after {
+                position: absolute;
+                transform: rotate(45deg);
+            }
+
+            &::before {
+                position: absolute;
+                transform: rotate(-45deg);
+            }
+        }
+    }
+}

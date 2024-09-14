@@ -1,0 +1,13 @@
+%transparent-hover {
+	transition: background-color .2s;
+
+	&:hover {
+		@media (hover: hover) {
+			background-color: rgba(#fff, 20%);
+		}
+	}
+
+	&:active {
+		background-color: rgba(#fff, 30%);
+	}
+}

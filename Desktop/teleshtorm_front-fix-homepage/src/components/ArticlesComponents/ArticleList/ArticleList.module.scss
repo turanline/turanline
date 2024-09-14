@@ -1,0 +1,82 @@
+.section {
+    max-width: 1140px;
+    padding: 0 15px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px 21px;
+
+    @media screen and (max-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media screen and (max-width: 576px) {
+        grid-template-columns: 1fr;
+    }
+
+    @media screen and (max-width: 480px) {
+        padding: 0 0 15px 0;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        transition: all .3s ease-in-out;
+        text-decoration: none;
+
+        &:hover {
+            transform: scale(1.02);
+            transition: all .3s ease-in-out;
+        }
+
+        .image {
+            border: 1px solid rgb(222, 226, 228);
+            border-radius: 15px;
+            transition: all .3s ease-in-out;
+            margin-bottom: 15px;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .container {
+
+            .title {
+                margin: 0;
+                margin-bottom: 10px;
+                color: rgb(62, 67, 71);
+                font-family: 'Roboto-SemiBold';
+                font-size: 19px;
+                font-weight: 600;
+                line-height: 22px;
+                text-align: left;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                white-space: normal;
+            }
+
+            .text {
+                margin: 0;
+                margin-bottom: 15px;
+                color: rgb(120, 129, 137);
+                font-family: 'Roboto-Light';
+                font-size: 14px;
+                font-weight: 300;
+                line-height: 16px;
+                letter-spacing: 0%;
+                text-align: left;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                white-space: normal;
+            }
+        }
+    }
+}

@@ -1,0 +1,8 @@
+<svg width="12.500000" height="10.937500" viewBox="0 0 12.5 10.9375" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs/>
+	<rect id="arrow-sm" width="10.937500" height="12.500000" transform="matrix(-6.12323e-17 1 1 6.12323e-17 0 0)" fill="#FFFFFF" fill-opacity="0"/>
+	<path id="arrow" d="M0 5.46C0 5.9 0.34 6.25 0.78 6.25L9.83 6.25L6.47 9.6C6.17 9.9 6.17 10.4 6.47 10.7C6.78 11.01 7.27 11.01 7.58 10.7L12.27 6.02C12.57 5.71 12.57 5.22 12.27 4.91L7.58 0.22C7.27 -0.08 6.78 -0.08 6.47 0.22C6.17 0.53 6.17 1.02 6.47 1.33L9.83 4.68L0.78 4.68C0.34 4.68 0 5.03 0 5.46Z" fill="#161B22" fill-opacity="1.000000" fill-rule="evenodd"/>
+</svg>

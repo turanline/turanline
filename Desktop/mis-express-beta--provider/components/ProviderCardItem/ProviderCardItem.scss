@@ -1,0 +1,104 @@
+@mixin profile-text($family, $size, $height, $weight) {
+  font-family: $family;
+  font-size: $size;
+  line-height: $height;
+  font-weight: $weight;
+}
+
+.provider-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.provider-card_title {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  width: 350px;
+
+  &-block {
+    display: flex;
+    flex-direction: column;
+    height: 50px;
+    justify-content: space-between;
+  }
+}
+
+.provider-card_options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: auto;
+  // max-width: 450px;
+
+  span{
+    width: 150px;
+  }
+
+}
+
+.products-content_cards-item {
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  // gap: 15px;
+}
+
+.products-content_cards-item-block {
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.products-content_cards-item-block-text {
+  display: flex;
+  justify-content: space-between;
+}
+
+.product-title {
+  @include profile-text("Geometria-Bold", 16px, 20px, 500);
+}
+
+.products-content_cards-item-block-article {
+  @include profile-text("Geometria-Light", 16px, 20px, 300);
+}
+
+.provider-card_title-block_buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.provider-card_title-block_buttons > button,
+.provider-card_title-block_buttons > a {
+  @include profile-text("Geometria-Bold", 12px, 15px, 400);
+}
+
+.products-content_cards-item-span {
+  @include profile-text("Geometria-Bold", 16px, 20px, 500);
+  color: #0abab5;
+  width: 120px;
+  text-align: center;
+}
+
+.products-content_cards-item-date{
+  width: 345px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.products-content_cards-item-date,
+.products-content_cards-item-price,
+.products-content_cards-item-article {
+  text-align: center;
+  @include profile-text("Geometria-Light", 16px, 20px, 300);
+}
+
+.products-content_cards-item-price {
+  width: 75px;
+}
+
+.products-content_cards-item-article {
+  width: 75px;
+}

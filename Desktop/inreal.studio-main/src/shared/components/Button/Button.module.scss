@@ -1,0 +1,76 @@
+@use "@/global/scss/templates/transparent-hover";
+
+@layer ui {
+	.button {
+		display: inline-block;
+
+		text-transform: uppercase;
+		text-align: center;
+		font-weight: 600;
+
+		border-radius: 9999px;
+		transition: background-color .2s, color .2s;
+
+		cursor: pointer;
+		user-select: none;
+	}
+
+	.primary {
+		background-color: #fff;
+		color: #000;
+
+		&:hover {
+			background-color: #e2e8f0;
+		}
+
+		&:active {
+			background-color: #94a3b8;
+		}
+	}
+
+	.normal {
+		padding: 8px 16px;
+		line-height: 130%;
+	}
+
+	.large {
+		padding: 16px;
+		font-size: 18px;
+	}
+
+	.secondary {
+		border: #fff 1px solid;
+		color: #fff;
+
+		* {
+			transition: color, fill, stroke;
+			transition-duration: .3s;
+		}
+
+		&:hover {
+			@media(hover: hover) {
+				background-color: #fff;
+				color: #000;
+			}
+
+			* {
+				@media(hover: hover) {
+					color: #000;
+					fill: #000;
+					stroke: #000;
+				}
+			}
+		}
+
+		&:active {
+			background-color: #fff;
+			color: #000;
+		}
+	}
+
+	.transparent {
+		color: #fff;
+
+		@extend %transparent-hover;
+	}
+}

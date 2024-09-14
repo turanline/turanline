@@ -1,0 +1,57 @@
+@use "@/global/scss/vars";
+
+.wrapper {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 24px;
+
+	@media (max-width: vars.$tablet) {
+		gap: 16px;
+	}
+
+	@media (max-width: vars.$medium) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.title {
+	color: rgba(#fff, 60%);
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 16px;
+}
+
+.contact {
+	margin-top: 90px;
+	font-size: 22px;
+	font-weight: 400;
+	display: block;
+
+	@media (max-width: vars.$tablet-l) {
+		font-size: 18px;
+	}
+
+	@media (max-width: vars.$tablet) {
+		font-size: 14px;
+		margin-top: 70px;
+	}
+
+	@media (max-width: vars.$medium) {
+		font-size: 16px;
+		margin-top: 32px;
+	}
+}
+
+.card {
+	@media (max-width: vars.$tablet) {
+		padding: 16px;
+	}
+
+	&:hover {
+		background-color: lighten(#242424, 2%);
+	}
+}

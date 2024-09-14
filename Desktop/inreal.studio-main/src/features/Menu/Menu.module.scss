@@ -1,0 +1,168 @@
+@use "@/global/scss/vars";
+@use "@/global/scss/templates/transparent-hover";
+
+.menu {
+	flex-grow: 1;
+	flex-basis: 100%;
+	display: inline-flex;
+	align-items: center;
+	gap: 16px;
+	justify-content: flex-end;
+	position: relative;
+	z-index: 999;
+}
+
+.navigation {
+	display: inline-flex;
+	flex-shrink: 0;
+	position: relative;
+}
+
+.window {
+	transition: backdrop-filter .3s, backgroud-color .3s;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(#000, 0);
+	backdrop-filter: blur(0);
+	pointer-events: none;
+
+	.opened & {
+		pointer-events: all;
+		background-color: rgba(#000, 40%);
+		backdrop-filter: blur(12px);
+	}
+}
+
+.menuButton {
+	flex-basis: 64px;
+	height: 56px;
+	flex-shrink: 0;
+	padding: 24px 16px;
+	border-radius: 8px;
+
+	position: relative;
+
+	@media (max-width: vars.$mobile-l) {
+		flex-basis: 52px;
+		height: 44px;
+	}
+
+	@extend %transparent-hover;
+
+	.line {
+		display: inline-block;
+		width: 50px;
+		height: 1px;
+		background-color: #fff;
+		left: 6px;
+
+		position: absolute;
+
+		transition: top .3s, bottom .3s, transform .3s;
+		content: '';
+
+		@media (max-width: vars.$mobile-l) {
+			width: 40px;
+		}
+
+		&:first-child {
+			top: 16px;
+
+			@media (max-width: vars.$mobile-l) {
+				top: 12px;
+			}
+
+			.opened & {
+				top: calc(50% - 1px);
+				transform: rotateZ(45deg);
+			}
+		}
+
+		&:nth-child(2) {
+			transition: left .3s, width .3s;
+
+			.opened & {
+				left: 50%;
+				width: 0;
+			}
+		}
+
+		&:last-child {
+			bottom: 16px;
+
+			@media (max-width: vars.$mobile-l) {
+				bottom: 12px;
+			}
+
+			.opened & {
+				bottom: calc(50% + 1px);
+				transform: rotateZ(135deg);
+			}
+		}
+	}
+}
+
+.menuList {
+	transition: transform .5s, opacity .5s;
+
+	transform: translateY(50px);
+	opacity: 0;
+	gap: 8px;
+
+	display: flex;
+	flex-direction: column;
+
+	margin-top: 105px;
+
+	overflow-y: auto;
+	height: calc(100% - 105px);
+
+	.opened & {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+
+.menuItem {
+	transition: color, transform;
+	transition-duration: .3s;
+	font-size: 40px;
+	text-transform: uppercase;
+	width: 100%;
+	font-weight: 700;
+
+	cursor: pointer;
+	text-align: center;
+
+	.link {
+		color: inherit;
+
+		display: block;
+		padding-block: 16px;
+	}
+
+	&:hover {
+		color: #c00;
+
+		transform: translateY(-5px);
+	}
+}
+
+.menuLink {
+	font-size: 16px;
+	font-weight: 600;
+	text-transform: uppercase;
+	padding: 8px 16px;
+	border-radius: 999px;
+	line-height: 130%;
+
+	@extend %transparent-hover;
+
+	@media (max-width: vars.$mobile-l) {
+		padding: 0;
+		font-size: 14px;
+	}
+}

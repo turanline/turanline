@@ -1,0 +1,23 @@
+.provider-text-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+}
+
+.read {
+  background: transparent;
+  border-radius: 5px;
+  border: 1px solid #0abab5;
+  font-family: geometria-medium;
+  height: 44px;
+  font-size: 14px;
+}
+
+.products-content_spiner{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

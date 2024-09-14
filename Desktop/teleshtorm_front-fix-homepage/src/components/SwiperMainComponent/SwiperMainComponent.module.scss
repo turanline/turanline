@@ -1,0 +1,130 @@
+@use '../../styles/index' as index;
+
+.section {
+    width: 100%;
+}
+
+.embla {
+    overflow: hidden;
+
+    &__container {
+        display: flex;
+    }
+
+    &__slide {
+        display: flex;
+        flex: 0 0 33.3%;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 8px;
+        min-width: 0;
+        padding: 0 10px;
+
+        @include index.tablet {
+            flex: 0 0 50%;
+        }
+
+        @include index.small-tablet {
+            flex: 0 0 100%;
+        }
+    }
+}
+
+.subtitle {
+    max-width: 1140px;
+    padding: 0 15px;
+    margin: 0 auto;
+
+    @media screen and (max-width: 480px) {
+        padding: 0;
+    }
+
+    .subtitle_container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+
+        .subtitle_text {
+            @include index.subheader_text();
+        }
+
+        .button_text {
+            display: flex;
+            align-items: center;
+            gap: 4.41px;
+            font-family: 'Roboto-Light';
+            color: index.$title_color;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all .3s ease-in-out;
+
+            &:hover {
+                color: #161B22;
+                cursor: pointer;
+            }
+
+            .icon_add {
+                width: 15px;
+                height: 15px;
+
+                &:hover * {
+                    fill: #161B22;
+                    transition: all .3s;
+                }
+            }
+        }
+    }
+}
+
+.title {
+    @include index.header_text();
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.content {
+    position: relative;
+    border-radius: 14px;
+    border: 1px solid #C9CDD0;
+    background: #FFF;
+    min-height: 226px;
+    padding: 24px;
+    --controls-offset: -20px;
+
+    @media screen and (max-width: 480px) {
+        padding: 27px 23px;
+        max-width: 100%;
+    }
+    @include index.mini-desktop {
+        --controls-offset: -10px;
+    }
+
+    .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        visibility: hidden;
+        opacity: 0;
+
+        @media screen and (max-width: 480px) {
+            display: none;
+        }
+
+        &_prev {
+            left: var(--controls-offset);
+        }
+
+        &_next {
+            right: var(--controls-offset);
+        }
+    }
+
+    &:hover {
+        .arrow {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+}
