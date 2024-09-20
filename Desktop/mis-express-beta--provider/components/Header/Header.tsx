@@ -135,6 +135,7 @@ export const Header = () => {
         <div className={mobileOpenClassName} onClick={closeMobileByOutside}>
           <div className="provider-page_header-mobile">
             <button
+            
               onClick={closeMobile}
               className="provider-page_header-close-btn"
             >
