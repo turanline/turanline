@@ -16,7 +16,7 @@ import { useTranslate } from '@/hooks/useTranslate';
 import { useUserActions } from '@/hooks/useUserActions';
 import { useCustomForm } from '@/hooks/useCustomForm.';
 //Services
-import { resetUserPassword } from '@/services/authAPI';
+import { getVerifySmsCode } from '@/services/codeConfirmation';
 //Prefixes
 import * as prefixes from '@/locales/prefixes.json';
 //styles
@@ -64,22 +64,24 @@ const ForgetPasswordModal:FC <IModalForgetPassword> = ({forgetModal,setForgetMod
     const phone = (selectPhone + getValues().phone_number).replace(/[^\d+]/g, '');
 
     try {
-      const resetPassword = await resetUserPassword({phone_number:phone, email:getValues().email})
-         if(resetPassword.response.status === 200) {
+      const resetPassword = await getVerifySmsCode(phone,'reset_password')
+      
+          if(resetPassword?.status === 200) {
             push(REGISTRATION_ROUTE);
             onSetRegistrationPage(3);
             onSetForgetPassword(true);
-            setCookie('userPhone',phone);
+            setCookie('phoneNumber',phone);
             return;
           };
-          if(resetPassword.response.status === 404){
-            showToastMessage('warn','Пользователь не найден');
+          if(resetPassword?.response?.status === 404){
+            showToastMessage('warn',translate.notifyUserUndefiend);
+            return;
           }
-          if(resetPassword.response.status === 400){
-            showToastMessage('warn','Пользователь не верифицирован');
+          if(resetPassword?.response?.status === 400){
+            showToastMessage('warn',translate.notifyUserNorVerified);
             push(REGISTRATION_ROUTE);
             onSetRegistrationPage(3);
-            setCookie('userPhone',phone);
+            setCookie('phoneNumber',phone);
             return;
           }
     } catch (error) {
@@ -121,7 +123,7 @@ const ForgetPasswordModal:FC <IModalForgetPassword> = ({forgetModal,setForgetMod
     <main onClick={closeModal} className={wrapperClassName}>
       <form onSubmit={handleSubmit(sendRequestToRecoverPassword)} className={contentClassName} onClick={stopPropagation}>
         <h4 className="forget-content-title">{translate.recoverPasswordTitle}</h4>
-        <label htmlFor="#" className="form-content-forget-label">
+        {/* <label htmlFor="#" className="form-content-forget-label">
             <span className="form-content-forget-label-span">
               {translate.inputEmail}
             </span>
@@ -134,7 +136,7 @@ const ForgetPasswordModal:FC <IModalForgetPassword> = ({forgetModal,setForgetMod
               className="form-content-forget-label-input"
             />
             {returnInputError("email")}
-          </label>
+          </label> */}
 
           <label htmlFor="#" className="form-content-forget-label">
             <span className="form-content-forget-label-span">

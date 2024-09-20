@@ -23,6 +23,10 @@ import {
   countryRegular,
   priceRegular,
   codeRegular,
+  weightRegular,
+  titleRegular,
+  descriptionRegular,
+  clothesSizeRegular
 } from "@/utils/Consts";
 
 const useCustomForm = <T extends CustomFormType>() => {
@@ -66,13 +70,19 @@ const useCustomForm = <T extends CustomFormType>() => {
       case "country":
         return countryRegular;
       case "name":
-        return compoundRegular;
+        return titleRegular;
       case "price":
         return priceRegular;
       case "size":
         return priceRegular;
       case "code":
         return codeRegular;
+      case "weight":
+        return weightRegular;
+      case "description":
+        return descriptionRegular;
+      case "clothesSize":
+        return clothesSizeRegular;
     }
   };
 
@@ -116,8 +126,14 @@ const useCustomForm = <T extends CustomFormType>() => {
         return translate.checkPrice;
       case "size":
         return translate.checkSize;
+      case "clothesSize":
+        return translate.correctValue;
       case "code":
         return translate.checkCode;  
+      case "weight":
+        return translate.checkWeight;
+      case "description":
+        return translate.checkWeight;
     }
   };
 
@@ -142,7 +158,10 @@ const useCustomForm = <T extends CustomFormType>() => {
       name: 150,
       price: 13,
       size:3,
-      code:6,      
+      code:6,
+      weight:6,     
+      description: 160, 
+      clothesSize:5
     };
 
     const minLengthInput: IInputsLength = {
@@ -160,12 +179,15 @@ const useCustomForm = <T extends CustomFormType>() => {
       compound: 3,
       article: 3,
       brand: 3,
-      pattern: 3,
+      pattern: 0,
       country: 11, 
       name: 3,    
       price: 1,  
       size:1,
-      code:6      
+      code:6 ,
+      weight:1,
+      description:10,
+      clothesSize:1
     };
 
     return {

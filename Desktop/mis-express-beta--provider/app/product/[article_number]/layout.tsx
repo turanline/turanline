@@ -13,7 +13,7 @@ import './product.scss';
 
 export default function ProductLayout({children}: {children: React.ReactNode}) {
     
-  const { isProviderAuth ,status} = useTypedSelector(state => state.user);
+  const { isProviderAuth ,status} = useTypedSelector(state => state.authorization);
   const { onGetUser } = useUserActions();
 
   //checkAuth

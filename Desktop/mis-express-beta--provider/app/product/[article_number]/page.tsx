@@ -1,10 +1,7 @@
 //Global
 import React from "react";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
-//Utils
-import { PROVIDER_PRODUCTS_ROUTE } from "@/utils/Consts";
 //Services
 import { getProductBySlug } from "@/services/providerAPI";
 //Components
@@ -13,12 +10,12 @@ import { EditDynamicCard } from "@/components/EditDynamicCard/EditDynamicCard";
 import "../../../components/EditDynamicCard/EditDynamicCard.scss";
 
 
-export async function generateMetadata({params}: {params: { slug: string }}) {
+export async function generateMetadata({params}: {params: { article_number: string }}) {
   const language = cookies()?.get("selectedLanguage")?.value;
-
+    
   try {
     if(language){
-      const product = await getProductBySlug(params?.slug, language);
+      const product = await getProductBySlug(params?.article_number, language);
 
 
       const title = product?.name ? product?.name : '404';
@@ -32,16 +29,19 @@ export async function generateMetadata({params}: {params: { slug: string }}) {
   }
 }
 
-const ProviderProduct = async ({ params }: { params: { slug: string } }) => {
+const ProviderProduct = async ({ params }: { params: { article_number: string } }) => {
+
   async function getProductByParams() {
     try {
     const language = cookies()?.get("selectedLanguage")?.value;
-      if(language){
-        const oneProduct = await getProductBySlug(params?.slug, language);
+    const selectedLanguage = language ? language : "en";
+
+      if(selectedLanguage){
+        const oneProduct = await getProductBySlug(params?.article_number, selectedLanguage);
 
         if (!oneProduct) notFound();
 
-        return <EditDynamicCard oneProduct={oneProduct} language={language} />;
+        return <EditDynamicCard oneProduct={oneProduct} language={selectedLanguage} />;
       }
     } catch (error) {
       notFound();
@@ -49,7 +49,7 @@ const ProviderProduct = async ({ params }: { params: { slug: string } }) => {
   }
 
   return (
-    <div className="container mx-auto mt-[30px] mb-[100px] px-[28px] sm:px-0">
+    <div className="container mx-auto mt-[30px] mb-[100px] px-[15px] sm:px-0">
         {getProductByParams()}
     </div>
   );

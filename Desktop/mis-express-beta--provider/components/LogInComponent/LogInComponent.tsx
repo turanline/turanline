@@ -6,95 +6,67 @@ import React, { FC, useEffect, useState } from "react";
 import { showToastMessage } from "@/app/toastsChange";
 //Components
 import { Icons } from "@/components/Icons/Icons";
-import { Checkbox, Button, Input} from "@nextui-org/react";
+import InputMask from "react-input-mask";
+import { Checkbox, Button, Input,Select, SelectItem} from "@nextui-org/react";
 import ForgetPasswordModal from "../Modals/ForgetPasswordModal/ForgetPasswordModal";
 //Cookies
 import { getCookie, setCookie } from 'cookies-next';
 //Utils
 import {
-  OFFER_PAGE_ROUTE,
-  PROVIDER_BLOCKED_ROUTE,
   PROVIDER_ROUTE,
   REGISTRATION_ROUTE,
-  THIRD_STAGE_ROUTE,
 } from "@/utils/Consts";
 //Hooks
 import { useCustomForm } from "@/hooks/useCustomForm.";
 import { useTranslate } from "@/hooks/useTranslate";
 import { useTypedSelector } from "@/hooks/useTypedSelector";
 import { useUserActions } from "@/hooks/useUserActions";
+import { useLanguage } from "@/hooks/useLanguage";
+//Prefixes
+import prefixes from "@/locales/prefixes.json";
 //Types
 import { IInputsLogin, ILogin } from "@/types/additionalTypes";
+import { Country } from "@/types/componentsTypes";
 //Styles
 import "./LoginComponent.scss";
-import { getVerifySmsCode } from "@/services/authAPI";
+
+
 
 export const LogInComponent: FC = () => {
   const [forgetModal, setForgetModal] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [selectPhone,setSelectPhone] = useState<string>('');
+  const [prefixCode,setPrefixCode] = useState<string>('+1');
   //hooks
   const { push } = useRouter();
   const translate = useTranslate();
   const { onLogInUser, onGetUser ,onSetRegistrationPage,onSetForgetPassword} = useUserActions();
-  const { status, isProviderAuth } = useTypedSelector(state => state.user);
+  const { status, isProviderAuth } = useTypedSelector(state => state.authorization);
+ 
+
   const { returnInputError, returnInputProperties, isValid, handleSubmit, getValues, setValue } = useCustomForm<IInputsLogin>();
-   
+  
+  const selectClassName = {
+    innerWrapper: "w-fit h-[30px]",
+    popoverContent: "w-[130px] h-[250px]",
+    mainWrapper: "w-[74px] h-[50px]",
+    base: "w-[74px] h-[40px]",
+    trigger: "rounded-tl-[10px] rounded-bl-[10px] rounded-tr-none rounded-br-none shadow-none w-[74px] h-[40px] border border-r-0"
+  };
   const logInAccount: SubmitHandler<IInputsLogin> = async () => {
-    if (!isValid) return;
+    if (!isValid){
+      showToastMessage('warn',translate.notifyFillFields)
+      return;
+    }
 
     const userInformation:ILogin  = {
-      phone_number: selectPhone,
+      phone_number: (prefixCode + selectPhone).replace(/[^\d+]/g, ''),
       password: getValues()?.password,
     };
-    //Тут идут проверки на код в строке.
-    //В редакс трудно на данный момент передать четко статус код
+
     try {
-      onLogInUser(userInformation)
-        .then(response => {
-          if(response.payload?.access){
-            showToastMessage("success", translate.messageLogInSuccess);
-            return;
-          };
-          if (response.payload === 'Error: 403') {
-            setCookie('userPhone',selectPhone);
-            onSetRegistrationPage(3);
-            push(REGISTRATION_ROUTE);
-            getVerifySmsCode(getValues().phone_login_number);
-            showToastMessage("warn", "Пользователь не подтвержден");
-            return;
-          }
-          if (response.payload === 'Error: 401') {
-            showToastMessage("error", translate.messageLogInError);
-            return;
-          };
-          if (response.payload === 'Error: 401') {
-            showToastMessage("error", 'Пользователь не найден');
-            return;
-          };
-          switch (response.payload.state) {
-            case "M":
-              showToastMessage("warn", "Ваша заявка еще на модерации!");
-              push(REGISTRATION_ROUTE);
-              break;
-            case "B":
-              showToastMessage("warn", "Ваш аккаунт заблокирован!");
-              push(REGISTRATION_ROUTE);
-              break;
-            case "C":
-              showToastMessage("warn", "Ваша заявка отклонена!");
-              push(REGISTRATION_ROUTE);
-              break;
-            case "F":
-              showToastMessage("success", translate.messageLogInSuccess);
-              push(PROVIDER_ROUTE);
-              break;
-            default:
-              break;
-          }
-        })
-        .catch(error => console.log(error));
-      if(rememberMe) setCookie('userPhoneRemember',selectPhone);
+      await onLogInUser(userInformation,{rememberMe, selectPhone, prefixCode});
+    
     } catch (error) {
       console.error(error);
     }
@@ -104,6 +76,22 @@ export const LogInComponent: FC = () => {
   const redirectToRegistration = () => {
     onSetRegistrationPage(1);
     push(REGISTRATION_ROUTE);
+  };
+  const renderAllPrefixes = () => {
+    if (!prefixes.prefixes) return (
+      <SelectItem aria-labelledby="country" key="+1" value="+1">
+        Ошибка
+      </SelectItem>
+    );
+  
+    return (
+      prefixes.prefixes?.map((country: Country) => (
+        <SelectItem aria-labelledby="country" aria-label={`${country?.code}`} key={country?.code} value={`${country?.code}`}>
+          <img src={country?.flag} alt={country?.name} className="inline-block w-4 h-4 mr-2" />
+          {country?.code}
+        </SelectItem>
+      ))
+    );
   };
   //checkAuth
   useEffect(() => {
@@ -121,18 +109,23 @@ export const LogInComponent: FC = () => {
   }, [isProviderAuth, push]);
 
   useEffect(() => {
-    const savedUser = getCookie('userPhoneRemember');
+    const savedPhone = getCookie('userPhoneRemember');
+    const savedPrefix = getCookie('phonePrefix');
       
-    if (savedUser) setSelectPhone(savedUser);
+    if (savedPhone) setSelectPhone(savedPhone);
+    if (savedPrefix) setPrefixCode(savedPrefix);
 
-    setValue('phone_login_number',selectPhone)
-  },[rememberMe]);
+    setValue('phone_login_number',String(savedPhone))
+    
+  },[]);
+
 
   if (status === "pending" || isProviderAuth) return(
       <div className="products-content_spiner">
         <Icons id="spiner" />
       </div>
   );
+
 
   
   return (
@@ -149,17 +142,29 @@ export const LogInComponent: FC = () => {
             <span className="form-content_bottom-label-span">
               {translate.registrationPhoneNumber}
             </span>
-                <input
-                    {...returnInputProperties("phone_login_number")}
-                    className="form-content-login-label-input phone"
-                    type="tel"
-                    onChange={event => setSelectPhone(event.target.value)}
-                    placeholder={translate.registrationPhoneNumber}
-                    value={selectPhone}
-                    minLength={12}
-                    maxLength={14}
-                  />
-                  {returnInputError("phone_login_number")}
+            <div className="flex">
+            <Select
+                aria-label="select-prefix"
+                radius="none"
+                disallowEmptySelection
+                defaultSelectedKeys={[prefixCode]}
+                classNames={selectClassName}
+                onChange={event => setPrefixCode(event.target.value)}
+              >
+                {renderAllPrefixes()}
+              </Select>
+
+              <InputMask
+                {...returnInputProperties("phone_login_number")}
+                data-phone
+                value={selectPhone}
+                className="form-content-login-label-input-phone"
+                mask='(999) 999-99-99'
+                alwaysShowMask={true}
+                onChange={event => setSelectPhone(event.target.value)}
+              />
+           </div>
+                {returnInputError("phone_login_number")}
           </label>
 
           <label htmlFor="#" className="form-content_bottom-label">

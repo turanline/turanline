@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+  // basePath: '/partners',
   reactStrictMode: true,
   swcMinify: true,
   optimizeFonts: true,

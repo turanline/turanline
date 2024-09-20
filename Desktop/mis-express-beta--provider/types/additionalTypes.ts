@@ -1,7 +1,23 @@
+import { StaticImageData } from "next/image";
 import { Dispatch, SetStateAction } from "react";
 
 export type FunctionDispatch<T> = Dispatch<SetStateAction<T>>;
 export type CustomFormType = IInputsLogin | IInputsRegistrationProvider;
+
+
+
+export interface loginProps {
+  rememberMe: boolean;
+  selectPhone: string;
+  prefixCode: string;
+}
+
+export interface registrationProps {
+  phone_number: string;
+  selectPhoneRegistration: string;
+  nextStep: () => void;
+}
+
 
 // Registration
 export interface IInputsRegistrationProvider {
@@ -30,7 +46,7 @@ export interface ILogin{
 }
 //ResetPassword
 export interface IResetPassword{
-  email: string;
+  verification_code: string;
   phone_number: string;
 }
 
@@ -47,7 +63,7 @@ export interface IOrderProduct {
   price: string;
   season: string;
   pattern: string;
-  slug: string;
+  article_number: string;
   is_famous: boolean;
   brand: number;
   color: number;
@@ -79,13 +95,57 @@ export interface IProvidersOrders {
   payment_method: string;
   status: string;
   created_date: string;
-  total_sum: string;
+  sum_for_period: string;
 }
+
+export interface GoodInformationBase {
+  name: string;
+  price: string;
+  description: string;
+  article: string;
+  compound: string;
+  season: string;
+  pattern: string;
+  country: {
+    id: number;
+    name: string;
+  }
+  weight: string;
+  mold: string;
+  material:string;
+}
+
+export interface GoodInformationCreate extends GoodInformationBase {
+  // Для создания продукта бренд не нужен
+  brand?: never;
+}
+
+export interface GoodInformationEdit extends GoodInformationBase {
+  // При редактировании бренд обязателен
+  brand: string;
+  category: string;
+}
+
+export interface ProductFormArguments<T extends GoodInformationBase> {
+  images: (string | null)[];
+  setImages: Dispatch<SetStateAction<(string | null)[]>>;
+  isActiveFormGood: boolean;
+  uploadedImageCount: number;
+  setUploadedImageCount: Dispatch<SetStateAction<number>>;
+  goodSizesClothes: { [key: string]: number };
+  setGoodSizesClothes: Dispatch<SetStateAction<{ [key: string]: number }>>;
+  productColors: Color[];
+  setProductColors: Dispatch<SetStateAction<Color[]>>;
+  goodInformation: T;
+  setGoodInformation: Dispatch<SetStateAction<T>>;
+}
+
+
 
 // Products
 export interface IProvidersGoods {
   id: number;
-  article_number: number;
+  article_number: string;
   date_and_time: string;
   images: { image_url: string; image_file: null }[];
   price: number;
@@ -93,6 +153,14 @@ export interface IProvidersGoods {
   status: string;
   compound: string;
   slug: string;
+  category: {
+    id:number;
+    slug: string;
+    name:string;
+    image: string;
+    level:number;
+    parent:number;
+  };
 }
 
 // Provider News
@@ -101,7 +169,8 @@ export interface IProviderNewsObj {
   image: string;
   title: string;
   text: string;
-  data: string;
+  date: string;
+  category: string;
 }
 
 // Notifications
@@ -112,6 +181,7 @@ export interface IProvidersNotificationsResult {
     description: string;
     compound: string;
     slug: string;
+    article_number:string;
   };
   old_status: string;
   new_status: string;
@@ -155,6 +225,7 @@ interface Product {
   images: { image_url: string; image_file: null }[];
   slug: string;
   price: string;
+  article_number:string;
 }
 export interface Color {
   id: number;
@@ -168,29 +239,31 @@ interface Size {
 }
 interface User {
   email: string;
+  phone_number: string;
 }
 interface Customer {
   user: User;
-  phone_number: string;
 }
 export interface IProductEditPage {
   id: number;
-  brand: {
-    id: number;
-    image: string;
-    name: string;
-  };
+  brand: string;
+  material: string;
   colors_data:Color[];
+  provider:{
+    address: string;
+    company: string;
+    country: string;
+  }
   sizes_data: {
     id: number;
     name: string;
     amount: number;
   }[];
-  manufacturerCountry: {
+  manufacturerCountry:{
     id: number;
-    name: string;
-    slug: string;
-  };
+    name:string;
+    slug:string;
+  }
   subTypes: {
     id: number;
     name: string;
@@ -208,8 +281,14 @@ export interface IProductEditPage {
   slug: string;
   is_famous: boolean;
   date_and_time: string;
+  weight: string;
+  mold: string;
+  category: {
+    name:string
+  };
 }
 export interface IInputsLength {
+  weight:number;
   phone_number: number;
   phone_login_number: number;
   password: number;
@@ -230,6 +309,8 @@ export interface IInputsLength {
   price: number;
   size:number; 
   code: number;
+  description: number;
+  clothesSize:number;
 }
 export interface OrderProduct {
   amount: number;

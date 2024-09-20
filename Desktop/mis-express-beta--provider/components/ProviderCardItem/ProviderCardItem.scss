@@ -1,14 +1,26 @@
-@mixin profile-text($family, $size, $height, $weight) {
+@mixin profile-text($family, $size, $height) {
   font-family: $family;
   font-size: $size;
   line-height: $height;
-  font-weight: $weight;
 }
 
 .provider-card {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  border-radius: 8px;
+  align-items: center;
+  padding: 10px 5px;
+  cursor: pointer;
+  img{
+    max-width: 50px;
+    max-height: 50px;
+    object-fit: cover;
+  }
+  @media (hover: hover) {
+    &:hover {
+      background-color: rgb(235, 235, 235);
+    }
+  }
 }
 
 .provider-card_title {
@@ -17,11 +29,14 @@
   gap: 30px;
   width: 350px;
 
+  @media (max-width: 767px) {
+    gap: 15px;
+  }
+
   &-block {
     display: flex;
     flex-direction: column;
-    height: 50px;
-    justify-content: space-between;
+    gap: 10px;
   }
 }
 
@@ -58,28 +73,37 @@
 }
 
 .product-title {
-  @include profile-text("Geometria-Bold", 16px, 20px, 500);
+  @include profile-text("Geometria-Bold", 16px, 20px);
+  @media (max-width: 767px) {
+    font-size: 14px;
+  }
 }
 
 .products-content_cards-item-block-article {
-  @include profile-text("Geometria-Light", 16px, 20px, 300);
+  @include profile-text("Geometria-Light", 16px, 20px);
 }
 
 .provider-card_title-block_buttons {
   display: flex;
   gap: 15px;
+  row-gap: 5px;
+  flex-wrap: wrap
 }
 
 .provider-card_title-block_buttons > button,
 .provider-card_title-block_buttons > a {
-  @include profile-text("Geometria-Bold", 12px, 15px, 400);
+  @include profile-text("Geometria-Bold", 12px, 15px);
 }
 
 .products-content_cards-item-span {
-  @include profile-text("Geometria-Bold", 16px, 20px, 500);
+  @include profile-text("Geometria-Bold", 16px, 20px);
   color: #0abab5;
   width: 120px;
   text-align: center;
+  @media (max-width: 767px) {
+    font-size: 14px;
+    width: 120px !important;
+  }
 }
 
 .products-content_cards-item-date{
@@ -92,7 +116,7 @@
 .products-content_cards-item-price,
 .products-content_cards-item-article {
   text-align: center;
-  @include profile-text("Geometria-Light", 16px, 20px, 300);
+  @include profile-text("Geometria-Light", 16px, 20px);
 }
 
 .products-content_cards-item-price {
@@ -101,4 +125,10 @@
 
 .products-content_cards-item-article {
   width: 75px;
+}
+
+@media (max-width: 1023px) {
+  .products-content_card-item--off {
+    display: none;
+  }
 }

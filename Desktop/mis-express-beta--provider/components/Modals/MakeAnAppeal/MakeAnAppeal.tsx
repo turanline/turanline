@@ -16,7 +16,7 @@ const MakeAnAppeal: FC<IModalAppeal> = ({ appealModal, setAppealModal,clientEmai
   const closeModal = () => setAppealModal(false);
   const stopPropagation = (event: React.MouseEvent) => event.stopPropagation();
 
-  //колхоз. нужно обсуждать с матвеем
+  //колхоз.
   useEffect(() => {
     if (appealModal) {
       document.body.classList.add("no-scroll");

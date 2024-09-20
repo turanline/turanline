@@ -1,6 +1,6 @@
 "use client";
 //Global
-import { useEffect,useState } from "react";
+import { useEffect } from "react";
 //Utils
 //Hooks
 import { useTypedSelector } from "@/hooks/useTypedSelector";

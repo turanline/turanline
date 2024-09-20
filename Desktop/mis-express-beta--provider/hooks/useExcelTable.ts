@@ -4,6 +4,7 @@ import { useState, useRef, SetStateAction, Dispatch } from "react";
 import { showToastMessage } from "@/app/toastsChange";
 //Hooks
 import { useUserActions } from "./useUserActions";
+import { useTranslate } from "./useTranslate";
 //Services
 import { getProviderExport, postProviderImport } from "@/services/providerAPI";
 
@@ -17,6 +18,8 @@ export const useExcelTable = (isOpen: boolean,setIsOpen: Dispatch<SetStateAction
 
   const { onGetProviderGoods } = useUserActions();
 
+  const translate = useTranslate()
+
   const getExcelTable = () => {
     getProviderExport()
       .then(data => {
@@ -26,10 +29,7 @@ export const useExcelTable = (isOpen: boolean,setIsOpen: Dispatch<SetStateAction
         }
       })
       .catch(() => {
-        showToastMessage(
-          "error",
-          "Произошла ошибка при экспорте таблицы, попробуйте позже!"
-        );
+        showToastMessage("error",translate.notifyUnSuccessExportTable);
       });
   };
 
@@ -45,7 +45,7 @@ export const useExcelTable = (isOpen: boolean,setIsOpen: Dispatch<SetStateAction
 
     if (table) {
       if (tableExtension && !fileExtensions.includes(tableExtension)) {
-        showToastMessage("warn", "Недопустимый формат файла!");
+        showToastMessage("warn", translate.notifyFomatFile);
         return;
       }
 
@@ -57,25 +57,22 @@ export const useExcelTable = (isOpen: boolean,setIsOpen: Dispatch<SetStateAction
           .then((response) => {
             if(response){
               onGetProviderGoods();
-              showToastMessage("success", "Добавление товаров займет время...");
+              showToastMessage("success", translate.notifyWaitAddTable );
             }else{
-              showToastMessage("error", "Произошла ошибка при отправке таблицы, попробуйте позже!");
+              showToastMessage("error", translate.notifyErrorAddTable);
             }
           })
           .catch(error => {
-            showToastMessage("error", "Произошла ошибка при отправке таблицы, попробуйте позже!");
+            showToastMessage("error", translate.notifyErrorAddTable);
           })
           .finally(() => {
             setIsOpen(false);
             handleResetFileInput();
           });
       } catch (error) {
-        showToastMessage(
-          "warn",
-          "Все товары должны быть с уникальным столбцом slug и serial number!"
-        );
+        showToastMessage("warn",translate.notifyErrorAddTable);
       }
-    } else showToastMessage("warn", "Вы не выбрали файл!");
+    } else showToastMessage("warn", translate.notifyDontChoseFile);
   };
 
   return {

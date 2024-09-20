@@ -9,15 +9,38 @@
     font-size: 14px;
   }
 }
+@media (max-width: 640px) {
+  .footer-main-wrapper{
+    max-width: 400px;
+  }
+}
+
+
 @media (max-width: 530px) {
   .footer_shop_address {
     font-size: 12px;
   }
 }
 
-.family_bold {
-  font-family: geometria-bold;
+@media (max-width: 400px) {
+  .footer-main-wrapper{
+    max-width: 350px;
+  }
+  .links-wrapper{
+    max-width: 100px;
+  }
+  .links-wrapper-link{
+    width: 100%;
+  }
 }
-.family_medium {
-  font-family: Geometria-Medium;
+
+// .family_bold {
+//   font-family: geometria-bold;
+// }
+// .family_medium {
+//   font-family: Geometria-Medium;
+// }
+
+.footer-links-fonts {
+  font-family: geometria-bold;
 }

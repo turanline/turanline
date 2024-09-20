@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { IUserOrdersState,OrderProduct} from "./additionalTypes";
-
+import { IProvidersGoods } from "./additionalTypes";
 // export type FunctionDispatch<T> = Dispatch<SetStateAction<T>>;
 export interface Country {
   code: string;
@@ -11,7 +11,6 @@ export interface Country {
 export interface IUserOrderItemProps {
   cardTitle: string;
   cardPrice: string;
-  cardSize: string;
   cardColor: string;
   cardAmount: number;
   cardPriceAll: number;
@@ -31,6 +30,7 @@ export interface IUserOrderWrapperProps {
   orderInformation: OrderProduct[];
   setAppealModal: Dispatch<SetStateAction<boolean>>;
   appealModal: boolean;
+  onItemClick: () => void;
 }
 export interface IModalForgetPassword {
   setForgetModal: Dispatch<SetStateAction<boolean>>;
@@ -50,11 +50,23 @@ export interface IProviderCardProps {
   cardTitle: string;
   cardImage: string | null;
   cardPrice: number;
-  cardArticle: number;
+  cardArticle: string;
   cardDate: string;
   cardTime: string;
   cardStatusText: string;
   cardStatus: string;
   cardCompound: string;
-  cardSlug: string;
+  onItemClick: ()=> void;
+  setSelectedGood: Dispatch<SetStateAction<IGoodModal | null>>;
+}
+
+export interface IGoodModal{
+  cardTitle: string;
+  cardPrice: number;
+  cardArticle: string;
+  cardDate: string;
+  cardTime: string;
+  cardStatusText: string;
+  cardStatus: string;
+  cardCompound: string;
 }

@@ -16,6 +16,67 @@
   "headerProductsPage": "Ürünler ve Fiyatlar",
   "headerOrdersPage": "Siparişler",
 
+
+  "moldOversize":"Büyük boy",
+  "moldSlim":"İnce",
+  "moldSkinny":"Sıska",
+  "moldNormal":"Normal",
+  "moldNoMold":"Olumsuz",
+  "moldTitle":"Model",
+
+
+  "materialTitle": "Malzeme",
+  "cotton": "Pamuk",
+  "silck": "İpek",
+  "polyester": "Polyester",
+  "wool": "Yün",
+  "linen": "Keten",
+
+  "notifyFillFields": "Tüm alanları doldurun",
+  "notifySuccesAddProduct": "Ürün başarıyla eklendi",
+  "notifyUnSuccesAddProduct": "Ürün eklenemedi",
+  "notifySuccessChangedProduct": "Ürün başarıyla değiştirildi",
+  "notifyErrorChangedProduct": "Ürün değiştirilirken bir hata oluştu",
+  "notifyUserUndefiend": "Kullanıcı bulunamadı",
+  "notifyUserNorVerified": "Kullanıcı doğrulanmadı",
+  "notifySuccesDeleteProduct": "Ürün başarıyla silindi",
+  "notifySomethingWentWrong": "Bir şeyler ters gitti",
+  "notifySuccesStatusChanged": "Ürün durumu başarıyla değiştirildi!",
+  "notifyCheckCodeSuccess": "Doğrulama başarılı",
+  "notifyCheckCodeUnSuccess": "Doğrulama başarısız oldu",
+  "notifyUnSuccessExportTable": "Tablo dışa aktarılırken bir hata oluştu, daha sonra tekrar deneyin",
+  "notifyFomatFile": "Geçersiz dosya formatı",
+  "notifyWaitAddTable": "Ürünlerin eklenmesi zaman alacak...",
+  "notifyErrorAddTable": "Tablo gönderilirken bir hata oluştu, daha sonra tekrar deneyin",
+  "notifyDontChoseFile": "Bir dosya seçmediniz",
+  "notifyMinimumPhoto": "En az bir fotoğraf",
+  "notifyMaximumPhoto": "5'ten fazla fotoğraf yükleyemezsiniz",
+  "notifyDeleteColor": "Renk başarıyla silindi",
+  "notifyMinimumColor": "En az bir renk kalmalı",
+  "notifySizeDelete": "Boyut başarıyla silindi",
+  "notifyMinimumSize": "En az bir boyut kalmalı",
+  "notifyCouldntGetNews": "Haberler alınamadı",
+  "notifyCouldntGetReviews": "Yorumlar alınamadı",
+  "notifyCouldntGetNotifications": "Bildirimler alınamadı",
+  "notifyCouldntGetTimer": "Zamanlayıcı alınamadı",
+  "notifyCouldntFindUser": "Kullanıcı bulunamadı",
+  "notifyAccountModeration": "Başvurunuz hâlâ moderasyonda",
+  "notifyAccountBlocked": "Hesabınız bloke edildi",
+  "notifyAccountDecliened": "Başvurunuz reddedildi",
+  "notifySuccessfulRegistration": "Kayıt başarılı",
+  "notifyUnSuccessfulRegistration": "Kayıt başarısız oldu",
+  "notifyVerifyPhone": "Telefon numaranızı doğrulayın",
+  "notifyCouldntLogout": "Çıkış yapılamadı",
+  "notifyCouldntFindProvider": "Sağlayıcı bulunamadı",
+  "notifyCouldntGetBalance":"Denge sağlanamadı",
+  
+
+  "typeWearClothes": "Kıyafet",
+  "typeWearShoes": "Ayakkabı",
+  "addShoeSize": "Beden Ekle",
+  "writeShoeSize": "Beden Girin",
+
+
   "mainPageAccount": "Hesapta",
   "mainPageTotalSum": "Teslim edilmeyen siparişler dahil toplam tutar",
   "mainPageWithdrawal": "Çekim",
@@ -35,10 +96,16 @@
 
   "blockedPageTitle": "Hesabınız engellendi",
   "blockedPageButton": "İtiraz",
+  "productPageTitle": "Ürün adı",
+
+  "headerTypeSelect": "Alt Kategori",
+  "headerSubtypeSelect": "Tür",
+  "productsPageNotArchive": "Arşivde",
 
   "productsPageProducts": "Ürünler",
   "productsPageExport": "İhracat",
   "productsPageImport": "İthalat",
+  "productsPageCreate":"Ürün ekle",
   "productsPageAll": "Hepsi",
   "productsPagePublished": "Yayınlanan",
   "productsPageNotAccepted": "Kabul Edilmeyenler",
@@ -360,16 +427,17 @@
   "errorPageText": "Sunucu tarafında bir hata meydana geldi, bunu düzeltmek için çok çalışıyoruz!",
 
   "formEmail": "Lütfen geçerli bir e-posta adresi girin.",
-  "formName": "Lütfen büyük bir İngilizce harfle başlayan ve ardından yalnızca küçük harflerin geldiği geçerli bir değer girin.",
+  "formName": "Lütfen büyük bir İngilizce, Türkçe veya Rusça başlayan ve ardından yalnızca küçük harflerin geldiği geçerli bir değer girin.",
   "formPassword": "Şifre yalnızca harfler (büyük ve küçük harfler) ve rakamlar içerebilir. Lütfen şifrenizin bu gereksinimleri karşıladığından emin olun.",
   "formUsername": "Kullanıcı adı yalnızca harfler (büyük ve küçük harfler), rakamlar ve alt çizgiler içerebilir. Lütfen kullanıcı adınızın yalnızca bu karakterlerden oluştuğundan emin olun.",
   "formPhone": "Lütfen telefon numarasını şu formatta girin: +1 234 567 89 00",
-  "formAddress": "Adres yalnızca Latin harfleri, rakamlar, boşluklar, virgüller, noktalar ve tireler içerebilir. Lütfen geçerli bir adres girin.",
+  "formAddress": "Adres yalnızca Latin veya Kiril harfleri, rakamlar, boşluklar, virgüller, noktalar ve tireler içerebilir. Lütfen geçerli bir adres girin.",
   "formCompany": "Lütfen geçerli bir şirket adı girin!",
   "formRequired": "Bu alan gereklidir!",
   "formMin": "En az",
   "formMax": "En fazla",
   "formSymbols": "karakter",
+  "formPriceRefining": "Birim başına fiyat*",
 
   "sizes": "Boyutlar",
   "sizeProduct": "Boyut",
@@ -397,13 +465,16 @@
   "PhoneConfirmCode": "Mesajdaki kod",
   "PhoneConfirmCodePlaceHolder": "Doğrulama kodunu girin",
   "ConfirmPhoneButton": "Onayla",
-
+  "formPriceRefining": "Birim başına fiyat*",
+  
   "inspectionCheck": "Geçerli bir vergi dairesi numarası giriniz!",
   "mersisCheck": "Mersis numarası tam olarak 16 karakterden oluşmalıdır",
   "correctValue": "Geçerli bir değer giriniz",
-  "checkPrice": "Fiyatı boşluksuz giriniz",
+  "checkPrice": "Geçerli bir değer girin",
+  "checkWeight": "Geçerli bir değer girin",
   "checkSize": "Bedeni boşluksuz giriniz",
   "checkCode": "Kod boşluk veya harf içermemelidir",
+  "productWeight": "Ürün Ağırlığı",
 
   "Russia": "Rusya",
   "China": "Çin",
@@ -414,6 +485,8 @@
   "Winter": "Kış",
   "Spring": "İlkbahar",
   "DemiSeason": "Mevsimlik",
+  "productStatusCargo": "Kargoya aktarıldı",
+
 
   "productStatusDelivered": "Teslim Edildi",
   "productStatusBundle": "Montajda",
@@ -426,5 +499,7 @@
   "productsModerated": "Ürünler Moderasyondan Geçti",
   "productsNotModerated": "Ürünler Moderasyondan Geçmedi",
   "buttonResetFile": "Dosyayı Sıfırla",
-  "selectedFile": "Seçilen Dosya"
+  "selectedFile": "Seçilen Dosya",
+  "productsInArchive": "Arşivdeki ürünler",
+  "productsInCargo": "Kargoya aktarılan mallar"
 }

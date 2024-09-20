@@ -6,7 +6,6 @@ const Registration = lazy(() => import('@/components/Registration/RegistrationCo
 const Offer = lazy(() => import('@/components/Registration/OfferStage/OfferStage'));
 const Timer = lazy(() => import('@/components/Registration/TimerComponent/TimerComponent'));
 const PhoneConfirm = lazy(() => import('@/components/Registration/PhoneConfirmation/PhoneConfirmation'));
-
 import { Icons } from '@/components/Icons/Icons';
 //Hooks
 import { useTypedSelector } from '@/hooks/useTypedSelector';
@@ -14,7 +13,7 @@ import { useUserActions } from '@/hooks/useUserActions';
 
 
 const RegistrationPage = () => {
-  const { status, isProviderAuth,registrationPageNumber } = useTypedSelector(state => state.user);
+  const { status, isProviderAuth,registrationPageNumber } = useTypedSelector(state => state.authorization);
   const { onGetUser,onSetRegistrationPage } = useUserActions();
 
   const nextStep = () => onSetRegistrationPage(registrationPageNumber + 1);

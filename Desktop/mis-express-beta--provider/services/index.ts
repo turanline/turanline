@@ -1,7 +1,10 @@
 // Global
 import axios from "axios";
+import { redirect } from "next/navigation";
 // Cookies
 import { deleteCookie, getCookie } from "cookies-next";
+import { postVerifyToken,postTokenRefresh } from "./token";
+import { LOGIN_ROUTE } from "@/utils/Consts";
 
 const baseURL = process.env.NEXT_PUBLIC_URL;
 
@@ -28,6 +31,8 @@ const unauthorizedInterceptor = (config: any) => {
   return config;
 };
 
+
+
 $authHost.interceptors.request.use(authorizationInterceptor);
 $host.interceptors.request.use(unauthorizedInterceptor);
 
@@ -36,4 +41,48 @@ export { $host, $authHost };
 export const clearTokens = () => {
   deleteCookie("AuthTokenMis");
   deleteCookie("AuthTokenMisRef");
+};
+
+//checkTokens
+export const verifyAndRefreshToken = async () => {
+  // Get all tokens
+  const token = getCookie("AuthTokenMis");
+  const refreshToken = getCookie("AuthTokenMisRef");
+
+  // Check if the token exists
+  if (!token) {
+    throw new Error("Токен не найден");
+  }
+
+  try {
+    const {user,roles} = await postVerifyToken(token);
+
+    switch (true) {
+      case roles?.provider && roles?.customer:
+          return user;
+      case roles?.customer && !roles?.provider:
+          redirect(LOGIN_ROUTE);
+      case roles?.provider && !roles?.customer:
+          return user;
+      default:
+          break;
+  }
+
+  } catch (error) {
+    if (refreshToken) {
+      try {
+        const newToken = await postTokenRefresh();
+        const { user } = await postVerifyToken(newToken);
+
+
+        return user;
+      } catch (refreshError) {
+        clearTokens();
+        throw new Error("Не удалось обновить токен");
+      }
+    } else {
+      clearTokens();
+      throw new Error("Токен обновления не найден");
+    }
+  }
 };

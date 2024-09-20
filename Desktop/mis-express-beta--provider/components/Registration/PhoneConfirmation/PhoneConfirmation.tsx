@@ -4,6 +4,7 @@ import { useEffect,useState } from "react";
 import { Button, Input } from "@nextui-org/react";
 import { getCookie,deleteCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
+import { showToastMessage } from "@/app/toastsChange";
 //Hooks
 import { useCustomForm } from "@/hooks/useCustomForm.";
 import { useTranslate } from "@/hooks/useTranslate";
@@ -12,18 +13,17 @@ import { useTypedSelector } from "@/hooks/useTypedSelector";
 //Utils
 import { LOGIN_ROUTE } from "@/utils/Consts";
 //Services
-import { postVerifySmsCode } from "@/services/authAPI";
+import { postConfirmCode,resetUserPassword } from "@/services/codeConfirmation";
 //Types
 import { IInputsRegistrationProvider } from "@/types/additionalTypes";
 //Styles
 import './PhoneConfirmation.scss';
-import { showToastMessage } from "@/app/toastsChange";
 
 export default function PhoneConfirmation({nextStep}: {nextStep: () => void}){
   const { push } = useRouter();
   const translate = useTranslate();
   const {onGetUser,onSetForgetPassword} = useUserActions();
-  const { forgetPasswordState } = useTypedSelector(state => state.user);
+  const { forgetPasswordState } = useTypedSelector(state => state.authorization);
   const {returnInputError,returnInputProperties,handleSubmit,getValues} = useCustomForm<IInputsRegistrationProvider>();
 
   const [phoneNumber,setPhoneNumber] = useState('');
@@ -45,30 +45,40 @@ export default function PhoneConfirmation({nextStep}: {nextStep: () => void}){
   };
   const stopPropagation = (event: React.MouseEvent | React.FormEvent) => event.stopPropagation();
 
-  const checkVerifyCode = () => {
-    try {
-      postVerifySmsCode(phoneNumber,getValues().code)
-      .then(response => {
-        if(response){
-          if(forgetPasswordState){
-            showToastMessage('success','Проверка прошла успешно');
-            deleteCookie('userPhone');
+  const checkVerifyCode = async () => {
+    if(forgetPasswordState){
+      try {
+        const response = await resetUserPassword({phone_number:phoneNumber,verification_code: getValues().code})
+           if(response?.status === 200){
+            showToastMessage('success',translate.notifyCheckCodeSuccess);
+            deleteCookie('phoneNumber');
             push(LOGIN_ROUTE);
             onSetForgetPassword(false);
-          };
-          onGetUser();
-          nextStep();
-        };
-        if(!response) showToastMessage('error','Проверка не прошла');
-      })
-      .catch(error => console.error(error))
-    } catch (error) {
-        showToastMessage('error','Проверка не прошла')
+           };
+           if(!response) showToastMessage('error',translate.notifyCheckCodeUnSuccess);
+           return;
+       } catch (error) {
+           showToastMessage('error',translate.notifyCheckCodeUnSuccess)
+           return;
+       }
     }
+    try {
+      const response = await postConfirmCode(phoneNumber,getValues().code)
+         if(response?.status === 200){
+          nextStep();
+          onGetUser();
+         }
+         if(response?.response?.status){
+          showToastMessage('error',translate.notifyCheckCodeUnSuccess);
+          return;
+         }
+     } catch (error) {
+         console.error(error);
+     }
   }
 
   useEffect(()=>{
-    const phone = getCookie('userPhone');
+    const phone = getCookie('phoneNumber');
 
     if(phone) setPhoneNumber(phone);
 

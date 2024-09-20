@@ -31,6 +31,24 @@ export const Icons: FC<{ id: string }> = ({ id }) => {
           />
         </svg>
       );
+    case "burger":
+      return (
+        <svg
+          width="40"
+          height="40"
+          viewBox="0 0 40 40"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M5.5 22H31.1667M5.5 11H38.5M5.5 33H38.5"
+            stroke="#0ABAB5"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
     case "search2":
       return (
         <svg
@@ -530,5 +548,23 @@ export const Icons: FC<{ id: string }> = ({ id }) => {
         return (
           <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0,0,256,256" width="16px" height="16px"><g fill="#0abab5" fillRule="nonzero" stroke="none" strokeWidth="1" strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit="10" strokeDasharray="" strokeDashoffset="0" fontFamily="none" fontWeight="none" fontSize="none" textAnchor="none" style={{mixBlendMode: "normal"}}><g transform="scale(10.66667,10.66667)"><path d="M20.49609,2.99219c-0.13237,0.00312 -0.2581,0.05861 -0.34961,0.1543l-8.14648,8.14648l-8.14648,-8.14648c-0.09421,-0.09737 -0.22389,-0.15234 -0.35937,-0.15234c-0.20372,0.00004 -0.38705,0.12367 -0.46345,0.31252c-0.0764,0.18885 -0.03059,0.40518 0.1158,0.54685l8.14648,8.14648l-8.14648,8.14648c-0.13061,0.12541 -0.18322,0.31163 -0.13754,0.48685c0.04568,0.17522 0.18251,0.31205 0.35773,0.35773c0.17522,0.04568 0.36144,-0.00693 0.48685,-0.13754l8.14648,-8.14648l8.14648,8.14648c0.12541,0.13061 0.31163,0.18321 0.48684,0.13753c0.17521,-0.04568 0.31204,-0.18251 0.35772,-0.35772c0.04568,-0.17521 -0.00693,-0.36143 -0.13753,-0.48684l-8.14648,-8.14648l8.14648,-8.14648c0.14922,-0.14268 0.19541,-0.36239 0.11628,-0.55308c-0.07913,-0.19069 -0.26731,-0.31314 -0.4737,-0.30825z"></path></g></g></svg>
         );
+    case "burger":
+      return (
+        <svg
+          width="40"
+          height="40"
+          viewBox="0 0 40 40"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M5.5 22H31.1667M5.5 11H38.5M5.5 33H38.5"
+            stroke="#0ABAB5"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
   }
 };

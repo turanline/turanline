@@ -10,6 +10,7 @@ import { IUserOrderWrapperProps } from "@/types/componentsTypes";
 import { useTranslate } from "@/hooks/useTranslate";
 //Styles
 import "./ProviderOrderWrapper.scss";
+import OrderStatus from "../OrderStatus/OrderStatus";
 
 const ProviderOrderWrapper: FC<IUserOrderWrapperProps> = ({
   orderDate,
@@ -19,22 +20,51 @@ const ProviderOrderWrapper: FC<IUserOrderWrapperProps> = ({
   appealModal,
   setAppealModal,
   orderInformation,
+  onItemClick = () => {}
 }) => {
 
-  const {
-    orderNumberOrders,
-    makeAppealOrders,
-    productStatusDelivered,
-    productStatusBundle,
-    productStatusTransit,
-    productStatusCreated,
-    productStatusUnknown,
-  } = useTranslate();
+  const translate = useTranslate();
 
   const [isHidden, setIsHidden] = useState<boolean>(true);
   const [wrapperHeight, setWrapperHeight] = useState<number | null>(null);
 
   const contentRef = useRef<HTMLDivElement>(null);
+  const wrapperStyles = {
+    maxHeight: isHidden ? "35px" : `${wrapperHeight}px`,
+    transition: "max-height 0.3s ease-in-out",
+  };
+
+  const changeModalStatusAppeal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setAppealModal(!appealModal)
+  };
+
+  const renderGoodsInOrder = () => {
+    if (!orderInformation?.length) return <h3>Товаров нет</h3>;
+
+    return orderInformation?.map(good => {
+      const cardImage: string | null = good?.product?.images[0]?.image_file;
+
+      return (
+        <ProviderOrderItem
+          key={good?.product?.id}
+          cardColor={good?.color?.color}
+          cardAmount={good?.amount}
+          cardPriceAll={good?.sum}
+          cardPrice={good?.product?.price}
+          cardTitle={good?.product?.name}
+          cardSlug={good?.product?.article_number}
+          cardImg={cardImage}
+        />
+      );
+    });
+  };
+
+  const setHiden = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsHidden(!isHidden)
+  };
+
 
   useEffect(() => {
     setWrapperHeight(contentRef.current?.scrollHeight || null);
@@ -60,108 +90,15 @@ const ProviderOrderWrapper: FC<IUserOrderWrapperProps> = ({
     };
   }, []);
 
-  const returnOrderStatus = (status: string) => {
-    let orderStatusText;
-    let iconId;
-    let buttonStyles;
-
-    switch (status) {
-      case "FD":
-        orderStatusText = productStatusDelivered;
-        iconId = "deliveredOrder";
-        buttonStyles = {
-          backgroundColor: "#ECFFFE",
-          color: "#0ABAB5",
-        };
-
-        break;
-      case "CD":
-        orderStatusText = productStatusBundle;
-        iconId = "Packed";
-        buttonStyles = {
-          backgroundColor: "#FEFFF3",
-          color: "#FFD600",
-        };
-        break;
-      case "PR":
-        orderStatusText = productStatusTransit;
-        iconId = "car";
-        buttonStyles = {
-          backgroundColor: "#fff3fa",
-          color: "#e30387",
-        };
-
-        break;
-      case "CR":
-        orderStatusText = productStatusCreated;
-        iconId = "deliveredOrder";
-        buttonStyles = {
-          backgroundColor: "#ECFFFE",
-          color: "#0ABAB5",
-        };
-
-        break;
-      default:
-        orderStatusText = productStatusUnknown;
-        iconId = "car";
-        buttonStyles = {
-          backgroundColor: "#fff3fa",
-          color: "#e30387",
-        };
-        break;
-    }
-
-    return (
-      <button
-        style={buttonStyles}
-        className="provider-content_orders-content-order-status"
-      >
-        <Icons id={iconId} />
-        {orderStatusText}
-      </button>
-    );
-  };
-
-  const wrapperStyles = {
-    maxHeight: isHidden ? "25px" : `${wrapperHeight}px`,
-    transition: "max-height 0.3s ease-in-out",
-  };
-
-  const changeModalStatusAppeal = () => setAppealModal(!appealModal);
-
-  const renderGoodsInOrder = () => {
-    if (!orderInformation?.length) return <h3>Товаров нет</h3>;
-
-    return orderInformation?.map(good => {
-      const cardImage: string | null = good?.product?.images[0]?.image_file;
-
-      return (
-        <ProviderOrderItem
-          key={good?.product?.id}
-          cardColor={good?.color?.color}
-          cardAmount={good?.amount}
-          cardPriceAll={good?.sum}
-          cardSize={good?.size?.name}
-          cardPrice={good?.product?.price}
-          cardTitle={good?.product?.name}
-          cardSlug={good?.product?.slug}
-          cardImg={cardImage}
-        />
-      );
-    });
-  };
-
-  const setHiden = () => setIsHidden(!isHidden);
-
   return (
     <div style={wrapperStyles} className="provider-content_orders-content-order-wrapper" ref={contentRef}>
-      <div key={orderNumber} className="provider-content_orders-content-order">
+      <div onClick={onItemClick} key={orderNumber} className="provider-content_orders-content-order">
         <button
           data-order
           className="provider-content_orders-content-order-span"
           onClick={setHiden}
         >
-          {orderNumberOrders} #{orderNumber}
+          {translate.orderNumberOrders} #{orderNumber}
         </button>
 
         <span data-date className="provider-content_orders-content-order-span">
@@ -172,11 +109,11 @@ const ProviderOrderWrapper: FC<IUserOrderWrapperProps> = ({
           ${orderPrice}
         </span>
 
-          {returnOrderStatus(orderStatus)}
+          {<OrderStatus status={orderStatus} />}
 
         <button onClick={changeModalStatusAppeal} className="provider-content_orders-content-order-button">
           <Icons id="flag" />
-          {makeAppealOrders}
+          {translate.makeAppealOrders}
         </button>
 
       </div>

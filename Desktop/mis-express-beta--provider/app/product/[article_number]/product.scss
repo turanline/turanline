@@ -18,6 +18,18 @@
   .single-page-wrapper {
     grid-template-columns: repeat(1, minmax(0, 100%));
   }
+  .container{
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 400px) {
+  .single-page-wrapper {
+    grid-template-columns: repeat(1, minmax(0, 100%));
+  }
+  .container{
+    max-width: 350px;
+  }
 }
 
 .family-bold {

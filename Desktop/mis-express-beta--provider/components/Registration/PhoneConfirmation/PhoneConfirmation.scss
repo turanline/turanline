@@ -4,9 +4,8 @@
     gap: $gap;
   }
   
-  @mixin form-text($color, $weight, $size, $align) {
+  @mixin form-text($color, $size, $align) {
     color: $color;
-    font-weight: $weight;
     font-size: $size;
     text-align: $align;
   }
@@ -79,7 +78,7 @@
   .form-content_header-title-phone {
     font-family: geometria-medium;
     line-height: 38px;
-    @include form-text(#0abab5, 600, 30px, center);
+    @include form-text(#0abab5, 30px, center);
   }
   
   
@@ -107,7 +106,7 @@
   
   .form-content_phone-label-span {
     line-height: 20px;
-    @include form-text(#344054, 500, 15px, left);
+    @include form-text(#344054, 15px, left);
   }
   
   .form-content_phone-label-span.phone {

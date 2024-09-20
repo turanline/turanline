@@ -1,8 +1,11 @@
 import { $authHost, $host } from "./index";
+import { IProductEditPage } from "@/types/additionalTypes";
 
-export const getAllProvidersGoods = async () => {
+
+export const getProvidersOrdersPeriodPrice = async (startDate?: Date | null | string) => {
   try {
-    const { data } = await $authHost.get(`/api/provider/products`);
+    const { data } = await $authHost.get(`/api/provider/get_orders/?start_date=${startDate}` );
+
     return data;
     
   } catch (error) {
@@ -10,9 +13,19 @@ export const getAllProvidersGoods = async () => {
   }
 };
 
-export const getProductBySlug = async (slug: string, language: string) => {
+export const getAllProvidersGoods = async () => {
   try {
-    const { data } = await $host.get("/api/catalog/" + slug, {headers: {'Accept-Language': language}});
+    const { data } = await $authHost.get('/api/provider/products/');
+    return data;
+    
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getProductBySlug = async (article_number: string, language: string) => {
+  try {
+    const { data } = await $host.get("/api/catalog/" + article_number, {headers: {'Accept-Language': language}});
 
     return data;
   } catch (error) {
@@ -20,24 +33,26 @@ export const getProductBySlug = async (slug: string, language: string) => {
   }
 };
 
-export const deleteProductBySlug = async (slug: string) => {
+export const deleteProductBySlug = async (article_number: string) => {
   try {
-    const { data } = await $authHost.delete(`/api/catalog/${slug}/`);
+    const { data,status } = await $authHost.delete(`/api/catalog/${article_number}/`);
 
-    return data;
-  } catch (error) {
+    return { data,status };
+  } catch (error: any) {
     console.error(error);
-    throw error;
+    return error;
   }
 };
 
-export const patchProductBySlug = async (slug: string,body: { status: string }) => {
-  try {
-    const { data } = await $authHost.patch(`/api/catalog/${slug}/`, body);
 
-    return data;
-  } catch (error) {
+export const patchProductBySlug = async (article_number: string,body:{status: string}) => {
+  try {
+    const { data, status } = await $authHost.patch(`/api/catalog/${article_number}/`,body);
+
+    return { data, status };
+  } catch (error: any) {
     console.error(error);
+    return error;
   }
 };
 
@@ -97,7 +112,7 @@ export const getProvidersOrders = async () => {
 
 export const getProviderNews = async () => {
   try {
-    const { data } = await $authHost.get("/api/superusernews/");
+    const { data } = await $authHost.get("/api/news/");
 
     return data;
   } catch (error) {
@@ -115,11 +130,21 @@ export const getProviderReviews = async () => {
   }
 };
 
-export const putProductBySlug = async (slug: string,changes: any) => {
+export const getAllCountries = async (language :string) => {
   try {
-    const { data } = await $authHost.put(`/api/catalog/${slug}/`, changes);
+    const { data } = await $authHost.get("/api/country/",{headers: {'Accept-Language': language}});
 
     return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const putProductBySlug = async (article_number: string,changes: any,language:string) => {
+  try {
+    const { data,status } = await $authHost.put(`/api/catalog/${article_number}/`, changes,{headers: {'Accept-Language': language}});
+
+    return { data,status };
   } catch (error) {
     console.error(error);
   }
@@ -135,5 +160,53 @@ export const getColorsAPI = async () => {
     throw error;
   }
 };
+
+export const getSizesClothes = async () => {
+  try {
+    const { data,status } = await $authHost.get("/api/size/");
+
+    return { data,status };
+  } catch (error) {
+    console.error("Failed get colors: " + error);
+    throw error;
+  }
+};
+
+
+export const getAllCategories = async () => {
+  try {
+    const { data, status } = await $host.get('/api/categories/?level=0');
+
+    return { data, status };
+  } catch (error: any) {
+    if(error) return error;
+    console.error("Failed to get categories: " + error);
+  }
+};
+
+export const getTypesByChildren = async (children: number) => {
+  try {
+    const { data, status } = await $host.get('/api/categories/', {params: { children }});
+
+    return { data, status };
+  } catch (error: any) {
+    if(error) return error;
+    console.error("Failed to get categories: " + error);
+  }
+};
+
+
+export const createNewProduct = async (productParameters: any,language: string) => {
+  try {
+    const { data,status } = await $authHost.post("/api/catalog/", productParameters,{headers: {'Accept-Language': language}});
+
+    return { data,status };
+  } catch (error:any) {
+    if(error){
+      return error;
+    }
+    console.error(error);
+  }
+}
 
 

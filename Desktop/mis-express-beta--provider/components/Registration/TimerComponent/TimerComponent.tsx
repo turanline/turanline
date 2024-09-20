@@ -15,8 +15,10 @@ import "./TimerComponent.scss";
 
 export default function TimerComponent() {
   //hooks
-  const {onGetProviderTime, onSetTimer } = useUserActions();
-  const { time_left,status } = useTypedSelector(state => state.user);
+  const {onGetProviderTime, onSetTimer} = useUserActions();
+  const { time_left } = useTypedSelector(state => state.user);
+  const { status } = useTypedSelector(state => state.authorization);
+
   const text = useTranslate();
   
   const formatTime = () => {
@@ -33,9 +35,6 @@ export default function TimerComponent() {
     return `${hours}:${minutes}:${remainingSeconds}`;
   };
 
-  useEffect(() => {
-    onGetProviderTime();
-  }, [onGetProviderTime]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -46,6 +45,13 @@ export default function TimerComponent() {
 
     return () => clearInterval(interval);
   }, [ time_left]);
+
+
+
+  useEffect(() => {
+    onGetProviderTime();
+  }, [onGetProviderTime]);
+
 
   if (status === "pending") return(
       <div className="products-content_spiner">

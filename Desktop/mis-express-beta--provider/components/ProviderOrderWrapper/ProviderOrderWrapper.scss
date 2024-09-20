@@ -66,29 +66,30 @@
   align-items: center;
   flex-wrap: wrap;
   user-select: none;
+  padding: 5px 5px;
   gap: 10px;
+  cursor: pointer;
+  @media (hover: hover) {
+    &:hover {
+      background-color: rgb(235, 235, 235);
+    }
+  }
 }
 
 .provider-content_orders-content-order-span[data-order] {
   cursor: pointer;
   width: 100px;
+  @media (hover: hover) {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .provider-content_orders-content-order-span[data-price],
 .provider-content_orders-content-order-span[data-date] {
   text-align: left;
   width: 100px;
-}
-
-.provider-content_orders-content-order-status {
-  width: 100px;
-  padding: 6px 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  border-radius: 5px;
-  @include provider-text(geometria-medium, 10px, 15px);
 }
 
 .provider-content_orders-content-order-button {
@@ -101,7 +102,7 @@
 }
 
 .provider-content_orders-content-order-status {
-  width: 100px;
+  width: fit-content;
   padding: 5px 10px;
   height: 25px;
   display: flex;

@@ -1,7 +1,7 @@
 //Global
 import { toast } from "react-toastify";
 //Styles
-import "./globals.scss";
+// import "./globals.scss";
 import "react-toastify/dist/ReactToastify.css";
 
 export const showToastMessage = (status: "error" | "success" | "warn",message: string) => {

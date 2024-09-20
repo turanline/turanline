@@ -1,38 +1,45 @@
+@mixin profile-text($family, $size, $height) {
+  font-family: $family;
+  font-size: $size;
+  line-height: $height;
+}
+
+
 @media (max-width: 8000px) {
   .provider-content_orders-content-filters {
-    width: 1065px;
+    width: 1025px;
   }
 }
 
 @media (max-width: 1536px) {
   .provider-content_orders-content-filters {
-    width: 870px;
+    width: 830px;
   }
 }
 
 @media (max-width: 1280px) {
   .provider-content_orders-content-filters {
-    width: 680px;
+    width: 640px;
   }
 }
 
 @media (max-width: 1024px) {
   .provider-content_orders-content-filters {
-    width: 490px;
+    width: 450px;
   }
 }
 
 @media (max-width: 768px) {
   .provider-content_orders-content-filters {
-    width: 585px;
+    max-width: 545px;
+    width: 100%;
   }
-}
-
-@media (max-width: 768px) {
   .provider-content_orders-content-order > * {
     flex: 1 1 auto;
   }
 }
+
+
 
 @media (max-width: 640px) {
   .provider-content_orders-content-filters {
@@ -45,6 +52,8 @@
     gap: 15px;
   }
 }
+
+
 
 @mixin provider-text($size, $height) {
   font-size: $size;
@@ -71,6 +80,9 @@
 .search-wrapper {
   position: relative;
   display: inline-block;
+  @media (max-width: 640px) {
+    width: 100%;
+  }
 }
 
 .provider-content_orders-header-input {
@@ -81,6 +93,9 @@
   border: 1px solid #dadada;
   outline: none;
   padding-left: 60px;
+  @media (max-width: 640px) {
+    width: 100%;
+  }
 }
 
 .search-wrapper > svg {
@@ -119,10 +134,19 @@
   gap: 5px;
   @include provider-text(12px, 15px);
   font-family: geometria-medium;
+  @media (max-width: 767px) {
+    width: auto;
+    border-radius: 8px;
+    padding: 5px 8px;
+    background-color: rgb(243, 243, 243);
+  }
 }
 
 .provider-content_orders-content-filters-button[data-name] {
   width: 100px;
+  @media (max-width: 767px) {
+    width: auto;
+  }
 }
 
 .provider-content_orders-content-list {
@@ -137,4 +161,34 @@
   display: flex;
   justify-content: center;
   font-size: 30px;
+}
+
+.provider-modal {
+  padding-bottom: 20px;
+  &__header {
+    border-bottom: 1px solid lightgray;
+    p {
+      @include profile-text("Geometria-bold", 20px, 1.2);
+    }
+  }
+  &__body {
+    text-align: center;
+    gap: 0;
+  }
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    padding: 15px 0;
+    & + & {
+      border-top: 1px solid lightgray;
+    }
+  }
+  &__title {
+    @include profile-text("Geometria-Bold", 18px, 1.2);
+  }
+  &__text {
+    @include profile-text("Geometria-light", 16px, 1.2);
+  }
 }

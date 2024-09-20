@@ -4,47 +4,48 @@ import React, { useState } from "react";
 //Components
 import { Select, SelectItem, Input, Button } from "@nextui-org/react";
 import InputMask from "react-input-mask";
+import { showToastMessage } from "@/app/toastsChange";
 //Hooks
 import { useCustomForm } from "@/hooks/useCustomForm.";
 import { useTypedSelector } from "@/hooks/useTypedSelector";
 import { useUserActions } from "@/hooks/useUserActions";
 import { useTranslate } from "@/hooks/useTranslate";
 //Types
-import { IInputsRegistrationProvider } from "@/types/additionalTypes";
+import { IInputsRegistrationProvider ,IPostRegistrationProvider} from "@/types/additionalTypes";
 import { Country } from "@/types/componentsTypes";
-//Styles
-import "./RegistrationComponent.scss";
 //Prefixes
 import * as prefixes from '@/locales/prefixes.json';
-import { setCookie } from "cookies-next";
+//Styles
+import "./RegistrationComponent.scss";
+
+
 
 export default function Provider({nextStep}: {nextStep: () => void}) {
 
-  //hooks
-  const { providerState} = useTypedSelector(state => state.user);
-  const { onRegistrationUser, onGetUser } = useUserActions();
-  const { isValid,returnInputError,returnInputProperties,handleSubmit,getValues,reset,setValue } = useCustomForm<IInputsRegistrationProvider>();
-  const text = useTranslate();
+  const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const [selectPhoneRegistration, setSelectPhoneRegistration] = useState<string>("+7");
 
-  const [selected, setSelected] = useState<string>("");
-  const [selectPhone, setSelectPhone] = useState<string>("+7");
+  //hooks
+  const translate = useTranslate();
+  const { providerState} = useTypedSelector(state => state.authorization);
+  const { onRegistrationUser } = useUserActions();
+  const { isValid,returnInputError,returnInputProperties,handleSubmit,getValues,reset,setValue } = useCustomForm<IInputsRegistrationProvider>();
 
   const Countries = [
     {
-        name:text.Russia,
+        name:translate.Russia,
         value:'russia'
     },
     {
-        name:text.China,
+        name:translate.China,
         value:'china',
     },
     {
-        name:text.Turkey,
+        name:translate.Turkey,
         value:'turkey',
     },
   ];
 
-  const companyHeader = providerState?.state !== "C" ? "Данные компаниии" : "Заявка не принята";
 
   const selectClassName = {
     innerWrapper: "w-fit h-[50px]",
@@ -55,48 +56,34 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
   };
 
 
-  const handleSubmitForm = () => {
-    const {
-      address,
-      company,
-      first_name,
-      inspection,
-      last_name,
-      mersis,
-      password,
-      phone_number,
-      email
-    } = getValues();
-
-    if (isValid && selected)
-    onRegistrationUser(
-      {
+  const handleSubmitForm = async () => {
+    try {
+      if (!isValid && !selectedCountry){
+        showToastMessage('warn', translate.notifyFillFields)
+        return;
+      }
+      const { address, company, first_name, inspection, last_name, mersis, password, phone_number, email} = getValues();
+      const requestBody: IPostRegistrationProvider = {
         user: {
           first_name,
           last_name,
           password,
           email,
-          phone_number:(selectPhone + phone_number).replace(/[^\d+]/g, ''),
+          phone_number:(selectPhoneRegistration + phone_number).replace(/[^\d+]/g, ''),
         },
         address,
         bank_account_number: { number: inspection.toString() },
         company,
         state: "M",
-        country: selected,
+        country: selectedCountry,
         taxpayer_identification_number: mersis.toString(),
       }
-    )
-    .then(data => {
-      if ("error" in data && data?.error?.message === "Rejected")
-      console.error("регистрация не вышла");
-    })
-    .then(()=> setCookie("userPhone",(selectPhone + phone_number).replace(/[^\d+]/g, '')))
-    .then(() => nextStep())
-    .catch(error => console.log(error))
-    .finally(() => {
-      reset();
-      setValue("phone_number", "");
-    });
+
+      const response = await onRegistrationUser(requestBody,{phone_number,selectPhoneRegistration,nextStep});
+      
+    } catch (error) {
+        console.error(error)
+    }
   };
 
   const returnAcceptedBlock = () => {
@@ -104,7 +91,7 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
     if (providerState?.state !== "C"){ 
       return (
         <Button className="submit-form" type="submit">
-          {text.cartContinue}
+          {translate.cartContinue}
         </Button>
       );
     }
@@ -123,7 +110,7 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
             </div>
 
             <Button className="submit-form" type="submit">
-              {text.cartContinue}
+              {translate.cartContinue}
             </Button>
           </div>
         </div>
@@ -162,7 +149,7 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
         <div className="first-stage_header">
 
           <h3 className="first-stage_title">
-            {text.registrationTitle}
+            {translate.registrationTitle}
           </h3>
 
           <div className="provider-stages">
@@ -174,7 +161,7 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
               <div className="stage-link"></div>
             </nav>
 
-            <p className="provider-stages-text">{text.registrationStage} 2/4</p>
+            <p className="provider-stages-text">{translate.registrationStage} 2/4</p>
           </div>
         </div>
 
@@ -184,28 +171,28 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
             <div className="provider-form-left">
 
               <label htmlFor="#" className="form-label">
-                {text.registrationCountry}
+                {translate.registrationCountry}
                 <Select
                   isRequired
                   disallowEmptySelection
                   classNames={{ trigger: "provider-form-input" }}
-                  label={text.registartionCountryLabel}
-                  selectedKeys={[selected]}
-                  onChange={e => setSelected(e.target.value)}
+                  label={translate.registartionCountryLabel}
+                  selectedKeys={[selectedCountry]}
+                  onChange={e => setSelectedCountry(e.target.value)}
                 >
                   {renderAllCountries()}
                 </Select>
 
-                <p className="label-county-text">{text.registrationCountryText}</p>
+                <p className="label-county-text">{translate.registrationCountryText}</p>
               </label>
 
               <label htmlFor="#" className="form-label">
-                {text.registrationPhoneNumber}
+                {translate.registrationPhoneNumber}
               <div className="flex">
               <Select
                 aria-label="Страны и коды"
-                onChange={(event) => setSelectPhone(event.target.value)}
-                defaultSelectedKeys={[selectPhone]}
+                onChange={(event) => setSelectPhoneRegistration(event.target.value)}
+                defaultSelectedKeys={[selectPhoneRegistration]}
                 disallowEmptySelection
                 className="max-w-xs"
                 classNames={selectClassName}
@@ -224,11 +211,11 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
               </label>
 
               <label htmlFor="#" className="form-label">
-                {text.registrationMersis}
+                {translate.registrationMersis}
                 <Input
                   {...returnInputProperties("mersis")}
                   classNames={{ inputWrapper: "provider-form-input" }}
-                  placeholder={text.registrationMersisLabel}
+                  placeholder={translate.registrationMersisLabel}
                   minLength={16}
                   maxLength={16}
                 />
@@ -236,11 +223,11 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
               </label>
 
               <label htmlFor="#" className="form-label">
-                {text.registrationInspection}
+                {translate.registrationInspection}
                 <Input
                   {...returnInputProperties("inspection")}
                   classNames={{ inputWrapper: "provider-form-input" }}
-                  placeholder={text.registrationInspectionLabel}
+                  placeholder={translate.registrationInspectionLabel}
                   minLength={10}
                   maxLength={10}
                 />
@@ -248,11 +235,11 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
               </label>
 
               <label htmlFor="#" className="form-label">
-                {text.inputEmail}
+                {translate.inputEmail}
                 <Input
                   {...returnInputProperties("email")}
                   classNames={{ inputWrapper: "provider-form-input" }}
-                  placeholder={text.inputEmailPlaceHolder}
+                  placeholder={translate.inputEmailPlaceHolder}
                 />
                 {returnInputError("email")}
               </label>
@@ -260,52 +247,52 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
 
             <div className="provider-form-right">
               <label htmlFor="#" className="form-label">
-                {text.logInLabelPassword}
+                {translate.logInLabelPassword}
                 <Input
                   {...returnInputProperties("password")}
                   classNames={{ inputWrapper: "provider-form-input" }}
                   type="password"
-                  placeholder={text.logInInputPassword}
+                  placeholder={translate.logInInputPassword}
                 />
                 {returnInputError("password")}
               </label>
 
               <label htmlFor="#" className="form-label">
-                {text.registrationCompany}
+                {translate.registrationCompany}
                 <Input
                   {...returnInputProperties("company")}
                   classNames={{ inputWrapper: "provider-form-input" }}
-                  placeholder={text.registrationCompanyLabel}
+                  placeholder={translate.registrationCompanyLabel}
                 />
                 {returnInputError("company")}
               </label>
 
               <label htmlFor="#" className="form-label">
-                {text.registrationName}
+                {translate.registrationName}
                 <Input
                   {...returnInputProperties("first_name")}
                   classNames={{ inputWrapper: "provider-form-input" }}
-                  placeholder={text.registrationNameLabel}
+                  placeholder={translate.registrationNameLabel}
                 />
                 {returnInputError("first_name")}
               </label>
 
               <label htmlFor="#" className="form-label">
-                {text.registrationSurname}
+                {translate.registrationSurname}
                 <Input
                   {...returnInputProperties("last_name")}
                   classNames={{ inputWrapper: "provider-form-input" }}
-                  placeholder={text.registrationSurnameLabel}
+                  placeholder={translate.registrationSurnameLabel}
                 />
                 {returnInputError("last_name")}
               </label>
 
               <label htmlFor="#" className="form-label">
-                {text.registrationAddress}
+                {translate.registrationAddress}
                 <Input
                   {...returnInputProperties("address")}
                   classNames={{ inputWrapper: "provider-form-input" }}
-                  placeholder={text.registrationAddressLabel}
+                  placeholder={translate.registrationAddressLabel}
                 />
                 {returnInputError("address")}
               </label>

@@ -3,6 +3,7 @@
 import React, { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import NoImage from '@/public/assets/other/no_picture_create.png'
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
 //Types
@@ -13,7 +14,6 @@ import "./ProviderOrderItem.scss";
 const ProviderOrderItem: FC<IUserOrderItemProps> = ({
   cardTitle,
   cardPrice,
-  cardSize,
   cardColor,
   cardAmount,
   cardPriceAll,
@@ -21,13 +21,7 @@ const ProviderOrderItem: FC<IUserOrderItemProps> = ({
   cardImg,
 }) => {
 
-  const {
-    filterSize,
-    filterColor,
-    cartItemPrice,
-    cartItemCounterText,
-    cartItemTotalPrice,
-  } = useTranslate();
+  const translate = useTranslate();
 
   
   
@@ -35,7 +29,7 @@ const ProviderOrderItem: FC<IUserOrderItemProps> = ({
     <section className="product-card">
       <div className="product-card__image-container">
         <Link href={`product/${cardSlug}`}>
-          <Image src={cardImg || ''} alt={cardTitle} width={111} height={111} />
+          <Image src={cardImg || NoImage} alt={cardTitle} width={111} height={111} />
         </Link>
 
         <div className="product-card__info-container">
@@ -44,18 +38,10 @@ const ProviderOrderItem: FC<IUserOrderItemProps> = ({
           </Link>
           <div className="product-card__options-container">
             <div className="product-card__description-container-wrapper">
-              <div className="product-card__description-container">
-                <p className="product-card__description">{filterSize}</p>
-
-                <div className="product-card__option">
-                  <p className="product-card__option--active font-medium">
-                    {cardSize}
-                  </p>
-                </div>
-              </div>
+          
 
               <div className="product-card__description-container">
-                <p className="product-card__description">{filterColor}</p>
+                <p className="product-card__description">{translate.filterColor}</p>
 
                 <div
                   style={{ background: `${cardColor}` }}
@@ -65,7 +51,7 @@ const ProviderOrderItem: FC<IUserOrderItemProps> = ({
               </div>
 
               <div className="product-card__description-container">
-                <p className="product-card__description">{cartItemPrice}</p>
+                <p className="product-card__description">{translate.cartItemPrice}</p>
 
                 <div className="product-card__option">
                   <p className="font-medium">${cardPrice}</p>
@@ -75,7 +61,7 @@ const ProviderOrderItem: FC<IUserOrderItemProps> = ({
 
             <div className="product-card__total-container">
               <div className="product-card__total-description-container">
-                <p className="product-card__description">{cartItemCounterText}</p>
+                <p className="product-card__description">{translate.cartItemCounterText}</p>
 
                 <div data-counter className="product-card__option">
                   <p className="font-medium">{cardAmount}</p>
@@ -83,7 +69,7 @@ const ProviderOrderItem: FC<IUserOrderItemProps> = ({
               </div>
 
               <div className="product-card__total-description-container">
-                <p className="product-card__description">{cartItemTotalPrice}</p>
+                <p className="product-card__description">{translate.cartItemTotalPrice}</p>
 
                 <div className="product-card__option">
                   <p className="font-medium">${cardPriceAll}</p>
