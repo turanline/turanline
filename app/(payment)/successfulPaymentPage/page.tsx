@@ -14,7 +14,7 @@ const SuccessfulPaymentPage: NextPage = () => {
   return (
     <div className="h-[358px] my-auto flex justify-center items-center flex-col gap-[40px]">
       <div className="flex flex-col gap-[20px]">
-        <h5 className="text-tiffani text-center font-medium text-[31px] lg:text-[50px]">
+        <h5 className="text-black text-center font-medium text-[31px] lg:text-[50px]">
           {paymentSuccess}
         </h5>
 
@@ -24,7 +24,7 @@ const SuccessfulPaymentPage: NextPage = () => {
       </div>
 
       <Link
-        className="w-[187px] h-[44px] flex justify-center items-center bg-tiffani text-white rounded-[5px] py-[10px] px-[20px] text-[14px]"
+        className="w-[187px] h-[44px] flex justify-center items-center bg-black text-white rounded-[5px] py-[10px] px-[20px] text-[14px]"
         href={SHOP_LINK}
       >
         {paymentButton}

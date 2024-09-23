@@ -41,8 +41,8 @@ import {
   SHOP_ROUTE,
 } from "@/utils/Consts";
 //Icons
-import logo from "@/public/assets/other/logo.svg";
-import logo2 from "@/public/assets/other/logo2.svg";
+import logo from "@/public/assets/other/logo2.png";
+// import logo2 from "@/public/assets/other/logo.png";
 //Styles
 import "./Header.scss";
 
@@ -69,7 +69,7 @@ export function Header() {
     mapCategoriesOnPhone,
     onSetTypes,
     onSetSubtypes,
-  } = useCategories("#E30387");
+  } = useCategories("#282828");
 
 
   const logOut = () =>{
@@ -108,7 +108,7 @@ export function Header() {
       <DropdownTrigger>
         <div className="flex gap-[10px] basis-[50%]">
           <Icons id="profile" />
-          <p className="text-black">{accountProfileText}</p>
+          <p className="text-white">{accountProfileText}</p>
         </div>
       </DropdownTrigger>
       <DropdownMenu classNames={{ base: "p-0" }}>
@@ -133,7 +133,7 @@ export function Header() {
     const renderLinkIdClassName = !isMobile
       ? "profileAccountWhite"
       : "profile-account";
-    const renderLinkPClassName = !isMobile ? "text-white w-max" : "text-black";
+    const renderLinkPClassName = !isMobile ? "text-white w-max" : "text-white";
 
     if (!isAuth)
       return (
@@ -200,7 +200,7 @@ export function Header() {
           </div>
 
           <div className="flex gap-[75px]">
-            <Link className="text-white" href={CATALOG_ROUTE}>
+            <Link  className="text-white" href={CATALOG_ROUTE}>
               {translate.headerCatalog}
             </Link>
 
@@ -218,11 +218,11 @@ export function Header() {
           </div>
         </nav>
 
-        <nav className="flex justify-between mb-[25px] gap-[46px] pt-[25px] lg:pt-0">
+        <nav className="flex justify-between items-center mb-[25px] gap-[46px] pt-[25px] lg:pt-0">
           <Link href={SHOP_ROUTE} className="flex items-center justify-center">
-            <Image data-logo="desktop" src={logo} alt="logo" />
+            <Image data-logo="desktop" width={150} height={50} src={logo} alt="logo" />
 
-            <Image data-logo="mobile" src={logo2} alt="logo2" />
+            <Image data-logo="mobile" width={130} height={80} src={logo} alt="logo2" />
           </Link>
 
           <HeaderSearch
@@ -270,7 +270,7 @@ export function Header() {
             {returnHeaderElement(false)}
           </div>
           <div className="lg:hidden flex gap-[15px] items-center">
-            <LanguageSelect color="black" />
+            <LanguageSelect color="white" />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="w-[45px] md:w-[44px] cursor-pointer"
@@ -283,15 +283,15 @@ export function Header() {
         <div className={burgerMenuClass}>
           <nav className="flex items-start justify-start sm:justify-between flex-wrap sm:gap-[20px]">
             <div className="flex flex-col max-sm:basis-[50%] gap-[20px]">
-              <Link href={CATALOG_ROUTE}>{translate.headerCatalog}</Link>
+              <Link style={{color:"white"}} href={CATALOG_ROUTE}>{translate.headerCatalog}</Link>
 
-              <Link href={ABOUT_ROUTE}>{translate.headerAbout}</Link>
+              <Link style={{color:"white"}} href={ABOUT_ROUTE}>{translate.headerAbout}</Link>
 
-              <Link href={DELIVERY_ROUTE}>{translate.headerDelivery}</Link>
+              <Link style={{color:"white"}} href={DELIVERY_ROUTE}>{translate.headerDelivery}</Link>
 
-              <Link href={CONTACTS_ROUTE}>{translate.headerContacts}</Link>
+              <Link style={{color:"white"}} href={CONTACTS_ROUTE}>{translate.headerContacts}</Link>
 
-              <Link href={`tel:${SHOP_PHONE}`}>{SHOP_PHONE}</Link>
+              <Link style={{color:"white"}} href={`tel:${SHOP_PHONE}`}>{SHOP_PHONE}</Link>
             </div>
 
             {mapCategoriesOnPhone()}
@@ -316,7 +316,7 @@ export function Header() {
                   <Icons id="heart" />
                 </Badge>
 
-                <p>{translate.headerFavorites}</p>
+                <p style={{color:"white"}}>{translate.headerFavorites}</p>
               </div>
             </Link>
 
@@ -326,7 +326,7 @@ export function Header() {
             >
               <Icons id="searchMobile" />
 
-              <p>{translate.headerSearch}</p>
+              <p style={{color:"white"}}>{translate.headerSearch}</p>
             </button>
 
             <Link
@@ -342,7 +342,7 @@ export function Header() {
                 <Icons id="shopping" />
               </Badge>
 
-              <p>{translate.headerCart}</p>
+              <p style={{color:"white"}}>{translate.headerCart}</p>
             </Link>
           </div>
         </div>

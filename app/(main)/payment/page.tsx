@@ -13,7 +13,7 @@ export default function Payment() {
     <main className="container mx-auto mt-[30px] mb-[100px] px-[15px] lg:px-[30px]">
       <div className="w-full mt-[48px]">
         <div className="w-full flex flex-col items-center mb-[60px]">
-          <h1 className="family-bold text-[40px] text-tiffani font-semibold mb-[20px]">
+          <h1 className="family-bold text-[40px] text-black font-semibold mb-[20px]">
             {translate.paymentPageTitle}
           </h1>
           <p className="text-gray/500 text-center mb-[40px]">
@@ -24,7 +24,7 @@ export default function Payment() {
           <div className="flex flex-col md:flex-row justify-between gap-[30px]">
             <div className="flex flex-col items-center gap-[6px]">
               <Icons id="featureIcon" />
-              <p className="family-medium text-tiffani font-medium">
+              <p className="family-medium text-black font-medium">
                 Оплата банком
               </p>
               <p className="text-gray/500 text-center text-[13px]">
@@ -33,7 +33,7 @@ export default function Payment() {
             </div>
             <div className="flex flex-col items-center gap-[6px]">
               <Icons id="paymentIcon" />
-              <p className="family-medium text-tiffani font-medium">
+              <p className="family-medium text-black font-medium">
                 Оплата картой
               </p>
               <p className="text-gray/500 text-center text-[13px]">
@@ -42,7 +42,7 @@ export default function Payment() {
             </div>
             <div className="flex flex-col items-center gap-[6px]">
               <Icons id="paperIcon" />
-              <p className="family-medium text-tiffani font-medium">
+              <p className="family-medium text-black font-medium">
                 Оплата чеком
               </p>
               <p className="text-gray/500 text-center text-[13px]">
@@ -53,7 +53,7 @@ export default function Payment() {
           <div className="flex flex-col sm:flex-row justify-between gap-[50px]">
             <div className="flex flex-col items-center gap-[6px]">
               <Icons id="cryptoIcon" />
-              <p className="family-medium text-tiffani font-medium">
+              <p className="family-medium text-black font-medium">
                 Криптовалютой
               </p>
               <p className="text-gray/500 text-center text-[13px]">
@@ -62,7 +62,7 @@ export default function Payment() {
             </div>
             <div className="flex flex-col items-center gap-[6px]">
               <Icons id="linkIcon" />
-              <p className="family-medium text-tiffani font-medium">PayPal</p>
+              <p className="family-medium text-black font-medium">PayPal</p>
               <p className="text-gray/500 text-center text-[13px]">
                 {translate.paymentPagePayPal}
               </p>

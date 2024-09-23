@@ -4,6 +4,9 @@
   gap: $gap;
 }
 
+.btnRegg{
+  background-color: #282828;
+}
 @mixin form-text($color, $weight, $size, $align) {
   color: $color;
   font-weight: $weight;
@@ -76,7 +79,7 @@
 .form-content_header-title {
   font-family: geometria-medium;
   line-height: 38px;
-  @include form-text(#0abab5, 600, 30px, center);
+  @include form-text(#282828, 600, 30px, center);
 }
 
 .form-content_header-text {
@@ -145,5 +148,5 @@
 
 .form-content_checkbox-button {
   font-family: geometria-medium;
-  @include form-text(#0abab5, 600, 14px, center);
+  @include form-text(#282828, 600, 14px, center);
 }

@@ -23,7 +23,7 @@ export const SHOP_ROUTE = "/",
 export const SHOP_LINK = "https://mis-express.com/";
 
 //Shop Information
-export const SHOP_NAME = "Mis Express",
+export const SHOP_NAME = "TuranLine",
   SHOP_PHONE = "+905525977888",
   SHOP_SECOND_PHONE = "+905010008882",
   SHOP_EMAIL = "mis.express@mail.ru",

@@ -26,14 +26,14 @@ import {
   SHOP_SECOND_PHONE,
 } from "@/utils/Consts";
 //Images
-import logo from "../../public/assets/other/logo2.svg";
+import logo from "../../public/assets/other/logo.png";
 //Styles
 import "./Footer.scss";
   
 export function Footer() {
   const translate = useTranslate();
 
-  const { onSetCategories, mapCategoriesOnDesktop } = useCategories("#0ABAB5");
+  const { onSetCategories, mapCategoriesOnDesktop } = useCategories("#282828");
 
   useEffect(() => {
     onSetCategories();
@@ -44,7 +44,7 @@ export function Footer() {
       <div className="container mx-auto mb-[47px] px-[15px] lg:px-[30px]">
         <nav className="hidden md:flex justify-between items-center mb-[32px]">
           <Link href={SHOP_ROUTE}>
-            <Image src={logo} alt="logo" />
+            <Image width={100} height={50} src={logo} alt="logo" />
           </Link>
 
           <div className="footer-links">
@@ -64,7 +64,7 @@ export function Footer() {
         <nav className="grid grid-cols-2 md:flex w-full justify-between">
           <div className="flex flex-col md:hidden justify-between md:items-center gap-[18px] md:gap-0">
             <Link href={SHOP_ROUTE}>
-              <Image src={logo} alt="logo" />
+              <Image width={100} height={50} src={logo} alt="logo" />
             </Link>
             <div className="flex flex-col gap-[16px] md:gap-[57px]">
               <Link href={ABOUT_ROUTE}>{translate.headerAbout}</Link>
@@ -112,7 +112,7 @@ export function Footer() {
 
               <div className="flex flex-col">
                 <Link
-                  className="family_bold text-[10px] text-tiffani"
+                  className="family_bold text-[10px] text-black"
                   href={`mailto:${SHOP_EMAIL}`}
                 >
                   {SHOP_EMAIL}

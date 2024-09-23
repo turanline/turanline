@@ -330,7 +330,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
                     <div className="flex flex-row">
                       <button
                         onClick={() => changeProductCounter("dec")}
-                        className="w-[30px] h-[30px] flex items-center justify-center cursor-pointer border-1 border-tiffani"
+                        className="w-[30px] h-[30px] flex items-center justify-center cursor-pointer border-1 border-black"
                       >
                         <Icons id="minus" />
                       </button>
@@ -346,7 +346,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
 
                       <button
                         onClick={() => changeProductCounter("inc")}
-                        className="w-[30px] h-[30px] flex items-center justify-center cursor-pointer border-1 border-tiffani"
+                        className="w-[30px] h-[30px] flex items-center justify-center cursor-pointer border-1 border-black"
                       >
                         <Icons id="plusMini" />
                       </button>
@@ -354,7 +354,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
 
                   <Button
                     onClick={handleAddToCart}
-                    className="bg-tiffani text-white rounded-md w-full h-[44px] py-[10px]"
+                    className="bg-black text-white rounded-md w-full h-[44px] py-[10px]"
                   >
                     {translate.productPageButton}
                   </Button>

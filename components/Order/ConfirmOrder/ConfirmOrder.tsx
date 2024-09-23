@@ -216,7 +216,7 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
             <div className="flex justify-between">
               <p className="text-[24px] text-textGray">{translate.orderPageSum}</p>
 
-              <p className="text-[24px] text-tiffani">
+              <p className="text-[24px] text-black">
                 {cart?.total_sum} $
               </p>
             </div>
@@ -234,7 +234,7 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
 
           <Button
             onClick={handlePostUserOrder}
-            className="bg-tiffani text-[22px] text-white rounded-lg w-full h-[63px] py-[10px]"
+            className="bg-black text-[22px] text-white rounded-lg w-full h-[63px] py-[10px]"
           >
             {translate.orderPageButton}
           </Button>

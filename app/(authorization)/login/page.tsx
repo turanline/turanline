@@ -216,14 +216,14 @@ const LogIn: NextPage = () => {
 
           <Button
             type="submit"
-            className="bg-tiffani text-white rounded-md w-full h-[44px] py-[10px]"
+            className="signBtn text-white rounded-md w-full h-[44px] py-[10px]"
           >
             {translate.logInButtonText}
           </Button>
 
           <Button
             onClick={() => push(REGISTRATION_ROUTE)}
-            className="bg-transparent text-tiffani rounded-md w-full h-[44px] py-[10px]"
+            className="bg-transparent text-black rounded-md w-full h-[44px] py-[10px]"
           >
             {translate.logInButtonRegistration}
           </Button>

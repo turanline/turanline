@@ -147,7 +147,7 @@ const ForgetPasswordModal:FC <IModalForgetPassword> = ({forgetModal,setForgetMod
 
           <Button
             type="submit"
-            className="bg-tiffani text-white rounded-md w-[100%] max-w-[300px] h-[44px] py-[10px]"
+            className="forgetBtn text-white rounded-md w-[100%] max-w-[300px] h-[44px] py-[10px]"
           >
             {translate.recoverAppeal}
           </Button>

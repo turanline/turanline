@@ -37,14 +37,13 @@ export interface IProductsState {
   status: IFavoritesState["status"];
   searchText: string;
   filters: {
-    brand: string | null;
-    color: string | number | null;
+    brand: string[] | null;
+    color: string[] | number | null;
      price_max: number | null;
      price_min: number | null;
-     mold: string | null;
-     season: string | null;
-     category: string | number | null;
-     material: string | null;
+     mold: string[] | null;
+     season: string[] | null;
+     material: string[] | null;
 
   };
   colors:{

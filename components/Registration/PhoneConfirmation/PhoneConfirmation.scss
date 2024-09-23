@@ -3,6 +3,11 @@
     flex-direction: $direction;
     gap: $gap;
   }
+
+
+  .btnReg{
+    background-color: #282828;
+  }
   
   @mixin form-text($color, $weight, $size, $align) {
     color: $color;

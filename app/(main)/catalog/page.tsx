@@ -30,7 +30,7 @@ export default function Category() {
 
   //Styles
   const buttonStyles: CSSProperties = {
-    background: isOpen ? "#E30387" : "#0ABAB5",
+    background: isOpen ? "#282828" : "#0ABAB5",
     color: "white",
     fontSize: "22px",
     textTransform: 'none'
@@ -82,10 +82,9 @@ export default function Category() {
   useEffect(()=>{
     const newFilters: IProductsState["filters"] = {
       brand: null,
-      color: "",
+      color: 0,
       price_max:10000,
       price_min:0,
-      category: "",
       mold: null,
       material: null,
       season: null,

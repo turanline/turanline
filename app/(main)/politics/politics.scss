@@ -82,11 +82,11 @@
 }
 
 .politics-content_header-span {
-  @include politics-text(13px, 20px, center, 600, #0abab5, "Geometria-Bold");
+  @include politics-text(13px, 20px, center, 600, #282828, "Geometria-Bold");
 }
 
 .politics-content_header-title {
-  @include politics-text(40px, 50px, center, 600, #0abab5, "Geometria-Bold");
+  @include politics-text(40px, 50px, center, 600, #282828, "Geometria-Bold");
 }
 
 .politics-content_text {

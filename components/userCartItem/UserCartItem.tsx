@@ -88,18 +88,18 @@ const UserCartItem: FC<{product: IProductCart;}> = ({ product }) => {
                 <div className="flex">
                   <button
                     onClick={() => handleChangeProductCounter("dec")}
-                    className="w-[30px] h-[30px] flex items-center justify-center cursor-pointer border-1 border-tiffani"
+                    className="w-[30px] h-[30px] flex items-center justify-center cursor-pointer border-1 border-black"
                   >
                     <Icons id="minus" />
                   </button>
 
-                  <span className="w-[40px] h-[30px] flex items-center justify-center border-t-1 border-b-1 border-tiffani">
+                  <span className="w-[40px] h-[30px] flex items-center justify-center border-t-1 border-b-1 border-black">
                     {product?.amount}
                   </span>
 
                   <button
                     onClick={() => handleChangeProductCounter("inc")}
-                    className="w-[30px] h-[30px] flex items-center justify-center cursor-pointer border-1 border-tiffani"
+                    className="w-[30px] h-[30px] flex items-center justify-center cursor-pointer border-1 border-black"
                   >
                     <Icons id="plusMini" />
                   </button>

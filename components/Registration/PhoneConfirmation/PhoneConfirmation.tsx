@@ -136,7 +136,7 @@ export default function PhoneConfirmation(){
 
           <Button
             type="submit"
-            className="bg-tiffani text-white rounded-md w-full h-[44px] py-[10px]"
+            className="btnReg text-white rounded-md w-full h-[44px] py-[10px]"
           >
             {translate.ConfirmPhoneButton}
           </Button>

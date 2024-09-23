@@ -146,7 +146,7 @@ const useCart = () => {
           <div className="basket_confirm">
             <Button
               onClick={() => redirectToOrder()}
-              className="basket_button bg-tiffani text-white rounded-md w-[278px] h-[51px] py-[10px]"
+              className="basket_button text-white rounded-md w-[278px] h-[51px] py-[10px]"
             >
               {translate.cartContinue}
             </Button>

@@ -182,7 +182,7 @@ export default function PaymentOrder({prevStep}: {prevStep: () => void}) {
             <div className="flex justify-between">
               <p className="text-[24px] text-textGray">{translate.orderPageSum}</p>
 
-              <p className="text-[24px] text-tiffani">
+              <p className="text-[24px] text-black">
                 {(Number(deliveryCost) + Number(cart?.total_sum)).toFixed(2)} $
               </p>
             </div>
@@ -205,7 +205,7 @@ export default function PaymentOrder({prevStep}: {prevStep: () => void}) {
           <Button
             disabled={isSubmitting}
             type="submit"
-            className="bg-tiffani text-[22px] text-white rounded-lg w-full h-[63px] py-[10px] flex flex-row justify-center items-center"
+            className="bg-black text-[22px] text-white rounded-lg w-full h-[63px] py-[10px] flex flex-row justify-center items-center"
           >
             {/* {translate.orderPageButton} */}
             {translate.PaymentPay} {isSubmitting && <Icons id="spiner-payment"/>}

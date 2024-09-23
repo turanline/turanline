@@ -30,7 +30,7 @@ export default function Delivery() {
 
       <div className="w-full mt-[30px] sm:mt-[48px]">
         <div className="w-full flex flex-col items-center mb-[40px]">
-          <h1 className="family-bold text-[32px] xl:text-[40px] text-tiffani mb-[20px]">
+          <h1 className="family-bold text-[32px] xl:text-[40px] text-black mb-[20px]">
             {translate.deliveryPageTitle}
           </h1>
 

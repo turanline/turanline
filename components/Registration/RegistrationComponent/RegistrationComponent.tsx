@@ -138,7 +138,7 @@ export default function Registration({nextStep}: {nextStep: () => void}) {
                 <div className="stage-link"></div>
               </nav>
 
-              <p className="provider-stages-text">{translate.registrationStage} 2/2</p>
+              <p className="provider-stages-text">{translate.registrationStage} 1/2</p>
               </div>
           </div>
       <form onSubmit={handleSubmit(createAccount)} className="form-content">
@@ -249,14 +249,14 @@ export default function Registration({nextStep}: {nextStep: () => void}) {
 
           <Button
             type="submit"
-            className="bg-tiffani text-white rounded-md w-full h-[44px] py-[10px]"
+            className="btnRegg text-white rounded-md w-full h-[44px] py-[10px]"
           >
             {translate.registrationButtonText}
           </Button>
 
           <Button
             onClick={() => push(LOGIN_ROUTE)}
-            className="rounded-md w-full h-[44px] py-[10px] text-tiffani bg-transparent"
+            className="text-black rounded-md w-full h-[44px] py-[10px] bg-transparent"
           >
             {translate.registrationButtonLogIn}
           </Button>

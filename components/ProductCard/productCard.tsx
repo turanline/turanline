@@ -104,6 +104,11 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({ productInfo }) => 
           {productInfo?.name}
         </Link>
 
+        <div className="description_wrapper">
+          <h3>{productInfo?.category?.name}</h3>
+          <p>{productInfo?.description}</p>
+        </div>
+
         <div className="w-fit py-[5px] px-[10px] border-1 border-border rounded-md">
           <p className="font-bold">{`$${productInfo?.price}`}</p>
         </div>
@@ -118,7 +123,7 @@ const ProductCard: FC<{ productInfo: IProductMainPage }> = ({ productInfo }) => 
 
       <Button
         onClick={handleAddToCart}
-        className="bg-tiffani text-white rounded-md w-full h-[44px] py-[10px]"
+        className="buybutton text-white rounded-md w-full h-[44px] py-[10px]"
       >
         {translate.productPageButton}
       </Button>

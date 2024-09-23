@@ -25,7 +25,6 @@ export async function generateStaticParams() {
     price_min: null,
     season: null,
     material: null,
-    category: null,
     mold:null,
   };
 

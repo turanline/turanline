@@ -30,9 +30,9 @@ const OrderPage = () => {
 
   const renderCurrentStep = () => {
     switch (paymentPageNumber) {
-      case 1:
-        return <ConfirmOrder nextStep={nextStep} key="confirm" />;
       case 2:
+        return <ConfirmOrder nextStep={nextStep} key="confirm" />;
+      case 1:
         return <PaymentOrder prevStep={prevStep}  key="payment"/>;
       default:
         return <ConfirmOrder nextStep={nextStep} key="confirm" />;

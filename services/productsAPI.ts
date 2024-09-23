@@ -47,27 +47,27 @@ export const getSimilarProducts = async (article_number: string,language: string
 
 export const getAllProducts = async (category: string, filters: IProductsState["filters"]) => {
   try {
-    const params: Record<string, string | number> = {};
+    // const params: Record<string, string | number> = {};
 
-    if (category !== "Все категории") {
-      params.cats = category;
-    }
+    // if (category !== "Все категории") {
+    //   params.cats = category;
+    // }
 
-    const filterKeys: (keyof IProductsState["filters"])[] = [
-      "brand",
-      "color",
-      "price_max",
-      "price_min"
-    ];
+    // const filterKeys: (keyof IProductsState["filters"])[] = [
+    //   "brand",
+    //   "color",
+    //   "price_max",
+    //   "price_min"
+    // ];
 
-    filterKeys.forEach(key => {
-      const value = filters[key];
-      if (value) {
-        params[key === "brand" ? "brands" : key] = value;
-      }
-    });
+    // filterKeys.forEach(key => {
+    //   const value = filters[key];
+    //   if (value) {
+    //     params[key === "brand" ? "brands" : key] = value;
+    //   }
+    // });
 
-    const { data } = await $host.get("/api/catalog/?status=A", { params });
+    const { data } = await $host.get("/api/catalog/?status=A");
 
     return data;
   } catch (error) {
@@ -78,7 +78,7 @@ export const getAllProducts = async (category: string, filters: IProductsState["
 
 export const getProductsByFilter = async (filters: any) => {
   try {
-    const { data } = await $host.get('/api/catalog/', { params: filters });
+    const { data } = await $host.get(`/api/catalog/?${filters}`);
 
     return data;
   } catch (error) {

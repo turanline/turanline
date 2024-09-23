@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <link rel="icon" href="/favicon.ico" />
-        <title>Mis Express</title>
+        <title>TuranLine</title>
       </head>
       <body>
         <ProviderComponent>

@@ -1,3 +1,7 @@
+.buybutton{
+  background-color: #282828;
+}
+
 @media (max-width: 8000px) {
   .product_card {
     box-sizing: border-box;
@@ -14,6 +18,28 @@
     text-transform: uppercase;
     width: fit-content;
   }
+
+  .description_wrapper{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    h3{
+      color: #0abab5;
+      font-size: 14px;
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis;
+    }
+    p{
+      font-size: 14px;
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis;
+    }
+  }
+
 }
 @media (max-width: 1535px) {
   .product_card {

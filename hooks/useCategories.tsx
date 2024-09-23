@@ -10,11 +10,15 @@ import {
   fetchSubtypes,
 } from "@/redux/reducers/categoriesSlice";
 //Hooks
-import { useAppDispatch, useTypedSelector } from "./useReduxHooks";
+import { useAppDispatch, useTypedSelector} from "./useReduxHooks";
+import { useProducts } from "./useProducts";
 //Types
 import { ICurrentCategory } from "@/types/componentTypes";
+//Services
+import { getProductsByFilter } from "@/services/productsAPI";
 //Styles
 import "@/components/Header/Header.scss";
+import { showToastMessage } from "@/app/toastsChange";
 
 const useCategories = (color: string) => {
   //Hooks
@@ -23,6 +27,8 @@ const useCategories = (color: string) => {
   );
   const { selectedLanguage } = useTypedSelector((state) => state.language);
   const dispatch = useAppDispatch();
+  const { onSetSearchProducts, setAllProducts } = useProducts();
+
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [currentCategory, setCurrentCategory] = useState<ICurrentCategory>({
@@ -54,6 +60,20 @@ const useCategories = (color: string) => {
     [dispatch, selectedLanguage]
   );
 
+  const getProducts = async (category:number) => {
+    try {
+      const products = await getProductsByFilter(`category=${category}`);
+
+      if(!products?.length){
+        showToastMessage('warn','По данной категории ничего не найдено');
+      }
+      onSetSearchProducts(products)
+
+    } catch (error) {
+      showToastMessage('warn','По данной категории ничего не найдено');
+    }
+  }
+
   const renderDesktopCategories = () =>
     categories?.map((category) => (
       <Link
@@ -62,7 +82,8 @@ const useCategories = (color: string) => {
           setIsOpen(true);
         }}
         key={category?.id}
-        href={`/category/${category?.id}`}
+        href={`/catalog`}
+        onClick={()=> getProducts(category?.id)}
       >
         {category?.name}
       </Link>
@@ -75,13 +96,13 @@ const useCategories = (color: string) => {
       <div className="w-full container flex gap-[50px] justify-between flex-wrap text-white">
         {returnTypesByCategory(currentCategory.id).map((type) => (
           <div key={type.id} className="flex flex-col gap-[10px]">
-            <Link className="font-bold" href={`/category/${type.parent}`}>
+            <Link className="font-bold" href={`/catalog`} onClick={()=> getProducts(type.id)}>
               {type.name}
             </Link>
 
             <div className="flex flex-col gap-[5px]">
               {returnSubtypesByType(type.id).map((subtype) => (
-                <Link key={subtype.id} href={`/category/${type.parent}`}>
+                <Link key={subtype.id} href={`/catalog`} onClick={()=> getProducts(subtype.id)}>
                   {subtype.name}
                 </Link>
               ))}
@@ -117,7 +138,7 @@ const useCategories = (color: string) => {
       return (
         <div className="flex flex-col max-sm:basis-[50%] gap-[20px] row-span-4">
           {categories?.map((category) => (
-            <Link key={category?.id} href={`/category/${category?.id}`}>
+            <Link style={{color:"white"}} key={category?.id} href={`/catalog`} onClick={()=> getProducts(category.id)}>
               {category?.name}
             </Link>
           ))}
