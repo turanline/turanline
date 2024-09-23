@@ -84,8 +84,6 @@ class ProductsViewSet(viewsets.ModelViewSet):
     ).prefetch_related(
         'color',
         'size'
-    ).filter(
-        status=enums.ProductStatus.ACTIVE
     )
     serializer_class = serializers.ProductSerializer
     permission_classes = [
@@ -107,8 +105,13 @@ class ProductsViewSet(viewsets.ModelViewSet):
     ]:
         if self.action == 'famous':
             return self.queryset.filter(
-                is_famous=True
+                is_famous=True,
+                status=enums.ProductStatus.ACTIVE
             )[:3]
+        elif self.action == 'similar':
+            return self.queryset.filter(
+                status=enums.ProductStatus.ACTIVE
+            )
         return super().get_queryset()
 
     def get_serializer_class(self) -> Type[Serializer]:

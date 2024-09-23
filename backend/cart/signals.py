@@ -107,7 +107,9 @@ def clear_cart_after_payment_success(
     **kwargs: Any
 ) -> None:
     if instance.is_paid:
-        cart = models.Cart.objects.get(customer=instance.customer)
+        cart = models.Cart.objects.get(
+            customer=instance.customer
+        )
         cart.order_products.clear()
 
 

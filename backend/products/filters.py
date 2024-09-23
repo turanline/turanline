@@ -39,25 +39,25 @@ class CatalogFilter(django_filters.FilterSet):
         queryset=product_component_models.Size.objects.all()
     )
 
-    season = django_filters.ChoiceFilter(
+    season = django_filters.MultipleChoiceFilter(
         choices=enums.SeasonChoices.choices
     )
 
-    mold = django_filters.ChoiceFilter(
+    mold = django_filters.MultipleChoiceFilter(
         choices=enums.MoldChoices.choices
     )
 
-    material = django_filters.ChoiceFilter(
+    material = django_filters.MultipleChoiceFilter(
         choices=enums.MaterialChoices.choices
-    )
-
-    category = django_filters.ModelChoiceFilter(
-        queryset=product_component_models.Category.objects.filter(level=0),
-        method='filter_by_category_descendants'
     )
 
     status = django_filters.ChoiceFilter(
         choices=enums.ProductStatus.choices
+    )
+
+    category = django_filters.ModelChoiceFilter(
+        queryset=product_component_models.Category.objects.all(),
+        method='filter_by_category_descendants'
     )
 
     class Meta(ProductFilter.Meta):
@@ -70,7 +70,8 @@ class CatalogFilter(django_filters.FilterSet):
             'mold',
             'material',
             'category',
-            'status'
+            'status',
+            'category'
         ]
 
     def filter_by_category_descendants(
@@ -80,7 +81,6 @@ class CatalogFilter(django_filters.FilterSet):
         value: product_component_models.Category
     ) -> QuerySet[models.Product]:
         if value:
-            descendants = value.get_descendants(include_self=False)
+            descendants = value.get_descendants(include_self=True)
             return queryset.filter(category__in=descendants)
         return queryset
-
