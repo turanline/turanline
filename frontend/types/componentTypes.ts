@@ -19,7 +19,7 @@ interface Product {
   id: number;
   name: string;
   images: Image[];
-  slug: string;
+  article_number: string;
   price: string;
 }
 
@@ -51,7 +51,6 @@ export interface IProductCart {
   amount: number;
   product: Product;
   color: Color;
-  size: CartSize;
   images: Image[];
   sum: string;
 }
@@ -61,11 +60,10 @@ export interface IProductMainPage {
   name: string;
   description: string;
   compound: string;
-  brand: Brand;
+  brand: string;
   colors_data: Color[];
   sizes_data: Size[];
-  manufacturerCountry: ManufacturerCountry;
-  category: any[];
+  material: string;
   images: Image[];
   article_number: string;
   amount: number;
@@ -77,13 +75,28 @@ export interface IProductMainPage {
   is_famous: boolean;
   status: string;
   date_and_time: string;
-  provider: number;
+  mold: string;
+  provider:{
+    address: string;
+    company: string;
+    country: string;
+  }
+  category: {
+    name:string
+  };
+  manufacturerCountry:{
+    id: number;
+    name:string;
+    slug:string;
+  }
 }
+
 
 export interface IUserOrderItem {
   amount: number;
   color: IProductCart["color"];
-  size: IProductCart["size"];
+  // size: IProductCart["size"];
+  sum: string;
   product: IProductCart["product"];
 }
 
@@ -164,6 +177,15 @@ export interface ISortConfig {
   key: "created_date" | "total_sum";
   direction: "desc" | "asc";
 }
+export interface Country {
+  code: string;
+  flag: string;
+  name: string;
+}
+export interface IModalForgetPassword {
+  setForgetModal: Dispatch<SetStateAction<boolean>>;
+  forgetModal: boolean;
+}
 
 export interface IPrefixConfig {
   code: string;
@@ -174,12 +196,16 @@ export interface IPrefixConfig {
 
 export interface PrefixMaskProps {
   onClickFunction: (item: IPrefixConfig) => void;
-  properties: (
-    inputType: keyof IInputsLength
-  ) => ReturnType<UseFormRegister<IInputsLength>>;
+  properties: (inputType: keyof IInputsLength) => ReturnType<UseFormRegister<IInputsLength>>;
+  setSelectPhone:Dispatch<SetStateAction<string>>;
 }
 
 export interface ICurrentCategory {
   id: number;
+  name: string;
+}
+export interface Country {
+  code: string;
+  flag: string;
   name: string;
 }

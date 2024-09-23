@@ -1,22 +1,13 @@
 //Global
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
+import { verifyAndRefreshToken } from "@/services";
 //GLobal Types
 import { IPostCartApi, IPutCart } from "@/types/types";
-
 //Redux Types
 import { ICartState } from "@/types/reduxTypes";
-
 //Services
-import {
-  getCart,
-  postToCart,
-  deleteFromCartById,
-  patchCartItem,
-} from "@/services/cartAPI";
-import { getCookie } from "cookies-next";
-import { postVerifyToken } from "@/services/authAPI";
-
+import { getCart,postToCart,deleteFromCartById,patchCartItem } from "@/services/cartAPI";
+//State
 const initialState: ICartState = {
   cart: {
     address: "",
@@ -31,29 +22,20 @@ const initialState: ICartState = {
   status: "pending",
 };
 
-export const fetchCart = createAsyncThunk<
-  ICartState["cart"],
-  undefined,
-  { rejectValue: string }
->("cartSlice/fetchCart", async (_, { rejectWithValue }) => {
+export const fetchCart = createAsyncThunk<ICartState["cart"],undefined,{ rejectValue: string }>("cartSlice/fetchCart", async (_, { rejectWithValue }) => {
   try {
-    const token = getCookie("AuthTokenMis");
+    const user = await verifyAndRefreshToken();
 
-    if (token) {
-      const { user } = await postVerifyToken(token);
-
+    if(user){
       return await getCart(user);
+
     }
   } catch (error) {
     return rejectWithValue(`Failed to load user cart: ${error}`);
   }
 });
 
-export const addToCart = createAsyncThunk<
-  undefined,
-  IPostCartApi,
-  { rejectValue: string }
->("cartSlice/addToCart", async (cartItem, { rejectWithValue }) => {
+export const addToCart = createAsyncThunk<any,IPostCartApi,{ rejectValue: string }>("cartSlice/addToCart", async (cartItem, { rejectWithValue }) => {
   try {
     await postToCart(cartItem);
   } catch (error) {
@@ -61,13 +43,9 @@ export const addToCart = createAsyncThunk<
   }
 });
 
-export const changeItemCounter = createAsyncThunk<
-  { options: IPutCart; id: number },
-  { options: IPutCart; id: number },
-  { rejectValue: string }
->("cartSlice/changeItemCounter", async (obj, { rejectWithValue }) => {
+export const changeItemCounter = createAsyncThunk<{ options: IPutCart; id: number },{ options: IPutCart; id: number },{ rejectValue: string }>("cartSlice/changeItemCounter", async (obj, { rejectWithValue }) => {
   try {
-    await patchCartItem(obj.options, obj.id);
+    await patchCartItem(obj?.options, obj?.id);
 
     return obj;
   } catch (error) {
@@ -75,11 +53,7 @@ export const changeItemCounter = createAsyncThunk<
   }
 });
 
-export const deleteFromCart = createAsyncThunk<
-  undefined,
-  number,
-  { rejectValue: string }
->("cartSlice/deleteFromCart", async (id, { rejectWithValue }) => {
+export const deleteFromCart = createAsyncThunk<undefined,number,{ rejectValue: string }>("cartSlice/deleteFromCart", async (id, { rejectWithValue }) => {
   try {
     await deleteFromCartById(id);
   } catch (error) {

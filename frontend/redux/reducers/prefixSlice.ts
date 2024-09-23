@@ -1,15 +1,16 @@
 //Global
 import { createSlice } from "@reduxjs/toolkit";
-
 //Component Types
 import { IPrefixConfig } from "@/types/componentTypes";
-
+//State
 const initialState: IPrefixConfig = {
   code: "+7",
   name: "Russia",
   flag: "https://flagcdn.com/ru.svg",
   phone_mask: "(999) 999-99-99",
 };
+
+
 
 const prefixSlice = createSlice({
   name: "prefixSlice",

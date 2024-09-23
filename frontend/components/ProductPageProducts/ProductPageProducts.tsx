@@ -1,31 +1,23 @@
 "use client";
-
 //Global
 import React, { FC } from "react";
-
 //Components
 import { ProductCard } from "../ProductCard/productCard";
-
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
-
 //Component Types
 import { IProductMainPage } from "@/types/componentTypes";
-
 //Component Types
 import { IProductPageProducts } from "@/types/componentTypes";
 
-const ProductPageProducts: FC<IProductPageProducts> = ({
-  products,
-  isSimilar,
-}) => {
+const ProductPageProducts: FC<IProductPageProducts> = ({ products, isSimilar }) => {
   const { productPageFamous, productPageSimilar } = useTranslate();
 
   const title = isSimilar ? productPageSimilar : productPageFamous;
 
   const renderProducts = () =>
-    products.map((product: IProductMainPage) => (
-      <ProductCard productInfo={product} key={product.id} />
+    products?.map((product: IProductMainPage) => (
+      <ProductCard productInfo={product} key={product?.id} />
     ));
 
   return (

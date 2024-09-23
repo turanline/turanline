@@ -1,142 +1,107 @@
 //Global
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+//Types
+import { IChangeUserData, IInputsLoginPost } from "@/types/types";
+//Redux Types
+import { IUserInformationApi, ICartState } from "@/types/reduxTypes";
+import { IOrderProduct } from "@/types/componentTypes";
+//Cookies
+import { getCookie } from "cookies-next";
+//Services
+import { postVerifyToken, postTokenRefresh, postLogIn, postLogOut } from "@/services/authAPI";
+import { getUserData,postRegistration,changeUserData,getUserOrders,getUserReviews } from "@/services/usersAPI";
+import { verifyAndRefreshToken } from "@/services";
 import { clearTokens } from "@/services";
 
-//Types
-import { IChangeUserData, IInputsLogin } from "@/types/types";
-
-//Redux Types
-import { IUserInformationApi, IUserState } from "@/types/reduxTypes";
-
-//Cookie
-import { deleteCookie, getCookie } from "cookies-next";
-
-//Services
-import {
-  postVerifyToken,
-  postTokenRefresh,
-  postLogIn,
-  postLogOut,
-} from "@/services/authAPI";
-import {
-  getUserData,
-  postRegistration,
-  changeUserData,
-  getUserOrders,
-  getUserReviews,
-} from "@/services/usersAPI";
-
+//Interfaces
+interface IUserReviewState {
+  id: number;
+  product: IOrderProduct;
+  text: string;
+  created_datetime: string;
+  user: number;
+}
+interface IUserState {
+  userState: IUserInformationApi | null;
+  userReviews: IUserReviewState[];
+  userOrders: ICartState["cart"][];
+  isAuth: boolean;
+  status: "pending" | "fulfilled";
+  registrationPageNumber: number;
+  forgetPasswordState: boolean;
+  paymentPageNumber: number;
+}
+//State
 const initialState: IUserState = {
   userState: null,
   userReviews: [],
   userOrders: [],
   isAuth: false,
   status: "pending",
+  registrationPageNumber: 1,
+  paymentPageNumber: 1,
+  forgetPasswordState: false,
 };
 
-export const getUser = createAsyncThunk<
-  any,
-  undefined,
-  { rejectValue: string }
->("userSlice/getUser", async (_, { rejectWithValue }) => {
+
+
+export const getUser = createAsyncThunk<any,undefined,{ rejectValue: string }>("userSlice/getUser", async (_, { rejectWithValue }) => {
   try {
-    const token = getCookie("AuthTokenMis");
-
-    if (!token) throw new Error("AuthToken not found");
-
-    const { user } = await postVerifyToken(token);
+    const user = await verifyAndRefreshToken();
+    
+    if (!user) throw new Error("AuthToken not found");
 
     return await getUserData(user);
   } catch (error) {
+    return rejectWithValue(`${error}`);
+  } 
+});
+
+export const registrationUser = createAsyncThunk<any,IUserInformationApi,{ rejectValue: string }>("userSlice/registrationUser", async (information, { rejectWithValue }) => {
+  try {
+    const newUser = await postRegistration(information);
+
+    return newUser;
+  } catch (error) {
+    return rejectWithValue(`${error}`);
+  }
+});
+
+export const logInUser = createAsyncThunk<any,IInputsLoginPost,{ rejectValue: string }>("userSlice/logInUser", async (information, { rejectWithValue }) => {
+  try {
+    const loginData = await postLogIn(information);
+    await verifyAndRefreshToken();
+
+
+    return loginData;
+  } catch (error) {
+    return rejectWithValue(`${error}`);
+  }
+});
+
+export const updateUserState = createAsyncThunk('user/updateUserState',async (newUserData: Partial<any>, { rejectWithValue }) => {
     try {
-      const refreshToken = getCookie("AuthTokenMisRef");
-
-      if (!refreshToken) {
-        clearTokens();
-        throw new Error("RefreshToken not found");
-      }
-
-      const newToken = await postTokenRefresh(),
-        { user } = await postVerifyToken(newToken);
-
-      return await getUserData(user);
-    } catch (refreshError: any) {
-      clearTokens();
-      return rejectWithValue(
-        `Failed to refresh token: ${
-          refreshError.response?.data || refreshError.message
-        }`
-      );
+      return newUserData;
+    } catch (error) {
+      return rejectWithValue(error);
     }
   }
-});
+);
 
-export const registrationUser = createAsyncThunk<
-  undefined,
-  Omit<IUserInformationApi, "address" | "company">,
-  { rejectValue: string }
->("userSlice/registrationUser", async (information, { rejectWithValue }) => {
-  try {
-    await postRegistration(information);
-  } catch (error) {
-    return rejectWithValue(`${error}`);
-  }
-});
-
-export const logInUser = createAsyncThunk<
-  any,
-  IInputsLogin,
-  { rejectValue: string }
->("userSlice/logInUser", async (information, { rejectWithValue }) => {
-  try {
-    await postLogIn(information);
-  } catch (error) {
-    return rejectWithValue(`${error}`);
-  }
-});
-
-export const logOutUser = createAsyncThunk<
-  undefined,
-  undefined,
-  { rejectValue: string }
->("userSlice/logOutUser", async (_, { rejectWithValue }) => {
+export const logOutUser = createAsyncThunk<undefined,undefined,{ rejectValue: string }>("userSlice/logOutUser", async (_, { rejectWithValue }) => {
   try {
     const refreshToken = getCookie("AuthTokenMisRef");
 
     if (refreshToken) await postLogOut(refreshToken);
 
-    deleteCookie("AuthTokenMis");
-    deleteCookie("AuthTokenMisRef");
+    clearTokens();
   } catch (error) {
     return rejectWithValue(`Failed log out user: ${error}`);
   }
 });
 
-export const changeUserDataProfile = createAsyncThunk<
-  IChangeUserData,
-  IChangeUserData,
-  { rejectValue: string }
->("userSlice/changeUserDataProfile", async (userData, { rejectWithValue }) => {
-  try {
-    const authToken = getCookie("AuthTokenMis");
 
-    if (authToken) {
-      const { user } = await postVerifyToken(authToken);
-
-      await changeUserData(user, userData);
-    }
-
-    return userData;
-  } catch (error) {
-    return rejectWithValue(`${error}`);
-  }
-});
-
-export const getOrders = createAsyncThunk<
-  IUserState["userOrders"],
-  undefined,
-  { rejectValue: string }
->("userSlice/getUserOrders", async (_, { rejectWithValue }) => {
+export const getOrders = createAsyncThunk<IUserState["userOrders"],undefined,{ rejectValue: string }>("userSlice/getUserOrders", async (_, { rejectWithValue }) => {
   try {
     return await getUserOrders();
   } catch (error) {
@@ -144,11 +109,7 @@ export const getOrders = createAsyncThunk<
   }
 });
 
-export const getReviews = createAsyncThunk<
-  IUserState["userReviews"],
-  undefined,
-  { rejectValue: string }
->("userSlice/getUserReviews", async (_, { rejectWithValue }) => {
+export const getReviews = createAsyncThunk<IUserState["userReviews"],undefined,{ rejectValue: string }>("userSlice/getUserReviews", async (_, { rejectWithValue }) => {
   try {
     return await getUserReviews();
   } catch (error) {
@@ -159,7 +120,17 @@ export const getReviews = createAsyncThunk<
 const userSlice = createSlice({
   name: "userSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    setRegistrationPageNumber(state,action){
+      state.registrationPageNumber = action.payload;
+    },
+    setForgetPassword(state,action){
+      state.forgetPasswordState = action.payload;
+    },
+    setPaymenPageNumber(state,action){
+      state.paymentPageNumber = action.payload;
+    }
+  },
   extraReducers: builder =>
     builder
       .addCase(getUser.pending, state => {
@@ -177,6 +148,19 @@ const userSlice = createSlice({
         state.userState = null;
 
         clearTokens();
+      })
+      .addCase(updateUserState.fulfilled, (state, action) => {
+        if (state.userState) {
+          state.userState = {
+            ...state.userState,
+            user: {
+              ...state.userState.user,
+              ...action.payload.user,
+            },
+            company: action.payload.company ?? state.userState.company,
+            address: action.payload.address ?? state.userState.address,
+          };
+        }
       })
       .addCase(logOutUser.pending, state => {
         state.status = "pending";
@@ -210,30 +194,6 @@ const userSlice = createSlice({
         state.status = "fulfilled";
         state.isAuth = false;
       })
-      .addCase(changeUserDataProfile.pending, state => {
-        state.status = "pending";
-      })
-      .addCase(changeUserDataProfile.fulfilled, (state, action) => {
-        state.status = "fulfilled";
-
-        const { address, company, user, phone_number } = action.payload;
-
-        if (state.userState) {
-          state.userState = {
-            user: {
-              first_name: user.first_name,
-              last_name: user.last_name,
-              email: state.userState.user.email,
-              password: state.userState.user.password,
-              username: state.userState.user.username,
-              is_provider: false,
-            },
-            address,
-            company,
-            phone_number,
-          };
-        }
-      })
       .addCase(getOrders.pending, state => {
         state.status = "pending";
       })
@@ -249,5 +209,6 @@ const userSlice = createSlice({
         state.userReviews = action.payload;
       }),
 });
+export const { setRegistrationPageNumber ,setForgetPassword,setPaymenPageNumber} = userSlice.actions;
 
 export default userSlice.reducer;

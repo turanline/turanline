@@ -1,45 +1,46 @@
 "use client";
-
 //Global
 import { useState } from "react";
 import Link from "next/link";
 import { useCallback } from "react";
-
 //Actions
 import {
   fetchCategories,
   fetchTypes,
   fetchSubtypes,
 } from "@/redux/reducers/categoriesSlice";
-
 //Hooks
-import { useAppDispatch, useTypedSelector } from "./useReduxHooks";
-
+import { useAppDispatch, useTypedSelector} from "./useReduxHooks";
+import { useProducts } from "./useProducts";
+//Types
+import { ICurrentCategory } from "@/types/componentTypes";
+//Services
+import { getProductsByFilter } from "@/services/productsAPI";
 //Styles
 import "@/components/Header/Header.scss";
-import { ICurrentCategory } from "@/types/componentTypes";
+import { showToastMessage } from "@/app/toastsChange";
 
 const useCategories = (color: string) => {
+  //Hooks
   const { status, categories, types, subtypes } = useTypedSelector(
-    state => state.categories
+    (state) => state.categories
   );
+  const { selectedLanguage } = useTypedSelector((state) => state.language);
+  const dispatch = useAppDispatch();
+  const { onSetSearchProducts, setAllProducts } = useProducts();
 
-  const { selectedLanguage } = useTypedSelector(state => state.language);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const [currentCategory, setCurrentCategory] = useState<ICurrentCategory>({
     id: 0,
     name: "",
   });
 
-  const dispatch = useAppDispatch();
-
   const filterByProperty = <T, K extends keyof T>(
     items: T[],
     property: K,
     value: T[K]
-  ) => items.filter(item => item[property] === value);
+  ) => items.filter((item) => item[property] === value);
 
   const returnTypesByCategory = (id: number) =>
     filterByProperty(types, "parent", id);
@@ -59,32 +60,49 @@ const useCategories = (color: string) => {
     [dispatch, selectedLanguage]
   );
 
+  const getProducts = async (category:number) => {
+    try {
+      const products = await getProductsByFilter(`category=${category}`);
+
+      if(!products?.length){
+        showToastMessage('warn','По данной категории ничего не найдено');
+      }
+      onSetSearchProducts(products)
+
+    } catch (error) {
+      showToastMessage('warn','По данной категории ничего не найдено');
+    }
+  }
+
   const renderDesktopCategories = () =>
-    categories.map(category => (
+    categories?.map((category) => (
       <Link
         onMouseEnter={() => {
           setCurrentCategory(category);
           setIsOpen(true);
         }}
-        key={category.id}
-        href={`/category/${category.id}`}
+        key={category?.id}
+        href={`/catalog`}
+        onClick={()=> getProducts(category?.id)}
       >
-        {category.name}
+        {category?.name}
       </Link>
     ));
 
-  const renderTypesByCategory = () =>
-    isOpen && (
-      <div className="w-full container flex justify-between text-white">
-        {returnTypesByCategory(currentCategory.id).map(type => (
+  const renderTypesByCategory = () => {
+    if (!isOpen) return;
+
+    return (
+      <div className="w-full container flex gap-[50px] justify-between flex-wrap text-white">
+        {returnTypesByCategory(currentCategory.id).map((type) => (
           <div key={type.id} className="flex flex-col gap-[10px]">
-            <Link className="font-bold" href={`/category/${type.parent}`}>
+            <Link className="font-bold" href={`/catalog`} onClick={()=> getProducts(type.id)}>
               {type.name}
             </Link>
 
             <div className="flex flex-col gap-[5px]">
-              {returnSubtypesByType(type.id).map(subtype => (
-                <Link key={subtype.id} href={`/category/${type.parent}`}>
+              {returnSubtypesByType(type.id).map((subtype) => (
+                <Link key={subtype.id} href={`/catalog`} onClick={()=> getProducts(subtype.id)}>
                   {subtype.name}
                 </Link>
               ))}
@@ -93,6 +111,7 @@ const useCategories = (color: string) => {
         ))}
       </div>
     );
+  };
 
   const mapCategoriesOnDesktop = () => {
     if (status === "fulfilled")
@@ -105,7 +124,7 @@ const useCategories = (color: string) => {
             padding: "15px 0",
           }}
         >
-          <div className="w-full container flex justify-between text-white">
+          <div className="w-full container px-[15px] flex justify-between text-white">
             {renderDesktopCategories()}
           </div>
 
@@ -117,10 +136,10 @@ const useCategories = (color: string) => {
   const mapCategoriesOnPhone = () => {
     if (status === "fulfilled")
       return (
-        <div className="flex flex-col gap-[20px] row-span-4">
-          {categories.map(category => (
-            <Link key={category.id} href={`/category/${category.id}`}>
-              {category.name}
+        <div className="flex flex-col max-sm:basis-[50%] gap-[20px] row-span-4">
+          {categories?.map((category) => (
+            <Link style={{color:"white"}} key={category?.id} href={`/catalog`} onClick={()=> getProducts(category.id)}>
+              {category?.name}
             </Link>
           ))}
         </div>

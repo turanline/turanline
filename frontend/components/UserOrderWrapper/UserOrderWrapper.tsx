@@ -1,27 +1,18 @@
 "use client";
-
 //GLobal
 import React, { FC, useState, useRef, useEffect } from "react";
-
+import Link from "next/link";
 //Components
 import { Icons } from "../Icons/Icons";
 import { UserOrderItem } from "@/components/UserOrderItem/UserOrderItem";
-
 //Component Types
 import { IUserOrderWrapper } from "@/types/componentTypes";
-
 //styles
 import "./UserOrderWrapper.scss";
 
-const UserOrderWrapper: FC<IUserOrderWrapper> = ({
-  orderDate,
-  orderNumber,
-  orderStatus,
-  orderProducts,
-  orderSum,
-}) => {
-  const [isHidden, setIsHidden] = useState<boolean>(true),
-    [wrapperHeight, setWrapperHeight] = useState<number | null>(null);
+const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderDate, orderNumber, orderStatus, orderProducts, orderSum }) => {
+  const [isHidden, setIsHidden] = useState<boolean>(true);
+  const [wrapperHeight, setWrapperHeight] = useState<number | null>(null);
 
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -60,13 +51,14 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({
   const renderOrderProducts = () =>
     orderProducts.map(product => (
       <UserOrderItem
-        key={product.id}
-        amount={product.amount}
-        color={product.color}
-        product={product.product}
-        size={product.size}
+        key={product?.id}
+        amount={product?.amount}
+        color={product?.color}
+        product={product?.product}
+        sum={product?.sum}
       />
     ));
+
 
   const returnOrderStatus = (status: string) => {
     let orderStatusText, iconId, buttonStyles;
@@ -108,6 +100,14 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({
         };
         break;
 
+      case "CT":
+        orderStatusText = "Передан в Карго";
+        iconId = "deliveredOrder";
+        buttonStyles = {
+          backgroundColor: "#ECFFFE",
+          color: "#0ABAB5",
+        };
+        break;
       default:
         orderStatusText = "Неизвестный статус";
         iconId = "car";
@@ -135,11 +135,7 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({
   };
 
   return (
-    <div
-      style={wrapperStyles}
-      className="profile-content_orders-content-order-wrapper"
-      ref={contentRef}
-    >
+    <div style={wrapperStyles} className="profile-content_orders-content-order-wrapper" ref={contentRef}>
       <div className="profile-content_orders-content-order">
         <span
           className="profile-content_orders-content-order-span"
@@ -158,15 +154,10 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({
 
         {returnOrderStatus(orderStatus)}
 
-        <button className="profile-content_orders-content-order-button">
-          <Icons id="repeat" />
-          Повторить
-        </button>
-
-        <button className="profile-content_orders-content-order-button">
+        <Link target="_" href={`https://wa.me/${'+905525977888'}`} className="profile-content_orders-content-order-button">
           <Icons id="flag" />
           Составить обращение
-        </button>
+        </Link>
       </div>
 
       {renderOrderProducts()}

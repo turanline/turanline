@@ -1,6 +1,5 @@
 //Hosts
 import { $authHost } from "./index";
-
 //Global Types
 import { IPostCartApi, IPutCart } from "@/types/types";
 
@@ -17,18 +16,21 @@ export const getCart = async (id: number) => {
 
 export const postToCart = async (obj: IPostCartApi) => {
   try {
-    const { data: orderData } = await $authHost.post("/api/order/", obj);
+    const { data: orderData } = await $authHost.post(
+      "/api/order-products/",
+      obj
+    );
 
     return orderData;
   } catch (error) {
-    console.error("Failed post to user cart:" + error);
+    console.error(error);
     throw error;
   }
 };
 
 export const deleteFromCartById = async (id: number) => {
   try {
-    const { data } = await $authHost.delete(`/api/order/${id}/`);
+    const { data } = await $authHost.delete(`/api/order-products/${id}/`);
 
     return data;
   } catch (error) {
@@ -39,7 +41,7 @@ export const deleteFromCartById = async (id: number) => {
 
 export const patchCartItem = async (product: IPutCart, id: number) => {
   try {
-    const { data } = await $authHost.put(`/api/order/${id}/`, product);
+    const { data } = await $authHost.put(`/api/order-products/${id}/`, product);
 
     return data;
   } catch (error) {

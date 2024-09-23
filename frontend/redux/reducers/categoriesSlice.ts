@@ -1,12 +1,22 @@
 //Global
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-//Redux Types
-import { ICategoriesState } from "@/types/reduxTypes";
-
 //Services
-import { getCategories, getTypes, getSubTypes } from "@/services/categoriesAPI";
-
+import { getAllCategories, getTypes, getSubTypes } from "@/services/categoriesAPI";
+//Interfaces
+interface Category {
+  id: number;
+  name: string;
+  image: string;
+  level: number;
+  parent: number;
+}
+interface ICategoriesState {
+  categories: Category[];
+  types: Category[];
+  subtypes: Category[];
+  status: "pending" | "fulfilled";
+}
+//State
 const initialState: ICategoriesState = {
   categories: [],
   types: [],
@@ -14,25 +24,19 @@ const initialState: ICategoriesState = {
   status: "pending",
 };
 
-export const fetchCategories = createAsyncThunk<
-  ICategoriesState["categories"],
-  undefined,
-  { rejectValue: string }
->("categoriesSlice/fetchCategories", async (_, { rejectWithValue }) => {
-  try {
-    const categories = await getCategories();
 
-    return await categories;
+
+export const fetchCategories = createAsyncThunk<ICategoriesState["categories"],undefined,{ rejectValue: string }>("categoriesSlice/fetchCategories", async (_, { rejectWithValue }) => {
+  try {
+    const categories = getAllCategories();
+
+    return categories;
   } catch (error) {
     return rejectWithValue(`${error}`);
   }
 });
 
-export const fetchTypes = createAsyncThunk<
-  ICategoriesState["types"],
-  undefined,
-  { rejectValue: string }
->("categoriesSlice/fetchTypes", async (_, { rejectWithValue }) => {
+export const fetchTypes = createAsyncThunk<ICategoriesState["types"],undefined,{ rejectValue: string }>("categoriesSlice/fetchTypes", async (_, { rejectWithValue }) => {
   try {
     return await getTypes();
   } catch (error) {
@@ -40,11 +44,7 @@ export const fetchTypes = createAsyncThunk<
   }
 });
 
-export const fetchSubtypes = createAsyncThunk<
-  ICategoriesState["subtypes"],
-  undefined,
-  { rejectValue: string }
->("categoriesSlice/fetchSubtypes", async (_, { rejectWithValue }) => {
+export const fetchSubtypes = createAsyncThunk<ICategoriesState["subtypes"],undefined,{ rejectValue: string }>("categoriesSlice/fetchSubtypes", async (_, { rejectWithValue }) => {
   try {
     return await getSubTypes();
   } catch (error) {

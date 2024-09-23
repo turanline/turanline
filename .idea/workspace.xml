@@ -5,177 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64759555-ae87-479e-8346-d05a36760444" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/payment/services/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/payment/services/hash_service/hash_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/cart/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/cart/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/cart/enums.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/cart/enums.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/cart/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/cart/migrations/0002_order_card.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/cart/migrations/0003_order_customer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/cart/migrations/0004_rename_card_order_payment.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/cart/migrations/0005_alter_order_options.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/cart/mixins.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/cart/mixins.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/cart/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/cart/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/cart/permissions.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/cart/permissions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/cart/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/cart/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/cart/signals.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/cart/signals.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/cart/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/cart/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/clients/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/clients/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/clients/redis_client/redis_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/clients/redis_client/redis_client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/clients/twilio_client/twilio_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/clients/twilio_client/twilio_client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/customers/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/customers/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/customers/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/customers/migrations/0002_alter_review_options_alter_review_unique_together.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/customers/migrations/0003_customer_is_verified.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/customers/migrations/0004_remove_customer_phone_number.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/customers/migrations/0005_alter_customer_user.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/customers/migrations/0006_remove_customer_is_verified_alter_customer_user.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/customers/migrations/0007_alter_review_options.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/customers/mixins.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/customers/mixins.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/customers/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/customers/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/customers/permissions.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/customers/permissions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/customers/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/customers/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/customers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/customers/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/delivery/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/delivery/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/delivery/filters.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/delivery/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/delivery/migrations/0002_remove_city_name_remove_tariff_name_citytranslation_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/delivery/migrations/0003_alter_city_options_alter_citytranslation_options_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/delivery/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/delivery/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/delivery/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/delivery/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/delivery/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/delivery/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/mssite/celery.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mssite/celery.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/mssite/middleware.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mssite/middleware.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/mssite/mixins.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mssite/mixins.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/mssite/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mssite/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/mssite/storages.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mssite/storages.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/mssite/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mssite/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/payment/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/payment/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/payment/enums.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/payment/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/payment/migrations/0002_remove_card_expiration_date_card_expiration_month_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/payment/migrations/0003_alter_cardpayment_customer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/payment/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/payment/mixins.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/payment/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/payment/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/payment/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/payment/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/payment/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/poetry.lock" beforeDir="false" afterPath="$PROJECT_DIR$/backend/poetry.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/product_components/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/product_components/filters.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/managers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/product_components/managers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0002_images.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0003_alter_productsubtype_name.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0004_rename_color_color_color_hex_alter_color_name.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0005_rename_color_hex_color_color.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0006_delete_images.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0007_image.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0008_delete_image.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0009_alter_producttype_name.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0010_alter_productsubtype_unique_together_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0011_delete_productsubtype_delete_producttype.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0012_alter_category_options.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0013_alter_category_options_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0014_producttranslation_delete_categorytranslation.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0015_rename_producttranslation_categorytranslation.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0016_category_slug.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0017_alter_color_options_remove_color_name_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0018_color_slug.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0019_alter_manufacturercountry_options_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/migrations/0020_alter_categorytranslation_master_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/product_components/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/product_components/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/product_components/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/product_components/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/enums.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/products/enums.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/fields.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/products/fields.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0002_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0003_alter_product_image_delete_images.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0004_alter_product_image.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0005_alter_product_image.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0006_alter_product_options_alter_product_article_number_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0007_product_is_published.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0007_remove_product_image_product_fifth_image_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0008_remove_product_is_published.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0009_merge_20240628_2050.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0010_productstatuschangearchive.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0011_rename_user_productstatuschangearchive_provider.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0012_alter_productstatuschangearchive_new_status_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0013_alter_productstatuschangearchive_options_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0014_alter_producttranslation_master_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0015_alter_product_fifth_image_alter_product_first_image_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0016_remove_product_color_remove_product_size_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0017_alter_product_is_famous.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0018_remove_product_fifth_image_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0019_remove_product_images_image.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0020_alter_image_product.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0021_productsize.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0022_alter_product_size.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0023_producttranslation_weight.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0024_remove_producttranslation_weight_product_weight.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0025_alter_productsize_size.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0026_remove_product_subtypes_product_category.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0027_alter_product_price.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0028_alter_image_options_image_position.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0029_alter_image_position.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0030_alter_image_image_file.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0031_alter_image_image_file.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0032_alter_image_image_file.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0033_alter_image_image_file.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0034_remove_image_image_url.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0035_productcolor_alter_product_color.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0036_remove_product_amount.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0037_alter_product_price.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0038_alter_producttranslation_compound.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/migrations/0039_alter_product_price.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/mixins.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/products/mixins.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/products/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/permissions.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/resources.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/products/resources.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/products/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/services/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/services/products_service.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/signals.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/products/signals.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products/tasks.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/products/tasks.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/products/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/products/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/products_generator.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/migrations/0002_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/migrations/0003_provider_last_downloaded_file.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/migrations/0004_alter_provider_last_downloaded_file.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/migrations/0005_alter_provider_phone_number_alter_provider_state.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/migrations/0006_alter_provider_last_downloaded_file.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/migrations/0007_alter_provider_last_downloaded_file.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/migrations/0008_alter_provider_phone_number.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/migrations/0009_provider_is_verified.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/migrations/0010_remove_provider_phone_number.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/migrations/0011_alter_provider_user.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/migrations/0012_remove_provider_is_verified_alter_provider_user.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/mixins.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/providers/mixins.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/providers/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/permissions.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/providers/permissions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/providers/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/providers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/providers/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pyproject.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/users/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/enums.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/users/enums.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/managers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/users/managers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/migrations/0002_alter_user_is_provider_delete_appeal.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/migrations/0003_appeal.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/migrations/0004_user_is_verified.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/migrations/0005_remove_user_is_verified_user_phone_number.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/migrations/0006_alter_user_phone_number.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/migrations/0007_user_is_customer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/migrations/0008_user_is_verified.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/migrations/0009_alter_user_is_verified.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/migrations/0010_delete_appeal.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/mixins.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/users/mixins.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/users/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/users/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/users/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dump.rdb" beforeDir="false" afterPath="$PROJECT_DIR$/dump.rdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gateway/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/nginx.conf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -205,18 +38,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Python.backend.executor": "Debug",
-    "Python.manage.executor": "Debug",
-    "Python.test.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/timurrybakov/Desktop/pet_projects/MIS_EXPRESS/backend/cart/migrations",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Python.backend.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.manage.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/timurrybakov/Desktop/pet_projects/MIS_EXPRESS/backend/cart/migrations&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/backend/cart/migrations" />

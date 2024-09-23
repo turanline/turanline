@@ -1,53 +1,30 @@
 "use client";
-
 //Global
 import { useForm } from "react-hook-form";
-
 //Types
-import {
-  IInputsLength,
-  CustomFormType,
-  IInputsChangeProfile,
-} from "@/types/types";
-
+import { IInputsLength,CustomFormType } from "@/types/types";
 //Hooks
 import { useTranslate } from "./useTranslate";
-
 //Utils
 import {
   emailRegular,
   passwordRegular,
   nameRegular,
   surnameRegular,
-  usernameRegular,
+  phone_login_Regular,
   phoneRegular,
   addressRegular,
   companyNameRegular,
+  codeRegular,
+  cardNumberRegular,
+  cardHolderNameRegular,
+  cvvRegular,
+  expirationDateRegular,
 } from "@/utils/Consts";
 
 const useCustomForm = <T extends CustomFormType>() => {
-  const {
-    register,
-    formState: { errors, isValid },
-    getValues,
-    handleSubmit,
-    reset,
-    setValue,
-  } = useForm<T>({ mode: "onBlur" });
-
-  const {
-    formAddress,
-    formCompany,
-    formEmail,
-    formName,
-    formPassword,
-    formPhone,
-    formUsername,
-    formMax,
-    formMin,
-    formRequired,
-    formSymbols,
-  } = useTranslate();
+  const translate = useTranslate();
+  const { register,formState: { errors, isValid },getValues,handleSubmit,reset,setValue } = useForm<T>({ mode: "onBlur" });
 
   const returnRegularByInputType = (inputType: keyof IInputsLength) => {
     switch (inputType) {
@@ -59,36 +36,61 @@ const useCustomForm = <T extends CustomFormType>() => {
         return surnameRegular;
       case "password":
         return passwordRegular;
-      case "username":
-        return usernameRegular;
+      case "phone_login_number":
+        return phone_login_Regular;
       case "phone_number":
         return phoneRegular;
       case "address":
         return addressRegular;
       case "company":
         return companyNameRegular;
+      case "code":
+        return codeRegular;
+      case "card_number":
+        return cardNumberRegular; 
+      case "cardholder_name":
+        return cardHolderNameRegular; 
+      case "cvv":
+       return cvvRegular; 
+      case "expiration_month":
+        return expirationDateRegular; 
+      case "expiration_year":
+        return expirationDateRegular; 
     }
   };
 
   const returnMessageByInputType = (inputType: keyof IInputsLength) => {
     switch (inputType) {
       case "email":
-        return formEmail;
+        return translate.formEmail;
       case "first_name":
-        return formName;
+        return translate.formName;
       case "last_name":
-        return formName;
+        return translate.formName;
       case "password":
-        return formPassword;
-      case "username":
-        return formUsername;
+        return translate.formPassword;
       case "phone_number":
-        return formPhone;
+        return translate.formPhone;
+      case "phone_login_number":
+        return translate.formPhone;
       case "address":
-        return formAddress;
+        return translate.formAddress;
       case "company":
-        return formCompany;
+        return translate.formCompany;
+      case "code":
+        return translate.checkCode;
+      case "card_number":
+        return translate.formCorrectCardNumber; 
+      case "cardholder_name":
+        return translate.formCorrectCardName; 
+      case "cvv":
+       return translate.formCorrectCardCVV; 
+      case "expiration_month":
+        return translate.formCorrectCardMonth; 
+      case "expiration_year":
+        return translate.formCorrectCardYear; 
     }
+    
   };
 
   const returnInputProperties = (inputType: keyof IInputsLength) => {
@@ -97,10 +99,16 @@ const useCustomForm = <T extends CustomFormType>() => {
       first_name: 150,
       last_name: 150,
       password: 120,
-      username: 150,
+      phone_login_number: 18,
       phone_number: 18,
       address: 150,
       company: 30,
+      code:6,
+      card_number:20,  
+      cardholder_name:100,
+      cvv:3,
+      expiration_month:2,
+      expiration_year:4,
     };
 
     const minLengthInput: IInputsLength = {
@@ -108,22 +116,28 @@ const useCustomForm = <T extends CustomFormType>() => {
       first_name: 2,
       last_name: 2,
       password: 8,
-      username: 3,
-      phone_number: 6,
+      phone_login_number: 10,
+      phone_number: 10,
       address: 1,
       company: 1,
+      code:6,
+      card_number:16,  
+      cardholder_name:5,
+      cvv:3,
+      expiration_month:2,
+      expiration_year:4,
     };
 
     return {
       ...register(inputType as any, {
-        required: formRequired,
+        required: translate.formRequired,
         minLength: {
           value: minLengthInput[inputType],
-          message: `${formMin} ${minLengthInput[inputType]} ${formSymbols}`,
+          message: `${translate.formMin} ${minLengthInput[inputType]} ${translate.formSymbols}`,
         },
         maxLength: {
           value: maxLengthInput[inputType],
-          message: `${formMax} ${maxLengthInput[inputType]} ${formSymbols}`,
+          message: `${translate.formMax} ${maxLengthInput[inputType]} ${translate.formSymbols}`,
         },
         pattern: {
           value: returnRegularByInputType(inputType),

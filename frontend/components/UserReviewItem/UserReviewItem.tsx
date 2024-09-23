@@ -1,17 +1,11 @@
 //Global
 import React, { FC } from "react";
-
 //Component Types
 import { IUserReviewItemProps } from "@/types/componentTypes";
-
 //Styles
 import "./UserReviewItem.scss";
 
-const UserReviewItem: FC<IUserReviewItemProps> = ({
-  reviewStatus,
-  reviewText,
-  reviewTitle,
-}) => {
+const UserReviewItem: FC<IUserReviewItemProps> = ({ reviewStatus, reviewText, reviewTitle }) => {
   const status = reviewStatus === "moderation" ? "на модерации" : "опубликован";
 
   const statusStyles = {

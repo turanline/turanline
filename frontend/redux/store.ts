@@ -1,8 +1,6 @@
 "use client";
-
 //GLobal
 import { configureStore } from "@reduxjs/toolkit";
-
 //Reducers
 import languageSlice from "./reducers/languageSlice";
 import productsSlice from "./reducers/productsSlice";

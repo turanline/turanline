@@ -1,17 +1,14 @@
 "use client";
-
 //Global
 import { useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import { Pagination } from "swiper/modules";
 import Link from "next/link";
-
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
 import { useTypedSelector } from "@/hooks/useReduxHooks";
 import { useProducts } from "@/hooks/useProducts";
-
 //Images
 import slide1 from "../../public/assets/other/slide1.png";
 import back1 from "../../public/assets/other/back1.png";
@@ -19,93 +16,83 @@ import back2 from "../../public/assets/other/back2.png";
 import back3 from "../../public/assets/other/back3.png";
 import airplane from "../../public/assets/other/airplane.png";
 import packageImg from "../../public/assets/other/package.png";
-import lcWaikiki from "../../public/assets/companies/lcWaikiki.png";
-import armani from "../../public/assets/companies/armani.png";
-import mavi from "../../public/assets/companies/mavi.png";
-import koton from "../../public/assets/companies/koton.png";
-import prada from "../../public/assets/companies/prada.png";
-import fangi from "../../public/assets/companies/fangi.png";
-import chanel from "../../public/assets/companies/chanel.png";
-import defacto from "../../public/assets/companies/defacto.png";
-import dior from "../../public/assets/companies/dior.png";
-import luiviton from "../../public/assets/companies/luiviton.png";
-import rolex from "../../public/assets/companies/rolex.png";
-import colins from "../../public/assets/companies/colins.png";
-
 //Components
 import { Icons } from "@/components/Icons/Icons";
 import { ProductCard } from "../ProductCard/productCard";
-import { Filter } from "../Filter/Filter";
+import { Filter } from "../Modals/Filter/Filter";
 import { EmptyComponent } from "../EmptyComponent/EmptyComponent";
-
 //Utils
 import {
   CATALOG_ROUTE,
   DELIVERY_ROUTE,
-  MANUFACTURES_ROUTE,
   SHOP_ROUTE,
 } from "@/utils/Consts";
-
 //Styles
 import "swiper/css/pagination";
 import "./Home.scss";
 import "swiper/css";
 
 const Home = () => {
-  const {
-    newRevenues,
-    newRevenuesLink,
-    newRevenuesText,
-    manufacturer,
-    manufacturerText,
-    headerDelivery,
-    deliveryText,
-    promotions,
-    promotionsText,
-    seasonThings,
-    productSelection,
-    lookAll,
-    bestsellers,
-    foundation,
-    emptyCatalogTitle,
-    emptyCatalogButtonText,
-    emptyCatalogText,
-  } = useTranslate();
-
+  const translate = useTranslate();
+  const { setAllProducts } = useProducts();
   const { products, status } = useTypedSelector(state => state.products);
 
-  const { setAllProducts } = useProducts();
-
-  useEffect(() => {
-    setAllProducts();
-  }, [setAllProducts]);
 
   const mapAllProducts = () => {
     const threeProducts = products.slice(0, 3);
 
     if (status === "pending") return <Icons id="spiner" />;
 
-    if (!threeProducts.length && status === "fulfilled")
-      return (
+    if (!threeProducts?.length && status === "fulfilled")
+    return (
         <EmptyComponent
-          title={emptyCatalogTitle}
-          text={emptyCatalogText}
+          title={translate.emptyCatalogTitle}
+          text={translate.emptyCatalogText}
           route={SHOP_ROUTE}
-          buttonText={emptyCatalogButtonText}
+          buttonText={translate.emptyCatalogButtonText}
         />
       );
 
     return (
       <div className="home-products-wrapper">
-        {threeProducts.map(product => (
-          <ProductCard key={product.id} productInfo={product} />
+        {threeProducts?.map(product => (
+          <ProductCard key={product?.id} productInfo={product} />
         ))}
       </div>
     );
   };
 
+  const renderSlider = () => (
+    <Swiper
+      className="sm:min-w-[400px] max-h-[231px] w-full h-[177px] lg:max-w-[400px] sm:h-[230px] rounded-lg"
+      spaceBetween={0}
+      slidesPerView={1}
+      watchSlidesProgress
+      modules={[Pagination]}
+      pagination={true}
+    >
+      <SwiperSlide>
+        <div className="w-full h-full relative flex flex-col items-center justify-center text-center text-white">
+          <Image
+            className="absolute w-full h-full z-0"
+            src={slide1}
+            alt="slide1"
+          />
+          <h5 className="relative z-10 family_bold text-[26px]">
+            {translate.manufacturer}
+          </h5>
+          <p className="relative z-10 font-light">{translate.manufacturerText}</p>
+        </div>
+      </SwiperSlide>
+    </Swiper>
+  );
+
+  useEffect(() => {
+    setAllProducts();
+  }, [setAllProducts]);
+
   return (
-    <main className="container mx-auto px-[28px] sm:px-0">
+    <main className="container mx-auto px-[15px] lg:px-[30px]">
       <div className="flex flex-col lg:flex-row gap-[15px] lg:gap-[24px] mb-[15px] lg:mb-[24px]">
         <Link className="lg:h-auto   w-full  " href={CATALOG_ROUTE}>
           <div className="h-[200px]  lg:max-h-[230px] max-h-[300px] flex-col p-[24px] sm:p-[36px] sm:h-[240px] text-white relative">
@@ -115,11 +102,11 @@ const Home = () => {
               alt="back1"
             />
             <h3 className="family_bold relative z-10 text-[26px] sm:text-[42px]">
-              {newRevenues}
+              {translate.newRevenues}
             </h3>
-            <p className="relative z-10">{newRevenuesText}</p>
+            <p className="relative z-10">{translate.newRevenuesText}</p>
             <div className="flex absolute right-[20px] bottom-[16px] gap-[7px] items-center">
-              <p>{newRevenuesLink}</p>
+              <p>{translate.newRevenuesLink}</p>
               <Icons id="arrow" />
             </div>
           </div>
@@ -132,31 +119,10 @@ const Home = () => {
               src={airplane}
               alt="airplane"
             />
-            <h5 className="family_bold text-[26px]">{headerDelivery}</h5>
-            <p className="font-light">{deliveryText}</p>
+            <h5 className="family_bold text-[26px]">{translate.headerDelivery}</h5>
+            <p className="font-light">{translate.deliveryText}</p>
           </div>
-          <Swiper
-            className="sm:min-w-[400px] w-full h-[177px] lg:max-w-[400px] min-h-[230px]"
-            spaceBetween={0}
-            slidesPerView={1}
-            watchSlidesProgress
-            modules={[Pagination]}
-            pagination={true}
-          >
-            <SwiperSlide>
-              <div className="w-full h-full relative flex flex-col items-center justify-center text-center text-white">
-                <Image
-                  className="absolute w-full h-full z-0"
-                  src={slide1}
-                  alt="slide1"
-                />
-                <h5 className="relative z-10 family_bold text-[26px]">
-                  {manufacturer}
-                </h5>
-                <p className="relative z-10 font-light">{manufacturerText}</p>
-              </div>
-            </SwiperSlide>
-          </Swiper>
+          {renderSlider()}
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 sm:h-[230px] gap-[15px] lg:gap-[24px]">
@@ -167,9 +133,9 @@ const Home = () => {
             alt="back2"
           />
           <h5 className="family_bold relative z-10 text-[26px]">
-            {promotions}
+            {translate.promotions}
           </h5>
-          <p className="relative z-10 font-light">{promotionsText}</p>
+          <p className="relative z-10 font-light">{translate.promotionsText}</p>
         </div>
 
         <Link
@@ -181,8 +147,8 @@ const Home = () => {
             src={airplane}
             alt="airplane"
           />
-          <h5 className="family_bold text-[26px]">{headerDelivery}</h5>
-          <p className="font-light">{deliveryText}</p>
+          <h5 className="family_bold text-[26px]">{translate.headerDelivery}</h5>
+          <p className="font-light">{translate.deliveryText}</p>
         </Link>
 
         <div className="relative rounded-md text-white h-[177px] sm:h-auto flex flex-col items-center justify-center p-4">
@@ -192,106 +158,28 @@ const Home = () => {
             alt="back3"
           />
           <h5 className="family_bold relative z-10 text-[26px] text-center">
-            {seasonThings}
+            {translate.seasonThings}
           </h5>
         </div>
         <Link href={"#filter"} className="choose_good_card">
           <Image src={packageImg} alt="packageImg" width={500} height={500} />
 
           <p className="text-[26px] family_bold sm:text-[20px]">
-            {productSelection}
+            {translate.productSelection}
           </p>
         </Link>
       </div>
-      <div className="hidden md:flex flex-col items-center relative">
-        <div className="w-full flex flex-col gap-[40px] mt-[100px]">
-          <div className="flex gap-[30px] justify-between cursor-pointer">
-            <Image
-              className="w-[100px] object-contain"
-              src={lcWaikiki}
-              alt="lcWaikiki"
-            />
-
-            <Image
-              className="w-[100px] object-contain"
-              src={armani}
-              alt="armani"
-            />
-
-            <Image className="w-[100px] object-contain" src={mavi} alt="mavi" />
-            <Image
-              className="w-[100px] object-contain"
-              src={koton}
-              alt="koton"
-            />
-
-            <Image
-              className="w-[100px] object-contain"
-              src={prada}
-              alt="prada"
-            />
-
-            <Image
-              className="w-[100px] object-contain"
-              src={fangi}
-              alt="fangi"
-            />
-          </div>
-          <div className="flex justify-between lg:gap-[50px] cursor-pointer">
-            <Image
-              className="w-[100px] object-contain"
-              src={chanel}
-              alt="chanel"
-            />
-
-            <Image
-              className="w-[100px] object-contain"
-              src={defacto}
-              alt="defacto"
-            />
-
-            <Image className="w-[100px] object-contain" src={dior} alt="dior" />
-            <Image
-              className="w-[100px] object-contain"
-              src={luiviton}
-              alt="luiviton"
-            />
-
-            <Image
-              className="w-[100px] object-contain"
-              src={rolex}
-              alt="rolex"
-            />
-
-            <Image
-              className="w-[100px] object-contain"
-              src={colins}
-              alt="colins"
-            />
-          </div>
-        </div>
-
-        <div className="absolute right-0 bottom-[220px] flex gap-[7px] items-center mt-[30px]">
-          <Link
-            className="hover:text-tiffani transition-colors"
-            href={MANUFACTURES_ROUTE}
-          >
-            {lookAll}
-          </Link>
-
-          <Icons id="arrowBlack" />
-        </div>
-      </div>
+     
       <div className="flex flex-col mt-[30px] w-full">
-        <div className="flex justify-between mb-[26px]">
-          <h5 className="text-[24px]">{bestsellers}</h5>
+        <div className="flex items-center justify-between mb-[26px]">
+          <h5 className="text-[24px]">{translate.bestsellers}</h5>
 
           <div className="flex gap-[7px] items-center">
             <Link
               className="hover:text-tiffani transition-colors"
               href={CATALOG_ROUTE}
             >
-              {lookAll}
+              {translate.lookAll}
             </Link>
 
             <Icons id="arrowBlack" />
@@ -301,7 +189,7 @@ const Home = () => {
         {mapAllProducts()}
       </div>
 
-      <h5 className="text-[24px] mt-[30px] mb-[25px]">{foundation}</h5>
+      <h5 className="text-[24px] mt-[30px] mb-[25px]">{translate.foundation}</h5>
 
       <Filter />
     </main>

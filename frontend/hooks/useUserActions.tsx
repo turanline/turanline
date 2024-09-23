@@ -1,172 +1,128 @@
 "use client";
-
 //Global
 import { showToastMessage } from "@/app/toastsChange";
 import { Dispatch, SetStateAction, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { UseFormReset, UseFormSetValue } from "react-hook-form";
-
 //Components
 import { Icons } from "@/components/Icons/Icons";
 import { EmptyComponent } from "@/components/EmptyComponent/EmptyComponent";
 import { UserOrderWrapper } from "@/components/UserOrderWrapper/UserOrderWrapper";
 import { UserReviewItem } from "@/components/UserReviewItem/UserReviewItem";
-
+import { getColors } from "@/redux/reducers/productsSlice";
 //Actions
 import {
   getUser,
   logInUser,
   registrationUser,
-  changeUserDataProfile,
   getOrders,
   getReviews,
   logOutUser,
+  setRegistrationPageNumber,
+  setForgetPassword,
+  setPaymenPageNumber,
+  updateUserState
 } from "@/redux/reducers/userSlice";
-
 //Hooks
 import { useAppDispatch } from "./useReduxHooks";
 import { useFavorites } from "./useFavorites";
 import { useTranslate } from "./useTranslate";
 import { useCart } from "./useCart";
-
+import { useTypedSelector } from "./useReduxHooks";
 //Utils
-import { CATALOG_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE } from "@/utils/Consts";
-
+import { CATALOG_ROUTE } from "@/utils/Consts";
 //Global Types
 import {
   IChangeUserData,
   IInputsChangeProfile,
-  IInputsLogin,
-  IInputsRegistration,
+  IInputsLoginPost,
 } from "@/types/types";
-
 //Component Types
 import { ISortConfig } from "@/types/componentTypes";
-
 //Redux Types
-import {
-  ICartState,
-  IUserInformationApi,
-  IUserState,
-} from "@/types/reduxTypes";
+import { ICartState, IUserInformationApi } from "@/types/reduxTypes";
+import { IOrderProduct } from "@/types/componentTypes";
+
+interface IUserReviewState {
+  id: number;
+  product: IOrderProduct;
+  text: string;
+  created_datetime: string;
+  user: number;
+}
+interface IUserState {
+  userState: IUserInformationApi | null;
+  userReviews: IUserReviewState[];
+  userOrders: ICartState["cart"][];
+  isAuth: boolean;
+  status: "pending" | "fulfilled";
+}
 
 const useUserActions = () => {
-  const dispatch = useAppDispatch();
-
+  //Hooks
   const { push } = useRouter();
-
-  const { onResetCart } = useCart(),
-    { onResetFavorites } = useFavorites();
-
-  const {
-    messageLogOutSuccess,
-    profileOrdersText,
-    profileOrdersTitle,
-    emptyBasketButtonText,
-    profileReviewsText,
-    profileReviewsTitle,
-    messageLogInError,
-    messageLogInSuccess,
-    messageRegistrationError,
-    messageRegistration,
-    messageModalChangeError,
-    messageModalChangeSuccess,
-  } = useTranslate();
+  const translate = useTranslate();
+  const { onResetCart } = useCart();
+  const dispatch = useAppDispatch();
+  const { onResetFavorites } = useFavorites();
+  const { userOrders } = useTypedSelector((state) => state.user);
 
   const onLogInUser = useCallback(
-    (information: IInputsLogin, reset: UseFormReset<IInputsLogin>) =>
-      dispatch(logInUser(information))
-        .then(data => {
-          if ("error" in data && data.error.message === "Rejected") {
-            showToastMessage("error", messageLogInError);
-            return;
-          }
-
-          showToastMessage("success", messageLogInSuccess);
-          push(PROFILE_ROUTE);
-        })
-        .catch(error => console.log(error))
-        .finally(() => reset()),
+    (information: IInputsLoginPost) => dispatch(logInUser(information)),
     [dispatch]
   );
 
   const onRegistrationUser = useCallback(
-    (
-      information: Omit<IUserInformationApi, "address" | "company">,
-      reset: UseFormReset<IInputsRegistration>,
-      setValue: UseFormSetValue<IInputsRegistration>
-    ) =>
-      dispatch(registrationUser(information))
-        .then(data => {
-          if ("error" in data && data.error.message === "Rejected") {
-            showToastMessage("error", messageRegistrationError);
-            return;
-          }
-
-          showToastMessage("success", messageRegistration);
-          push(LOGIN_ROUTE);
-        })
-        .catch(error => console.error(error))
-        .finally(() => {
-          setValue("phone_number", "");
-          reset();
-        }),
+    (information: IUserInformationApi) =>
+      dispatch(registrationUser(information)),
     [dispatch]
   );
 
-  const onChangeUserData = useCallback(
-    (
-      newUserData: IChangeUserData,
-      reset: UseFormReset<IInputsChangeProfile>,
-      setValue: UseFormSetValue<IInputsChangeProfile>,
-      setIsChange: Dispatch<SetStateAction<boolean>>
-    ) =>
-      dispatch(changeUserDataProfile(newUserData))
-        .then(data => {
-          if ("error" in data && data.error.message === "Rejected") {
-            showToastMessage("error", messageModalChangeError);
-            return;
-          }
-          showToastMessage("success", messageModalChangeSuccess);
-          setIsChange(false);
-        })
-        .catch(error => console.log(error))
-        .finally(() => {
-          reset();
-          setValue("phone_number", "");
-        }),
+  const onSetRegistrationPage = useCallback(
+    (page: number) => dispatch(setRegistrationPageNumber(page)),
     [dispatch]
   );
 
-  const onGetUser = useCallback(() => dispatch(getUser()), [dispatch]),
-    onGetOrders = useCallback(() => dispatch(getOrders()), [dispatch]),
-    onGetReviews = useCallback(() => dispatch(getReviews()), [dispatch]);
+  const onSetPaymenPageNumber = useCallback(
+    (page: number) => dispatch(setPaymenPageNumber(page)),
+    [dispatch]
+  );
+
+  const onSetForgetPassword = useCallback(
+    (forget: boolean) => dispatch(setForgetPassword(forget)),
+    [dispatch]
+  );
+
+  const onUpdateUserState = useCallback(
+    (userState:IChangeUserData)=> dispatch(updateUserState(userState))
+  ,[])
+
+
+  const onGetUser = useCallback(() => dispatch(getUser()), [dispatch]);
+  const onGetOrders = useCallback(() => dispatch(getOrders()), [dispatch]);
+  const onGetReviews = useCallback(() => dispatch(getReviews()), [dispatch]);
 
   const onLogOutUser = useCallback(async () => {
     try {
-      await dispatch(logOutUser())
-        .then(() => {
-          showToastMessage("success", messageLogOutSuccess);
-          onResetCart();
-          onResetFavorites();
-        })
-        .catch(error => console.error(error));
+      const response = await dispatch(logOutUser());
+      if (response.meta.requestStatus === "fulfilled") {
+        onResetCart();
+        onResetFavorites();
+      }
     } catch (error) {
       console.error(error);
     }
   }, [dispatch, onResetCart, onResetFavorites]);
 
-  const returnUserOrders = (
-    orders: ICartState["cart"][],
-    handleSort: (key: ISortConfig["key"]) => void
-  ) => {
-    if (!orders?.length) {
+
+  const returnUserOrders = ( orders: ICartState["cart"][],handleSort: (key: ISortConfig["key"]) => void) => {
+    if (!userOrders?.length) {
       return (
         <EmptyComponent
-          buttonText={emptyBasketButtonText}
+          buttonText={translate.emptyBasketButtonText}
           route={CATALOG_ROUTE}
-          text={profileOrdersText}
-          title={profileOrdersTitle}
+          text={translate.profileOrdersText}
+          title={translate.profileOrdersTitle}
         />
       );
     }
@@ -178,7 +134,7 @@ const useUserActions = () => {
             data-name
             className="profile-content_orders-content-filters-button"
           >
-            Название
+            {translate.userActionsTitle}
           </button>
 
           <button
@@ -186,7 +142,7 @@ const useUserActions = () => {
             onClick={() => handleSort("created_date")}
             className="profile-content_orders-content-filters-button"
           >
-            Дата
+            {translate.userActionsDate}
             <Icons id="arrowDownProfile" />
           </button>
 
@@ -195,7 +151,7 @@ const useUserActions = () => {
             onClick={() => handleSort("total_sum")}
             className="profile-content_orders-content-filters-button"
           >
-            Стоимость
+            {translate.userActionsCost}
             <Icons id="arrowDownProfile" />
           </button>
 
@@ -203,19 +159,20 @@ const useUserActions = () => {
             data-status
             className="profile-content_orders-content-filters-button"
           >
-            Статус
+            {translate.userActionsStatus}
           </button>
         </div>
 
         <div className="profile-content_orders-content-list">
-          {orders?.map(order => (
+          {orders?.map((order) => (
             <UserOrderWrapper
-              key={order.id}
+              // phoneNumber={order?.customer}
+              key={order?.id}
               orderNumber={order?.id}
               orderDate={order?.created_date}
               orderStatus={order?.status}
-              orderProducts={order.order_products}
-              orderSum={order.total_sum}
+              orderProducts={order?.order_products}
+              orderSum={order?.total_sum}
             />
           ))}
         </div>
@@ -227,14 +184,14 @@ const useUserActions = () => {
     <>
       {!reviews?.length ? (
         <EmptyComponent
-          buttonText={emptyBasketButtonText}
+          buttonText={translate.emptyBasketButtonText}
           route={CATALOG_ROUTE}
-          text={profileReviewsText}
-          title={profileReviewsTitle}
+          text={translate.profileReviewsText}
+          title={translate.profileReviewsTitle}
         />
       ) : (
         <div className="profile-content_reviews-list">
-          {reviews?.map(review => (
+          {reviews?.map((review) => (
             <UserReviewItem
               key={review.id}
               reviewStatus="published"
@@ -247,16 +204,28 @@ const useUserActions = () => {
     </>
   );
 
+  const onGetColors = useCallback(async () => {
+    try {
+      const response = await dispatch(getColors());
+    } catch (error) {
+      console.error(error)
+    }
+  },[dispatch]);
+
   return {
     onLogInUser,
     onRegistrationUser,
     onGetUser,
-    onChangeUserData,
     onGetOrders,
     onGetReviews,
     onLogOutUser,
     returnUserOrders,
     returnUserReviews,
+    onSetRegistrationPage,
+    onSetForgetPassword,
+    onSetPaymenPageNumber,
+    onGetColors,
+    onUpdateUserState
   };
 };
 

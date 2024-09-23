@@ -1,46 +1,32 @@
 "use client";
-
 //Global
 import { ChangeEvent, FC } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
-
 //Components
 import { Select, SelectItem, Input, Button } from "@nextui-org/react";
 import { Icons } from "../Icons/Icons";
-
 //Utils
 import { CATALOG_ROUTE } from "@/utils/Consts";
-
 //Hooks
 import { useProducts } from "@/hooks/useProducts";
 import { useTranslate } from "@/hooks/useTranslate";
-
 //Component Types
 import { IHeaderSearchProps } from "@/types/componentTypes";
-
 //Styles
 import "./HeaderSearch.scss";
 
-const HeaderSearch: FC<IHeaderSearchProps> = ({
-  allCategories,
-  onSetCategory,
-  category,
-  isHidden,
-}) => {
-  const { push } = useRouter(),
-    pathname = usePathname();
-
-  const { headerCategorySelect, headerSearchPlaceholder } = useTranslate();
-
-  const { reset, getValues, handleSubmit, register } = useForm<{
-    search: string;
-  }>();
-
+const HeaderSearch: FC<IHeaderSearchProps> = ({ allCategories, onSetCategory, category, isHidden }) => {
+  const { push } = useRouter();
+  const pathname = usePathname();
+  const translate = useTranslate();
   const { onSetSearchText } = useProducts();
+  const { reset, getValues, handleSubmit, register } = useForm<{search: string}>();
+
 
   const handleSubmitForm = () => {
     if (pathname !== CATALOG_ROUTE) push(CATALOG_ROUTE);
+
     onSetSearchText(getValues().search);
   };
 
@@ -55,9 +41,9 @@ const HeaderSearch: FC<IHeaderSearchProps> = ({
   };
 
   const renderHeaderCategories = () =>
-    newCategories.map(category => (
-      <SelectItem key={category.name} value={category.name}>
-        {category.name}
+    newCategories?.map(category => (
+      <SelectItem key={category?.name} value={category?.name}>
+        {category?.name}
       </SelectItem>
     ));
 
@@ -65,30 +51,25 @@ const HeaderSearch: FC<IHeaderSearchProps> = ({
     { id: 4, name: "Все категории", image: null },
     ...allCategories,
   ];
-
+  //ClassNames
   const selectClassName = {
     popoverContent: "w-[170px]",
     mainWrapper: "w-[170px]",
     base: "w-[170px]",
     trigger: "rounded-none shadow-none transition duration-200 ease bg-white",
   };
-
+  const formClassName = `${isHidden ? "hidden" : "search-mobile"} lg:flex h-[56px] overflow-hidden rounded-[10px]`;
   const inputClassName = {
     inputWrapper: "shadow-none border-none h-[56px] bg-white",
     mainWrapper: "h-[56px] transition duration-200 ease",
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(handleSubmitForm)}
-      className={`${
-        isHidden ? "hidden" : "search-mobile"
-      } lg:flex h-[56px] overflow-hidden rounded-[10px]`}
-    >
+    <form onSubmit={handleSubmit(handleSubmitForm)} className={formClassName}>
       <div className="flex w-[900px]">
         <Select
           disallowEmptySelection
-          label={headerCategorySelect}
+          label={translate.headerCategorySelect}
           selectedKeys={[category]}
           onChange={handleChange}
           classNames={selectClassName}
@@ -101,7 +82,7 @@ const HeaderSearch: FC<IHeaderSearchProps> = ({
           isClearable
           radius="none"
           className="w-full focus:outline-none"
-          placeholder={headerSearchPlaceholder}
+          placeholder={translate.headerSearchPlaceholder}
           onClear={handleClear}
           classNames={inputClassName}
         />

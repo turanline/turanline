@@ -4,13 +4,7 @@ import { IOrderProduct } from "./componentTypes";
 //Component Types
 import { IProductCart, IProductMainPage } from "./componentTypes";
 
-interface IUserReviewState {
-  id: number;
-  product: IOrderProduct;
-  text: string;
-  created_datetime: string;
-  user: number;
-}
+
 
 export interface ICart {
   id: number | null;
@@ -23,48 +17,19 @@ export interface ICart {
   customer: number | null;
 }
 
-interface Category {
-  id: number;
-  name: string;
-  image: string;
-  level: number;
-  parent: number;
-}
 
-export interface ICategoriesState {
-  categories: Category[];
-  types: Category[];
-  subtypes: Category[];
-  status: "pending" | "fulfilled";
-}
 
 export interface IUserInformationApi {
   user: {
     password: string;
-    username: string;
     first_name: string;
     last_name: string;
     email: string;
-    is_provider: boolean;
+   phone_number: string;
   };
-  phone_number: string;
   company: string;
   address: string;
 }
-
-export interface IUserState {
-  userState: IUserInformationApi | null;
-  userReviews: IUserReviewState[];
-  userOrders: ICartState["cart"][];
-  isAuth: boolean;
-  status: "pending" | "fulfilled";
-}
-
-export interface ICartState {
-  cart: ICart;
-  status: "pending" | "fulfilled";
-}
-
 export interface IProductsState {
   products: IProductMainPage[];
   filtered: IProductMainPage[];
@@ -72,13 +37,26 @@ export interface IProductsState {
   status: IFavoritesState["status"];
   searchText: string;
   filters: {
-    size: string | null;
-    brand: string | null;
-    color: string | null;
-    lbprice: number | null;
-    hbprice: number | null;
+    brand: string[] | null;
+    color: string[] | number | null;
+     price_max: number | null;
+     price_min: number | null;
+     mold: string[] | null;
+     season: string[] | null;
+     material: string[] | null;
+
   };
+  colors:{
+    id:number,
+    name: string
+  }[]
 }
+
+export interface ICartState {
+  cart: ICart;
+  status: "pending" | "fulfilled";
+}
+
 
 export interface IFavoritesState {
   favorites: IProductMainPage[];

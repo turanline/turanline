@@ -1,20 +1,31 @@
 //Hosts
 import { $host } from "./index";
 
-export const getCategories = async () => {
+export const getAllCategories = async () => {
   try {
-    const { data } = await $host.get("/api/categories/");
+    const {data}= await $host.get('/api/categories/?level=0');
 
     return data;
   } catch (error) {
-    console.error("Failed get categories:" + error);
+    console.error("Failed to get categories: " + error);
     throw error;
   }
 };
 
+// export const getTypesByChildren = async (children: number) => {
+//   try {
+//     const { data, status } = await $host.get('/api/categories/', {params: { children }});
+
+//     return { data, status };
+//   } catch (error: any) {
+//     if(error) return error;
+//     console.error("Failed to get categories: " + error);
+//   }
+// };
+
 export const getCategoryById = async (id: number) => {
   try {
-    const { data } = await $host.get(`/api/categories/${id}/`);
+    const { data } = await $host.get(`/api/categories/?children=${id}/`);
 
     return data;
   } catch (error) {
@@ -25,9 +36,7 @@ export const getCategoryById = async (id: number) => {
 
 export const getTypes = async () => {
   try {
-    const { data } = await $host.get("/api/categories/", {
-      params: { level: 1 },
-    });
+    const { data } = await $host.get("/api/categories/", {params: { level: 1 }});
 
     return data;
   } catch (error) {
@@ -38,9 +47,7 @@ export const getTypes = async () => {
 
 export const getSubTypes = async () => {
   try {
-    const { data } = await $host.get("/api/categories/", {
-      params: { level: 2 },
-    });
+    const { data } = await $host.get("/api/categories/", {params: { level: 2 }});
 
     return data;
   } catch (error) {
