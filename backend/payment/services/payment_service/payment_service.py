@@ -57,12 +57,38 @@ class PaymentService:
     ) -> None:
         order.delete()
 
+    def _after_process_payment_by_company_details(
+        self,
+        order: cart_models.Order
+    ) -> None:
+        order.status = cart_enums.OrderStatuses.ON_PAYMENT
+        order.save()
+
     def _get_order_by_oid(
         self,
         oid: str
     ) -> cart_models.Order:
         return cart_models.Order.objects.get(
             order_id=oid
+        )
+
+    def _get_last_order(
+        self,
+        user: user_models.User
+    ) -> cart_models.Order:
+        return cart_models.Order.objects.filter(
+            customer=user.customer,
+            status=cart_enums.OrderStatuses.CREATED,
+            is_paid=False
+        ).last()
+
+    def process_payment_by_company_details(
+        self,
+        user: user_models.User
+    ) -> None:
+        order = self._get_last_order(user=user)
+        self._after_process_payment_by_company_details(
+            order=order
         )
 
     def process_payment(

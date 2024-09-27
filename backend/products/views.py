@@ -17,9 +17,10 @@ from customers import models as customer_models
 from customers import serializers as customer_serializers
 from providers import permissions as provider_permissions
 
+from . import enums
 from . import filters as product_filters
 from . import models as product_models
-from . import serializers, tasks, enums
+from . import serializers, tasks
 
 logger = logging.getLogger(__name__)
 

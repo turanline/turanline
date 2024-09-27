@@ -2,7 +2,7 @@ from typing import Any, Type, Union
 
 from django.conf import settings
 from django.http import HttpResponseRedirect
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
@@ -41,6 +41,20 @@ class CardPaymentViewSet(viewsets.GenericViewSet):
         if not self.action == 'process_payment':
             return Serializer
         return super().get_serializer_class()
+
+    @action(methods=['POST'], detail=False)
+    def process_payment_by_company_details(
+        self,
+        request: Request,
+        *args: Any,
+        **kwargs: Any
+    ) -> Response:
+        self.payment_service.process_payment_by_company_details(
+            user=request.user
+        )
+        return Response(
+            status=status.status.HTTP_200_OK
+        )
 
     @action(methods=['POST'], detail=False)
     def process_payment(
