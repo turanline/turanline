@@ -1,0 +1,86 @@
+.tariff-wrapper {
+    width: 100%;
+    padding: 30px 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .tariff-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .tariff-info-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .tariff-page_info {
+    width: 100%;
+    padding: 30px;
+  }
+
+  .tariff-block{
+    order: 1;
+    margin-bottom: 10px;
+    padding-left:30px;
+    padding-right: 30px;
+  }
+ 
+
+  .tariff-info {
+    width: 300px;
+    display: grid;
+    grid-template-columns: auto auto;
+   
+  }
+
+
+  //button
+  .buttons-header-wrapper{
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    justify-content: flex-end; 
+    padding-right: 30px;
+    align-items: center;
+    @media (max-width: 767px) {
+      gap: 30px;
+    }
+  }
+  
+  .buttons-header-wrapper button:first-child{
+      background-color: #0abab5;
+      color: white;
+      padding: 8px;
+      border-radius: 8px;
+      transition: 0.3s all ease-in-out;
+      &:hover{
+        background-color: #079591;
+        transition: 0.3s all ease-in-out;
+      }
+  }
+
+
+
+  // Dropdown ve Input stilleri
+.button-option_left_table {
+  border: 1px solid #0abab5;
+}
+
+.button-option_left_table:hover {
+  background-color: rgba(10, 186, 181, 0.1);
+}
+
+.provider-form-input {
+  border: 1px solid #0abab5;
+  padding-left: 5px;
+}
+
+.provider-form-input:focus {
+  border-color: darken(#0abab5, 10%);
+  outline: none;
+}
+
