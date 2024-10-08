@@ -28,7 +28,7 @@ const LanguageSelect: FC<{ color: string }> = ({ color }) => {
   const { refresh } = useRouter();
   const { changeSelectedLanguage } = useLanguage();
 
-  const flags = ["RU", "TR", "EN"];
+  const flags = ["TR", "EN", "RU"];
 
   const onChangeLanguage = (language: string) => {
     setCookie("selectedLanguage", language);
@@ -40,10 +40,12 @@ const LanguageSelect: FC<{ color: string }> = ({ color }) => {
     switch (language) {
       case "TR":
         return tur;
+      case "RU":
+        return rus;
       case "EN":
         return eng;
       default:
-        return rus;
+        return tur;
     }
   };
 
