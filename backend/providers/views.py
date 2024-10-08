@@ -71,8 +71,7 @@ class ProviderViewSet(
             return cart_models.Order.objects.filter(
                 order_products__product__provider=self.request.user.provider
             ).exclude(
-                status=cart_enums.OrderStatuses.CREATED,
-                is_paid=False
+                status=cart_enums.OrderStatuses.CREATED
             ).distinct().prefetch_related(
                 models.Prefetch(
                     'order_products',

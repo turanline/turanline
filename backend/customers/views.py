@@ -59,14 +59,9 @@ class CustomerViewSet(
             return self.request.user.customer.favorites.all()
         elif self.action == 'get_customer_history':
             return cart_models.Order.objects.filter(
-                customer=self.request.user.customer,
-                status__in=(
-                    cart_enums.OrderStatuses.CARGO_TRANSFERRED,
-                    cart_enums.OrderStatuses.FINISHED,
-                    cart_enums.OrderStatuses.PROCESSED,
-                    cart_enums.OrderStatuses.COLLECTED
-                ),
-                is_paid=True
+                customer=self.request.user.customer
+            ).exclude(
+                status=cart_enums.OrderStatuses.CREATED
             )
         return super().get_queryset()
 

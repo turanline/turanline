@@ -53,7 +53,7 @@ class CardPaymentViewSet(viewsets.GenericViewSet):
             user=request.user
         )
         return Response(
-            status=status.status.HTTP_200_OK
+            status=status.HTTP_200_OK
         )
 
     @action(methods=['POST'], detail=False)

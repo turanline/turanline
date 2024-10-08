@@ -62,6 +62,7 @@ class PaymentService:
         order: cart_models.Order
     ) -> None:
         order.status = cart_enums.OrderStatuses.ON_PAYMENT
+        order.created_date = timezone.now()
         order.save()
 
     def _get_order_by_oid(

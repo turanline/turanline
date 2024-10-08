@@ -10,7 +10,7 @@ from product_components import serializers as product_component_serializers
 from products import models as product_models
 from products import serializers as product_serializers
 
-from . import mixins, models
+from . import fields, mixins, models
 
 
 class OrderProductsBaseSerializer(serializers.ModelSerializer):
@@ -132,7 +132,9 @@ class OrderSerializer(OrderBaseSerializer):
     )
 
     class Meta(OrderBaseSerializer.Meta):
-        fields = '__all__'
+        exclude = [
+            'check_file'
+        ]
 
 
 class OrderCreateSerializer(
@@ -146,7 +148,8 @@ class OrderCreateSerializer(
             'created_date',
             'customer',
             'status',
-            'is_paid'
+            'is_paid',
+            'check_file'
         ]
         read_only_fields = [
             'total_sum'
@@ -157,6 +160,10 @@ class OrderUpdateSerializer(
     mixins.OrderMixin,
     OrderBaseSerializer
 ):
+
+    check_file = fields.Base64FileField(
+        required=False
+    )
 
     class Meta(OrderBaseSerializer.Meta):
         exclude = [
@@ -200,7 +207,8 @@ class OrderProviderHistorySerializer(serializers.ModelSerializer):
             'delivery',
             'payment',
             'total_sum',
-            'is_paid'
+            'is_paid',
+            'check_file'
         ]
         read_only_fields = [
             'customer',

@@ -7,6 +7,7 @@ from django.db import models, transaction
 
 from delivery import models as delivery_models
 
+from . import enums
 from . import models as cart_models
 
 
@@ -87,18 +88,22 @@ class OrderMixin:
         instance: cart_models.Order,
         validated_data: OrderedDict
     ) -> cart_models.Order:
-        delivery_data = validated_data.pop('delivery')
+        delivery_data = validated_data.pop('delivery', None)
+        if delivery_data:
+            delivery_price, min_days, max_days = self._calculate_delivery(
+                order_products=instance.order_products.all(),
+                delivery_data=delivery_data
+            )
 
-        delivery_price, min_days, max_days = self._calculate_delivery(
-            order_products=instance.order_products.all(),
-            delivery_data=delivery_data
-        )
-
-        instance.delivery = self._create_order_delivery(
-            delivery_price=delivery_price,
-            min_days=min_days,
-            max_days=max_days,
-            delivery_data=delivery_data
-        )
+            instance.delivery = self._create_order_delivery(
+                delivery_price=delivery_price,
+                min_days=min_days,
+                max_days=max_days,
+                delivery_data=delivery_data
+            )
+        for attr, value in validated_data.items():
+            if attr == 'check_file':
+                instance.status = enums.OrderStatuses.ON_INSPECTION
+            setattr(instance, attr, value)
         instance.save()
         return instance

@@ -16,6 +16,11 @@ services:
       - .env
     restart: always
 
+  redis:
+    container_name: me-shop-redis
+    image: redis:alpine
+    restart: always
+
   me-backend-app:
     container_name: me-backend-app
     image: timrybakov/misexpress_backend:latest
@@ -23,11 +28,25 @@ services:
       - static_data:/backend_static
       - media_data:/app/media/
     restart: always
+    command: sh "./entrypoint.sh"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+      - celery
+
+  celery:
+    container_name: me-worker-app
+    image: timrybakov/misexpress_celery:latest
+    volumes:
+      - media_data:/app/media/
+    restart: always
     env_file:
       - .env
     depends_on:
       - db
-    command: sh -c "./entrypoint.sh"
+      - redis
 
   me-frontend-app:
     image: timrybakov/misexpress_frontend:latest
@@ -37,14 +56,25 @@ services:
     command: sh -c "npm run start"
     restart: always
 
+  me-frontend-partners-app:
+    image: timrybakov/misexpress_frontend_partners:latest
+    container_name: me-frontend-partners-app
+    depends_on:
+      - me-backend-app
+    command: sh -c "npm run start"
+    restart: always
+    ports:
+      - "3001:3000"
+
   nginx:
     image: timrybakov/misexpress_gateway:latest
     container_name: me-gateway-app
     depends_on:
       - me-backend-app
       - me-frontend-app
+      - me-frontend-partners-app
     ports:
-      - 8000:80
+      - "8000:80"
     volumes:
       - static_data:/staticfiles
       - media_data:/media

@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 from rest_framework_simplejwt import views
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
-from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+from rest_framework_simplejwt.tokens import AccessToken
 
 from customers import models as customer_models
 from customers import serializers as customer_serializers

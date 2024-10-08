@@ -1,7 +1,7 @@
 from typing import Any, Type, Union
 
 from drf_spectacular.utils import extend_schema
-from rest_framework import filters, mixins, status, viewsets
+from rest_framework import filters, mixins, parsers, status, viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer

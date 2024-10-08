@@ -139,6 +139,13 @@ class Order(BaseCartOrderModel):
         verbose_name='Продукты в заказе'
     )
 
+    check_file = models.FileField(
+        upload_to='check_pdf/',
+        null=True,
+        blank=True,
+        verbose_name='Чек об оплате заказа'
+    )
+
     class Meta:
         ordering = ['-created_date']
         verbose_name = 'Заказ'

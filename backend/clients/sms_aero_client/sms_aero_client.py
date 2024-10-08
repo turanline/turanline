@@ -16,8 +16,9 @@ class SMSAeroClient:
 
     def __init__(self) -> None:
         self.client = SmsAero(
-            settings.SMSAERO_EMAIL,
-            settings.SMSAERO_API_KEY
+            email=settings.SMSAERO_EMAIL,
+            api_key=settings.SMSAERO_API_KEY,
+            signature='TURANLINE'
         )
 
     @property
