@@ -25,6 +25,19 @@ export const getAllCities = async () => {
 };
 
 
+export const putProductReciept = async (id: number, changes:any) => {
+  try {
+    const { data } = await $authHost.patch(`/api/order/${id}/`, changes);
+
+
+    return data;
+  } catch (error) {
+    console.log(error)
+    throw new Error(`${error}`);
+  }
+};
+
+
 export const getColorsAPI = async () => {
   try {
     const { data } = await $authHost.get("/api/color/");
@@ -75,6 +88,8 @@ export const getAllProducts = async (category: string, filters: IProductsState["
     throw error;
   }
 };
+
+
 
 export const getProductsByFilter = async (filters: any) => {
   try {

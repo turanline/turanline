@@ -10,6 +10,22 @@
       text-decoration: underline;
     }
   }
+
+  .payment_method_btns{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 10px;
+    justify-content: center;
+
+
+    button{
+      &:hover{
+        text-decoration: underline;
+      }
+    }
+   
+  }
   
   .button-change {
     width: 300px;

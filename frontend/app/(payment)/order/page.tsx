@@ -1,6 +1,6 @@
 'use client';
 //Global
-import React, { lazy, Suspense,useEffect } from 'react';
+import React, { lazy, Suspense,useEffect,useState } from 'react';
 //Components
 const ConfirmOrder = lazy(() => import('@/components/Order/ConfirmOrder/ConfirmOrder'));
 const PaymentOrder = lazy(() => import('@/components/Order/PaymentOrder/PaymentOrder'));
@@ -12,11 +12,11 @@ import { useUserActions } from '@/hooks/useUserActions';
 import { useCart } from '@/hooks/useCart';
 //Utils
 import { LOGIN_ROUTE, SHOP_ROUTE } from '@/utils/Consts';
-import { showToastMessage } from '@/app/toastsChange';
 
 
 const OrderPage = () => {
   const {push} = useRouter();
+  const [selectedPayment,setSelectedPayment] = useState<string>('card')
 
   const { status,isAuth,paymentPageNumber } = useTypedSelector(state => state.user);
   const { cart } = useTypedSelector(state => state.cart);
@@ -30,12 +30,12 @@ const OrderPage = () => {
 
   const renderCurrentStep = () => {
     switch (paymentPageNumber) {
-      case 2:
-        return <ConfirmOrder nextStep={nextStep} key="confirm" />;
       case 1:
-        return <PaymentOrder prevStep={prevStep}  key="payment"/>;
+        return <ConfirmOrder selectedPayment={selectedPayment} setSelectedPayment={setSelectedPayment} nextStep={nextStep} key="confirm" />;
+      case 2:
+        return <PaymentOrder selectedPayment={selectedPayment} prevStep={prevStep}  key="payment"/>;
       default:
-        return <ConfirmOrder nextStep={nextStep} key="confirm" />;
+        return <ConfirmOrder selectedPayment={selectedPayment} setSelectedPayment={setSelectedPayment} nextStep={nextStep} key="confirm" />;
     }
   }
   //checkAuth

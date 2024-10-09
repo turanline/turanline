@@ -108,9 +108,10 @@ export interface IUserOrderProduct {
 }
 
 export interface IUserOrderWrapper {
+  orderId:number | null;
   orderNumber: number | null;
   orderDate: string;
-  orderStatus: ICartState["cart"]["status"];
+  orderStatus: string;
   orderProducts: IProductCart[];
   orderSum: string | null;
 }

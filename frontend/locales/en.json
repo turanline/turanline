@@ -13,6 +13,32 @@
   "headerSearch": "Search",
   "materialTitle": "Material",
 
+  "paymentMethod":"Select payment method",
+  "paymentMethodCard":"Bank card",
+  "paymentMethodDetails":"By bank details",
+
+
+  "productStatusDelivered": "Delivered",
+  "productStatusBundle": "In Assembly",
+  "productStatusTransit": "In Transit",
+  "productStatusCreated": "Created",
+  "productStatusUnknown": "Unknown Status",
+  "productStatusCargo": "Transferred to Cargo",
+  "productStatusPayment": "In payment",
+  "productStatusClosed": "Closed",
+
+  "back": "Back",
+  "importTitle": "Upload reciept PDF",
+  "importLink": "Instruction",
+  "importText": "for filling out the table",
+  "importButton": "Upload file",
+  "importConfirm": "Import",
+  "buttonResetFile": "Reset File",
+  "selectedFile": "Selected File",
+  "makeAppealOrders": "Make an Appeal",
+  "productStatusInspection": "Verifying",
+
+
   "productPriceDescription":"The price is per unit",
 
   "paymentSuccess": "Thank you for your purchase!",

@@ -81,7 +81,7 @@ export const postConfirmCode = async (phone_number: string,verification_code: st
 export const getVerifySmsCode = async (phone_number: string,purpose: string) => {
   try {
     const { data,status } = await $host.post("/api/users/receive_verification_code/", {phone_number,purpose});
-    
+
     return { data,status };
   } catch (error: any) {
     if(error){

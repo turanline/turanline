@@ -92,7 +92,7 @@ const HeaderSearch: FC<IHeaderSearchProps> = ({ allCategories, onSetCategory, ca
         type="submit"
         className="h-full search-button-mobile transition duration-200 ease"
       >
-        <Icons id="searchMobile" />
+        <Icons id="searchMobileGreen" />
       </Button>
     </form>
   );

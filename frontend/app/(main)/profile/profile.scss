@@ -30,7 +30,7 @@
   }
 
   .profile-content_orders-content-filters {
-    max-width: 1110px;
+    // max-width: 1110px;
   }
 }
 
@@ -40,7 +40,7 @@
   }
 
   .profile-content_orders-content-filters {
-    max-width: 920px;
+    // max-width: 920px;
   }
 }
 
@@ -50,7 +50,7 @@
   }
 
   .profile-content_orders-content-filters {
-    max-width: 740px;
+    // max-width: 740px;
   }
 }
 
@@ -60,7 +60,7 @@
   }
 
   .profile-content_orders-content-filters {
-    max-width: 540px;
+    // max-width: 540px;
   }
 }
 
@@ -70,7 +70,7 @@
   }
 
   .profile-content_orders-content-filters {
-    max-width: 400px;
+    // max-width: 400px;
   }
 
   .profile-content_orders-content-order > * {
@@ -260,10 +260,17 @@
 }
 
 .profile-content_orders-content-filters {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   width: 100%;
-  justify-content: space-between;
   align-items: center;
+
+  @media (max-width:1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (max-width:768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .profile-content_orders-content-filters-button {
@@ -284,6 +291,22 @@
     padding: 5px 8px;
     background-color: #eeeeee;
     border-radius: 8px;
+  }
+}
+
+.profile-content_orders-content-filters-button[data-status]{
+  grid-column: span 2;
+}
+
+.profile-content_orders-content-filters-button[data-date]{
+  @media (max-width:1024px) {
+    display: none;
+  }
+}
+
+.profile-content_orders-content-filters-button[data-price]{
+  @media (max-width:768px) {
+    display: none;
   }
 }
 

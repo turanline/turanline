@@ -1,5 +1,5 @@
 //Hosts
-import { $authHost } from ".";
+import { $authHost,$host } from ".";
 
 
 export const postToOrder = async (obj: any) => {
@@ -12,6 +12,18 @@ export const postToOrder = async (obj: any) => {
       return error;
     }
 };
+
+export const postToPayByDetails = async () => {
+  try {
+    const { data, status } = await $authHost.post("/api/card-payments/process_payment_by_company_details/");
+
+    return { data, status };
+  } catch (error: any) {
+    console.error("Failed to post order: " + error);
+    return error;
+  }
+};
+
 
 export const postToPay = async (obj: any) => {
   try {

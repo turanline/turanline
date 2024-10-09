@@ -9,12 +9,17 @@ import { UserOrderItem } from "@/components/UserOrderItem/UserOrderItem";
 import { IUserOrderWrapper } from "@/types/componentTypes";
 //styles
 import "./UserOrderWrapper.scss";
+import { useTranslate } from "@/hooks/useTranslate";
+import ModalImport from "../Modals/ModalImport/ModalImport";
 
-const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderDate, orderNumber, orderStatus, orderProducts, orderSum }) => {
+
+const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderId,orderDate, orderNumber, orderStatus, orderProducts, orderSum }) => {
   const [isHidden, setIsHidden] = useState<boolean>(true);
+  const [isOpenReciept,setIsOpenReciept] = useState<boolean>(false);
   const [wrapperHeight, setWrapperHeight] = useState<number | null>(null);
-
   const contentRef = useRef<HTMLDivElement>(null);
+  const translate = useTranslate()
+
 
   useEffect(() => {
     setWrapperHeight(contentRef.current?.scrollHeight || null);
@@ -58,14 +63,12 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderDate, orderNumber, order
         sum={product?.sum}
       />
     ));
-
-
   const returnOrderStatus = (status: string) => {
     let orderStatusText, iconId, buttonStyles;
 
     switch (status) {
       case "FD":
-        orderStatusText = "Доставлено";
+        orderStatusText = translate.productStatusDelivered;
         iconId = "deliveredOrder";
         buttonStyles = {
           backgroundColor: "#ECFFFE",
@@ -74,7 +77,7 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderDate, orderNumber, order
         break;
 
       case "CD":
-        orderStatusText = "В сборке";
+        orderStatusText = translate.productStatusBundle;
         iconId = "Packed";
         buttonStyles = {
           backgroundColor: "#FEFFF3",
@@ -83,7 +86,7 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderDate, orderNumber, order
         break;
 
       case "PR":
-        orderStatusText = "В пути";
+        orderStatusText = translate.productStatusTransit;
         iconId = "car";
         buttonStyles = {
           backgroundColor: "#fff3fa",
@@ -92,7 +95,7 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderDate, orderNumber, order
         break;
 
       case "CR":
-        orderStatusText = "Создан";
+        orderStatusText = translate.productStatusCreated;
         iconId = "deliveredOrder";
         buttonStyles = {
           backgroundColor: "#ECFFFE",
@@ -101,15 +104,42 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderDate, orderNumber, order
         break;
 
       case "CT":
-        orderStatusText = "Передан в Карго";
+        orderStatusText = translate.productStatusCargo;
         iconId = "deliveredOrder";
         buttonStyles = {
           backgroundColor: "#ECFFFE",
           color: "#0ABAB5",
         };
         break;
+
+      case "OP":
+        orderStatusText = translate.productStatusPayment;
+          iconId = "Packed";
+          buttonStyles = {
+            backgroundColor: "#FEFFF3",
+            color: "#FFD600",
+          };
+      break;  
+
+      case "OI":
+        orderStatusText = translate.productStatusInspection;
+          iconId = "Packed";
+          buttonStyles = {
+            backgroundColor: "#FEFFF3",
+            color: "#FFD600",
+          };
+      break; 
+
+      case "CL":
+        orderStatusText = translate.productStatusClosed;
+          iconId = "deliveredOrder";
+          buttonStyles = {
+            backgroundColor: "#ECFFFE",
+            color: "#0ABAB5",
+          };
+          break;  
       default:
-        orderStatusText = "Неизвестный статус";
+        orderStatusText = translate.productStatusUnknown;
         iconId = "car";
         buttonStyles = {
           backgroundColor: "#fff3fa",
@@ -130,7 +160,7 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderDate, orderNumber, order
   };
 
   const wrapperStyles = {
-    maxHeight: isHidden ? "27px" : `${wrapperHeight}px`,
+    maxHeight: isHidden ? "30px" : `${wrapperHeight}px`,
     transition: "max-height 0.3s ease-in-out",
   };
 
@@ -144,23 +174,33 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderDate, orderNumber, order
           Заказ #{orderNumber}
         </span>
 
-        <span data-date className="profile-content_orders-content-order-span">
+        <span data-date className="profile-content_orders-content-order-span date">
           {returnOrderDate()}
         </span>
 
-        <span className="profile-content_orders-content-order-span">
+        <span className="profile-content_orders-content-order-span sum">
           ${orderSum}
         </span>
 
         {returnOrderStatus(orderStatus)}
 
-        <Link target="_" href={`https://wa.me/${'+905525977888'}`} className="profile-content_orders-content-order-button">
-          <Icons id="flag" />
-          Составить обращение
-        </Link>
+        {
+          orderStatus === 'OP' ? (
+            <button onClick={()=> setIsOpenReciept(true)} className="profile-content_orders-content-order-button">
+              <Icons id="flag" />
+                {translate.importTitle}
+            </button>
+          ):(
+            <Link target="_" href={`https://wa.me/${'+905525977888'}`} className="profile-content_orders-content-order-button">
+              <Icons id="flag" />
+              <p>{translate.makeAppealOrders}</p>
+            </Link>
+          )
+        }
       </div>
 
       {renderOrderProducts()}
+      <ModalImport receiptId={orderId} isOpen={isOpenReciept} setIsOpen={setIsOpenReciept}/>
     </div>
   );
 };

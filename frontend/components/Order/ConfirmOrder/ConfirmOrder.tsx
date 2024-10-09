@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { showToastMessage } from "@/app/toastsChange";
 import { getAllCities } from "@/services/productsAPI";
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
+import { Dispatch,SetStateAction } from "react";
 //Components
 import {
   Button,
@@ -40,7 +41,7 @@ interface Tariffes{
   name: string;
 };
 
-export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
+export default function ConfirmOrder({nextStep,selectedPayment,setSelectedPayment}: {nextStep: () => void,selectedPayment:string,setSelectedPayment:Dispatch<SetStateAction<string>>}) {
   //Hooks
   const translate = useTranslate();
   const { cart } = useTypedSelector(state => state.cart);
@@ -51,6 +52,7 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
   const [selectedCity, setSelectedCity] = useState<number>(0);
   const [selectedTarif, setSelectedTarif] = useState<string>('0');
   const [allTariffies,setAllTariffies] = useState<Tariffes[]>([]);
+
 
   //get
   const getCities = async () => {
@@ -107,6 +109,7 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
         },
         order_products: productsId,
       };
+
 
       const response = await postToOrder(requestBody);
         if(response?.status === 201){
@@ -251,6 +254,19 @@ export default function ConfirmOrder({nextStep}: {nextStep: () => void}) {
 
             <RadioGroup aria-label="select-cardSystem" value={String(selectedTarif)} onValueChange={setSelectedTarif}>
               {mapTariffes()}
+            </RadioGroup>
+          </div>
+
+          <div className="flex flex-col">
+            <p className="text-[18px] mb-[10px]">{translate.paymentMethod}</p>
+
+            <RadioGroup aria-label="select-cardSystem" value={selectedPayment} onValueChange={setSelectedPayment}>
+              <Radio aria-label="select-tatif" key={'card'} classNames={{ label: "text-textAcc" }} value={'card'}>
+                {translate.paymentMethodCard}
+              </Radio>
+              <Radio aria-label="select-tatif" key={'details'} classNames={{ label: "text-textAcc" }} value={'details'}>
+               {translate.paymentMethodDetails}
+              </Radio>
             </RadioGroup>
           </div>
         </div>

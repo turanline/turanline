@@ -2,21 +2,19 @@ import React, { FC, useEffect, ChangeEvent, useState, DragEvent } from "react";
 import Link from "next/link";
 import { Icons } from "../../Icons/Icons";
 import { Button } from "@nextui-org/react";
-import { IMPORT_INSTRUCTION } from "@/utils/Consts";
-import { IModalImportProps } from "@/types/componentsTypes";
-//Hooks
 import { useTranslate } from "@/hooks/useTranslate";
-import { useExcelTable } from "@/hooks/useExcelTable";
-//Styles
+import { putProductReciept } from "@/services/productsAPI";
 import "./ModalImport.scss";
+import { showToastMessage } from "@/app/toastsChange";
 
-const ModalImport: FC<IModalImportProps> = ({ isOpen, setIsOpen }) => {
-  const { postExcelTable, isLoading, table, setTable, handleResetFileInput, fileInputRef} = useExcelTable(isOpen, setIsOpen);
+const ModalImport: FC<any> = ({ isOpen, setIsOpen, receiptId }) => {
   const text = useTranslate();
 
   const [isDragging, setIsDragging] = useState(false);
+  const [table, setTable] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const fileClassName    = `file-upload-wrapper ${isDragging && "dragging"}`;
+  const fileClassName = `file-upload-wrapper ${isDragging && "dragging"}`;
   const dragingClassName = `import-icon ${isDragging && "active"}`;
   const wrapperClassName = `import-wrapper ${isOpen && "active"}`;
   const contentClassName = `import-content ${isOpen && "active"}`;
@@ -38,6 +36,7 @@ const ModalImport: FC<IModalImportProps> = ({ isOpen, setIsOpen }) => {
   };
 
 
+
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(true);
@@ -56,6 +55,53 @@ const ModalImport: FC<IModalImportProps> = ({ isOpen, setIsOpen }) => {
     }
   };
 
+
+  const convertToBase64 = (file: Blob): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+    
+
+  const handleSendReceipt = async () => {
+    if (!table) return;
+
+    setIsLoading(true);
+
+    try {
+        const check_file = await convertToBase64(table); 
+
+        const changes = {
+          // id: 0,
+          // delivery: {
+          //   id: 0,
+          //   price: "100",
+          //   days_min: 7,
+          //   days_max: 9,
+          //   city: 3,
+          //   tariff: 3
+          // },
+          check_file: check_file,
+          // order_id: receiptId,
+          // total_sum: "-"
+        }
+
+        
+
+        await putProductReciept(receiptId, changes); 
+        setOpen();
+        setTable(null);
+        setIsLoading(false);
+        showToastMessage('success','Чек успешно загружен !')
+    } catch (error) {
+        setIsLoading(false);
+        showToastMessage('error','Произошла ошибка при загруке')
+    }
+};
+
   const renderButtons = () => {
     if (!table?.name) {
       return (
@@ -66,8 +112,8 @@ const ModalImport: FC<IModalImportProps> = ({ isOpen, setIsOpen }) => {
     }
 
     return (
-      <Button className="file-upload-label" onClick={handleResetFileInput}>
-        {text.buttonResetFile}
+      <Button className="file-upload-label" onClick={handleSendReceipt}>
+        Отправить
       </Button>
     );
   };
@@ -88,7 +134,6 @@ const ModalImport: FC<IModalImportProps> = ({ isOpen, setIsOpen }) => {
           </div>
 
           <input
-            ref={fileInputRef}
             required
             type="file"
             id="file-upload"
@@ -97,17 +142,6 @@ const ModalImport: FC<IModalImportProps> = ({ isOpen, setIsOpen }) => {
           />
 
           <h5 className="import-title">{text.importTitle}</h5>
-
-          <span className="import-text">
-            <Link
-              href={IMPORT_INSTRUCTION}
-              target="_blank"
-              className="import-link"
-            >
-              {text.importLink}
-            </Link>{" "}
-            {text.importText}
-          </span>
 
           {renderButtons()}
 
@@ -118,19 +152,12 @@ const ModalImport: FC<IModalImportProps> = ({ isOpen, setIsOpen }) => {
           )}
         </div>
 
-        <Button onClick={postExcelTable} className="import-button">
-          <Icons id="import" />
-          {text.importConfirm}
-        </Button>
-
         <div onClick={setOpen} className="delete-icon">
           <Icons id="deleteCard" />
         </div>
       </>
     );
   };
-
-
 
   return (
     <div onClick={setOpen} className={wrapperClassName}>

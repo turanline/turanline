@@ -20,6 +20,29 @@
   "paymentUnsuccessText": "К сожалению, возникла непредвиденная ошибка",
   "paymentButton": "В магазин",
 
+  "paymentMethod":"Выберите метод оплаты",
+  "paymentMethodCard":"Банковская карта",
+  "paymentMethodDetails":"По реквизитам",
+
+  "productStatusDelivered": "Доставлено",
+  "productStatusBundle": "В сборке",
+  "productStatusTransit": "В пути",
+  "productStatusCreated": "Создан",
+  "productStatusUnknown": "Неизвестный статус",
+  "productStatusCargo": "Передан в Карго",
+  "productStatusPayment": "В оплате",
+  "productStatusClosed": "Закрыт",
+  "productStatusInspection": "На проверке",
+
+
+  "importTitle": "Загрузка чека PDF",
+  "importLink": "Инструкция",
+  "importText": "по заполнению таблицы",
+  "importButton": "Загрузить файл",
+  "importConfirm": "Импорт",
+  "buttonResetFile": "Сбросить файл",
+  "selectedFile": "Выбранный файл",
+
   "newRevenues": "Новые поступления",
   "newRevenuesText": "Узнайте первым о товарах, создающих будущее индустрии",
   "newRevenuesLink": "Подробнее",
@@ -197,6 +220,7 @@
   "productPageDescription": "Описание товара",
   "productPageSimilar": "Похожие товары",
   "productPageFamous": "Популярные товары",
+  "makeAppealOrders":"Составить обращение",
 
 
   "userActionsTitle": "Название",

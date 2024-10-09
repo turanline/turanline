@@ -23,6 +23,33 @@
   "paymentSelectCity": "Şehir Seçin",
   "paymentSelectTarif": "Tarife Seçin",
 
+  "paymentMethod":"Ödeme yöntemini seçin",
+  "paymentMethodCard":"Banka kartıyla",
+  "paymentMethodDetails":"Ayrıntılara göre",
+
+
+  "productStatusCargo": "Kargoya aktarıldı",
+
+
+  "productStatusDelivered": "Teslim Edildi",
+  "productStatusBundle": "Montajda",
+  "productStatusTransit": "Yolda",
+  "productStatusCreated": "Oluşturuldu",
+  "productStatusUnknown": "Bilinmeyen Durum",
+  "productStatusPayment": "Ödemede",
+  "productStatusClosed": "Kapalı",
+
+  "importTitle": "Makbuz PDF'sini indir",
+  "importLink": "Talimat",
+  "importText": "tabloyu doldurmak için",
+  "importButton": "Dosya Yükle",
+  "importConfirm": "İthalat",
+  "buttonResetFile": "Dosyayı Sıfırla",
+  "selectedFile": "Seçilen Dosya",
+  "makeAppealOrders": "Başvuru Yap",
+  "productStatusInspection": "Kontrol devam ediyor",
+
+
   "productWeight":"Ürün ağırlığı",
   "productMold":"Model",
   "paymentNameSurname": "Ad Soyad",

@@ -75,9 +75,11 @@ const LogIn: NextPage = () => {
         }
         if (response.payload === 'Error: 406') {
           setCookie('phoneNumber',selectPhone.replace(/[^\d+]/g, ''));
+          setCookie('phonePrefix',prefixCode)
+
           onSetRegistrationPage(2);
           push(REGISTRATION_ROUTE);
-          getVerifySmsCode(selectPhone,'verification');
+          getVerifySmsCode(prefixCode + selectPhone,'verification');
           showToastMessage("warn", "Пользователь не подтвержден");
           return;
         }

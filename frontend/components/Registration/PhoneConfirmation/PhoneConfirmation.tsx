@@ -82,11 +82,11 @@ export default function PhoneConfirmation(){
     const phone = getCookie('phoneNumber');
     const phonePrefix = getCookie('phonePrefix');
 
+
     if(phone && phonePrefix) setPhoneNumber(phonePrefix + phone);
 
 
   },[phoneNumber])
-
 
 
   return (
