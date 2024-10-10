@@ -6,9 +6,6 @@ on:
     paths-ignore:
       - '**/README.md'
 
-env:
-  NEXT_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_URL }}
-
 jobs:
   # tests:
   #   name: PEP8 check
@@ -72,6 +69,8 @@ jobs:
 
       - name: Push to DockerHub
         uses: docker/build-push-action@v5
+        env:
+          NEXT_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_URL }}
         with:
           context: ./frontend/
           push: true
