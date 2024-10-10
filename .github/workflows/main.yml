@@ -2,7 +2,7 @@ name: Development workflow
 
 on:
   push:
-    branches: [ development ]
+    branches: [ master ]
     paths-ignore:
       - '**/README.md'
 
