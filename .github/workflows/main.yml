@@ -6,6 +6,9 @@ on:
     paths-ignore:
       - '**/README.md'
 
+env:
+  NEXT_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_URL }}
+
 jobs:
   # tests:
   #   name: PEP8 check
@@ -76,7 +79,7 @@ jobs:
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_dev:latest
           build-args: |
-            - NEXT_PUBLIC_URL=${{ vars.NEXT_PUBLIC_URL }}
+            NEXT_PUBLIC_URL=${{ env.NEXT_PUBLIC_URL }}
 
   build_gateway_and_push_to_docker_hub:
     name: Push gateway Docker image to DockerHub
@@ -98,4 +101,4 @@ jobs:
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_gateway_dev:latest
           build-args: |
-            - NEXT_PUBLIC_URL=${{ vars.NEXT_PUBLIC_URL }}
+            - NEXT_PUBLIC_URL=${{ env.NEXT_PUBLIC_URL }}
