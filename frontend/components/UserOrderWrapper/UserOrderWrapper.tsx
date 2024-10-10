@@ -192,7 +192,7 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderId,orderDate, orderNumbe
                 
             </button>
           ):(
-            <Link target="_" href={`https://wa.me/${'+905525977888'}`} className="profile-content_orders-content-order-button">
+            <Link target="_" href={`https://wa.me/${'+905010019888'}`} className="profile-content_orders-content-order-button">
               <Icons id="flag" />
               <p>{translate.makeAppealOrders}</p>
             </Link>

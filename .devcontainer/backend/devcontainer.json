@@ -1,0 +1,12 @@
+{
+    "name": "backend",
+    "dockerComposeFile": "../../docker-compose.dev.yml",
+    "service": "me-backend-app",
+    "workspaceFolder": "/app",
+    "extensions": [
+        "ms-vscode-remote.remote-containers"
+    ],
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    }
+}
