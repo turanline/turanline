@@ -56,15 +56,16 @@ const ForgetPasswordModal:FC <IModalForgetPassword> = ({forgetModal,setForgetMod
   const sendRequestToRecoverPassword = async () => {
     if (!isValid) return;
 
-    const phone = (selectPhone + getValues().phone_number).replace(/[^\d+]/g, '');
+    const phone = getValues().phone_number.replace(/[^\d+]/g, '');
 
     try {
-      const resetPassword = await getVerifySmsCode(phone,'reset_password');
+      const resetPassword = await getVerifySmsCode(selectPhone + phone,'reset_password');
           if(resetPassword.status === 200) {
             push(REGISTRATION_ROUTE);
             onSetRegistrationPage(2);
             onSetForgetPassword(true);
             setCookie('phoneNumber',phone);
+            setCookie('phonePrefix',selectPhone);
             return;
           };
           if(resetPassword.response.status === 404){
@@ -76,12 +77,12 @@ const ForgetPasswordModal:FC <IModalForgetPassword> = ({forgetModal,setForgetMod
             push(REGISTRATION_ROUTE);
             onSetRegistrationPage(2);
             setCookie('phoneNumber',phone);
+            await getVerifySmsCode(selectPhone + phone,'verification');
             return;
           }
     } catch (error) {
       console.error(error)
     }
-
   };
   
   const renderAllPrefixes = () => {

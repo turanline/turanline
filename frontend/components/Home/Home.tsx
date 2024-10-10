@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import { Pagination } from "swiper/modules";
 import Link from "next/link";
+import { getCookie, setCookie } from "cookies-next";
 //Hooks
 import { useTranslate } from "@/hooks/useTranslate";
 import { useTypedSelector } from "@/hooks/useReduxHooks";
@@ -26,7 +27,6 @@ import {
   CATALOG_ROUTE,
   DELIVERY_ROUTE,
   SHOP_ROUTE,
-  PROVIDER_SITE
 } from "@/utils/Consts";
 //Styles
 import "swiper/css/pagination";
@@ -92,6 +92,12 @@ const Home = () => {
     setAllProducts();
   }, [setAllProducts]);
 
+  useEffect(() => {
+    const language = getCookie("selectedLanguage");
+
+    if (!language) setCookie("selectedLanguage", "RU");
+  }, []);
+
   return (
     <main className="container mx-auto px-[15px] lg:px-[30px]">
       <div className="flex flex-col lg:flex-row gap-[15px] lg:gap-[24px] mb-[15px] lg:mb-[24px]">
@@ -127,22 +133,17 @@ const Home = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 sm:h-[230px] gap-[15px] lg:gap-[24px]">
-   
-        <Link
-          className="relative rounded-md text-white h-[177px] sm:h-auto flex flex-col items-center justify-center"
-          href={PROVIDER_SITE}
-        >
+        <div className="relative rounded-md text-white h-[177px] sm:h-auto flex flex-col items-center justify-center">
           <Image
             className="absolute w-full h-full z-0"
             src={back2}
             alt="back2"
           />
           <h5 className="family_bold relative z-10 text-[26px]">
-            {translate.workWithUs}
+            {translate.promotions}
           </h5>
-          {/* <p className="relative z-10 font-light">{translate.promotionsText}</p> */}
-           </Link>
-       
+          <p className="relative z-10 font-light">{translate.promotionsText}</p>
+        </div>
 
         <Link
           className="hidden lg:flex relative rounded-md text-white bg-pink flex-col py-[30px] px-[24px]"

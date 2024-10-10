@@ -1,7 +1,8 @@
 "use client";
 //Global
-import React, { CSSProperties, ChangeEvent,useMemo, useState } from "react";
+import React, { CSSProperties, ChangeEvent,useEffect,useMemo, useState } from "react";
 import Image from "next/image";
+import { getCookie, setCookie } from "cookies-next";
 //Components
 import { Icons } from "../Icons/Icons";
 import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
@@ -31,7 +32,7 @@ import { showToastMessage } from "@/app/toastsChange";
 
 
 
-const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
+const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage}) => {
 
 
   const [productCounter, setProductCounter] = useState<number>(1);
@@ -39,6 +40,7 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
   const [colorId, setColorId] = useState<number>(0);
   const { addItemToCart,onFetchCart } = useCart();
   const { renderColorOptions } = useProducts();
+  const [product,setProduct] = useState<IProductMainPage>()
   const translate = useTranslate();
   
   const allImages = [...oneProduct?.images?.map((image) => image?.image_file)];
@@ -187,6 +189,8 @@ const ProductComponent = ({ oneProduct }: { oneProduct: IProductMainPage }) => {
       </p>
   ));
 
+
+ 
 
   return (
     <main>

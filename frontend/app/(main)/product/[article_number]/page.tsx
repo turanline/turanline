@@ -40,7 +40,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: { article_number: string }}) {
   try {
     const language = cookies()?.get("selectedLanguage")?.value;
-    const selectedLanguage = language ? language : "en";
+    const selectedLanguage = language ? language : "ru";
 
     const product = await getProductBySlug(params?.article_number, selectedLanguage);
 
@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: { params: { article_number: s
 const Product = async ({ params }: { params: { article_number: string }}) => {
   try {
     const language = cookies()?.get("selectedLanguage")?.value;
-    const selectedLanguage = language ? language : "en";
+    const selectedLanguage = language ? language : "ru";
 
     const oneProductPromise = await getProductBySlug(params?.article_number, selectedLanguage);
     const similarProductsPromise = await getSimilarProducts(params?.article_number, selectedLanguage);

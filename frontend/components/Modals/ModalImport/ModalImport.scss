@@ -12,6 +12,7 @@
   visibility: none;
   pointer-events: none;
   transition: opacity 0.3s ease, visibility 0.3s ease, pointer-events 0.3s ease;
+  z-index: 999999;
 
   &.active {
     opacity: 1;
@@ -49,6 +50,11 @@
   font-size: 42px;
   color: #0abab5;
   font-family: geometria-medium;
+  text-align: center;
+
+  @media (max-width:500px) {
+    font-size: 28px;
+  }
 }
 
 .import-button {

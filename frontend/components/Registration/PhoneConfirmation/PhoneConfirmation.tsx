@@ -16,11 +16,13 @@ import { postConfirmCode,resetUserPassword } from "@/services/authAPI";
 import { IInputsRegistration } from "@/types/types";
 //Utils
 import { LOGIN_ROUTE, PROFILE_ROUTE } from "@/utils/Consts";
+import { Icons } from "@/components/Icons/Icons";
 //Styles
 import './PhoneConfirmation.scss';
 
 export default function PhoneConfirmation(){
   const [phoneNumber,setPhoneNumber] = useState('');
+  const [isSenidng,setIsSending] = useState(false);
   const {push} = useRouter();
   const translate = useTranslate();
   const {onGetUser,onSetForgetPassword} = useUserActions();
@@ -30,12 +32,16 @@ export default function PhoneConfirmation(){
   const stopPropagation = (event: React.MouseEvent | React.FormEvent) => event.stopPropagation();
 
   const checkVerifyCode = async () => {
+    setIsSending(true);
+
     if(forgetPasswordState){
       try {
         const response = await resetUserPassword({phone_number:phoneNumber,verification_code: getValues().code})
+        
            if(response?.status === 200){
             showToastMessage('success', translate.phoneConfirmSuccess);
             deleteCookie('phoneNumber');
+            deleteCookie('phonePrefix');
             push(LOGIN_ROUTE);
             onSetForgetPassword(false);
             return;
@@ -47,6 +53,8 @@ export default function PhoneConfirmation(){
        } catch (error) {
            showToastMessage('error',translate.phoneConfirmError)
            return;
+       }finally{
+          setIsSending(false);
        }
     }
     try {
@@ -63,6 +71,9 @@ export default function PhoneConfirmation(){
      } catch (error) {
          console.error(error);
      }
+     finally{
+      setIsSending(false);
+    }
   }
  
   const renderStages = () => {
@@ -135,10 +146,11 @@ export default function PhoneConfirmation(){
           </label>
 
           <Button
+            disabled={isSenidng}
             type="submit"
             className="btnReg text-white rounded-md w-full h-[44px] py-[10px]"
           >
-            {translate.ConfirmPhoneButton}
+            {translate.ConfirmPhoneButton} {isSenidng && <Icons id="spiner-payment"/>}
           </Button>
         </div>
       </form>
