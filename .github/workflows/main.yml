@@ -75,8 +75,8 @@ jobs:
           context: ./frontend/
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_dev:latest
-        env:
-          NEXT_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_URL }}
+          build-args: |
+            - NEXT_PUBLIC_URL=${{ vars.NEXT_PUBLIC_URL }}
 
   build_gateway_and_push_to_docker_hub:
     name: Push gateway Docker image to DockerHub
