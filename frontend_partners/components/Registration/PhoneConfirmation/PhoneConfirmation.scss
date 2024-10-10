@@ -1,0 +1,117 @@
+@mixin flex-column($gap, $direction) {
+    display: flex;
+    flex-direction: $direction;
+    gap: $gap;
+  }
+  
+  @mixin form-text($color, $size, $align) {
+    color: $color;
+    font-size: $size;
+    text-align: $align;
+  }
+  @media (max-width: 8000px) {
+    .provider-stages-wrapper{
+      display: flex;
+      justify-content: flex-end;
+      width: 1536px;
+    }
+  }
+  @media (max-width: 1536px) {
+    .provider-stages-wrapper{
+    width: 1280px;
+    }
+  }
+  @media (max-width: 1280px) {
+    .provider-stages-wrapper{
+      width: 1024px;
+    }
+  }
+  @media (max-width: 1024px) {
+    .provider-stages-wrapper{
+      width: 708px;
+    }
+  }
+  @media (max-width: 720px) {
+    .provider-stages-wrapper{
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+
+
+
+  .products-content_spiner{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .form-wrapper-phone {
+    padding: 50px 30px;
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .form-content-phone {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  
+  .form-content_header {
+    @include flex-column(12px, column);
+  }
+  
+  .form-content_header-title-phone {
+    font-family: geometria-medium;
+    line-height: 38px;
+    @include form-text(#282828, 30px, center);
+  }
+  
+  
+  .form-content_phone {
+    @include flex-column(24px, column);
+  }
+  
+  .form-content_phone-label {
+    @include flex-column(6px, column);
+  }
+
+  
+  .form-content_phone-label-input {
+    outline: none;
+    font-size: 16px;
+    color: #667085;
+    height: 100%;
+    max-height: 44px;
+    border: 1px solid #d0d5dd;
+    padding: 10px 14px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+    background: white;
+  }
+  
+  .form-content_phone-label-span {
+    line-height: 20px;
+    @include form-text(#344054, 15px, left);
+  }
+  
+  .form-content_phone-label-span.phone {
+    text-decoration: underline;
+    color: black;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
