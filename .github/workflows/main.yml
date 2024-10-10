@@ -2,7 +2,7 @@ name: Development workflow
 
 on:
   push:
-    branches: [ master ]
+    branches: [ workflowtest ]
     paths-ignore:
       - '**/README.md'
 
@@ -97,3 +97,5 @@ jobs:
           context: ./gateway/
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_gateway_dev:latest
+          build-args: |
+            - NEXT_PUBLIC_URL=${{ vars.NEXT_PUBLIC_URL }}
