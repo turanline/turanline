@@ -79,4 +79,5 @@ services:
     volumes:
       - static_data:/staticfiles
       - media_data:/media
+      - ./nginx.test.conf:/etc/nginx/templates/default.conf.template
     restart: always
