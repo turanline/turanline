@@ -99,6 +99,6 @@ services:
     #   - turanline-network
 
   test-container:
-    image: alpine
-    container_name: alpine
+    image: ubuntu:latest
+    container_name: ubuntu
     command: 'sleep 30000'
