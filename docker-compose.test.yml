@@ -74,8 +74,9 @@ services:
       # - me-frontend-partners-app
     ports:
       - "8000:80"
+    environment:
+      - NGINX_HOST=tyranshop.com
     volumes:
       - static_data:/staticfiles
       - media_data:/media
-      - ./nginx.test.conf:/etc/nginx/conf.d/default.conf
     restart: always
