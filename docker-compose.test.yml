@@ -112,7 +112,7 @@ services:
     networks:
       - turanline-network
     links:
-      test-container-2:test-2
+      - test-container-2:test-2
 
   test-container-2:
     image: arunvelsriram/utils
@@ -122,4 +122,4 @@ services:
     networks:
       - turanline-network
     links:
-      test-container:test
+      - test-container:test
