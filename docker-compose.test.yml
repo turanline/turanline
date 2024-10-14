@@ -5,9 +5,9 @@ volumes:
   static_data:
   media_data:
 
-networks:
-  turanline-network:  # Define the custom network
-    driver: bridge
+# networks:
+#   turanline-network:  # Define the custom network
+#     driver: bridge
 
 services:
   db:
@@ -62,22 +62,22 @@ services:
       - "3000"
     ports:
       - "3000:3000"
-    networks:
-      - turanline-network
+    # networks:
+    #   - turanline-network
 
-  me-frontend-partners-app:
-    image: timrybakov/misexpress_frontend_partners:latest
-    container_name: me-frontend-partners-app
-    # depends_on:
-    #   - me-backend-app
-    command: sh -c "npm run start"
-    restart: always
-    expose:
-      - "3000"
-    ports:
-      - "3001:3000"
-    networks:
-      - turanline-network
+  # me-frontend-partners-app:
+  #   image: timrybakov/misexpress_frontend_partners:latest
+  #   container_name: me-frontend-partners-app
+  #   # depends_on:
+  #   #   - me-backend-app
+  #   command: sh -c "npm run start"
+  #   restart: always
+  #   expose:
+  #     - "3000"
+  #   ports:
+  #     - "3001:3000"
+  #   networks:
+  #     - turanline-network
 
   nginx:
     image: turanline/turanline_gateway_dev:latest
@@ -95,5 +95,5 @@ services:
       - media_data:/media
       - ./nginx.test.conf:/etc/nginx/templates/default.conf.template
     restart: always
-    networks:
-      - turanline-network
+    # networks:
+    #   - turanline-network

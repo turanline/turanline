@@ -21,7 +21,7 @@ jobs:
     - uses: dorny/paths-filter@v3
       id: changes
       with:
-        ref: ${{ github.ref }}
+        base: ${{ github.ref_name }}
         filters: |
           backend:
             - 'backend/**'
