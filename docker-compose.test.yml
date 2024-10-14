@@ -100,5 +100,5 @@ services:
 
   test-container:
     image: arunvelsriram/utils
-    container-name: utils-app
+    container_name: utils-app
     
