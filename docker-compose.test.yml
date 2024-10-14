@@ -54,6 +54,8 @@ services:
     #   - me-backend-app
     command: sh -c "npm run start"
     restart: always
+    ports:
+      - "3000:3000"
 
   me-frontend-partners-app:
     image: timrybakov/misexpress_frontend_partners:latest
