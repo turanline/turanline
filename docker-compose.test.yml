@@ -58,6 +58,8 @@ services:
     #   - me-backend-app
     command: sh -c "npm run start"
     restart: always
+    expose:
+      - "3000"
     ports:
       - "3000:3000"
     networks:
@@ -70,6 +72,8 @@ services:
     #   - me-backend-app
     command: sh -c "npm run start"
     restart: always
+    expose:
+      - "3000"
     ports:
       - "3001:3000"
     networks:
