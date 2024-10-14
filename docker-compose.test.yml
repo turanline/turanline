@@ -5,6 +5,10 @@ volumes:
   static_data:
   media_data:
 
+networks:
+  turanline-network:  # Define the custom network
+    driver: bridge
+
 services:
   db:
     container_name: me-shop-postgres
@@ -56,6 +60,8 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    networks:
+      - turanline-network
 
   me-frontend-partners-app:
     image: timrybakov/misexpress_frontend_partners:latest
@@ -66,6 +72,8 @@ services:
     restart: always
     ports:
       - "3001:3000"
+    networks:
+      - turanline-network
 
   nginx:
     image: turanline/turanline_gateway_dev:latest
@@ -83,3 +91,5 @@ services:
       - media_data:/media
       - ./nginx.test.conf:/etc/nginx/templates/default.conf.template
     restart: always
+    networks:
+      - turanline-network
