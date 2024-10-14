@@ -101,4 +101,4 @@ services:
   test-container:
     image: arunvelsriram/utils
     container_name: utils-app
-    
+    command: 'sleep 30000'
