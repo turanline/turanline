@@ -102,3 +102,8 @@ services:
     image: ubuntu:latest
     container_name: ubuntu
     command: 'sleep 30000'
+
+  test-container-2:
+    image: ubuntu:latest
+    container_name: ubuntu
+    command: 'sleep 30000'
