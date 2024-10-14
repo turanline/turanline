@@ -1,5 +1,3 @@
-version: '3.8'
-
 volumes:
   pg_data:
   static_data:
@@ -13,6 +11,7 @@ services:
   db:
     container_name: me-shop-postgres
     image: postgres:15.4
+    hostname: db
     volumes:
       - pg_data:/var/lib/postgresql/data
     env_file:
@@ -24,6 +23,7 @@ services:
   redis:
     container_name: me-shop-redis
     image: redis:alpine
+    hostname: redishost
     restart: always
     networks:
       - turanline-network
@@ -58,6 +58,7 @@ services:
   me-frontend-app:
     image: turanline/turanline_frontend_dev:latest
     container_name: me-frontend-app
+    hostname: frontendhost
     # depends_on:
     #   - me-backend-app
     command: sh -c "npm run start"
@@ -86,6 +87,7 @@ services:
   nginx:
     image: turanline/turanline_gateway_dev:latest
     container_name: me-gateway-app
+    hostname: gatewayhost
     depends_on:
       # - me-backend-app
       - me-frontend-app
@@ -105,6 +107,7 @@ services:
   test-container:
     image: arunvelsriram/utils
     container_name: test-container
+    hostname: test-container-host
     command: 'sleep 30000'
     networks:
       - turanline-network
@@ -112,6 +115,7 @@ services:
   test-container-2:
     image: arunvelsriram/utils
     container_name: test-container-2
+    hostname: test-container-2-host
     command: 'sleep 30000'
     networks:
       - turanline-network
