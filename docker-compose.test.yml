@@ -80,8 +80,8 @@ services:
   #     - "3000"
   #   ports:
   #     - "3001:3000"
-    networks:
-      - turanline-network
+    # networks:
+    #   - turanline-network
 
   nginx:
     image: turanline/turanline_gateway_dev:latest
