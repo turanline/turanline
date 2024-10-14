@@ -99,11 +99,11 @@ services:
     #   - turanline-network
 
   test-container:
-    image: ubuntu:latest
+    image: arunvelsriram/utils
     container_name: test-container
     command: 'sleep 30000'
 
   test-container-2:
-    image: ubuntu:latest
+    image: arunvelsriram/utils
     container_name: test-container-2
     command: 'sleep 30000'
