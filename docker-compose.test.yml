@@ -111,6 +111,8 @@ services:
     command: 'sleep 30000'
     networks:
       - turanline-network
+    links:
+      test-container-2:test-2
 
   test-container-2:
     image: arunvelsriram/utils
@@ -119,3 +121,5 @@ services:
     command: 'sleep 30000'
     networks:
       - turanline-network
+    links:
+      test-container:test
