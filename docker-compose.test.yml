@@ -2,10 +2,6 @@ volumes:
   pg_data:
   static_data:
   media_data:
-
-networks:
-  turanline-network:
-    driver: bridge
   
 services:
   db:
@@ -17,83 +13,70 @@ services:
     env_file:
       - .env
     restart: always
-    networks:
-      - turanline-network
 
   redis:
     container_name: me-shop-redis
     image: redis:alpine
     hostname: redishost
     restart: always
-    networks:
-      - turanline-network
 
-  # me-backend-app:
-  #   container_name: me-backend-app
-  #   image: turanline/turanline_backend_dev:latest
-  #   volumes:
-  #     - static_data:/backend_static
-  #     - media_data:/app/media/
-  #   restart: always
-  #   command: sh "./entrypoint.sh"
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - redis
-  #     - db
-  #     - celery
+  me-backend-app:
+    container_name: me-backend-app
+    image: turanline/turanline_backend_dev:latest
+    volumes:
+      - static_data:/backend_static
+      - media_data:/app/media/
+    restart: always
+    command: sh "./entrypoint.sh"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+      - celery
 
-  # celery:
-  #   container_name: me-worker-app
-  #   image: timrybakov/misexpress_celery:latest
-  #   volumes:
-  #     - media_data:/app/media/
-  #   restart: always
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - db
-  #     - redis
+  celery:
+    container_name: me-worker-app
+    image: timrybakov/misexpress_celery:latest
+    volumes:
+      - media_data:/app/media/
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
 
   me-frontend-app:
     image: turanline/turanline_frontend_dev:latest
     container_name: me-frontend-app
     hostname: frontendhost
-    # depends_on:
-    #   - me-backend-app
+    depends_on:
+      - me-backend-app
     command: sh -c "npm run start"
     restart: always
-    expose:
-      - "3000"
     ports:
       - "3000:3000"
-    networks:
-      - turanline-network
 
-  # me-frontend-partners-app:
-  #   image: timrybakov/misexpress_frontend_partners:latest
-  #   container_name: me-frontend-partners-app
-  #   # depends_on:
-  #   #   - me-backend-app
-  #   command: sh -c "npm run start"
-  #   restart: always
-  #   expose:
-  #     - "3000"
-  #   ports:
-  #     - "3001:3000"
-    # networks:
-    #   - turanline-network
+  me-frontend-partners-app:
+    image: timrybakov/misexpress_frontend_partners:latest
+    container_name: me-frontend-partners-app
+    depends_on:
+      - me-backend-app
+    command: sh -c "npm run start"
+    restart: always
+    ports:
+      - "3001:3000"
 
   nginx:
     image: turanline/turanline_gateway_dev:latest
     container_name: me-gateway-app
-    hostname: gatewayhost
     depends_on:
-      # - me-backend-app
+      - me-backend-app
       - me-frontend-app
-      # - me-frontend-partners-app
+      - me-frontend-partners-app
     ports:
-      - "8000:80"
+      - "80:80"
     environment:
       - NGINX_HOST=tyranshop.com
     volumes:
@@ -101,23 +84,3 @@ services:
       - media_data:/media
       - ./nginx.test.conf:/etc/nginx/templates/default.conf.template
     restart: always
-    networks:
-      - turanline-network
-
-  test-container:
-    image: arunvelsriram/utils
-    container_name: test-container
-    hostname: test-container-host
-    command: 'sleep 30000'
-    networks:
-      - turanline-network
-    links:
-      - test-container-2:test-2
-
-  test-container-2:
-    image: arunvelsriram/utils
-    container_name: test-container-2
-    hostname: test-container-2-host
-    command: 'sleep 30000'
-    networks:
-      - turanline-network
