@@ -24,7 +24,9 @@ services:
     volumes:
       - ./backend:/app:cached
     command: >
-      sh -c "mkdir -p /logs
+      sh -c "mkdir -p /app/logs
+      && touch /app/logs/logs.log
+      && mkdir -p /logs
       && touch /logs/logs.log  
       && ./dev-entrypoint.sh"
     ports:
