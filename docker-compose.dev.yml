@@ -23,7 +23,10 @@ services:
       - db
     volumes:
       - ./backend:/app:cached
-    command: sh -c "./dev-entrypoint.sh"
+    command: >
+      sh -c "mkdir -p /logs
+      && touch /logs/logs.log  
+      && ./dev-entrypoint.sh"
     ports:
       - '8000:8000'
 
