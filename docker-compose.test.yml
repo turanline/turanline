@@ -27,7 +27,12 @@ services:
       - static_data:/backend_static
       - media_data:/app/media/
     restart: always
-    command: sh "./entrypoint.sh"
+    command: >
+      sh -c "mkdir -p /app/logs
+      && touch /app/logs/logs.log
+      && mkdir -p /logs
+      && touch /logs/logs.log  
+      && ./entrypoint.sh"
     env_file:
       - .env
     depends_on:
