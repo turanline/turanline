@@ -13,7 +13,7 @@ const nextConfig = {
       "drive.google.com",
       "disk.yandex.ru",
     ],
-    minimumCacheTTL: 1500000,
+    minimumCacheTTL: 1500000,  
   },
 };
 

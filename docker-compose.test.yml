@@ -69,6 +69,36 @@ services:
     ports:
       - "3001:3000"
 
+  me-forntend-cargo-app:
+    image: turanline/turanline_frontend_cargo_dev:latest
+    container_name: me-frontend-cargo-app
+    depends_on:
+      - me-backend-app
+    command: sh -c "npm run start"
+    restart: always
+    ports:
+      - "3002:3000"
+
+  me-frontend-admin-app:
+    image: turanline/turanline_frontend_admin_dev:latest
+    container_name: me-frontend-admin-app
+    depends_on:
+      - me-backend-app
+    command: sh -c "npm run start"
+    restart: always
+    ports:
+      - "3003:3000"
+
+  me-frontend-warehouse-app:
+    image: turanline/turanline_frontend_warehouse_dev:latest
+    container_name: me-frontend-warehouse-app
+    depends_on:
+      - me-backend-app
+    command: sh -c "npm run start"
+    restart: always
+    ports:
+      - "3004:3000"
+
   nginx:
     image: turanline/turanline_gateway_dev:latest
     container_name: me-gateway-app
