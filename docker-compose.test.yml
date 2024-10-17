@@ -32,6 +32,7 @@ services:
       && touch /app/logs/logs.log
       && mkdir -p /logs
       && touch /logs/logs.log  
+      && chmod +x ./entrypoint.sh
       && ./entrypoint.sh"
     env_file:
       - .env
