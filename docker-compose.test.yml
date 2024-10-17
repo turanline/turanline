@@ -24,7 +24,7 @@ services:
     container_name: me-backend-app
     image: turanline/turanline_backend_dev:latest
     volumes:
-      - static_data:/backend_static
+      - static_data:/collected_static
       - media_data:/app/media/
     restart: always
     command: >
