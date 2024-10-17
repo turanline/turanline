@@ -61,7 +61,7 @@ jobs:
   #       run: |
   #         python -m flake8 backend
 
-  build_and_push_to_docker_hub:
+  backend_build_and_push:
     name: Build And Push Backend Docker image to DockerHub
     runs-on: ubuntu-latest
     needs:
@@ -87,7 +87,7 @@ jobs:
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_backend_dev:latest
 
-  build_frontend_and_push_to_docker_hub:
+  frontend_build_and_push:
     name: Build And Push Frontend Docker image to DockerHub
     runs-on: ubuntu-latest
     needs:
@@ -117,7 +117,7 @@ jobs:
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_dev:latest
 
-  build_frontend_partners_and_push_to_docker_hub:
+  partners_build_and_push:
     name: Build And Push Frontend Partners Docker image to DockerHub
     runs-on: ubuntu-latest
     needs:
@@ -147,7 +147,7 @@ jobs:
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_partners_dev:latest
 
-  build_frontend_cargo_and_push_to_docker_hub:
+  cargo_build_and_push:
     name: Build And Push Cargo Docker image to DockerHub
     runs-on: ubuntu-latest
     needs:
@@ -177,7 +177,7 @@ jobs:
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_cargo_dev:latest
 
-  build_frontend_admin_and_push_to_docker_hub:
+  admin_build_and_push:
     name: Build And Push Admin Docker image to DockerHub
     runs-on: ubuntu-latest
     needs:
@@ -207,7 +207,7 @@ jobs:
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_admin_dev:latest
           
-  build_frontend_warehouse_and_push_to_docker_hub:
+  warehouse_build_and_push:
     name: Build And Push Admin Docker image to DockerHub
     runs-on: ubuntu-latest
     needs:
@@ -237,7 +237,7 @@ jobs:
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_warehouse_dev:latest
 
-  build_gateway_and_push_to_docker_hub:
+  gateway_build_and_push:
     name: Push gateway Docker image to DockerHub
     runs-on: ubuntu-latest
     needs:
@@ -266,22 +266,22 @@ jobs:
     name: Deploying on remote server
     runs-on: ubuntu-latest
     needs:
-      - build_and_push_to_docker_hub
-      - build_frontend_and_push_to_docker_hub
-      - build_gateway_and_push_to_docker_hub
-      - build_frontend_cargo_and_push_to_docker_hub
-      - build_frontend_admin_and_push_to_docker_hub
-      - build_frontend_warehouse_and_push_to_docker_hub
-      - build_frontend_partners_and_push_to_docker_hub
+      - backend_build_and_push
+      - frontend_build_and_push
+      - gateway_build_and_push
+      - cargo_build_and_push
+      - admin_build_and_push
+      - warehouse_build_and_push
+      - partners_build_and_push
     if: |
       always() && 
-      (needs.build_and_push_to_docker_hub.result == 'success' || needs.build_frontend_and_push_to_docker_hub.result == 'skipped') &&
-      (needs.build_frontend_and_push_to_docker_hub.result == 'success' || needs.build_frontend_and_push_to_docker_hub.result == 'skipped') &&
-      (needs.build_gateway_and_push_to_docker_hub.result == 'success' || needs.build_gateway_and_push_to_docker_hub.result == 'skipped') &&
-      (needs.build_frontend_cargo_and_push_to_docker_hub.result == 'success' || needs.build_frontend_cargo_and_push_to_docker_hub.result == 'skipped') &&
-      (needs.build_frontend_admin_and_push_to_docker_hub.result == 'success' || needs.build_frontend_admin_and_push_to_docker_hub.result == 'skipped') &&
-      (needs.build_frontend_warehouse_and_push_to_docker_hub.result == 'success' || needs.build_frontend_warehouse_and_push_to_docker_hub.result == 'skipped') &&
-      (needs.build_frontend_partners_and_push_to_docker_hub.result == 'success' || needs.build_frontend_partners_and_push_to_docker_hub.result == 'skipped')
+      (needs.backend_build_and_push.result == 'success' || needs.backend_build_and_push.result == 'skipped') &&
+      (needs.frontend_build_and_push.result == 'success' || needs.frontend_build_and_push.result == 'skipped') &&
+      (needs.gateway_build_and_push.result == 'success' || needs.gateway_build_and_push.result == 'skipped') &&
+      (needs.cargo_build_and_push.result == 'success' || needs.cargo_build_and_push.result == 'skipped') &&
+      (needs.admin_build_and_push.result == 'success' || needs.admin_build_and_push.result == 'skipped') &&
+      (needs.warehouse_build_and_push.result == 'success' || needs.warehouse_build_and_push.result == 'skipped') &&
+      (needs.partners_build_and_push.result == 'success' || needs.partners_build_and_push.result == 'skipped')
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
