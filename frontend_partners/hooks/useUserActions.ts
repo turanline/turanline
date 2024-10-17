@@ -89,7 +89,8 @@ const useUserActions = () => {
       }
 
       if (response.payload === 'Error: 406') {
-        setCookie('phoneNumber',(prefixCode + selectPhone).replace(/[^\d+]/g, ''));
+        setCookie('phoneNumber',(selectPhone).replace(/[^\d+]/g, ''));
+        setCookie('phonePrefix', prefixCode);
 
         
         onSetRegistrationPage(3);
@@ -150,7 +151,9 @@ const useUserActions = () => {
         showToastMessage('success',translate.notifySuccessfulRegistration);
         showToastMessage('warn',translate.notifyVerifyPhone);
         await getVerifySmsCode(response.payload.data.user.phone_number,'verification')
-        setCookie('phoneNumber',(selectPhoneRegistration + phone_number).replace(/[^\d+]/g, ''))
+        setCookie('phoneNumber',(phone_number).replace(/[^\d+]/g, ''))
+        setCookie('phonePrefix',(selectPhoneRegistration).replace(/[^\d+]/g, ''))
+
     
         nextStep();
         return;

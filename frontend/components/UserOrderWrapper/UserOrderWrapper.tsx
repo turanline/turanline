@@ -28,7 +28,7 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderId,orderDate, orderNumbe
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
       for (let entry of entries) {
-        setWrapperHeight(entry.target.scrollHeight);
+        setWrapperHeight(entry.target.scrollHeight + 1);
       }
     });
 
@@ -161,7 +161,7 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderId,orderDate, orderNumbe
 
   const wrapperStyles = {
     maxHeight: isHidden ? "30px" : `${wrapperHeight}px`,
-    transition: "max-height 0.3s ease-in-out",
+    transition: "all 0.3s ease-in-out",
   };
 
   return (
@@ -182,13 +182,14 @@ const UserOrderWrapper: FC<IUserOrderWrapper> = ({ orderId,orderDate, orderNumbe
           ${orderSum}
         </span>
 
-        {returnOrderStatus(orderStatus)}
+          {returnOrderStatus(orderStatus)}
 
         {
           orderStatus === 'OP' ? (
             <button onClick={()=> setIsOpenReciept(true)} className="profile-content_orders-content-order-button">
               <Icons id="flag" />
-                {translate.importTitle}
+              <p>{translate.importTitle}</p>
+                
             </button>
           ):(
             <Link target="_" href={`https://wa.me/${'+905010019888'}`} className="profile-content_orders-content-order-button">
