@@ -28,12 +28,7 @@ services:
       - media_data:/app/media/
     restart: always
     command: >
-      sh -c "mkdir -p /app/logs
-      && touch /app/logs/logs.log
-      && mkdir -p /logs
-      && touch /logs/logs.log  
-      && chmod +x ./entrypoint.sh
-      && ./entrypoint.sh"
+      sh -c "./entrypoint.sh"
     env_file:
       - .env
     depends_on:
