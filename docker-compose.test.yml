@@ -81,7 +81,7 @@ services:
     environment:
       - NGINX_HOST=tyranshop.com
     volumes:
-      - static_data:/staticfiles
+      - static_data:/staticfiles/static
       - media_data:/media
       - ./nginx.test.conf:/etc/nginx/templates/default.conf.template
     restart: always
