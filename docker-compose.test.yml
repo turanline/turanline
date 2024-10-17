@@ -60,7 +60,7 @@ services:
       - "3000:3000"
 
   me-frontend-partners-app:
-    image: timrybakov/turanline_frontend_partners_dev:latest
+    image: turanline/turanline_frontend_partners_dev:latest
     container_name: me-frontend-partners-app
     depends_on:
       - me-backend-app
