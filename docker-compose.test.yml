@@ -69,7 +69,7 @@ services:
     ports:
       - "3001:3000"
 
-  me-forntend-cargo-app:
+  me-frontend-cargo-app:
     image: turanline/turanline_frontend_cargo_dev:latest
     container_name: me-frontend-cargo-app
     depends_on:
