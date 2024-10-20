@@ -1,0 +1,121 @@
+volumes:
+  pg_data:
+  static_data:
+  media_data:
+  
+services:
+  db:
+    container_name: me-shop-postgres
+    image: postgres:15.4
+    hostname: db
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    restart: always
+
+  redis:
+    container_name: me-shop-redis
+    image: redis:alpine
+    hostname: redishost
+    restart: always
+
+  me-backend-app:
+    container_name: me-backend-app
+    image: turanline/turanline_backend_dev:latest
+    volumes:
+      - static_data:/app/collected_static
+      - media_data:/app/media/
+    restart: always
+    command: >
+      sh -c "./entrypoint.sh"
+    env_file:
+      - .env
+    ports:
+      - "8001:8000"
+    depends_on:
+      - redis
+      - db
+      - celery
+
+  celery:
+    container_name: me-worker-app
+    image: timrybakov/misexpress_celery:latest
+    volumes:
+      - media_data:/app/media/
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+
+  me-frontend-app:
+    image: turanline/turanline_frontend_dev:latest
+    container_name: me-frontend-app
+    hostname: frontendhost
+    depends_on:
+      - me-backend-app
+    command: sh -c "npm run start"
+    restart: always
+    ports:
+      - "3000:3000"
+
+  me-frontend-partners-app:
+    image: turanline/turanline_frontend_partners_dev:latest
+    container_name: me-frontend-partners-app
+    depends_on:
+      - me-backend-app
+    command: sh -c "npm run start"
+    restart: always
+    ports:
+      - "3001:3000"
+
+  me-frontend-cargo-app:
+    image: turanline/turanline_frontend_cargo_dev:latest
+    container_name: me-frontend-cargo-app
+    depends_on:
+      - me-backend-app
+    command: sh -c "npm run start"
+    restart: always
+    ports:
+      - "3002:3000"
+
+  me-frontend-admin-app:
+    image: turanline/turanline_frontend_admin_dev:latest
+    container_name: me-frontend-admin-app
+    depends_on:
+      - me-backend-app
+    command: sh -c "npm run start"
+    restart: always
+    ports:
+      - "3003:3000"
+
+  me-frontend-warehouse-app:
+    image: turanline/turanline_frontend_warehouse_dev:latest
+    container_name: me-frontend-warehouse-app
+    depends_on:
+      - me-backend-app
+    command: sh -c "npm run start"
+    restart: always
+    ports:
+      - "3004:3000"
+
+  nginx:
+    image: turanline/turanline_gateway_dev:latest
+    container_name: me-gateway-app
+    depends_on:
+      - me-backend-app
+      - me-frontend-app
+      - me-frontend-partners-app
+      - me-frontend-cargo-app
+      - me-frontend-admin-app
+      - me-frontend-warehouse-app
+    ports:
+      - "8000:80"
+    environment:
+      - NGINX_HOST=tyranshop.com
+    volumes:
+      - static_data:/staticfiles/static
+      - media_data:/media
+    restart: always
