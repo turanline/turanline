@@ -114,7 +114,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./frontend/
-          file: Dockerfile.prod
+          file: ./frontend/Dockerfile.prod
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_dev:latest
 
@@ -146,7 +146,7 @@ jobs:
         with:
           context: ./frontend_partners/
           push: true
-          file: Dockerfile.prod
+          file: ./frontend_partners/Dockerfile.prod
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_partners_dev:latest
 
   cargo_build_and_push:
@@ -177,7 +177,7 @@ jobs:
         with:
           context: ./frontend_cargo/
           push: true
-          file: Dockerfile.prod
+          file: ./frontend_cargo/Dockerfile.prod
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_cargo_dev:latest
 
   admin_build_and_push:
@@ -208,11 +208,11 @@ jobs:
         with:
           context: ./frontend_admin/
           push: true
-          file: Dockerfile.prod
+          file: ./frontend_admin/Dockerfile.prod
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_admin_dev:latest
           
   warehouse_build_and_push:
-    name: Build And Push Admin Docker image to DockerHub
+    name: Build And Push Warehouse Docker image to DockerHub
     runs-on: ubuntu-latest
     needs:
       - changes
@@ -239,7 +239,7 @@ jobs:
         with:
           context: ./frontend_warehouse/
           push: true
-          file: Dockerfile.prod
+          file: ./frontend_warehouse/Dockerfile.prod
           tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_warehouse_dev:latest
 
   gateway_build_and_push:
