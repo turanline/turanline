@@ -8,6 +8,7 @@ const nextConfig = {
     domains: [
       "mis-express.com",
       "www.mis-express.com",
+      "tyranshop.com",
       "localhost:3001",
       "drive.google.com",
     ],
