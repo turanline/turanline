@@ -182,7 +182,7 @@ jobs:
           context: ./frontend_cargo/
           push: true
           file: ./frontend_cargo/Dockerfile.prod
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_cargo_dev:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_cargo:latest
 
   admin_build_and_push:
     name: Build And Push Admin Docker image to DockerHub
@@ -213,7 +213,7 @@ jobs:
           context: ./frontend_admin/
           push: true
           file: ./frontend_admin/Dockerfile.prod
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_admin_dev:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_admin:latest
           
   warehouse_build_and_push:
     name: Build And Push Warehouse Docker image to DockerHub
@@ -244,7 +244,7 @@ jobs:
           context: ./frontend_warehouse/
           push: true
           file: ./frontend_warehouse/Dockerfile.prod
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_warehouse_dev:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_warehouse:latest
 
   gateway_build_and_push:
     name: Push gateway Docker image to DockerHub
@@ -267,7 +267,7 @@ jobs:
         with:
           context: ./gateway/
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_gateway_dev:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_gateway:latest
           build-args: |
             - NEXT_PUBLIC_URL=${{ env.NEXT_PUBLIC_URL }}
 
@@ -297,22 +297,22 @@ jobs:
   #   - name: Copy docker-compose.yml via ssh
   #     uses: appleboy/scp-action@master
   #     with:
-  #       host: ${{ secrets.TEST_HOST }}
-  #       username: ${{ secrets.TEST_USER }}
-  #       password: ${{ secrets.TEST_PASSWORD }}
+  #       host: ${{ secrets.PROD_HOST }}
+  #       username: ${{ secrets.PROD_USER }}
+  #       password: ${{ secrets.PROD_PASSWORD }}
   #       source: "docker-compose.test.yml, nginx.test.conf"
-  #       target: "turanline_dev"
+  #       target: "turanline"
   #   - name: Executing remote ssh commands to deploy
   #     uses: appleboy/ssh-action@master
   #     with:
-  #       host: ${{ secrets.TEST_HOST }}
-  #       username: ${{ secrets.TEST_USER }}
-  #       password: ${{ secrets.TEST_PASSWORD }}
+  #       host: ${{ secrets.PROD_HOST }}
+  #       username: ${{ secrets.PROD_USER }}
+  #       password: ${{ secrets.PROD_PASSWORD }}
   #       script: |
-  #         cd turanline_dev
-  #         sudo docker compose -f docker-compose.test.yml pull
-  #         sudo docker compose -f docker-compose.test.yml down
-  #         sudo docker compose -f docker-compose.test.yml up -d
+  #         cd turanline
+  #         sudo docker compose -f docker-compose.prod.yml pull
+  #         sudo docker compose -f docker-compose.prod.yml down
+  #         sudo docker compose -f docker-compose.prod.yml up -d
 
 # sudo docker compose -f docker-compose.test.yml exec backend python manage.py migrate
 # sudo docker compose -f docker-compose.test.yml exec backend python manage.py collectstatic --no-input
