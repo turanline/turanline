@@ -8,13 +8,12 @@ from googletrans import Translator
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 env = environ.Env(
     DEBUG=(bool, False),
 )
 
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
-
+BASE_DOMAIN = env("BASE_DOMAIN")
 translator = Translator()
 
 SECRET_KEY = env("SECRET_KEY")
@@ -25,7 +24,8 @@ ALLOWED_HOSTS = [
     'mis-express.com',
     '127.0.0.1',
     'localhost',
-    'www.mis-express.com'
+    'www.mis-express.com',
+    BASE_DOMAIN
 ]
 
 INSTALLED_APPS = [
@@ -147,7 +147,7 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = BASE_DIR / 'collected_static'
 
-MEDIA_URL = "https://mis-express.com/media/"
+MEDIA_URL = "https://" + BASE_DOMAIN + "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -215,9 +215,13 @@ SIMPLE_JWT = {
 }
 
 
-CSRF_TRUSTED_ORIGINS = ["https://mis-express.com",]
+CSRF_TRUSTED_ORIGINS = ["https://mis-express.com", "https://" + BASE_DOMAIN]
 CORS_ORIGIN_ALLOW_ALL = True
 
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
+
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
 
 LOGGING = {
     "version": 1,

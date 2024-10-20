@@ -2,22 +2,15 @@ name: Development workflow
 
 on:
   push:
-    branches: [ main ]
-    paths-ignore:
-      - '**/README.md'
-  pull_request:
-    branches: [ main ]
-    types:
-      - closed
+    branches: [ workflowtest ]
     paths-ignore:
       - '**/README.md'
 
 env:
-  NEXT_PUBLIC_URL: https://turanline.com
+  NEXT_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_URL }}
 
 jobs:
   changes:
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
     runs-on: ubuntu-latest
     outputs:
       backend: ${{ steps.changes.outputs.backend }}
@@ -92,7 +85,7 @@ jobs:
         with:
           context: ./backend/
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_backend:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_backend_dev:latest
 
   frontend_build_and_push:
     name: Build And Push Frontend Docker image to DockerHub
@@ -123,7 +116,7 @@ jobs:
           context: ./frontend/
           file: ./frontend/Dockerfile.prod
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_dev:latest
 
   partners_build_and_push:
     name: Build And Push Frontend Partners Docker image to DockerHub
@@ -137,7 +130,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         env:
-          NEXT_PUBLIC_URL: ${{ env.NEXT_PUBLIC_URL }}
+          NEXT_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_URL }}
       - name: Login to Docker
         uses: docker/login-action@v3
         with:
@@ -154,7 +147,7 @@ jobs:
           context: ./frontend_partners/
           push: true
           file: ./frontend_partners/Dockerfile.prod
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_partners:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_partners_dev:latest
 
   cargo_build_and_push:
     name: Build And Push Cargo Docker image to DockerHub
@@ -168,7 +161,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         env:
-          NEXT_PUBLIC_URL: ${{ env.NEXT_PUBLIC_URL }}
+          NEXT_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_URL }}
       - name: Login to Docker
         uses: docker/login-action@v3
         with:
@@ -185,7 +178,7 @@ jobs:
           context: ./frontend_cargo/
           push: true
           file: ./frontend_cargo/Dockerfile.prod
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_cargo:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_cargo_dev:latest
 
   admin_build_and_push:
     name: Build And Push Admin Docker image to DockerHub
@@ -199,7 +192,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         env:
-          NEXT_PUBLIC_URL: ${{ env.NEXT_PUBLIC_URL }}
+          NEXT_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_URL }}
       - name: Login to Docker
         uses: docker/login-action@v3
         with:
@@ -216,7 +209,7 @@ jobs:
           context: ./frontend_admin/
           push: true
           file: ./frontend_admin/Dockerfile.prod
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_admin:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_admin_dev:latest
           
   warehouse_build_and_push:
     name: Build And Push Warehouse Docker image to DockerHub
@@ -230,7 +223,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         env:
-          NEXT_PUBLIC_URL: ${{ env.NEXT_PUBLIC_URL }}
+          NEXT_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_URL }}
       - name: Login to Docker
         uses: docker/login-action@v3
         with:
@@ -247,7 +240,7 @@ jobs:
           context: ./frontend_warehouse/
           push: true
           file: ./frontend_warehouse/Dockerfile.prod
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_warehouse:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_frontend_warehouse_dev:latest
 
   gateway_build_and_push:
     name: Push gateway Docker image to DockerHub
@@ -270,53 +263,52 @@ jobs:
         with:
           context: ./gateway/
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_gateway:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/turanline_gateway_dev:latest
           build-args: |
             - NEXT_PUBLIC_URL=${{ env.NEXT_PUBLIC_URL }}
 
-  # deploy:
-  #   name: Deploying on remote server
-  #   runs-on: ubuntu-latest
-  #   needs:
-  #     - changes
-  #     - backend_build_and_push
-  #     - frontend_build_and_push
-  #     - gateway_build_and_push
-  #     - cargo_build_and_push
-  #     - admin_build_and_push
-  #     - warehouse_build_and_push
-  #     - partners_build_and_push
-  #   if: |
-  #     needs.changes.result == 'success' &&
-  #     (needs.backend_build_and_push.result == 'success' || needs.backend_build_and_push.result == 'skipped') &&
-  #     (needs.frontend_build_and_push.result == 'success' || needs.frontend_build_and_push.result == 'skipped') &&
-  #     (needs.gateway_build_and_push.result == 'success' || needs.gateway_build_and_push.result == 'skipped') &&
-  #     (needs.cargo_build_and_push.result == 'success' || needs.cargo_build_and_push.result == 'skipped') &&
-  #     (needs.admin_build_and_push.result == 'success' || needs.admin_build_and_push.result == 'skipped') &&
-  #     (needs.warehouse_build_and_push.result == 'success' || needs.warehouse_build_and_push.result == 'skipped') &&
-  #     (needs.partners_build_and_push.result == 'success' || needs.partners_build_and_push.result == 'skipped')
-  #   steps:
-  #   - name: Checkout repo
-  #     uses: actions/checkout@v4
-  #   - name: Copy docker-compose.yml via ssh
-  #     uses: appleboy/scp-action@master
-  #     with:
-  #       host: ${{ secrets.PROD_HOST }}
-  #       username: ${{ secrets.PROD_USER }}
-  #       password: ${{ secrets.PROD_PASSWORD }}
-  #       source: "docker-compose.test.yml, nginx.test.conf"
-  #       target: "turanline"
-  #   - name: Executing remote ssh commands to deploy
-  #     uses: appleboy/ssh-action@master
-  #     with:
-  #       host: ${{ secrets.PROD_HOST }}
-  #       username: ${{ secrets.PROD_USER }}
-  #       password: ${{ secrets.PROD_PASSWORD }}
-  #       script: |
-  #         cd turanline
-  #         sudo docker compose -f docker-compose.prod.yml pull
-  #         sudo docker compose -f docker-compose.prod.yml down
-  #         sudo docker compose -f docker-compose.prod.yml up -d
+  deploy:
+    name: Deploying on remote server
+    runs-on: ubuntu-latest
+    needs:
+      - backend_build_and_push
+      - frontend_build_and_push
+      - gateway_build_and_push
+      - cargo_build_and_push
+      - admin_build_and_push
+      - warehouse_build_and_push
+      - partners_build_and_push
+    if: |
+      always() && 
+      (needs.backend_build_and_push.result == 'success' || needs.backend_build_and_push.result == 'skipped') &&
+      (needs.frontend_build_and_push.result == 'success' || needs.frontend_build_and_push.result == 'skipped') &&
+      (needs.gateway_build_and_push.result == 'success' || needs.gateway_build_and_push.result == 'skipped') &&
+      (needs.cargo_build_and_push.result == 'success' || needs.cargo_build_and_push.result == 'skipped') &&
+      (needs.admin_build_and_push.result == 'success' || needs.admin_build_and_push.result == 'skipped') &&
+      (needs.warehouse_build_and_push.result == 'success' || needs.warehouse_build_and_push.result == 'skipped') &&
+      (needs.partners_build_and_push.result == 'success' || needs.partners_build_and_push.result == 'skipped')
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Copy docker-compose.yml via ssh
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.TEST_HOST }}
+        username: ${{ secrets.TEST_USER }}
+        password: ${{ secrets.TEST_PASSWORD }}
+        source: "docker-compose.test.yml, nginx.test.conf"
+        target: "turanline_dev"
+    - name: Executing remote ssh commands to deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.TEST_HOST }}
+        username: ${{ secrets.TEST_USER }}
+        password: ${{ secrets.TEST_PASSWORD }}
+        script: |
+          cd turanline_dev
+          sudo docker compose -f docker-compose.test.yml pull
+          sudo docker compose -f docker-compose.test.yml down
+          sudo docker compose -f docker-compose.test.yml up -d
 
 # sudo docker compose -f docker-compose.test.yml exec backend python manage.py migrate
 # sudo docker compose -f docker-compose.test.yml exec backend python manage.py collectstatic --no-input
