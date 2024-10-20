@@ -106,8 +106,11 @@ services:
       - me-backend-app
       - me-frontend-app
       - me-frontend-partners-app
+      - me-frontend-cargo-app
+      - me-frontend-admin-app
+      - me-frontend-warehouse-app
     ports:
-      - "80:80"
+      - "8000:80"
     environment:
       - NGINX_HOST=tyranshop.com
     volumes:
