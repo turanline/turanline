@@ -14,7 +14,7 @@ import { useTranslate } from "@/hooks/useTranslate";
 import { IInputsRegistrationProvider ,IPostRegistrationProvider} from "@/types/additionalTypes";
 import { Country } from "@/types/componentsTypes";
 //Prefixes
-import * as prefixes from '@/locales/prefixes.json';
+import prefixes from '@/locales/prefixes.json';
 //Styles
 import "./RegistrationComponent.scss";
 

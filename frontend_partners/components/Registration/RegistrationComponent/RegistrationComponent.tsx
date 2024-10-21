@@ -14,7 +14,7 @@ import { useTranslate } from "@/hooks/useTranslate";
 import { IInputsRegistrationProvider ,IPostRegistrationProvider} from "@/types/additionalTypes";
 import { Country } from "@/types/componentsTypes";
 //Prefixes
-import * as prefixes from '@/locales/prefixes.json';
+import prefixes from '@/locales/prefixes.json';
 //Styles
 import "./RegistrationComponent.scss";
 
@@ -65,18 +65,20 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
       const { address, company, first_name, inspection, last_name, mersis, password, phone_number, email} = getValues();
       const requestBody: IPostRegistrationProvider = {
         user: {
-          first_name,
-          last_name,
+          first_name:"",
+          last_name:"",
           password,
-          email,
+          email:"",
           phone_number:(selectPhoneRegistration + phone_number).replace(/[^\d+]/g, ''),
         },
-        address,
-        bank_account_number: { number: inspection.toString() },
-        company,
+        address:"",
+        bank_account_number: { number: ""},
+       // bank_account_number: { number: inspection.toString() },
+        company : "",
         state: "M",
         country: selectedCountry,
-        taxpayer_identification_number: mersis.toString(),
+        taxpayer_identification_number: "",
+      //  taxpayer_identification_number: mersis.toString(),
       }
 
       const response = await onRegistrationUser(requestBody,{phone_number,selectPhoneRegistration,nextStep});
@@ -210,7 +212,7 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
               {returnInputError("phone_number")}
               </label>
 
-              <label htmlFor="#" className="form-label">
+              {/* <label htmlFor="#" className="form-label">
                 {translate.registrationMersis}
                 <Input
                   {...returnInputProperties("mersis")}
@@ -220,8 +222,8 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
                   maxLength={16}
                 />
                 {returnInputError("mersis")}
-              </label>
-
+              </label> */}
+{/* 
               <label htmlFor="#" className="form-label">
                 {translate.registrationInspection}
                 <Input
@@ -242,7 +244,7 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
                   placeholder={translate.inputEmailPlaceHolder}
                 />
                 {returnInputError("email")}
-              </label>
+              </label> */}
             </div>
 
             <div className="provider-form-right">
@@ -257,7 +259,7 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
                 {returnInputError("password")}
               </label>
 
-              <label htmlFor="#" className="form-label">
+              {/* <label htmlFor="#" className="form-label">
                 {translate.registrationCompany}
                 <Input
                   {...returnInputProperties("company")}
@@ -295,7 +297,7 @@ export default function Provider({nextStep}: {nextStep: () => void}) {
                   placeholder={translate.registrationAddressLabel}
                 />
                 {returnInputError("address")}
-              </label>
+              </label> */}
             </div>
           </div>
 

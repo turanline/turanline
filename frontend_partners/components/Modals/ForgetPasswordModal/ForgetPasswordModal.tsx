@@ -18,7 +18,7 @@ import { useCustomForm } from '@/hooks/useCustomForm.';
 //Services
 import { getVerifySmsCode } from '@/services/codeConfirmation';
 //Prefixes
-import * as prefixes from '@/locales/prefixes.json';
+import prefixes from '@/locales/prefixes.json';
 //styles
 import './ForgetPasswordModal.scss';
 
