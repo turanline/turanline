@@ -2,7 +2,7 @@ name: Development workflow
 
 on:
   push:
-    branches: [ workflowtest ]
+    branches: [ development ]
     paths-ignore:
       - '**/README.md'
 
