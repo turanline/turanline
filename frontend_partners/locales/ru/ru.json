@@ -213,6 +213,7 @@
   "cartItemTotalPrice": "Стоимость, всего",
   "cartItemrice": "Стоимость",
   "productsEmpty": "Товары отсутствуют",
+  "newProductsEmpty": "Нажмите, чтобы добавить новый продукт",
   "ordersEmpty": "Нет Заказов",
 
   "orderNumberOrders": "Заказ",
@@ -431,6 +432,8 @@
   "formMax": "Не более",
   "formSymbols": "символов",
   "formPriceRefining": "Цена указана за единицу товара*",
+
+  "finalConsumerPrice":"Цена, которая будет отображаться на сайте",
 
   "sizes": "Размеры",
   "sizeProduct": "Размер",

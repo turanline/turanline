@@ -120,6 +120,7 @@
   "deleteCard": "Delete",
   "cartItemrice": "Cost",
   "productsEmpty": "No Products Available",
+  "newProductsEmpty": "Click to Add a New Product",
   "ordersEmpty": "No Orders",
   "backGood": "Return",
   "orderNumberOrders": "Order",
@@ -377,6 +378,8 @@
   "formMax": "No more than",
   "formSymbols": "characters",
   "formPriceRefining": "Price is per unit*",
+
+  "finalConsumerPrice":"Price to be displayed on the website",
 
   "sizes": "Sizes",
   "sizeProduct": "Size",

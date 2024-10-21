@@ -195,9 +195,16 @@ const ProviderProducts = () => {
 
     if (sortedFilteredGoods?.length === 0 && statusProduct === "fulfilled")
       return (
-        <span className="products-content_cards-item-span-empty">
+        <><span className="products-content_cards-item-span-empty">
           {translate.productsEmpty}
-        </span>
+        </span><span className="products-content_cards-item-span-empty">
+            <Link
+              href={CREATE_PRODUCT_ROUTE}
+              className="products-content_navigation-link underline"
+            >
+              {translate.newProductsEmpty}
+            </Link>
+          </span></>
       );
 
     return sortedFilteredGoods?.map((good) => {

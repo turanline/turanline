@@ -121,6 +121,7 @@
   "deleteCard": "Sil",
   "cartItemrice": "Maliyet",
   "productsEmpty": "Ürün Yok",
+  "newProductsEmpty": "Yeni Bir Ürün Eklemek İçin Tıklayın",
   "ordersEmpty": "Sipariş Yok",
   "backGood": "İade Et",
   "orderNumberOrders": "Sipariş",
@@ -394,6 +395,8 @@
   "formMax": "En fazla",
   "formSymbols": "karakter",
   "formPriceRefining": "Birim başına fiyat*",
+
+  "finalConsumerPrice":"Sitede gözükecek fiyat",
 
   "sizes": "Boyutlar",
   "sizeProduct": "Boyut",

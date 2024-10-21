@@ -20,7 +20,7 @@ export const SHOP_ROUTE = "/",
   POLITIC_ROUTE = "/politics",
   PROFILE_ROUTE = "/profile",
   SUCCESS_ROUTE = "/successfulPaymentPage",
-  PROVIDER_SITE ="https://partners.mis-express.com/login";
+  PROVIDER_SITE ="https://partners.tyranshop.com/login";
 export const SHOP_LINK = "https://mis-express.com/";
 
 //Shop Information
