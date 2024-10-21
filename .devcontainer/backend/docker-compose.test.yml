@@ -22,7 +22,7 @@ services:
 
   me-backend-app:
     container_name: me-backend-app
-    image: turanline/turanline_backend:latest
+    image: turanline/turanline_backend_dev:latest
     volumes:
       - static_data:/app/collected_static
       - media_data:/app/media/
@@ -51,7 +51,7 @@ services:
       - redis
 
   me-frontend-app:
-    image: turanline/turanline_frontend:latest
+    image: turanline/turanline_frontend_dev:latest
     container_name: me-frontend-app
     hostname: frontendhost
     depends_on:
@@ -62,7 +62,7 @@ services:
       - "3000:3000"
 
   me-frontend-partners-app:
-    image: turanline/turanline_frontend_partners:latest
+    image: turanline/turanline_frontend_partners_dev:latest
     container_name: me-frontend-partners-app
     depends_on:
       - me-backend-app
@@ -72,7 +72,7 @@ services:
       - "3001:3000"
 
   me-frontend-cargo-app:
-    image: turanline/turanline_frontend_cargo:latest
+    image: turanline/turanline_frontend_cargo_dev:latest
     container_name: me-frontend-cargo-app
     depends_on:
       - me-backend-app
@@ -82,7 +82,7 @@ services:
       - "3002:3000"
 
   me-frontend-admin-app:
-    image: turanline/turanline_frontend_admin:latest
+    image: turanline/turanline_frontend_admin_dev:latest
     container_name: me-frontend-admin-app
     depends_on:
       - me-backend-app
@@ -92,7 +92,7 @@ services:
       - "3003:3000"
 
   me-frontend-warehouse-app:
-    image: turanline/turanline_frontend_warehouse:latest
+    image: turanline/turanline_frontend_warehouse_dev:latest
     container_name: me-frontend-warehouse-app
     depends_on:
       - me-backend-app
@@ -102,7 +102,7 @@ services:
       - "3004:3000"
 
   nginx:
-    image: turanline/turanline_gateway:latest
+    image: turanline/turanline_gateway_dev:latest
     container_name: me-gateway-app
     depends_on:
       - me-backend-app
@@ -114,7 +114,7 @@ services:
     ports:
       - "8000:80"
     environment:
-      - NGINX_HOST=turanline.com
+      - NGINX_HOST=tyranshop.com
     volumes:
       - static_data:/staticfiles/static
       - media_data:/media
