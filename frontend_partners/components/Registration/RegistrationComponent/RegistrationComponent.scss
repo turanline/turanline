@@ -40,10 +40,12 @@
   }
 
   &-left,
-  &-right {
+  &-right,
+  &-center {
     display: flex;
     flex-direction: column;
     gap: 17px;
+    padding: 5px;
   }
 
   &-fields {

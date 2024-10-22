@@ -1,15 +1,15 @@
 {
     "prefixes": [
       {
-        "code": "+7",
-        "name": "Russia",
-        "flag": "https://flagcdn.com/ru.svg"
-      },
-      {
         "code": "+90",
         "name": "Turkey",
         "flag": "https://flagcdn.com/tr.svg"
       },
+      {
+        "code": "+7",
+        "name": "Russia",
+        "flag": "https://flagcdn.com/ru.svg"
+      },  
       {
         "code": "+1",
         "name": "United States",

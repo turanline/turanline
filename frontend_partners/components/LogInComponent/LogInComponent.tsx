@@ -36,7 +36,7 @@ export const LogInComponent: FC = () => {
   const [forgetModal, setForgetModal] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [selectPhone,setSelectPhone] = useState<string>('');
-  const [prefixCode,setPrefixCode] = useState<string>('+1');
+  const [prefixCode,setPrefixCode] = useState<string>('+90');
   //hooks
   const { push } = useRouter();
   const translate = useTranslate();
@@ -79,7 +79,7 @@ export const LogInComponent: FC = () => {
   };
   const renderAllPrefixes = () => {
     if (!prefixes.prefixes) return (
-      <SelectItem aria-labelledby="country" key="+1" value="+1">
+      <SelectItem aria-labelledby="country" key="+90" value="+90">
         Ошибка
       </SelectItem>
     );

@@ -232,6 +232,68 @@
       }
     }
   }
+
+  &-addProduct {
+    @include providerPageBlock();
+    flex-direction: column;
+    padding: 30px 15px;
+    flex: 1 1 100%; // Bulunduğu satırın %100'ünü kapsaması için düzenlendi
+  
+    &_block:first-of-type {
+      justify-content: flex-start;
+      gap: 10px;
+    }
+  
+    &_block {
+      display: flex;
+      gap: 30px;
+      align-items: flex-start;
+      justify-content: space-between;
+  
+      &-text {
+        color: #929292;
+        font-size: 10px;
+        line-height: 12px;
+        width: 100%;
+        max-width: 133px;
+      }
+  
+      &-account,
+      &-button {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+  
+      &-button {
+        gap: 5px;
+        font-family: geometria-medium;
+      }
+    }
+  }
+  
+}
+
+.buttons-header-wrapper{
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  align-items: center;
+  @media (max-width: 767px) {
+    gap: 30px;
+  }
+}
+
+.buttons-header-wrapper button:first-child{
+    background-color: #079591;
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+    transition: 0.3s all ease-in-out;
+    &:hover{
+      background-color: #282828;
+      transition: 0.3s all ease-in-out;
+    }
 }
 
 .account {

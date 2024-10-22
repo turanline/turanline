@@ -281,6 +281,21 @@ export default function Home() {
     <div className="provider-page_wrapper">
       <div className="provider-page_content">
         <div className="provider-page_blocks">
+          {/* newProductLink */}
+          <div className="provider-page_blocks-addProduct">
+            <h3>{translate.mainNewProduct}</h3>
+
+            <div className="provider-page_blocks-reviews_item">
+              <Link href={CREATE_PRODUCT_ROUTE}>
+                <div className="buttons-header-wrapper">
+                  <Button className=" rounded-[5px] w-[144px]">
+                    {translate.mainNewProductText}
+                  </Button>
+                </div>
+              </Link>
+            </div>
+          </div>
+
           {/* money */}
           <div className="provider-page_blocks-total">
             <div className="provider-page_blocks-total_block">
@@ -372,18 +387,6 @@ export default function Home() {
 
             <div className="provider-page_blocks-reviews_item">
               {renderProvideReviews()}
-            </div>
-          </div>
-          {/* newProductLink */}
-          <div className="provider-page_blocks-reviews">
-            <h3>{translate.mainNewProduct}</h3>
-
-            <div className="provider-page_blocks-reviews_item">
-              <Link href={CREATE_PRODUCT_ROUTE}>
-                <Button className="bg-black text-white rounded-[5px] w-[144px]">
-                  {translate.mainNewProductText}
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
