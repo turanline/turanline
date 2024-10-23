@@ -102,23 +102,26 @@ const Home = () => {
   return (
     <main className="container mx-auto px-[15px] lg:px-[30px]">
       <div className="flex flex-col lg:flex-row gap-[15px] lg:gap-[24px] mb-[15px] lg:mb-[24px]">
-        <Link className="lg:h-auto   w-full  " href={CATALOG_ROUTE}>
-          <div className="h-[200px]  lg:max-h-[230px] max-h-[300px] flex-col p-[24px] sm:p-[36px] sm:h-[240px] text-white relative">
-            <Image
-              className="absolute top-0 left-0 w-full h-full rounded-md z-0"
-              src={back1}
-              alt="back1"
-            />
-            <h3 className="family_bold relative z-10 text-[26px] sm:text-[42px]">
-              {translate.newRevenues}
-            </h3>
-            <p className="relative z-10">{translate.newRevenuesText}</p>
-            <div className="flex absolute right-[20px] bottom-[16px] gap-[7px] items-center">
+
+      <Link className="relative w-full rounded-md text-white h-[177px] sm:h-auto flex flex-col items-center justify-center"
+            href={PROVIDER_SITE}>
+          <Image
+            className="absolute w-full h-full z-0"
+            src={back1}
+            alt="back1"   
+          />
+          <h3 className="family_bold relative z-10 text-[32px]">
+            {translate.workWithUs}
+          </h3>
+          {/* <p className="relative z-10 font-light">{translate.promotionsText}</p> */}
+               { <p className="relative z-10 pt-14">{translate.workWithUsText}</p> }
+          <div className="flex absolute right-[20px] bottom-[16px] gap-[7px] items-center">
               <p>{translate.newRevenuesLink}</p>
               <Icons id="arrow" />
             </div>
-          </div>
-        </Link>
+          </Link>
+
+     
 
         <div className="flex flex-col sm:flex-row gap-[15px]">
           <div className="relative rounded-md text-white bg-pink h-[177px] sm:h-auto flex lg:hidden flex-col py-[24px] sm:py-[30px] px-[20px] sm:px-[24px]">
@@ -134,18 +137,24 @@ const Home = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 sm:h-[230px] gap-[15px] lg:gap-[24px]">
-        <Link className="relative rounded-md text-white h-[177px] sm:h-auto flex flex-col items-center justify-center"
-            href={PROVIDER_SITE}>
+        
+      <Link className="relative rounded-md text-white h-[177px] sm:h-auto flex flex-col items-center justify-center" href={CATALOG_ROUTE}>
+
           <Image
-            className="absolute w-full h-full z-0"
-            src={back2}
-            alt="back2"      
+            className="absolute object-cover w-full h-full rounded-md z-0"
+                  src={back1}
+              alt="back1"
           />
-          <h5 className="family_bold relative z-10 text-[26px]">
-            {translate.workWithUs}
+          <h5 className="family_bold relative z-10 text-[26px] text-center">
+            {translate.newRevenues}
           </h5>
-          {/* <p className="relative z-10 font-light">{translate.promotionsText}</p> */}
-          </Link>
+          <div className="flex absolute right-[20px] bottom-[16px] gap-[7px] items-center">
+              <p>{translate.newRevenuesLink}</p>
+              <Icons id="arrow" />
+            </div>
+       
+        </Link> 
+      
 
         <Link
           className="hidden lg:flex relative rounded-md text-white bg-pink flex-col py-[30px] px-[24px]"
