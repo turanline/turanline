@@ -114,7 +114,7 @@ const Home = () => {
             {translate.workWithUs}
           </h3>
           {/* <p className="relative z-10 font-light">{translate.promotionsText}</p> */}
-               { <p className="relative z-10 pt-14">{translate.workWithUsText}</p> }
+               { <p className="relative z-10 pt-4 px-3">{translate.workWithUsText}</p> }
           <div className="flex absolute right-[20px] bottom-[16px] gap-[7px] items-center">
               <p>{translate.newRevenuesLink}</p>
               <Icons id="arrow" />
