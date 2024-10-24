@@ -217,6 +217,42 @@ export default function Provider({ nextStep }: { nextStep: () => void }) {
                 </p>
               </label>
 
+              <label htmlFor="#" className="form-label">
+                {translate.registrationPhoneNumber}
+                <div className="flex">
+                  <Select
+                    aria-label="Страны и коды"
+                    onChange={(event) =>
+                      setSelectPhoneRegistration(event.target.value)
+                    }
+                    defaultSelectedKeys={[selectPhoneRegistration]}
+                    disallowEmptySelection
+                    className="max-w-xs"
+                    classNames={selectClassName}
+                  >
+                    {renderAllPrefixes()}
+                  </Select>
+
+                  <InputMask
+                    {...returnInputProperties("phone_number")}
+                    className="provider-form-input phone"
+                    alwaysShowMask
+                    mask="(999) 999-99-99"
+                  />
+                </div>
+                {returnInputError("phone_number")}
+              </label>
+
+              <label htmlFor="#" className="form-label">
+                {translate.logInLabelPassword}
+                <Input
+                  {...returnInputProperties("password")}
+                  classNames={{ inputWrapper: "provider-form-input" }}
+                  type="password"
+                  placeholder={translate.logInInputPassword}
+                />
+                {returnInputError("password")}
+              </label>
               {/* <label htmlFor="#" className="form-label">
                 {translate.registrationMersis}
                 <Input
@@ -251,48 +287,15 @@ export default function Provider({ nextStep }: { nextStep: () => void }) {
                 {returnInputError("email")}
               </label> */}
             </div>
-
+{/* 
             <div className="provider-form-center">
-              <label htmlFor="#" className="form-label">
-                {translate.registrationPhoneNumber}
-                <div className="flex">
-                  <Select
-                    aria-label="Страны и коды"
-                    onChange={(event) =>
-                      setSelectPhoneRegistration(event.target.value)
-                    }
-                    defaultSelectedKeys={[selectPhoneRegistration]}
-                    disallowEmptySelection
-                    className="max-w-xs"
-                    classNames={selectClassName}
-                  >
-                    {renderAllPrefixes()}
-                  </Select>
+          
+            </div> */}
 
-                  <InputMask
-                    {...returnInputProperties("phone_number")}
-                    className="provider-form-input phone"
-                    alwaysShowMask
-                    mask="(999) 999-99-99"
-                  />
-                </div>
-                {returnInputError("phone_number")}
-              </label>
-            </div>
+            {/*<div className="provider-form-right">
+            
 
-            <div className="provider-form-right">
-              <label htmlFor="#" className="form-label">
-                {translate.logInLabelPassword}
-                <Input
-                  {...returnInputProperties("password")}
-                  classNames={{ inputWrapper: "provider-form-input" }}
-                  type="password"
-                  placeholder={translate.logInInputPassword}
-                />
-                {returnInputError("password")}
-              </label>
-
-              {/* <label htmlFor="#" className="form-label">
+               <label htmlFor="#" className="form-label">
                 {translate.registrationCompany}
                 <Input
                   {...returnInputProperties("company")}
@@ -330,8 +333,8 @@ export default function Provider({ nextStep }: { nextStep: () => void }) {
                   placeholder={translate.registrationAddressLabel}
                 />
                 {returnInputError("address")}
-              </label> */}
-            </div>
+              </label> 
+            </div>*/}
           </div>
 
           {returnAcceptedBlock()}
