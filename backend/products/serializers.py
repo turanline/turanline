@@ -1,3 +1,5 @@
+from builtins import round
+from decimal import Decimal
 from parler_rest.fields import TranslatedFieldsField
 from parler_rest.serializers import TranslatableModelSerializer
 from rest_framework import serializers
@@ -174,7 +176,13 @@ class ProductSerializer(
         shared_model=models.Product
     )
 
+    price = serializers.SerializerMethodField()
+
     category = product_components_serializers.CategoriesSerializer()
+
+    def get_price(self, obj):
+        # Return the price multiplied by 15% and 2 decimal places as decimal
+        return round(obj.price * Decimal('1.15'), 2)
 
     class Meta(ProductBaseSerializer.Meta):
         exclude = [

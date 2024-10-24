@@ -71,35 +71,35 @@ services:
     ports:
       - "3001:3000"
 
-  me-frontend-cargo-app:
-    image: turanline/turanline_frontend_cargo:latest
-    container_name: me-frontend-cargo-app
-    depends_on:
-      - me-backend-app
-    command: sh -c "npm run start"
-    restart: always
-    ports:
-      - "3002:3000"
+  # me-frontend-cargo-app:
+  #   image: turanline/turanline_frontend_cargo:latest
+  #   container_name: me-frontend-cargo-app
+  #   depends_on:
+  #     - me-backend-app
+  #   command: sh -c "npm run start"
+  #   restart: always
+  #   ports:
+  #     - "3002:3000"
 
-  me-frontend-admin-app:
-    image: turanline/turanline_frontend_admin:latest
-    container_name: me-frontend-admin-app
-    depends_on:
-      - me-backend-app
-    command: sh -c "npm run start"
-    restart: always
-    ports:
-      - "3003:3000"
+  # me-frontend-admin-app:
+  #   image: turanline/turanline_frontend_admin:latest
+  #   container_name: me-frontend-admin-app
+  #   depends_on:
+  #     - me-backend-app
+  #   command: sh -c "npm run start"
+  #   restart: always
+  #   ports:
+  #     - "3003:3000"
 
-  me-frontend-warehouse-app:
-    image: turanline/turanline_frontend_warehouse:latest
-    container_name: me-frontend-warehouse-app
-    depends_on:
-      - me-backend-app
-    command: sh -c "npm run start"
-    restart: always
-    ports:
-      - "3004:3000"
+  # me-frontend-warehouse-app:
+  #   image: turanline/turanline_frontend_warehouse:latest
+  #   container_name: me-frontend-warehouse-app
+  #   depends_on:
+  #     - me-backend-app
+  #   command: sh -c "npm run start"
+  #   restart: always
+  #   ports:
+  #     - "3004:3000"
 
   nginx:
     image: turanline/turanline_gateway:latest
@@ -108,9 +108,9 @@ services:
       - me-backend-app
       - me-frontend-app
       - me-frontend-partners-app
-      - me-frontend-cargo-app
-      - me-frontend-admin-app
-      - me-frontend-warehouse-app
+      # - me-frontend-cargo-app
+      # - me-frontend-admin-app
+      # - me-frontend-warehouse-app
     ports:
       - "8000:80"
     environment:

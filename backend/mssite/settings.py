@@ -24,6 +24,8 @@ ALLOWED_HOSTS = [
     'mis-express.com',
     '127.0.0.1',
     'localhost',
+    'me-backend-app',
+    'me-backend-app:8000',
     'www.mis-express.com',
     BASE_DOMAIN
 ]

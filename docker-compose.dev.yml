@@ -35,38 +35,37 @@ services:
   me-frontend-app:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: me-frontend-app-dev
     depends_on:
       - me-backend-app
     volumes:
       - ./frontend:/app:cached
-    command: sleep infinity
+      - /app/node_modules
+    # command: sh -c "npm run start"
     ports:
       - '3000:3000'
     restart: always
 
-  me-frontend-providers:
+  me-frontend-partners-app:
     cpus: "0.5"
     mem_limit: 500m
     build:
-      context: ./providers
+      context: ./frontend_partners
       dockerfile: Dockerfile
 
-    container_name: me-frontend-providers-dev
+    container_name: me-frontend-partners-app-dev
     depends_on:
       - me-backend-app
     # command: sh -c "npm run start"
     ports:
-      - '3001:3001'
+      - '3001:3000'
     restart: always
 
   nginx:
     cpus: "0.5"
     mem_limit: 500m
-    build:
-      context: ./gateway
-      dockerfile: Dockerfile
+    image: nginx:1.21.3
     container_name: me-gateway-app-dev
     depends_on:
       - me-backend-app
@@ -75,9 +74,9 @@ services:
       - '80:80'
       - '8800:8800'
     volumes:
-      - static_data:/backend/var/www/api/static/
-      - media_data:/backend/var/www/api/media/
-    restart: always
+      - static_data:/staticfiles/static
+      - media_data:/media
+      - ./gateway/nginx.dev.conf:/etc/nginx/conf.d/default.conf
 volumes:
   static_data:
   media_data:

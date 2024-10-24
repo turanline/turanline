@@ -10,6 +10,7 @@ const nextConfig = {
       "www.mis-express.com",
       "tyranshop.com",
       "localhost:3001",
+      "localhost",
       "drive.google.com",
     ],
     minimumCacheTTL: 1500000,
