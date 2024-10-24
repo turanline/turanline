@@ -176,11 +176,11 @@ class ProductSerializer(
         shared_model=models.Product
     )
 
-    price = serializers.SerializerMethodField()
+    market_price = serializers.SerializerMethodField()
 
     category = product_components_serializers.CategoriesSerializer()
 
-    def get_price(self, obj):
+    def get_market_price(self, obj):
         # Return the price multiplied by 15% and 2 decimal places as decimal
         return round(obj.price * Decimal('1.15'), 2)
 
